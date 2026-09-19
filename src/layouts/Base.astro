@@ -1,0 +1,35 @@
+---
+// Document shell only: <!doctype>, <html lang>, a <head> fed by a
+// SeoResult prop, the tokens.css import, and one <slot />. Zero visual
+// styling beyond that import — see design.md §1's scope clarification.
+import '../styles/tokens.css';
+import type { SeoResult } from '../lib/seo';
+
+export interface Props {
+  lang: 'en' | 'es';
+  seo: SeoResult;
+}
+
+const { lang, seo } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <link rel="canonical" href={seo.canonical} />
+    {seo.alternates.map((alternate) => (
+      <link rel="alternate" hreflang={alternate.hrefLang} href={alternate.href} />
+    ))}
+    <meta property="og:title" content={seo.openGraph['og:title']} />
+    <meta property="og:description" content={seo.openGraph['og:description']} />
+    <meta property="og:url" content={seo.openGraph['og:url']} />
+    <meta property="og:type" content={seo.openGraph['og:type']} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

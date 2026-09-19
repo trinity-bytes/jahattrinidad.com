@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import { listProjects, listPosts } from '../lib/content';
+import { buildSeo } from '../lib/seo';
+import { getDictionary } from '../lib/i18n';
+
+const lang = 'en' as const;
+const t = getDictionary(lang);
+
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    'astro.config.mjs must define `site` before this page can compute canonical URLs.'
+  );
+}
+
+const featuredProjects = await listProjects({ lang, featuredOnly: true });
+const recentPosts = await listPosts({ lang, order: 'newest', limit: 5 });
+
+const seo = buildSeo({
+  title: 'Jahat Trinidad',
+  description: 'Personal portfolio and blog of Jahat Trinidad, software engineer.',
+  path: '/',
+  lang,
+  site,
+});
+---
+
+<Base lang={lang} seo={seo}>
+  <h1>{t.nav.home}</h1>
+
+  <section>
+    <h2>{t.home.featuredProjects}</h2>
+    <ul>
+      {featuredProjects.map((project) => (
+        <li>
+          <a href={`/projects/${project.id}/`}>{project.data.title}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section>
+    <h2>{t.home.recentPosts}</h2>
+    <ul>
+      {recentPosts.map(({ entry, readingTime }) => (
+        <li>
+          <a href={`/blog/${entry.id}/`}>{entry.data.title}</a> — {t.post.readingTime(readingTime)}
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>

@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import { projectRoutes, getTranslationGroup, renderEntry, type Project } from '../../lib/content';
+import { buildSeo } from '../../lib/seo';
+import { getDictionary } from '../../lib/i18n';
+
+export async function getStaticPaths() {
+  return projectRoutes('en');
+}
+
+export interface Props {
+  entry: Project;
+}
+
+const { entry } = Astro.props;
+const lang = 'en' as const;
+const t = getDictionary(lang);
+
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    'astro.config.mjs must define `site` before this page can compute canonical URLs.'
+  );
+}
+
+// projects do not carry a reading time — that is a posts-only derived
+// field (design.md §4); do not import getReadingTime here.
+const group = await getTranslationGroup('projects', entry);
+
+const seo = buildSeo({
+  title: entry.data.title,
+  description: entry.data.description,
+  path: `/projects/${entry.id}`,
+  lang,
+  site,
+  group,
+  type: 'article',
+  publishDate: entry.data.publishDate,
+  updatedDate: entry.data.updatedDate,
+});
+
+const { Content } = await renderEntry(entry);
+---
+
+<Base lang={lang} seo={seo}>
+  <article>
+    <h1>{entry.data.title}</h1>
+    <p>
+      <strong>{t.project.role}:</strong> {entry.data.role}
+    </p>
+    <p>
+      <strong>{t.project.timeframe}:</strong> {entry.data.timeframe}
+    </p>
+    <p>
+      <strong>{t.project.stack}:</strong> {entry.data.stack.join(', ')}
+    </p>
+    <Content />
+  </article>
+</Base>

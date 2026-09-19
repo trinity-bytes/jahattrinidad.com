@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import { listProjects } from '../../lib/content';
+import { buildSeo } from '../../lib/seo';
+import { getDictionary } from '../../lib/i18n';
+
+const lang = 'en' as const;
+const t = getDictionary(lang);
+
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    'astro.config.mjs must define `site` before this page can compute canonical URLs.'
+  );
+}
+
+const projects = await listProjects({ lang });
+
+const seo = buildSeo({
+  title: t.nav.projects,
+  description: 'Selected projects and case studies.',
+  path: '/projects',
+  lang,
+  site,
+});
+---
+
+<Base lang={lang} seo={seo}>
+  <h1>{t.nav.projects}</h1>
+  <ul>
+    {projects.map((project) => (
+      <li>
+        <a href={`/projects/${project.id}/`}>{project.data.title}</a>
+        <p>{project.data.description}</p>
+      </li>
+    ))}
+  </ul>
+</Base>

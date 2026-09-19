@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { listLinks } from '../lib/content';
+import { buildSeo } from '../lib/seo';
+import { getDictionary } from '../lib/i18n';
+
+const lang = 'en' as const;
+const t = getDictionary(lang);
+
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    'astro.config.mjs must define `site` before this page can compute canonical URLs.'
+  );
+}
+
+// listLinks() takes no `lang` — the links collection is language-agnostic
+// (D5 exception). Entries are already filtered to enabled:true and sorted
+// by data.order ascending inside lib/content.ts.
+const links = await listLinks();
+
+const seo = buildSeo({
+  title: t.nav.links,
+  description: 'Where to find me elsewhere.',
+  path: '/links',
+  lang,
+  site,
+});
+---
+
+<Base lang={lang} seo={seo}>
+  <h1>{t.nav.links}</h1>
+  <ul>
+    {links.map((link) => (
+      <li>
+        <a href={link.data.url}>{link.data.label}</a>
+      </li>
+    ))}
+  </ul>
+</Base>

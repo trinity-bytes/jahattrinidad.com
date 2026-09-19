@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+import {
+  postRoutes,
+  getReadingTime,
+  getTranslationGroup,
+  renderEntry,
+  type Post,
+} from '../../lib/content';
+import { buildSeo } from '../../lib/seo';
+import { getDictionary } from '../../lib/i18n';
+
+export async function getStaticPaths() {
+  return postRoutes('en');
+}
+
+export interface Props {
+  entry: Post;
+}
+
+const { entry } = Astro.props;
+const lang = 'en' as const;
+const t = getDictionary(lang);
+
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    'astro.config.mjs must define `site` before this page can compute canonical URLs.'
+  );
+}
+
+const readingTime = getReadingTime(entry);
+const group = await getTranslationGroup('posts', entry);
+
+const seo = buildSeo({
+  title: entry.data.title,
+  description: entry.data.description,
+  path: `/blog/${entry.id}`,
+  lang,
+  site,
+  // A canonicalUrl override suppresses all hreflang alternates (D10).
+  canonicalOverride: entry.data.canonicalUrl,
+  group,
+  type: 'article',
+  publishDate: entry.data.publishDate,
+  updatedDate: entry.data.updatedDate,
+});
+
+const { Content } = await renderEntry(entry);
+---
+
+<Base lang={lang} seo={seo}>
+  <article>
+    <h1>{entry.data.title}</h1>
+    <p>{t.post.readingTime(readingTime)}</p>
+    <Content />
+  </article>
+</Base>
