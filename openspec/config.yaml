@@ -9,7 +9,11 @@ context: |
   Syntax highlighting: Shiki (bundled); Prism forbidden
   Fonts: Astro native Fonts API; no @fontsource or Google Fonts CDN
   Styling: native CSS with design tokens; Tailwind evaluated and rejected
-  Allowed deps: astro, @astrojs/mdx@8.0.1, @astrojs/sitemap@3.7.4, @astrojs/rss@4.0.19 only
+  Allowed runtime deps: astro, @astrojs/mdx@8.0.1, @astrojs/sitemap@3.7.4, @astrojs/rss@4.0.19 only
+  Allowed devDeps: typescript, @astrojs/check (user-approved 2026-09-18 — `npx astro check`
+    refuses to run without both, and TypeScript strict is a hard project requirement, so the
+    original "exactly four, nothing else" wording was self-contradictory. Both are first-party
+    Astro tooling and neither reaches the browser bundle.)
 
 strict_tdd: false
 
@@ -53,6 +57,9 @@ rules:
       - Follow existing code patterns
       - Never install standalone `zod` (astro/zod is the only allowed import)
       - Never install `@astrojs/markdown-remark`, Prism, `@fontsource`, or Tailwind
+      - `typescript` and `@astrojs/check` are approved devDependencies; do not remove them
+        and do not treat them as a policy violation. Any OTHER new dependency still requires
+        an explicit user decision before installation.
       - Use Astro's native Fonts API, never a Google Fonts CDN
     tdd: false
     test_command: ""

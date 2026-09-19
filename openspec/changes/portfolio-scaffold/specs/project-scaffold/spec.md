@@ -86,6 +86,20 @@ The system's `package.json` dependencies MUST be exactly `astro`, `@astrojs/mdx`
 - THEN it MUST contain exactly `astro`, `@astrojs/mdx`, `@astrojs/sitemap`, and `@astrojs/rss`
 - AND no other package MUST appear under `dependencies`
 
+#### Scenario: devDependencies are limited to the approved type-checking tooling
+
+- GIVEN `package.json` as shipped
+- WHEN its `devDependencies` field is inspected
+- THEN it MUST contain exactly `typescript` and `@astrojs/check`
+- AND no other package MUST appear under `devDependencies`
+
+> Both were approved by the user on 2026-09-18, after `npx astro check` was confirmed to refuse
+> to run without them. They are first-party Astro tooling and never reach the browser bundle.
+> The original "exactly four packages, nothing else in dependencies or devDependencies" wording
+> was self-contradictory, because TypeScript `strict` is itself a hard project requirement and
+> cannot be checked without the TypeScript compiler. Any FURTHER dependency, runtime or dev,
+> still requires an explicit user decision before installation.
+
 #### Scenario: Forbidden packages are absent
 
 - GIVEN `package.json` as shipped
