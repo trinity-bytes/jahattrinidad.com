@@ -1,0 +1,65 @@
+# openspec/config.yaml
+schema: spec-driven
+
+context: |
+  Project: jahattrinidad.com — personal portfolio, static site (SSG only, no adapter/SSR/DB/CMS)
+  Runtime: Node v26.8.1, npm 11.19.0; Framework: Astro 7.3.3
+  Language: TypeScript strict mode; Validation: Zod 4 via astro/zod (never standalone zod)
+  Markdown: Satteri (Astro 7 default); remark/rehype forbidden
+  Syntax highlighting: Shiki (bundled); Prism forbidden
+  Fonts: Astro native Fonts API; no @fontsource or Google Fonts CDN
+  Styling: native CSS with design tokens; Tailwind evaluated and rejected
+  Allowed deps: astro, @astrojs/mdx@8.0.1, @astrojs/sitemap@3.7.4, @astrojs/rss@4.0.19 only
+
+strict_tdd: false
+
+testing:
+  detected: 2026-09-18
+  strict_tdd_reason: >
+    No package.json exists yet (branch `remake` is an orphan scaffold branch).
+    No test runner is planned for this project; functional checks below are
+    the applicable verification gate.
+  projects:
+    - path: "."
+      stack: "Astro 7.3.3 + TypeScript (strict), static output"
+      test_command: ""
+      framework: ""
+  functional_checks:
+    - command: "npx astro check"
+      purpose: "TypeScript + Astro diagnostics"
+    - command: "npx astro build"
+      purpose: "must complete clean"
+    - command: "node scripts/check-boundaries.mjs"
+      purpose: "custom dependency-rule checker (to be written)"
+  check_script: "npm run check (to wire the three commands above)"
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+    - State whether the change touches the Astro scaffold, content collections, or build config
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+    - Justify any new dependency against the allowed-dependencies list; flag anything outside
+      astro, @astrojs/mdx, @astrojs/sitemap, @astrojs/rss as requiring explicit user approval
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    guidelines:
+      - Follow existing code patterns
+      - Never install standalone `zod` (astro/zod is the only allowed import)
+      - Never install `@astrojs/markdown-remark`, Prism, `@fontsource`, or Tailwind
+      - Use Astro's native Fonts API, never a Google Fonts CDN
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: "npx astro check"
+    build_command: "npx astro build"
+    boundary_command: "node scripts/check-boundaries.mjs"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
