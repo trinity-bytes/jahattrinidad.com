@@ -10,9 +10,13 @@
     "check": "node scripts/check-boundaries.mjs && astro check && astro build"
   },
   "dependencies": {
-    "astro": "7.3.3",
     "@astrojs/mdx": "8.0.1",
+    "@astrojs/rss": "4.0.19",
     "@astrojs/sitemap": "3.7.4",
-    "@astrojs/rss": "4.0.19"
+    "astro": "7.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
   }
 }
