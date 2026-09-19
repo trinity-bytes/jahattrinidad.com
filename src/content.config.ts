@@ -24,8 +24,8 @@ const projects = defineCollection({
       timeframe: z.string(), // required — e.g. '2025 Q1-Q3'
       constraints: z.array(z.string()).default([]), // short records; narrative in the body
       outcome: z.string().optional(), // one-line quantified result for cards
-      repoUrl: z.string().url().optional(),
-      demoUrl: z.string().url().optional(),
+      repoUrl: z.url().optional(),
+      demoUrl: z.url().optional(),
       decisions: z
         .array(
           z.object({
@@ -49,7 +49,7 @@ const posts = defineCollection({
     updatedDate: z.coerce.date().optional(),
     draft: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
-    canonicalUrl: z.string().url().optional(), // cross-post → suppresses alternates (D10)
+    canonicalUrl: z.url().optional(), // cross-post → suppresses alternates (D10)
     // NO readingTime — derived in lib/content.ts (D6)
   }),
 });
@@ -59,7 +59,7 @@ const links = defineCollection({
   schema: z.object({
     id: z.string(), // required by the file() loader as the entry key
     label: z.string(),
-    url: z.string().url(),
+    url: z.url(),
     icon: z.string(), // key into an inline SVG sprite — no icon dependency
     order: z.number().int(), // explicit sort key, not JSON array position
     enabled: z.boolean().default(true), // retire a link without deleting the record

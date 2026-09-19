@@ -37,6 +37,20 @@ explicit new decision recorded in `openspec/`:
 `scripts/check-boundaries.mjs` itself imports only `node:fs` and
 `node:path` — zero dependencies. Keep it that way.
 
+## Zod 4 string formats are top-level
+
+`astro/zod` is Zod **4**. String format validators moved to the top level:
+write `z.url()`, not `z.string().url()`. The chained form still works but is
+deprecated, and `astro check` reports a `ts(6385)` hint for every use.
+
+This is worth stating because the archived design and proposal under
+`openspec/changes/archive/` were written with the chained form and are
+correct as historical records — they are not a style guide. Do not copy
+`z.string().url()` out of them.
+
+Same rule for the other formats when they are needed: `z.email()`,
+`z.uuid()`, `z.iso.date()`.
+
 ## No DDD, no repository pattern
 
 This project deliberately does not use Domain-Driven Design layering or a
