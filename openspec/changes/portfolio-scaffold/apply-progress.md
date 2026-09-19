@@ -5,48 +5,44 @@
 
 ## Status
 
-**BLOCKED before Phase 2** — a dependency-policy conflict was discovered while validating Phase 1 that needs an explicit user decision before implementation continues. Phase 1 itself is complete and committed.
+**IN PROGRESS** — Phases 1–3 complete and committed. Resuming at Phase 4.
 
-## Blocker — read before resuming
+## Dependency blocker — RESOLVED
 
-`npx astro check` (one of the three commands `npm run check` chains, and the command named directly in task 8.2 and the proposal's Success Criteria) **refuses to run at all** unless two additional packages are installed: `@astrojs/check` and `typescript`. This was confirmed interactively — Astro's CLI detects their absence and offers to run `npm i @astrojs/check typescript` (which would add them to `package.json`); declining leaves the command unusable.
-
-Neither package appears anywhere in the design's dependency list, the proposal's allowed-dependency list, or the hard "Dependency policy" in this apply prompt (`astro`, `@astrojs/mdx`, `@astrojs/sitemap`, `@astrojs/rss` — nothing else, in dependencies or devDependencies).
-
-**What still works without them** (verified): `npx astro build` runs fine with zero extra packages — Astro's build pipeline transpiles TS via esbuild without a full type-checker. Only the separate `astro check` diagnostic CLI needs `typescript` + `@astrojs/check`.
-
-**Per this prompt's hard rule** — "If you believe a task cannot be completed without a new dependency, STOP and report it — do not install it" — I stopped rather than deciding this myself.
-
-**Recommendation for the user**: `typescript` and `@astrojs/check` are official Astro tooling required to run TypeScript diagnostics at all (not a competing/alternative library like the forbidden ones — Tailwind, standalone `zod`, Prism, etc., all have an in-project replacement; there is no replacement for these). Approving them as `devDependencies` (the `dependencies` field stays exactly the four approved runtime packages) would unblock `npx astro check`, task 8.2, and the full `npm run check` gate as specified. Alternative: explicitly descope `astro check` from the verification gate and accept that TypeScript `strict` mode is declared but never mechanically checked in this change.
+`npx astro check` required `@astrojs/check` + `typescript`, outside the original approved list. Apply stopped and reported per the hard dependency-policy rule. User approved both as `devDependencies` (`openspec/config.yaml` + new spec scenario, commit `cb5c15d`). Installed and pinned `typescript@^6.0.3` (unpinned resolved `7.0.2`, whose native compiler doesn't yet expose the programmatic API `astro check` needs). Confirmed `npx astro check` now runs clean: `0 errors, 0 warnings, 0 hints`. `package.json` `devDependencies` is exactly `{ "@astrojs/check": "^0.9.10", "typescript": "^6.0.3" }`, matching the new spec scenario.
 
 ## Completed Phases
 
-### Phase 1: Scaffold + Config — COMPLETE, committed `7d5ed0e`
+### Phase 1: Scaffold + Config — commits `7d5ed0e`, `5dafcd0`
 
-- [x] 1.1 `package.json` — 4 approved deps, `npm run check` script chain written as specified. Whether it can *execute* end-to-end is blocked on the dependency decision above.
-- [x] 1.2 `tsconfig.json` — `astro/tsconfigs/strict`, no `paths`.
-- [x] 1.3 `.gitignore` — appended `node_modules`, `dist`, `.astro`, `.env*` to the pre-existing `.atl/` entry.
-- [x] 1.4 `astro.config.mjs` — full config per design §10. Open question resolved: `fonts: []` is accepted by Astro 7.3.3 config validation (confirmed via a successful `astro build` parse pass); no fallback to omitting the key was needed.
-- [x] 1.5 `npm install` — clean, 203 packages, 0 vulnerabilities, `dependencies` exactly the 4 approved packages.
+- [x] 1.1–1.5 all complete. See tasks.md for full outcome notes. `fonts: []` open question resolved (accepted by Astro 7.3.3 config validation).
 
-**Work Unit Evidence (Phase 1)**
+**Work Unit Evidence**: `npx astro check` — 0 errors/warnings/hints. `npx astro build` — config parses, 0 pages (none exist yet), confirms `astro.config.mjs` valid. Rollback: delete `package.json`, `package-lock.json`, `tsconfig.json`, `astro.config.mjs`, revert `.gitignore` append.
 
-| Evidence | Value |
-|---|---|
-| Focused test command and result | `npx astro build` (config-parse smoke test, no pages yet) — completed, exit 0, `0 page(s) built`, confirms `astro.config.mjs` (including `fonts: []`) is valid |
-| Runtime harness | N/A — no application code exists yet to exercise; `npm install` itself is the runtime evidence for the dependency set |
-| Rollback boundary | Delete `package.json`, `package-lock.json`, `tsconfig.json`, `astro.config.mjs`; revert the `.gitignore` append. Nothing else depends on this commit yet |
+### Phase 2: Content Contract — commit `802437c`
 
-## Remaining Phases (not started)
+- [x] 2.1 `src/content.config.ts` — three collections per design §8.
+- [x] 2.2 Confirmed no `readingTime` field (grep — only appears in a comment).
+- [x] 2.3 Confirmed `decisions[].rejected` has no `.optional()`/`.default()` at item level.
 
-- [ ] Phase 2: Content Contract (2.1–2.3)
-- [ ] Phase 3: Seed Content (3.1–3.6)
+**Work Unit Evidence**: `npx astro check` type-checks the schema file cleanly (verified as part of the Phase 1 check run + later full builds). Rollback: revert `src/content.config.ts`; nothing imports it yet.
+
+### Phase 3: Seed Content — commit `aed14b1`
+
+- [x] 3.1–3.6 all complete. Two entries per collection, covering every schema field between them.
+
+**Spec/design deviation recorded**: `content-model/spec.md`'s prose describes `projects.role`/`timeframe` as optional; `design.md` §8 and `tasks.md` 2.1's own field list (no `?` suffix) both mark them required, and the actual schema (written per design authority) makes them required. Followed `design.md` as implementation authority per the apply brief. Task 3.1's "minimal entry" now includes `role`/`timeframe` so it is a true minimum. Flagged, not silently resolved — see task 3.1's note in `tasks.md`.
+
+**Work Unit Evidence**: `npx astro build` — all six seed entries (2 projects, 2 posts, 2 links) validate successfully against their Zod schemas, including the cover image resolving via `image()`. Rollback: delete `src/content/projects/*.mdx`, `posts/*.mdx`, `links.json`, `cover.jpg`.
+
+## Remaining Phases
+
 - [ ] Phase 4: `src/lib/` (4.1–4.5)
 - [ ] Phase 5: Layout + Routes (5.0–5.9) — includes the D1 revisit gate at 5.0
 - [ ] Phase 6: Tokens (6.1–6.2)
 - [ ] Phase 7: Guards (7.1–7.3)
-- [ ] Phase 8: Verification (8.1–8.14) — includes the `renderEntry()` gate at 8.1, and is where the `astro check` blocker becomes fully load-bearing (8.2, 8.11)
+- [ ] Phase 8: Verification (8.1–8.14) — includes the `renderEntry()` gate at 8.1, and N1–N4 negative tests
 
 ## Next Task on Resume
 
-Resolve the dependency-policy question above, then continue at **task 2.1**.
+Task **4.1** (`src/lib/consts.ts`).

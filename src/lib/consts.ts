@@ -1,0 +1,18 @@
+/**
+ * Shared constants consumed by `content.ts` and `seo.ts`.
+ *
+ * `ROUTE_BASE` is the one place the `posts` collection name and its `/blog`
+ * URL segment diverge (design.md §4).
+ *
+ * `BCP47` MUST be mirrored literally in `astro.config.mjs`'s
+ * `sitemap({ i18n: { locales } })` option, because `astro.config.mjs` cannot
+ * import from `src/` — it runs before the Vite/Astro module graph exists.
+ * If this map ever changes, the mirror in `astro.config.mjs` must change
+ * with it, by hand, in the same commit (design.md §16 risk: "BCP-47 locale
+ * tags drift between `seo.ts` and `astro.config.mjs`"). This comment is
+ * what keeps a future session — one that may never read `design.md` —
+ * from missing that mirror requirement.
+ */
+export const ROUTE_BASE = { projects: 'projects', posts: 'blog' } as const;
+
+export const BCP47 = { en: 'en-US', es: 'es-ES' } as const;
