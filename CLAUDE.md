@@ -97,18 +97,35 @@ wrong. Do not add a default value for `lang` to "make the call site
 shorter" — the missing argument is meant to be a compile error, not a
 silent fallback.
 
-## The D1 revisit trigger
+## D1 is resolved — English-first, Spanish not ruled out
 
-The English-only-for-now i18n decision (D1) was made with an explicit
-condition attached, not as a closed decision:
+The i18n decision (D1) carried a revisit trigger: reopen it *before* the
+first substantial batch of UI copy is written. That trigger fired on
+2026-09-18, ahead of the visual-design pass, and D1 was closed:
 
-> Reopen the English-only-now i18n decision (D1) before the first
-> substantial batch of UI copy is written, not after — that is the moment
-> the cross-cutting i18n argument acquires real force, and the last cheap
-> moment to act on it.
+**English-first. Spanish is expected eventually, so the structure stays.**
+No `src/pages/es/` tree and no Spanish dictionary are created until there
+is Spanish content to put in them. Do not re-open this decision — it is
+settled, not deferred.
 
-If you are about to write a meaningful volume of new UI copy (page titles,
-nav labels, marketing/narrative text — not a handful of structural
-headings), stop and re-read `openspec/changes/portfolio-scaffold/proposal.md`
-section D1 first. This most plausibly applies to a future visual-design
-pass, which is explicitly out of scope for the current scaffold.
+What that resolution costs you, from here on, is one standing rule:
+
+**No UI string may be hardcoded into a component.** Every user-visible
+string — nav labels, section headings, button text, empty states, aria
+labels — goes through the `Dictionary` interface in `src/lib/i18n.ts` and
+is read via `getDictionary(lang)`. Every internal link is built with
+`localizedPath(lang, path)`, never as a bare string.
+
+This is the entire reason D1 was safe to defer. The expensive,
+non-retrofittable parts are already built: `lang` and `translationKey` in
+the schemas, the locale-keyed `dictionaries` record, `getDictionary()`
+with its `en` fallback, and `prefixDefaultLocale: false` freezing the
+English URLs permanently. Adding Spanish later is then one dictionary
+object plus content — mechanical. Hardcoding strings during the design
+pass is what would turn it back into a refactor of every page.
+
+Prose inside MDX content entries is exempt: that is content, and the
+`lang` field on the entry already carries it.
+
+The historical record is `openspec/changes/archive/2026-09-18-portfolio-scaffold/proposal.md`
+section D1. Read it for the reasoning, not for the status.
