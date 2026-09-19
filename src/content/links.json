@@ -1,0 +1,18 @@
+[
+  {
+    "id": "github",
+    "label": "GitHub",
+    "url": "https://github.com/jahattrinidad",
+    "icon": "github",
+    "order": 1,
+    "enabled": true
+  },
+  {
+    "id": "old-twitter",
+    "label": "Twitter",
+    "url": "https://twitter.com/jahattrinidad",
+    "icon": "twitter",
+    "order": 2,
+    "enabled": false
+  }
+]

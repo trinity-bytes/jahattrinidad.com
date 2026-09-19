@@ -1,0 +1,66 @@
+---
+title: 'Why this site enforces its own architecture with a 200-line script'
+description: 'A static analysis script over ESLint or dependency-cruiser, and why the tradeoff made sense here.'
+lang: 'en'
+translationKey: 'why-a-boundary-checker'
+publishDate: 2024-11-20
+updatedDate: 2024-12-01
+tags: ['architecture', 'tooling', 'astro']
+canonicalUrl: 'https://dev.to/jahattrinidad/why-a-boundary-checker'
+draft: false
+---
+
+Most of the code on this site is written and rewritten across sessions that
+do not share memory with each other. That constraint shaped a decision that
+would look unusual in a team codebase with a stable set of contributors:
+instead of documenting an architecture rule and trusting it to be followed,
+the rule is enforced by a script that runs on every build.
+
+## The rule
+
+There is exactly one file allowed to call `getCollection()` or `getEntry()`
+from `astro:content`: `src/lib/content.ts`. Every page, layout, and
+component that needs content goes through that one seam. The reasoning is
+simple — if the way content is fetched ever needs to change, there should be
+exactly one place to change it, not a scattered set of call sites that all
+need to agree.
+
+## Why not ESLint
+
+The obvious first instinct is a custom ESLint rule. It was rejected here for
+a narrow reason: it would have pulled in four devDependencies for a single
+rule, and `.astro` files are not first-class citizens in most ESLint
+tooling without an additional parser plugin. That is a lot of surface area
+for one invariant.
+
+## Why not dependency-cruiser
+
+`dependency-cruiser` was the second candidate, and a more serious one — it
+is built exactly for this kind of directional dependency rule. It was
+rejected for a concrete, testable reason: it cannot parse `.astro` files,
+and a meaningful fraction of the import statements this rule needs to catch
+live inside `.astro` frontmatter blocks.
+
+## What shipped instead
+
+A zero-dependency Node script, `scripts/check-boundaries.mjs`, using
+`node:fs` and `node:path` only. It walks `src/`, classifies each file into
+one of eight layers by path prefix, extracts import statements with a
+handful of line-anchored regular expressions, and checks each import
+against a small forbidden-import matrix. No parser, no AST, no dependency.
+
+```js
+const FROM_RE = /^[ \t]*(?:import|export)\b[^'"]*?\bfrom[ \t]*['"]([^'"]+)['"]/gm;
+```
+
+That one line — anchored to the start of a line — is most of the mechanism.
+It cannot catch every conceivable way to violate the rule (a dynamically
+computed `import()` specifier, for instance, would slip through), but it
+catches the failure mode that actually matters here: a session that does
+not know the rule writes a normal, top-of-file import. That is a lock, not
+a vault, and a lock is the right instrument when the adversary is
+forgetfulness rather than malice.
+
+The script runs first in `npm run check`, before the type checker and
+before the build, because it is the cheapest signal available — a
+violation is caught in milliseconds instead of after a full build.
