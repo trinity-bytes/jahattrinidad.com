@@ -31,11 +31,38 @@
 - [ ] 3.7 Owner verdict on Outside, section by section
 - [ ] 3.8 Owner verdict on Inside
 - [ ] 3.9 Owner reviews all Draft copy (proposal D7, texts in `design.md` section 4)
-- [ ] 3.10 Resolve the name hidden by the portrait (Open Question 1)
-- [ ] 3.11 Design the empty left column of Experience (Open Question 2)
-- [ ] 3.12 Decide toggle placement and update both boards (Open Question 5)
-- [ ] 3.13 Decide the opacity rule for Inside image dimming (Open Question 4)
-- [ ] 3.14 Fill remaining placeholders: value 02 proof, `[N]`, `[CITY / REMOTE]`, post titles, Elsewhere rows
+- [x] 3.10 Resolve the name hidden by the portrait (Open Question 1): hero shows "Jahat", full name is the logo (proposal D9, 2026-11-16)
+- [x] 3.10a Logo: wordmark "Jahat Trinidad" / "@trinitybytes" tied to Outside/Inside, states spec `2093:2` (proposal D9)
+- [x] 3.11 Design the empty left column of Experience (Open Question 2): D14
+- [x] 3.12 Decide toggle placement (Open Question 5): superseded by the lens, proposal D11
+- [ ] 3.13 Decide the opacity rule for Inside image dimming (Open Question 4). The footer no longer needs a fade (D17).
+- [x] 3.15 Language switch "EN / ES / PT" in the nav of both v3.1 boards (proposal D10)
+- [x] 3.16 Lens replaces the Work toggle; "Back outside" in the same corner; states spec `2109:103` (proposal D11, supersedes 3.12)
+- [x] 3.17 Values section as a scannable table with Garden proof `2112:29` (proposal D12; timeline version rejected)
+- [ ] 3.18 Owner verdict on 3.15–3.17
+- [x] 3.19 Rebuild Work, Experience, Writing, Elsewhere as scannable patterns on v3.1 Outside (D13–D15)
+- [x] 3.23 Work: Tranqui replaces Inspiration Garden (D13)
+- [x] 3.24 Contact with availability facts and copy-email action (D16); footer as ground (D17)
+- [ ] 3.21 Owner verdict on D13–D17 and their Draft copy
+- [x] 3.22 Prepare v3.1 Inside `2105:310`: recolored clones of the v3.1 Outside sections, footer name "@trinitybytes" (2026-11-16)
+- [x] 3.27 Design the Inside content of each v3.1 section, following the table "Inside v3.1 — what to design next" in `design.md`. Proposal on board `2137:2` (clone of `2105:310`, original untouched), annotation component `2137:416` (2026-11-16)
+- [ ] 3.28 Audit and owner verdict on the Inside content board `2137:2`. Audit done 2026-11-16 on both boards: `audit.md` (8 P1, 15 P2); owner verdict pending. Checklist:
+  - Only real facts: every annotation and Work row traces to a repo or to the owner (sources in `design.md`, Inside v3.1 table and the "Resolved 2026-11-16" note below it)
+  - [Draft] text: section headlines 02/03/04/05, sub of 02/04, Tranqui key decision
+  - [Owner: …] text: Viora key decision and pieces built
+  - Annotations: all are instances of `2137:416`; none clipped or covering content (screenshots checked 2026-11-16)
+  - Contact `2137:342`: landscape under the dusk overlay, text contrast still readable
+  - Covers `2137:139` (Mink'a) and `2137:160` (Tranqui): hero captures; decide whether Outside v3.1 gets them too
+- [x] 3.31 Contact Inside gets the dusk landscape; Mink'a and Tranqui covers become captures of their live heroes (2026-11-16)
+- [x] 3.32 Apply the `audit.md` corrections on v3.2 clones placed beside the v3.1 boards (owner, 2026-11-16: "luego te dejo aplicando todas las correcciones"). Includes the D18 rewrite of the Inside copy. Findings that need owner content or a product decision are listed in `audit.md` under "Applied on v3.2". Done 2026-11-16: Outside `2149:74`, Inside `2149:463`.
+- [x] 3.34 Owner review fixes on v3.3 clones (2026-11-16): lens hover pill, proof column as inline figures, Inside annotations anchored and made quiet (two owner rounds). Outside `2162:74`, Inside `2162:444`
+- [ ] 3.33 Owner verdict on v3.2/v3.3 and its [Draft] copy (Inside Values, Experience, Contact; two Values proof lines)
+- [x] 3.29 (done on v3.2 `2149:74`, 2026-11-16) Outside v3.1 Mink'a card still says "Android + web": correct it to native Android only (owner decision, 2026-11-16)
+- [x] 3.30 (done on v3.2: title now "…with a zero-dependency script") Featured post title says "200-line script"; `scripts/check-boundaries.mjs` has 293 lines. Fix the title or the claim
+- [x] 3.25 (owner, 2026-11-16: the button does not come back) Decide whether the hero "Look inside" button stays now that the lens exists (D11 open point)
+- [ ] 3.26 Promote v3.1 over v3 once the owner approves it (rename boards, keep v3 as reference)
+- [x] 3.20 Inside version of the values table (D12): the third column shows how each proof was built (done within 3.27, board `2137:2`)
+- [ ] 3.14 Fill remaining placeholders: `[N]` project count, email address, post titles, Elsewhere rows, Viora "My part", Mink'a problem and code part (value 02 proof and city are done)
 
 ## Phase 4 — Home v3, responsive
 
@@ -56,7 +83,7 @@ Blocked on Phase 3 approval.
 ## Phase 6 — Hi-fi
 
 - [ ] 6.1 Motion and depth: parallax amounts per hero layer (Open Question 7)
-- [ ] 6.2 The "Look inside" interaction: trigger, scope (element or page), transition
+- [ ] 6.2 The "Look inside" interaction: trigger, scope (element or page), transition. Designed as the lens (D11); motion values still open.
 - [ ] 6.3 Prototype
 - [ ] 6.4 Owner approves the hi-fi
 
@@ -70,3 +97,5 @@ Blocked on 6.4. Code starts only after this phase.
 - [ ] 7.4 Promote `specs/visual-identity/spec.md` from Draft, add the specs the final design needs
 - [ ] 7.5 Write implementation tasks (tokens, fonts, dictionary strings, schema fields, sections)
 - [ ] 7.6 Export web-sized hero images from Figma into `src/` when implementation starts
+- [ ] 7.7 Decide how the contact chat works (scripted or model-written), its questions and the email template. Deferred by the owner on 2026-11-16: do not raise during the design phase (D16).
+- [ ] 7.8 Spanish and Portuguese dictionaries and routes, only when there is content in those languages (D10)

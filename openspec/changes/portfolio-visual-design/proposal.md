@@ -3,7 +3,7 @@
 > Phase: design in Figma (pre-implementation). No source code is authorized by this change yet.
 > Store: `openspec/changes/portfolio-visual-design/` + Engram project `jahattrinidad.com` (topics `brand/*`, `design/*`).
 > Touches, per `openspec/config.yaml` rules.proposal: **nothing yet.** When implementation is authorized it will touch `src/styles/tokens.css`, the Astro Fonts config, page and section components, and the content collections (see "Affected Areas").
-> Last updated: 2026-11-16.
+> Last updated: 2026-11-16 (v3.1).
 
 Give jahattrinidad.com its visual identity and page designs, and record the decisions so the work can continue across agents and clones of the repo. The scaffold (archived change `2026-09-18-portfolio-scaffold`) shipped structure only: `src/styles/tokens.css` holds neutral and blue placeholder values, not the brand.
 
@@ -12,8 +12,10 @@ Give jahattrinidad.com its visual identity and page designs, and record the deci
 1. **Figma is the source of truth for visuals.** File key `gq6glEp9QrPOnEyYG9dldh`. The node map is in `design.md`.
 2. **`src/styles/tokens.css` is NOT the brand.** Never derive colors, type or image direction from it.
 3. **No UI code until the owner approves the hi-fi.** The owner has pushed back on code proposals during the design phase more than once. Propose in Figma.
-4. **Home v3 is the current direction; Home v2 is kept only for comparison.** Do not edit v2.
-5. Status words used below: **Accepted** = the owner said so explicitly. **Proposed** = built and well received, exact values still open. **Draft** = written by an agent, not reviewed.
+4. **Home v3.2 is the latest Home version: Outside `2149:74` and Inside `2149:463` (audit fixes and the D18 Inside rewrite, task 3.32; owner verdict pending, task 3.33). Home v3.1, Outside `2105:2` and Inside `2137:2`, stays beside it as the pre-audit reference (`audit.md`).** The v3 boards and the first v3.1 Inside (`2105:310`) were deleted at the owner's request on 2026-11-16; Figma version history still holds them. The specs "Lens — states" `2109:103` and "Logo — states" `2093:2` sit in one column left of the mockups.
+5. **Every section must be easy to scan** (owner rule, 2026-11-16, good practice and accessibility). A section uses one predictable pattern: a table, a fixed list of rows, a repeated card structure. A clever layout that the eye cannot follow is rejected even when it is original (see D12).
+6. **Speak to the team that hires.** Headlines say what a team or company gets, not what happened in a project (see D12).
+7. Status words used below: **Accepted** = the owner said so explicitly. **Proposed** = built and well received, exact values still open. **Draft** = written by an agent, not reviewed.
 
 ## Intent
 
@@ -46,7 +48,7 @@ The home has one mockup per state. Dark is no longer a section style: **dark mea
 
 - **Rejected: alternating light and dark sections** (Home v2). Dark carried no meaning, so the concept read as decoration.
 - **Supersedes:** "dark surface = green-900" as a general section rule.
-- **Open:** the toggle still sits in the Work section header. A page-wide state probably belongs in the nav (see Open Questions).
+- **Resolved by D11:** the switch is gone; a lens docked bottom-right turns the whole page Inside.
 
 ### D3 — The hero is separate layers, built for depth — Accepted (owner requirement)
 
@@ -77,9 +79,82 @@ A pin, a thin leader line and a two-line mono label that points at a real thing.
 - **Rejected: committing `design/hero/`** (about 70 MB of PNGs) and **Git LFS.** Not worth the repository weight while the design is still moving.
 - **Consequence:** a fresh clone has no image files. Export them from Figma or regenerate them with the prompts in `assets.md`. Implementation will need web-sized exports placed under `src/`; that is an implementation task, not this decision.
 
+### D9 — Hero name is "Jahat"; the logo is a wordmark that follows Outside/Inside — Accepted (2026-11-16)
+
+The display name is the first name only, "Jahat", sized to fit whole beside the portrait. The full name moves to the nav as the logo. The logo is a wordmark with two identities: "Jahat Trinidad" in Outside, "@trinitybytes" in Inside. In Outside, hover or keyboard focus also shows "@trinitybytes".
+
+- **Why:** "Jahat Trinidad" at hero size was hidden by the portrait, competed with the headline, and repeated the "JT" monogram.
+- **Rejected: a logo that rotates between the two names on its own.** Auto-moving content longer than 5 s needs a pause control (WCAG 2.2.2), it distracts while reading, and an unexplained "trinitybytes" means nothing to a visitor. Tying the swap to Outside/Inside makes it carry meaning.
+- **Rejected: keeping the monogram "JT".** Redundant once the name is large in the hero; the wordmark carries the surname instead.
+- The handle is written with "@" (owner's call) so it reads unmistakably as a username.
+- The swap is user-initiated only: a ~150 ms crossfade, none under `prefers-reduced-motion`. The link's accessible name stays "Jahat Trinidad — home" in every state.
+
+### D10 — Language switch in the nav — Proposed (2026-11-16)
+
+"EN / ES / PT" in IBM Plex Mono 14 sits before the Contact button, current language underlined. The logo lockup stays English in every language. Shown on the v3.1 boards.
+
+- **Consequence:** the switch ships only when Spanish or Portuguese content exists. Portuguese was added by the owner on 2026-11-16 and is a new locale beyond scaffold D1 (scaffold D1 is unchanged: no `src/pages/es/` until there is content). Its labels go through the `Dictionary`.
+
+### D11 — A draggable lens replaces the Outside/Inside switch — Proposed (2026-11-16, owner request)
+
+A round button with the Lucide "search" icon (ISC), docked bottom-right, fixed to the viewport. While it is dragged, a circle about 190 px wide opens around it and shows the Inside state of whatever is under it (owner simplified the first drawn-magnifier version); dropping it turns the whole page Inside. The same corner then holds "Back outside" (with an Esc hint). Click or Enter on the lens and the I key do the same without dragging. Spec frame "Lens — states" `2109:103`.
+
+- **Why bottom-right:** the bottom-left already carries the section marker and hint in the hero, and the right corner is in thumb reach on phones.
+- **Supersedes:** the "Outside / Inside" toggle in the Work header (removed on v3.1) and Open Question 5.
+- **Open:** whether the hero's "Look inside" secondary button stays now that the lens exists.
+
+### D12 — Values as a scannable table with real proof — Proposed (2026-11-16, revised same day)
+
+Section 02 is a three-row table with fixed columns: the value (approved titles), what it means for your team (approved bodies), and a proof block (sun-soft) with one large figure from Inspiration Garden: "7 days" from first commit to production, "10 releases" in one day across interface and performance, "1 week" after launch to new features on the same foundation. Headline (Draft): "Faster launches. Fewer handoffs. Nothing rebuilt."
+
+- **Rule from the owner:** every section of the portfolio must use a layout or pattern that is easy to scan and read (good practice and accessibility).
+- **Rejected: the release-log timeline** (first version of D12). Too hard to read and follow. Also rejected its headline "Idea to launch in 46 days, by one person.": it read as a case study, not as value for a team.
+- **Data source:** `git log` and tags of the `my-inspiration-garden` repository on 2026-11-16. Resolves the missing proof for value 02.
+
+### D13 — Work: one fixed pattern per project — Proposed (2026-11-16)
+
+Every project shows the same parts in the same order: image, meta line, name, one line of what it is, then a three-row list "The problem / What it does / My part", then one link. Viora is featured (image left, list right); Mink'a and Tranqui sit in two equal cards. Tranqui replaced Inspiration Garden at the owner's request, because Garden already carries the proof in section 02 (D12). Tranqui's cover is its GitHub social image; its "what it does" copy comes from that image. "See all projects" moves to the section header. The per-card "Look inside" buttons are gone: the lens does that now (D11).
+
+- **Rejected:** the v3 featured card with pins and outcome notes, and the two cards with only a title and a line. Not scannable, and the small cards said nothing.
+- Draft and placeholder copy is marked in the boards with "[Draft]" or "[Owner: …]".
+
+### D14 — Experience: the left column says what carries over — Proposed (2026-11-16)
+
+Under the title, "What carries over to your team" lists four skills, each with the role it came from (teaching, graphic design, community channels, choir). It fills the empty column (Open Question 2) and speaks to the team, like D12. On the web this column is sticky while the list scrolls. All four lines are Draft.
+
+### D15 — Writing and Elsewhere merge into "Notes" — Proposed (2026-11-16)
+
+One section with two columns: "Writing" (latest post featured large, then rows: type, title, minutes) and "Elsewhere" (rows: platform, date, first line). Background alternates to sand. The featured post is the scaffold sample post, a stand-in.
+
+### D16 — Contact: a guided chat drafts the email — Proposed (2026-11-16)
+
+Approved headline kept on the sky. Below it, three facts in a row: "Looking for: an internship in frontend or product design engineering", "Available: now", "Based in: Lima, Peru, open to remote" (owner, 2026-11-16). Status line: "OPEN TO WORK · LIMA, PERU".
+
+Actions: **"Start a conversation"** is the primary button (Lucide `message-circle`). It opens a guided chat that asks a few quick questions and drafts the email; the visitor edits it before sending. Secondary: "Copy my email" (fallback, copies to clipboard) and "LinkedIn" (Lucide `arrow-up-right`). A preview of the chat's first step sits on the right: "Hi, I'm Jahat. What brings you here?" with the replies "I'm hiring", "I have a project", "Just saying hi".
+
+- **Origin:** the owner's earlier plan. Until now it lived only in the Figma Archive page (frames `2031:55` "Contact — the invitation as display type" and `2032:44` "Chat opener preview"), not in openspec or Engram. Recorded here so it is not lost again.
+- **Deferred to implementation (owner, 2026-11-16):** how the chat works (scripted or model-written), its questions and the email template. This change is design only.
+- **Placeholder:** the email address is not written in the file yet.
+
+### D17 — The footer is the ground the page ends on — Proposed (2026-11-16)
+
+The footer surface is `#010903`, the colour the darkened near hill renders at its bottom edge, so the image runs into the solid footer with no visible seam and no fade (owner: the transition must not show). Measure it on the rendered composite, not on the image file: the file's semi-transparent edge pixels gave a wrong value (`#0C1103`) the first time. The near-hill image from the hero is reused, darkened, as the ridge. Three columns (Navigate, Elsewhere, This site: language switch, "Built with Astro · source on GitHub", "Press I to look inside"), an availability line, "Jahat" at 300 px in `#0F1F0C` as the closing name (Inside: "@trinitybytes"), and a bottom line "© 2026 Jahat Trinidad" / "Designed and built by the same person."
+
+- **Removed:** the binary easter egg "J 01001010 T 01010100". The name swap carries that role with meaning.
+- **Supersedes:** "Footer: green-950" in the state table of `design.md`.
+
+### D18 — Two audiences, two versions of every section — Decided (2026-11-16, owner)
+
+Owner, verbatim: "el inside es la version 'tecnica' que demuestra mis capacidades y conocimientos tecnicos para un publico tecnico, el outside es la version amigable para el publico en general, reclutadores y gerentes no tecnicos."
+
+- **Outside** is written for recruiters, non-technical managers and the general public: plain language, outcomes, no jargon.
+- **Inside** is written for a technical audience and has to prove technical skill and knowledge. Every section rewrites its copy for that reader, keeping the same structure. Annotations are one device inside it, not the whole difference.
+- **Unchanged:** same sections, same order, same layout pattern per section (D12 scan rule), so the lens can compare them element by element.
+- **Consequence:** audit finding 15 (`audit.md`) becomes a rewrite of the Inside copy in Values, Experience, Notes and Contact, not just extra annotations. Text that appears word for word in both states is a defect in Inside unless it is a fact, such as a name, a date or a place.
+
 ### D7 — New copy on the v3 boards — Draft
 
-All text added on 2026-11-16 was written by an agent and must be reviewed by the owner: the three outcome notes on the Viora card (Outside), the Inside hero headline and sub, and the three "How I actually do it" cards. Texts are listed in `design.md`.
+All text added on 2026-11-16 was written by an agent and must be reviewed by the owner. On v3: the three outcome notes on the Viora card (Outside, now replaced on v3.1 by D13), the Inside hero headline and sub, and the three "How I actually do it" cards. On v3.1: the values headline and sub (D12), the Work rows (D13), the four "What carries over" lines (D14), the chat preview note (D16) and the footer lines (D17). Texts are listed in `design.md` section 4.
 
 ## Scope
 
@@ -121,15 +196,16 @@ Nothing in `src/` changes, so there is nothing to roll back in code. In Figma, H
 
 ## Open Questions
 
-1. **Name hidden by the portrait.** "Jahat Trinidad" reads "Trinic__d". Shrink the name, move the portrait, or accept it as part of the depth effect?
-2. **Experience left column is empty.** Only its colors changed in v3.
+1. ~~Name hidden by the portrait.~~ Resolved 2026-11-16: the hero shows "Jahat" only, the full name is the nav logo. See D9.
+2. ~~Experience left column is empty.~~ Resolved on v3.1 by D14.
 3. **Inside/Outside vs OS color scheme.** `tokens.css` uses `light-dark()`, which follows the OS. The design makes dark a user-toggled content state. Are they the same switch, two switches, or does the site ignore the OS preference?
-4. **Opacity.** Palette v1 says "no opacity fades". The Inside hero uses a `#0A200B` overlay at 0.8 and an exposure filter on the hill. Keep the rule and bake dark image variants, or relax the rule for image dimming?
-5. **Toggle placement.** Section header (today) or nav (page-wide state)?
+4. **Opacity.** Palette v1 says "no opacity fades". The Inside hero uses a `#0A200B` overlay at 0.8 and an exposure filter on the hill. Keep the rule and bake dark image variants, or relax the rule for image dimming? (The footer avoided a fade by matching its colour to the image, D17.)
+5. ~~Toggle placement.~~ Resolved 2026-11-16: the lens, D11.
 6. **Sun yellow.** The owner showed slight doubt about yellow on 2026-11-09 ("maybe no es tan mi estilo"). Re-check now that it is on real pages.
 7. **Parallax amounts.** Inside labels say "moves slowest / moves fastest". No values are specified.
 8. ~~Where do the image assets live?~~ Resolved 2026-11-16: untracked, Figma holds them. See D8.
-9. **Placeholders still in the design:** proof for value 02, `[N]` project count, `[CITY / REMOTE]`, post titles, Elsewhere rows.
+9. **Placeholders still in the design:** `[N]` project count, the email address, post titles, Elsewhere rows, Viora "My part", Mink'a problem and code part. (Value 02 proof resolved by D12; city resolved by D16.)
+10. **Hero "Look inside" button.** Keep it as a visible entry point next to the lens, or remove it as a duplicate?
 
 ## Success Criteria
 
