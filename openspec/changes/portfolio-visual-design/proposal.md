@@ -3,7 +3,7 @@
 > Phase: design in Figma (pre-implementation). No source code is authorized by this change yet.
 > Store: `openspec/changes/portfolio-visual-design/` + Engram project `jahattrinidad.com` (topics `brand/*`, `design/*`).
 > Touches, per `openspec/config.yaml` rules.proposal: **nothing yet.** When implementation is authorized it will touch `src/styles/tokens.css`, the Astro Fonts config, page and section components, and the content collections (see "Affected Areas").
-> Last updated: 2026-11-16 (v3.1).
+> Last updated: 2026-11-16 (v3.5, Home desktop mockup approved).
 
 Give jahattrinidad.com its visual identity and page designs, and record the decisions so the work can continue across agents and clones of the repo. The scaffold (archived change `2026-09-18-portfolio-scaffold`) shipped structure only: `src/styles/tokens.css` holds neutral and blue placeholder values, not the brand.
 
@@ -12,7 +12,7 @@ Give jahattrinidad.com its visual identity and page designs, and record the deci
 1. **Figma is the source of truth for visuals.** File key `gq6glEp9QrPOnEyYG9dldh`. The node map is in `design.md`.
 2. **`src/styles/tokens.css` is NOT the brand.** Never derive colors, type or image direction from it.
 3. **No UI code until the owner approves the hi-fi.** The owner has pushed back on code proposals during the design phase more than once. Propose in Figma.
-4. **Home v3.2 is the latest Home version: Outside `2149:74` and Inside `2149:463` (audit fixes and the D18 Inside rewrite, task 3.32; owner verdict pending, task 3.33). Home v3.1, Outside `2105:2` and Inside `2137:2`, stays beside it as the pre-audit reference (`audit.md`).** The v3 boards and the first v3.1 Inside (`2105:310`) were deleted at the owner's request on 2026-11-16; Figma version history still holds them. The specs "Lens — states" `2109:103` and "Logo — states" `2093:2` sit in one column left of the mockups.
+4. **Home v3.5 is the latest Home version and the owner approved it as the finished desktop mockup on 2026-11-16: Outside `2191:86` and Inside `2191:503`** (owner, verbatim: "creo que ya, ya esta el mockup de home"). The owner cleaned the page the same day: only the specs column (Lens, Logo, Annotation, Lens hover, Nav states) and the two v3.5 boards remain. Earlier versions (v3.1–v3.4) and all proposal boards live only in Figma version history; their ids no longer resolve. [Draft] and [Owner: …] copy on the boards is still open (tasks 3.9, 3.14).
 5. **Every section must be easy to scan** (owner rule, 2026-11-16, good practice and accessibility). A section uses one predictable pattern: a table, a fixed list of rows, a repeated card structure. A clever layout that the eye cannot follow is rejected even when it is original (see D12).
 6. **Speak to the team that hires.** Headlines say what a team or company gets, not what happened in a project (see D12).
 7. Status words used below: **Accepted** = the owner said so explicitly. **Proposed** = built and well received, exact values still open. **Draft** = written by an agent, not reviewed.
@@ -110,6 +110,8 @@ Section 02 is a three-row table with fixed columns: the value (approved titles),
 - **Rule from the owner:** every section of the portfolio must use a layout or pattern that is easy to scan and read (good practice and accessibility).
 - **Rejected: the release-log timeline** (first version of D12). Too hard to read and follow. Also rejected its headline "Idea to launch in 46 days, by one person.": it read as a case study, not as value for a team.
 - **Data source:** `git log` and tags of the `my-inspiration-garden` repository on 2026-11-16. Resolves the missing proof for value 02.
+- **Revised on v3.4 (owner pick, 2026-11-16): the proof becomes one card.** Two text columns (value / what it means) plus an Inspiration Garden proof card in the third column: screenshot, name, one-liner, three fact rows, link to the case study. Each figure sits on a marker so the important information is found at a glance (owner request): Outside sun-soft `#FBEBA0` behind ink, Inside green-300 behind ink. Supersedes the inline figures of v3.3 and the sun-soft blocks of v3.1. Rejected: proposals A and B of the same round.
+- **Row 2 proof replaced (2026-11-16).** "10 releases in a single day" proved speed, not "A bridge between design and engineering". The headline maps one-to-one to the rows (Faster launches / Fewer handoffs / Nothing rebuilt), so the figure changed, not the value: Outside now reads "1 person · product, design and code" (owner: the proof of no handoffs is that they did the product direction and the design as well as the code). Inside keeps "10 releases · tagged on Oct 29", which matches its row "Small, versioned releases".
 
 ### D13 — Work: one fixed pattern per project — Proposed (2026-11-16)
 
@@ -135,13 +137,15 @@ Actions: **"Start a conversation"** is the primary button (Lucide `message-circl
 - **Origin:** the owner's earlier plan. Until now it lived only in the Figma Archive page (frames `2031:55` "Contact — the invitation as display type" and `2032:44` "Chat opener preview"), not in openspec or Engram. Recorded here so it is not lost again.
 - **Deferred to implementation (owner, 2026-11-16):** how the chat works (scripted or model-written), its questions and the email template. This change is design only.
 - **Placeholder:** the email address is not written in the file yet.
+- **Revised on v3.4 (owner pick, 2026-11-16): a composer, not a chat card.** The chat preview card and the "Start a conversation" button are gone. In their place: a text field "Tell me what you're looking for…" with a send button, two suggestions "I'm hiring" / "I have a project", then "Or · Copy my email · LinkedIn" as text links. Inside: green-900 field, green-300 send, placeholder "Tell me about your team and your stack… [Draft]". "Just saying hi" was removed, owner verbatim: "queda generico y si quisiera solo saludar escribiria por otro medio o directamente en el recuadro del chat". Consequence for task 7.7: the chat must accept free text, not only the suggestions.
 
 ### D17 — The footer is the ground the page ends on — Proposed (2026-11-16)
 
-The footer surface is `#010903`, the colour the darkened near hill renders at its bottom edge, so the image runs into the solid footer with no visible seam and no fade (owner: the transition must not show). Measure it on the rendered composite, not on the image file: the file's semi-transparent edge pixels gave a wrong value (`#0C1103`) the first time. The near-hill image from the hero is reused, darkened, as the ridge. Three columns (Navigate, Elsewhere, This site: language switch, "Built with Astro · source on GitHub", "Press I to look inside"), an availability line, "Jahat" at 300 px in `#0F1F0C` as the closing name (Inside: "@trinitybytes"), and a bottom line "© 2026 Jahat Trinidad" / "Designed and built by the same person."
+The footer surface is `#010903`, the colour the darkened near hill renders at its bottom edge, so the image runs into the solid footer (owner: the transition must not show). Measure it on the rendered composite, not on the image file: the file's semi-transparent edge pixels gave a wrong value (`#0C1103`) the first time. The near-hill image from the hero is reused, darkened, as the ridge. Three columns (Navigate, Elsewhere, This site: language switch, "Built with Astro · source on GitHub", "Press I to look inside"), an availability line, "Jahat" at 300 px in `#0F1F0C` as the closing name (Inside: "@trinitybytes"), and a bottom line "© 2026 Jahat Trinidad" / "Designed and built by the same person."
 
 - **Removed:** the binary easter egg "J 01001010 T 01010100". The name swap carries that role with meaning.
 - **Supersedes:** "Footer: green-950" in the state table of `design.md`.
+- **Revised 2026-11-16: a soft fade, not a matched edge.** The colour match alone still left a visible line where the clipped hill ends (owner: "me gustaria que la transicion al footer no sea solida sino haya un degradado suave para que no se vea la linea"). A 240 px gradient `#010903` (0 → 55% → 92% → 100%) now covers the bottom of the hill on both states ("ground fade").
 
 ### D18 — Two audiences, two versions of every section — Decided (2026-11-16, owner)
 
@@ -151,6 +155,26 @@ Owner, verbatim: "el inside es la version 'tecnica' que demuestra mis capacidade
 - **Inside** is written for a technical audience and has to prove technical skill and knowledge. Every section rewrites its copy for that reader, keeping the same structure. Annotations are one device inside it, not the whole difference.
 - **Unchanged:** same sections, same order, same layout pattern per section (D12 scan rule), so the lens can compare them element by element.
 - **Consequence:** audit finding 15 (`audit.md`) becomes a rewrite of the Inside copy in Values, Experience, Notes and Contact, not just extra annotations. Text that appears word for word in both states is a defect in Inside unless it is a fact, such as a name, a date or a place.
+
+### D19 — Nav: transparent on the hero, a sticky glass bar on scroll — Accepted (2026-11-16, owner)
+
+Component set "Nav" `2185:122` (in "Nav — states" `2185:56`, specs column) with variants `world` (Outside, Inside) × `state` (Top, Scrolled).
+
+- **Top:** transparent, sits on the hero (unchanged).
+- **Scrolled:** pinned to the top edge, full width, padding 12 / 64, no radius, frosted glass (Outside `#FAF6E8` at 82%, Inside `#0A200B` at 78%, background blur 20), a 1 px hairline under it, no shadow. The current section is marked with a sun dot before its link (brand: yellow marks the active nav); on Outside the dot gets an ink ring, per the palette rule for small yellow marks on light surfaces.
+- **Rejected:** a floating capsule 16 px from the top (owner: "no me gusta el navbar tipo capsula, mejor que se quede fijo arriba como en minka pero con el fondo ese acristalado"). Owner on the result: "bacan el navbar".
+
+### D20 — Backgrounds: the hero's light carried down the page, with the brand bytes where the light falls — Accepted (2026-11-16, owner)
+
+The owner found the section backgrounds flat, Inside most of all, and suggested the 8-bit resource. That resource is the brand "bytes pattern" (type sheet, IBM Plex Mono: "J 01001010 T 01010100"). Sections 02–05 of both states, bottom to top:
+
+1. **Gradient into the next section** (from proposal C): the last 320 px (Outside) / 360 px (Inside) fade into the next section's colour, so no section ends in a hard cut. None into Contact, which starts on the landscape.
+2. **Radial light** (from C): Outside sun `#FBEBA0` at 55% from the top on Values and Experience, leaf light `#B3F3B4` at 22% low-left on Work and Notes; Inside dusk `#2E7A33` at 45% top-right plus a sun ember at 6% on Values and Experience, centre light `#2B6E30` at 35% on Work and Notes. **Each section opens with its light already on**; the step this makes under the previous section is wanted (owner pointed at it in C when an agent smoothed it away: "que paso con esto de C? :(").
+3. **Grain** (from C): monotone noise, Outside ink at 6%, Inside black at 22%.
+4. **Bytes** (from proposal A5): random bytes mixed with the brand's J and T bytes, IBM Plex Mono 12/20, only where the light falls and at the joins between sections. Outside ink, Inside green-300; one byte per section in the lit area is highlighted (Inside sun, Outside green-700). **The bytes never sit under text:** a mask removes them within 40 px of every text block and ramps them back in by 120 px. Owner rule, verbatim: "tienes que cuidar mucho que los patrones sean muy sutiles y casi inexistentes en las zonas con texto. para nada el fondo debe quitar protagonismo al texto".
+
+- **Rejected, same day:** B "8-bit light" (dithered pixel transitions and glow; strong as a gesture, tiring when repeated); C alone (no identity); A1 bytes down the right margin (reads as Matrix rain); A3 bytes spelling the section label in ASCII (meaning invisible at that opacity); A4 a faint bytes field everywhere (muddies body text); bytes that blur progressively toward the text (built and working, owner: "va demasiado lejos… buscando que el fondo no haga confuso leer los textos").
+- Implementation notes are in `design.md` section 8.
 
 ### D7 — New copy on the v3 boards — Draft
 
@@ -192,20 +216,20 @@ All text added on 2026-11-16 was written by an agent and must be reviewed by the
 
 ## Rollback Plan
 
-Nothing in `src/` changes, so there is nothing to roll back in code. In Figma, Home v2 (`2038:46`, tablet `2062:2`, mobile `2049:2`) is untouched and remains a complete fallback. The v3 boards can be deleted without affecting it.
+Nothing in `src/` changes, so there is nothing to roll back in code. In Figma, every earlier Home version (v2 to v3.4) is recoverable from the file's version history; the boards themselves were deleted from the page on 2026-11-16.
 
 ## Open Questions
 
 1. ~~Name hidden by the portrait.~~ Resolved 2026-11-16: the hero shows "Jahat" only, the full name is the nav logo. See D9.
 2. ~~Experience left column is empty.~~ Resolved on v3.1 by D14.
 3. **Inside/Outside vs OS color scheme.** `tokens.css` uses `light-dark()`, which follows the OS. The design makes dark a user-toggled content state. Are they the same switch, two switches, or does the site ignore the OS preference?
-4. **Opacity.** Palette v1 says "no opacity fades". The Inside hero uses a `#0A200B` overlay at 0.8 and an exposure filter on the hill. Keep the rule and bake dark image variants, or relax the rule for image dimming? (The footer avoided a fade by matching its colour to the image, D17.)
+4. **Opacity.** Palette v1 says "no opacity fades". The Inside hero uses a `#0A200B` overlay at 0.8 and an exposure filter on the hill. Keep the rule and bake dark image variants, or relax the rule for image dimming? (The footer now uses a fade, D17, and the backgrounds use translucent light layers, D20.)
 5. ~~Toggle placement.~~ Resolved 2026-11-16: the lens, D11.
 6. **Sun yellow.** The owner showed slight doubt about yellow on 2026-11-09 ("maybe no es tan mi estilo"). Re-check now that it is on real pages.
 7. **Parallax amounts.** Inside labels say "moves slowest / moves fastest". No values are specified.
 8. ~~Where do the image assets live?~~ Resolved 2026-11-16: untracked, Figma holds them. See D8.
 9. **Placeholders still in the design:** `[N]` project count, the email address, post titles, Elsewhere rows, Viora "My part", Mink'a problem and code part. (Value 02 proof resolved by D12; city resolved by D16.)
-10. **Hero "Look inside" button.** Keep it as a visible entry point next to the lens, or remove it as a duplicate?
+10. ~~Hero "Look inside" button.~~ Resolved 2026-11-16: it does not come back (task 3.25).
 
 ## Success Criteria
 

@@ -2,7 +2,7 @@
 
 > Authority: `proposal.md` (decisions, open questions), `design.md` (values, Figma map), `assets.md` (images).
 > This change is design work in Figma. There is no test runner and nothing to build: the check for a design task is a screenshot reviewed against `design.md`, then the owner's verdict.
-> Last updated: 2026-11-16.
+> Last updated: 2026-11-16 (Home v3.5 desktop mockup approved).
 
 ## Phase 1 — Brand foundation
 
@@ -28,8 +28,8 @@
 - [x] 3.4 Upscaled sky (`bg-back-2X.png`) in both heroes
 - [x] 3.5 Outside board `2084:2`: warm neutrals, light Work and Experience, Viora without pins, sky on Contact
 - [x] 3.6 Inside board `2084:314`: dark state, layer annotations, "How I actually do it"
-- [ ] 3.7 Owner verdict on Outside, section by section
-- [ ] 3.8 Owner verdict on Inside
+- [x] 3.7 Owner verdict on Outside, section by section (approved on v3.5 `2191:86`, 2026-11-16)
+- [x] 3.8 Owner verdict on Inside (approved on v3.5 `2191:503`, 2026-11-16)
 - [ ] 3.9 Owner reviews all Draft copy (proposal D7, texts in `design.md` section 4)
 - [x] 3.10 Resolve the name hidden by the portrait (Open Question 1): hero shows "Jahat", full name is the logo (proposal D9, 2026-11-16)
 - [x] 3.10a Logo: wordmark "Jahat Trinidad" / "@trinitybytes" tied to Outside/Inside, states spec `2093:2` (proposal D9)
@@ -39,11 +39,11 @@
 - [x] 3.15 Language switch "EN / ES / PT" in the nav of both v3.1 boards (proposal D10)
 - [x] 3.16 Lens replaces the Work toggle; "Back outside" in the same corner; states spec `2109:103` (proposal D11, supersedes 3.12)
 - [x] 3.17 Values section as a scannable table with Garden proof `2112:29` (proposal D12; timeline version rejected)
-- [ ] 3.18 Owner verdict on 3.15–3.17
+- [x] 3.18 Owner verdict on 3.15–3.17 (covered by the v3.5 approval)
 - [x] 3.19 Rebuild Work, Experience, Writing, Elsewhere as scannable patterns on v3.1 Outside (D13–D15)
 - [x] 3.23 Work: Tranqui replaces Inspiration Garden (D13)
 - [x] 3.24 Contact with availability facts and copy-email action (D16); footer as ground (D17)
-- [ ] 3.21 Owner verdict on D13–D17 and their Draft copy
+- [x] 3.21 Owner verdict on D13–D17 (covered by the v3.5 approval; their Draft copy stays under 3.9)
 - [x] 3.22 Prepare v3.1 Inside `2105:310`: recolored clones of the v3.1 Outside sections, footer name "@trinitybytes" (2026-11-16)
 - [x] 3.27 Design the Inside content of each v3.1 section, following the table "Inside v3.1 — what to design next" in `design.md`. Proposal on board `2137:2` (clone of `2105:310`, original untouched), annotation component `2137:416` (2026-11-16)
 - [ ] 3.28 Audit and owner verdict on the Inside content board `2137:2`. Audit done 2026-11-16 on both boards: `audit.md` (8 P1, 15 P2); owner verdict pending. Checklist:
@@ -56,9 +56,16 @@
 - [x] 3.31 Contact Inside gets the dusk landscape; Mink'a and Tranqui covers become captures of their live heroes (2026-11-16)
 - [x] 3.32 Apply the `audit.md` corrections on v3.2 clones placed beside the v3.1 boards (owner, 2026-11-16: "luego te dejo aplicando todas las correcciones"). Includes the D18 rewrite of the Inside copy. Findings that need owner content or a product decision are listed in `audit.md` under "Applied on v3.2". Done 2026-11-16: Outside `2149:74`, Inside `2149:463`.
 - [x] 3.34 Owner review fixes on v3.3 clones (2026-11-16): lens hover pill, proof column as inline figures, Inside annotations anchored and made quiet (two owner rounds). Outside `2162:74`, Inside `2162:444`
-- [ ] 3.33 Owner verdict on v3.2/v3.3 and its [Draft] copy (Inside Values, Experience, Contact; two Values proof lines)
+- [x] 3.33 Owner verdict on v3.2/v3.3 (superseded by the v3.5 approval; the [Draft] copy stays under 3.9)
 - [x] 3.29 (done on v3.2 `2149:74`, 2026-11-16) Outside v3.1 Mink'a card still says "Android + web": correct it to native Android only (owner decision, 2026-11-16)
 - [x] 3.30 (done on v3.2: title now "…with a zero-dependency script") Featured post title says "200-line script"; `scripts/check-boundaries.mjs` has 293 lines. Fix the title or the claim
+- [x] 3.35 Values and Contact proposal round (A/B/C for each); owner picked C for both with two changes (markers on the proof figures, "Just saying hi" removed). Built as v3.4 (D12 and D16 revisions, 2026-11-16)
+- [x] 3.36 Review of v3.4: Outside Values row 2 proof replaced ("1 person · product, design and code"); Tranqui annotation moved off the screenshot; Inside Contact sun mask re-centred (2026-11-16)
+- [x] 3.37 Nav states component, Top and Scrolled for both states (D19); capsule rejected, sticky glass bar accepted (2026-11-16)
+- [x] 3.38 Footer transition as a soft fade (D17 revision, 2026-11-16)
+- [x] 3.39 Backgrounds: proposals A/B/C, A1–A5 iteration, then A5 bytes + C light on v3.5, kept off text with a soft edge (D20, 2026-11-16)
+- [x] 3.40 Owner approves Home v3.5 as the finished desktop mockup (2026-11-16)
+- [ ] 3.41 Replace the hero navs on the v3.5 boards with instances of the Nav set (Top state)
 - [x] 3.25 (owner, 2026-11-16: the button does not come back) Decide whether the hero "Look inside" button stays now that the lens exists (D11 open point)
 - [ ] 3.26 Promote v3.1 over v3 once the owner approves it (rename boards, keep v3 as reference)
 - [x] 3.20 Inside version of the values table (D12): the third column shows how each proof was built (done within 3.27, board `2137:2`)
@@ -66,10 +73,10 @@
 
 ## Phase 4 — Home v3, responsive
 
-Blocked on 3.7 and 3.8.
+Unblocked 2026-11-16 (3.7 and 3.8 done). Start from the v3.5 boards; the v2 tablet and mobile boards no longer exist.
 
-- [ ] 4.1 Tablet 768, Outside and Inside. Start from `2062:2`; the tablet hero uses vertical depth with the name on one line.
-- [ ] 4.2 Mobile 390, Outside and Inside. Start from `2049:2`. The owner rejected name and photo side by side on mobile: intro and CTAs on top, then the name full width, then the subject.
+- [ ] 4.1 Tablet 768, Outside and Inside. Start from v3.5; the tablet hero uses vertical depth with the name on one line.
+- [ ] 4.2 Mobile 390, Outside and Inside. Start from v3.5. The owner rejected name and photo side by side on mobile: intro and CTAs on top, then the name full width, then the subject.
 - [ ] 4.3 Mobile annotation pattern for Inside: numbered pins on the image plus a stacked numbered list below.
 
 ## Phase 5 — Other pages in the v3 direction
@@ -97,5 +104,5 @@ Blocked on 6.4. Code starts only after this phase.
 - [ ] 7.4 Promote `specs/visual-identity/spec.md` from Draft, add the specs the final design needs
 - [ ] 7.5 Write implementation tasks (tokens, fonts, dictionary strings, schema fields, sections)
 - [ ] 7.6 Export web-sized hero images from Figma into `src/` when implementation starts
-- [ ] 7.7 Decide how the contact chat works (scripted or model-written), its questions and the email template. Deferred by the owner on 2026-11-16: do not raise during the design phase (D16).
+- [ ] 7.7 Decide how the contact chat works (scripted or model-written), its questions and the email template. Since v3.4 it must accept free text from the composer, not only the two suggestions. Deferred by the owner on 2026-11-16: do not raise during the design phase (D16).
 - [ ] 7.8 Spanish and Portuguese dictionaries and routes, only when there is content in those languages (D10)

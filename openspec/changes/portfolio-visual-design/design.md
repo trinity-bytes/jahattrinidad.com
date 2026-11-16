@@ -193,15 +193,28 @@ Pages:
 | Writing — blog | `2066:2` |
 | Archive (old portfolio, Home v1) | `0:1` |
 
-Boards on "Portfolio — Home":
+Boards on "Portfolio — Home" (as of 2026-11-16, after the owner cleaned the page):
 
 | Board | Id | Position | Status |
 |---|---|---|---|
-| Lens — states | `2109:103` | x 0, y 0 | Spec column: rest, dragging (x-ray), dropped |
-| Logo — states | `2093:2` | x 0, y 960 | Spec column: the wordmark follows Outside / Inside |
-| **Home v3.1 · OUTSIDE** (current) | `2105:2` | x 3480 | Under audit |
-| **Home v3.1 · INSIDE** (current, task 3.27) | `2137:2` | x 5120 | Under audit |
-| Annotation (Inside) component | `2137:416` | right of Inside | Source of every annotation |
+| Lens — states | `2109:103` | x 0, y 0 | Spec: rest, dragging (x-ray), dropped |
+| Logo — states | `2093:2` | x 0, y 960 | Spec: the wordmark follows Outside / Inside |
+| Annotation (Inside) component set | `2165:10` | x 0, y 1678 | `side=right` `2137:416`, `side=below` `2165:2` |
+| Lens — hover / focus component | `2168:10` | x -8, y 1824 | Pill shown on hover and focus |
+| Nav — states (holder) | `2185:56` | x 0, y 2000 | Component set "Nav" `2185:122` (D19) + two in-context demos |
+| **Home v3.5 · OUTSIDE** | `2191:86` | x 3550, y 0 | **Approved desktop mockup** (2026-11-16) |
+| **Home v3.5 · INSIDE** | `2191:503` | x 5190, y 0 | **Approved desktop mockup** (2026-11-16) |
+
+Everything else in the history below (v3.1–v3.4 boards, proposal boards) was deleted from the page by the owner on 2026-11-16; Figma version history holds it.
+
+### Home v3.5 (latest, approved 2026-11-16)
+
+Built as clones of v3.4 (which were clones of v3.3 with Values and Contact replaced, D12 and D16 revisions). What v3.5 adds:
+
+- **Backgrounds (D20)** in sections 02–05 of both boards. Layer names inside each section, bottom to top: `bg / gradient into next section (C)`, `bg / light (C)` (a frame holding the radial lights), `bg / grain`, `bg / bytes (kept off text, soft edge)` (five stacked copies of the bytes layer, `step 1…5 · margin 40…120px`, each at 20% opacity and masked by "section minus every text box + margin"). The masks are computed from the current text boxes: if copy changes, regenerate them.
+- **Footer fade (D17 revision):** `ground fade` inside `ground edge (hill clipped)` on both boards.
+- **Nav (D19):** the hero navs on the boards are still plain frames in the Top state, not instances of the Nav set.
+- **Fixes from the 2026-11-16 review:** Values row 2 proof on Outside ("1 person · product, design and code"); Tranqui "[canvas glyph field]" annotation moved off the screenshot headline; Inside Contact "sun mask" re-centred on the real sun, 64 px, blur 16 (it sat about 100 px off, so the sun leaked as a dot).
 
 Page reorganized 2026-11-16 at the owner's request: v3 and the first v3.1 Inside were deleted. The v2 boards (`2038:46`, `2049:2`, `2062:2`) no longer exist in the file (checked the same day), so tasks 4.1 and 4.2 must start from the v3.1 boards instead.
 
@@ -225,7 +238,7 @@ Resolved 2026-11-16: Contact in Inside carries the landscape. It reuses the hero
 Built 2026-11-16 on board `2137:2` "Home v3.1 · INSIDE content (task 3.27 proposal)", a clone of `2105:310`. Section headlines are [Draft]. Work rows read Stack / Key decision / What I owned. Inside chips in Experience use sun yellow. Every annotation is an instance of the local component "Annotation (Inside)" `2137:416` (properties: title, note), and its label has a dark backing so it stays readable over covers.
 
 
-Latest boards (2026-11-16, task 3.34): **Home v3.3** Outside `2162:74` (x 7045) and Inside `2162:444` (x 8685), clones of v3.2 with three owner-review fixes:
+Previous boards, deleted 2026-11-16 (task 3.34): **Home v3.3** Outside `2162:74` (x 7045) and Inside `2162:444` (x 8685), clones of v3.2 with three owner-review fixes:
 
 - **Lens hover.** On hover and keyboard focus the lens does not change; a light pill (card `#FFFDF7`, green-950 text and 12% hairline, soft shadow) appears 12 px to its left: "Drag and drop over the page to see how it was built". The I shortcut is not repeated; the hint under the name gives it (owner, 2026-11-16). The state lives outside the mockups as the component `Lens — hover / focus` `2168:10` (above the v3.3 Outside board) and as state 1b in the Lens states spec; the page mockups show only the resting lens. Reason: the bare magnifier read as a search button.
 - **Proof column.** No box and no oversized numeral. Each proof reads like the other two columns: a sun status dot, the figure as a short phrase ("7 days") in Epilogue Medium 34 green-700 (Inside green-300) on the same baseline as the value title, and the caption below. Patterns taken from the owner's Inspiration Garden: Waveyu (number and its descriptor on one line, no decoration) and Shaun Scholtz (the figure lives inside a sentence). Rejected first: sun-soft boxes (flat, the only filled block on the cream page) and a 80–96 px numeral with a sun disc behind it (louder than the value it proves).
@@ -265,6 +278,13 @@ Tooling facts learned the hard way:
 | A rectangle with blend mode COLOR tints every layer below it, including other sections | Use image filters instead |
 | Changing text needs the node's font loaded first | Load Epilogue, Hanken Grotesk and IBM Plex Mono styles before editing |
 | Text inside "Screenshot — …" and "Cover — …" frames belongs to the project images | Exclude those frames from any recolor pass |
+| A mask does not clip sibling frames that have `clipsContent = true` | Set `clipsContent = false` on frames that a sibling mask must cut |
+| A frame with a layer blur ignores the mask inside it; a layer blur on text under a mask does not render | Keep the mask on an outer frame and put the blur on an inner frame |
+| A layer blur on a mask does not feather its edge | Fake a soft edge by stacking copies with growing masks at partial opacity |
+| `x` / `y` in `use_figma` are relative to the parent | Position children of a section in section coordinates |
+| Cloned sections that were FILL collapse inside a HUG auto-layout column | Fix the column width to 1440 and the children to FIXED |
+| The `NOISE` effect rejects a `blendMode` key; text has no `setRangeCharacters` | Omit `blendMode`; edit ranges with `setRangeFills` |
+| Smoothing a step an agent thinks is a defect can remove an effect the owner chose | Ask before "fixing" something the owner picked from a proposal (the lit section tops of C, D20) |
 
 ## 8. Implementation notes (not authorized yet)
 
@@ -278,4 +298,7 @@ These are implications to carry into the implementation tasks, not instructions 
 - Outside and Inside copy are both UI strings: they go through `Dictionary` in `src/lib/i18n.ts`.
 - Project covers and screenshots are content images: `coverImage` in the projects schema already exists.
 - Probable schema additions are listed in the proposal under Affected Areas.
+- **Nav (D19):** `position: sticky; top: 0` on a full-width bar; the Scrolled state appears once the hero has left the viewport (IntersectionObserver on the hero). Glass is `backdrop-filter: blur(20px)` over the translucent surface; provide an opaque fallback under `@supports not (backdrop-filter: …)` and under `prefers-reduced-transparency: reduce`. Mark the current section with `aria-current="true"` on its link, not only with the dot.
+- **Backgrounds (D20):** decorative only, `aria-hidden="true"`, never real text in the DOM (screen readers and find-in-page must not see the bytes). Render the bytes as a generated SVG or canvas background per section. Keep them off text with a CSS `mask-image` built from the text blocks' boxes, feathered from 40 px to 120 px (one real feathered mask replaces the five stacked copies used in Figma). The lights and the gradient into the next section are CSS radial and linear gradients; the grain is an SVG `feTurbulence` noise at low opacity. Hide the bytes under `prefers-reduced-transparency` and in forced-colors mode. Do not add progressive blur near text: the owner rejected it.
+- **Footer (D17):** the fade is a linear gradient over the bottom 240 px of the hill layer.
 - `openspec/config.yaml` says syntax highlighting is Shiki while `CLAUDE.md` says code fences render unhighlighted. The post template in Figma shows a plain unhighlighted block. This contradiction predates this change and needs an owner decision before the post page is built.
