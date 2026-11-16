@@ -2,7 +2,7 @@
 
 > Authority: `proposal.md` (decisions, open questions), `design.md` (values, Figma map), `assets.md` (images).
 > This change is design work in Figma. There is no test runner and nothing to build: the check for a design task is a screenshot reviewed against `design.md`, then the owner's verdict.
-> Last updated: 2026-11-16 (Home v3.5 desktop mockup approved).
+> Last updated: 2026-11-16 (Home v3.5 tablet and mobile approved; next session starts Phase 5).
 
 ## Phase 1 — Brand foundation
 
@@ -75,13 +75,16 @@
 
 Unblocked 2026-11-16 (3.7 and 3.8 done). Start from the v3.5 boards; the v2 tablet and mobile boards no longer exist.
 
-- [ ] 4.1 Tablet 768, Outside and Inside. Start from v3.5; the tablet hero uses vertical depth with the name on one line.
-- [ ] 4.2 Mobile 390, Outside and Inside. Start from v3.5. The owner rejected name and photo side by side on mobile: intro and CTAs on top, then the name full width, then the subject.
-- [ ] 4.3 Mobile annotation pattern for Inside: numbered pins on the image plus a stacked numbered list below.
+- [x] 4.1 Tablet 768, Outside and Inside. Start from v3.5; the tablet hero uses vertical depth with the name on one line. Built 2026-11-16 as proposals: Outside `2211:86`, Inside `2213:86` (design.md "Home v3.5 responsive").
+- [x] 4.2 Mobile 390, Outside and Inside. Start from v3.5. The owner rejected name and photo side by side on mobile: intro and CTAs on top, then the name full width, then the subject. Built 2026-11-16 as proposals: Outside `2210:86`, Inside `2212:86`.
+- [x] 4.3 Mobile annotation pattern for Inside: numbered pins on the image plus a stacked numbered list below. Applied on both Inside boards, tablet included (2026-11-16).
+- [x] 4.4 Owner verdict on the four responsive boards: approved after one review round (owner, 2026-11-16: "queda. de momento no tengo observaciones").
+- [ ] 4.6 Still undecided, carried forward (owner raised no objection, but did not decide): note opacity in the Inside lists (40%, fails AA; 60% would pass) and a touch variant of the hero hint ("press I" on phones). See design.md "Home v3.5 responsive".
+- [ ] 4.5 Design the open state of the mobile menu (links + EN / ES / PT); only the closed button exists.
 
 ## Phase 5 — Other pages in the v3 direction
 
-Blocked on Phase 3 approval.
+Unblocked: Home v3.5 approved at desktop, tablet and mobile (2026-11-16). The owner chose this as the next session's work: "diseñar las 3 vistas faltantes, los casos de estudio, proyectos y el blog". Start from the v3.5 boards (patterns, backgrounds D20, nav D19, lens D11, Outside/Inside D18); the 2026-11-09 v2 pages listed in design.md §6 are reference only.
 
 - [ ] 5.1 Case study — Inspiration Garden, Outside and Inside
 - [ ] 5.2 Work index

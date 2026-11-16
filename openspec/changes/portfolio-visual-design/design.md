@@ -205,7 +205,39 @@ Boards on "Portfolio — Home" (as of 2026-11-16, after the owner cleaned the pa
 | **Home v3.5 · OUTSIDE** | `2191:86` | x 3550, y 0 | **Approved desktop mockup** (2026-11-16) |
 | **Home v3.5 · INSIDE** | `2191:503` | x 5190, y 0 | **Approved desktop mockup** (2026-11-16) |
 
+| Home v3.5 · OUTSIDE · MOBILE 390 | `2210:86` | x 6830, y 0 | **Approved** (2026-11-16), task 4.2 |
+| Home v3.5 · OUTSIDE · TABLET 768 | `2211:86` | x 7380, y 0 | **Approved** (2026-11-16), task 4.1 |
+| Home v3.5 · INSIDE · MOBILE 390 | `2212:86` | x 8388, y 0 | **Approved** (2026-11-16), tasks 4.2 + 4.3 |
+| Home v3.5 · INSIDE · TABLET 768 | `2213:86` | x 8938, y 0 | **Approved** (2026-11-16), tasks 4.1 + 4.3 |
+
 Everything else in the history below (v3.1–v3.4 boards, proposal boards) was deleted from the page by the owner on 2026-11-16; Figma version history holds it.
+
+### Home v3.5 responsive (approved 2026-11-16)
+
+Each board is a clone of the approved desktop board of its state, reflowed; same sections, same order, same copy. Gutters 20 (mobile) and 40 (tablet). Type steps down from desktop: 60→34/48, 48→34/40, 44→32/40, 34→26/30, 18→16/17; 16 and below unchanged.
+
+- **Hero.** Intro and CTA on top, then "Jahat" full width (Epilogue Medium 130 on mobile, 210 on tablet) with the sun just above it and the grass covering the letter bases, then the portrait (300 wide on mobile, centred; 360 on tablet, right). The hero is 911 / 991 px tall; the portrait is cropped at 91% of its height, as on desktop. Sky and hill are the same images, scaled and placed so the sun and the grass edge land on the name.
+- **Nav, mobile.** Logo, Contact, and a new menu button (Lucide `menu`, 1 px stroke) that holds Work, Experience, Notes and EN / ES / PT. The open state is not designed (task 4.5). Tablet keeps the desktop nav.
+- **Marker and hint, mobile.** They move under the CTA. On Outside they turn green-700, because green-300 over the bright sky was unreadable; Inside keeps green-300.
+- **Values.** Mobile drops the two column headers and stacks value then text; tablet keeps two columns (value 248 | text). The proof card goes full width below the rows on both.
+- **Work.** Viora stacks image over info. Mink'a and Tranqui: one column on mobile, two equal-height cards on tablet. Fact rows stack label over text everywhere except Viora on tablet.
+- **Experience.** The left column moves above the list. Entries stack the date on mobile and keep a 112 px date column on tablet.
+- **Notes.** Writing and Elsewhere stack. Post rows stack on mobile.
+- **Contact.** Facts stack on mobile; on tablet "Looking for" is 320 wide so it stays on two lines. The composer goes full width on mobile.
+- **Footer.** Tagline, then the link columns (2 + 1 on mobile, 3 on tablet), then the ghost name sized to the width.
+- **Inside annotations (4.3).** Every annotation becomes a numbered pin on its dashed bound plus a numbered note in a stacked list: the hero list is a band right below the hero, the other lists close their section. Numbering restarts per section. Tablet uses the same pattern (agent's choice: the desktop side labels collide with copy at 768).
+- **Lens and Back outside** sit at the bottom-right of the first viewport (844 / 1024), since they are fixed to the viewport.
+- **Backgrounds (D20).** Lights, gradients and grain are re-fitted per section; the bytes masks were regenerated from the new text boxes (boolean subtract, not flattened: flatten fails on these shapes).
+
+Audit fixes applied the same day: suggestion chips 44 px tall on mobile; Experience role and organisation on two lines on mobile, with the leading "·" dropped (a separator, not copy); the Notes `type` holder hugs its chip (it clipped 2 px; the desktop boards still do); tablet Values value column 290 and the proof shot at its 376:196 ratio; every Inside bound and pin re-snapped to its element. Implementation note: text links ("See the project →", "Copy my email", "LinkedIn", "All writing →") keep their look but get a 44 px hit area through padding.
+
+Owner review round (2026-11-16): "el sujeto de la foto queda muy abajo… no importa que el texto quede un poco más comido por la loma"; the bytes "se pierden"; "hay gaps entre algunas secciones"; on Inside mobile the notes "al estar tan agrupados, llaman más la atención"; "en el hero se ve un gap al inferior de la loma". Applied on all four boards:
+- Hero: portrait 40 px higher on mobile (60 on tablet), near hill 40 / 30 px higher so it covers more of the name; heroes are now 871 / 931 px. The hill is scaled ×1.3 around its grass edge so its transparent rotated corner falls below the hero (that corner was the gap).
+- The section gaps were stale background layers: gradient, light, grain and bytes kept the old section heights after earlier fixes. Every section's background is now refitted to its height. Rule: after any change that alters a section's height, refit its `bg /` layers and masks.
+- Bytes masks on the responsive boards use smaller margins: 12–36 px on mobile, 20–52 px on tablet (desktop keeps 40–120). Step and mask names state the real margin.
+- Inside notes are quieter: on-element pins are 14 px outline circles (cream 45% stroke, number 9 px at 75%); list rows use 11 px text, 8 px spacing; the hero notes band has 16 / 24 padding.
+
+Open points for the owner (task 4.4): the annotation notes in the stacked lists measure 3.2–3.6:1 (12 px mono at 40%, inherited from the desktop spec; 60% would pass AA); the hint still says "press I" on phones; mobile hero is taller than the 844 viewport; white "Jahat" on the bright mobile sky (desktop is also white; v2 mobile used green-950 for contrast).
 
 ### Home v3.5 (latest, approved 2026-11-16)
 
