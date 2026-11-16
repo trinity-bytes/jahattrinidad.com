@@ -129,3 +129,34 @@ Prose inside MDX content entries is exempt: that is content, and the
 
 The historical record is `openspec/changes/archive/2026-09-18-portfolio-scaffold/proposal.md`
 section D1. Read it for the reasoning, not for the status.
+
+## Visual design lives in Figma — `tokens.css` is a placeholder
+
+The visual design is in progress and is recorded in
+`openspec/changes/portfolio-visual-design/`. Read it before any design,
+brand, copy, image or UI task:
+
+- `proposal.md` — decisions with the rejected alternatives, and the open
+  questions. Start here.
+- `design.md` — palette, type, the Outside/Inside model, the hero layer
+  composition, and the Figma node map.
+- `assets.md` — hero image files and the prompts that generated them.
+- `tasks.md` — what is done and what is next.
+
+Three rules follow from it, and they are the ones a session without
+context gets wrong:
+
+**`src/styles/tokens.css` is not the brand.** Its neutral and blue values
+are scaffold placeholders. The brand is a green ramp plus sun yellow, set
+in Epilogue, Hanken Grotesk and IBM Plex Mono. Never derive a color, a
+font or an image prompt from `tokens.css`.
+
+**No UI code until the owner approves the hi-fi.** Design proposals are
+built in the Figma file (`gq6glEp9QrPOnEyYG9dldh`), beside the current
+board, never over it. Do not offer CSS or component code as an
+alternative during the design phase.
+
+**`design/` is ignored by git on purpose.** The hero images live in the
+Figma file; the local copies are the owner's working files and a fresh
+clone does not have them. Do not assume they exist and do not commit
+them; `assets.md` says what they are and how to regenerate them.
