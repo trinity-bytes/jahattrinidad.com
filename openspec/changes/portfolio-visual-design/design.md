@@ -373,3 +373,31 @@ Hierarchy the owner set for the next attempt: **Featured projects → More proje
 - Bytes regenerated on 01 Featured (`2239:51`) and 02/03 (`2242:52`). Each layer covers the full current section. The "where the light falls" fields sit in the open areas: Featured at the top right and around Garden; More projects at the top right, the left middle and beside Small experiments. The seams sit at the top and bottom. Each of the 5 steps (20% opacity) is masked by the section minus the text that sits on the background, expanded by the step margin with rounded corners. The cards are opaque, so they cover the bytes without any mask. If you change copy or layout, regenerate the masks.
 - Responsive (2026-11-16): tablet 768 `2247:2` and mobile 390 `2248:2`, to the right of the desktop board. Each is built from that breakpoint's Home v3.5 sections (hero, Work, the Experience background, Contact, footer) plus the desktop v2 content: the hero has no portrait and the word "Work" is right-aligned behind the hill, following the owner's desktop adjustment. Featured: Viora, Mink'a + Tranqui (paired on tablet, stacked on mobile), then Garden. More projects: 2 columns on tablet, 1 on mobile. Small experiments: 2 columns on tablet, stacked on mobile. Bytes were regenerated on all four sections (Featured `2247:44` / `2248:49`, More `2247:355` / `2248:360`).
 - Approved 2026-11-16 at all three breakpoints ("de momento queda"). The owner will make manual adjustments on the boards; re-read them before building on them. Possible mobile improvement, not applied: compact horizontal cards for More projects, which would cut about 2,700 px of scroll and make the hierarchy clearer.
+
+## Case study v3 (task 5.1) — desktop proposal, 2026-11-16
+
+Boards on "Case study — Inspiration Garden" (`2047:13`): **Outside `2257:2`** (x 3400) and **Inside `2263:2`** (x 5040). The 2026-11-09 boards (`2047:14`, `2050:2`, `2063:2`) stay to their left as reference. Outside was built from a clone of Work index v2; Inside is a clone of Outside with the Home v3.5 Inside hero overlay, sun mask, hill filter, Nav, section backgrounds, Contact, footer and Viora card cloned in, then a recolor pass by the state table (section 3.4).
+
+Sections, one pattern each, neighbours alternating sand/cream (Inside 900/950):
+
+| # | Section | Pattern | Inside |
+|---|---|---|---|
+| 01 | Hero | Home landscape; "Garden" between sky and hill (right-aligned); "← All work", meta, name, one-liner, two buttons | Dusk, outlined name, "Read the API docs" |
+| 02 | Overview | Real product shot in a browser frame overlapping the hero by 64 px, then four figures on sun-soft markers (46 days · 7 days · 33 releases · 1 person) | Three annotations below the shot (one origin, ⌘K search, three.js canvas); figures v1.0.0 · v0.1.0 · 3 workspaces · 1 origin |
+| 03 | The problem | Two columns: headline / body + "The constraint" row | "The requirements" |
+| 04 | What it does | Three fixed rows: screenshot left, number/title/text right | "How it works" (FTS5, hybrid model, edge thumbnails) |
+| 05 | Decisions | Table: # / The choice / Why / What it cost | Decision / Why / Trade-off (one origin, agents write directly, hybrid model, thumbnails at the edge) |
+| 06 | What I got wrong | Headline + text, then before / after pair | Glass vs contrast, PR #1 on day 11 |
+| 07 | How it grew | Four milestones on one rule (Day 0, 7, 36, 46) | Tags, plus the release workflow |
+| 08 | Next case study | Viora card (Inside: the Home Inside Viora card) + "All work →" | — |
+| — | Contact, footer | Home clones | Home Inside clones |
+
+Facts come from the `my-inspiration-garden` repo on 2026-11-16: first commit Sep 23, v0.1.0 Sep 30 (day 7), 10 tags on Oct 29 (v0.5.0 → v0.8.1, day 36), solid cartoon panels merged Oct 4 (PR #1, day 11), v1.0.0 Nov 8 (day 46, 29 earlier tags), 33 tags, 290 commits. Days count elapsed days (first commit = day 0), matching Home's "7 days" and "day 46". Note: Home Inside says "34 tags"; the repo has 33. Screenshots are the repo's `docs/images` (converted to PNG). Years are left out, as on the Work index (timeless).
+
+Open: all new copy is [Draft]; decision 04 trade-off is [Owner: …]; the "before" shot of v0.1.0 is a placeholder; bytes masks were regenerated after the copy pass, so regenerate them again after any copy edit.
+
+### Case study v4 — one version (D21, 2026-11-17)
+
+Board `2270:2` (x 6700), a clone of the v3 Outside board with the technical layer from v3 Inside merged in, section by section: a stack line in the hero; three ink annotations below the product shot (one origin, ⌘K search, three.js canvas) and technical captions on the figures; "Requirements" and "Constraint" rows in the problem; an "Under the hood" row after each feature; a mono technical subtitle under each decision title, with the Why and Trade-off texts from Inside; technical lines in the milestones and the CI release workflow in the footnote. No lens dock. Bytes masks were regenerated on every section.
+
+Owner review of v4 (2026-11-17): "me gusta la dirección", with manual edits on the hero and footer. Read back the same day: the hero is 745 px tall and no longer has the "Garden" display word (sky, near hill, Nav and Intro remain; the sky and hill transforms were changed by hand); the footer is 561 px, its columns start at y 67 and the ghost name sits at y 261. The owner's version wins: re-read both before building tablet and mobile.

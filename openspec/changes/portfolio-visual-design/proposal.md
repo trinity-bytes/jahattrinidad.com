@@ -238,3 +238,12 @@ Nothing in `src/` changes, so there is nothing to roll back in code. In Figma, e
 - Inside communicates how things are built, not only a darker theme.
 - All Draft copy is either approved or replaced.
 - Open Questions 3, 4 and 5 are answered before implementation tasks are written.
+
+### D21 — The case study is one version: story and technique together — Accepted (2026-11-17, owner)
+
+Owner, verbatim: "creo que en el caso de estudio no tienen mucho sentido dividirlo en inside y outside. ya que el caso de estudio es justamente el momento en el que puedo combinar ambos: habilidades comunicativas y conocimiento técnico. creo que ambos deberían convivir ahí".
+
+- Case study pages have no Outside/Inside states. They use the light palette, and each section pairs a plain-language lead with a technical layer: an "Under the hood" row (mono label, Hanken 15 text) after each feature, "Requirements" and "Constraint" rows in the problem, a mono subtitle under each decision title, technical lines in the milestones, and annotations in ink (the Inside opacities) below the product shot.
+- **Supersedes** D2 and D18 for case study pages only; Home and other pages keep both states.
+- No lens and no I shortcut on case study pages (owner, 2026-11-17: "quitalas"): the lens dock and the footer line "Press I to look inside" are removed on these pages. Implementation: the footer's "This site" column omits that line on case study routes, and the I key handler is not mounted there.
+- Rejected: the v3 Outside `2257:2` and Inside `2263:2` pair (kept on the page as reference).
