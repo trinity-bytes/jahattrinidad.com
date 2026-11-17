@@ -2,7 +2,7 @@
 
 > Authority: `proposal.md` (decisions, open questions), `design.md` (values, Figma map), `assets.md` (images).
 > This change is design work in Figma. There is no test runner and nothing to build: the check for a design task is a screenshot reviewed against `design.md`, then the owner's verdict.
-> Last updated: 2026-11-17 (case study v5 `2285:2` built from the v4 audit; next: owner review of v5, then the audit's P2 or tablet/mobile).
+> Last updated: 2026-11-17 (case study v6 `2298:2` whiter surfaces + claim-first "How it grew"; Notes index v3 `2301:86` and post template v3 `2303:2` desktop built; next: owner review of the Notes boards, then tablet and mobile).
 
 ## Phase 1 — Brand foundation
 
@@ -88,7 +88,7 @@ Unblocked: Home v3.5 approved at desktop, tablet and mobile (2026-11-16). The ow
 
 - [ ] 5.1 Case study — Inspiration Garden, Outside and Inside. Desktop proposal built 2026-11-16: Outside `2257:2`, Inside `2263:2` on the case study page (design.md "Case study v3"). Owner rejected the Outside/Inside split for case studies (D21, 2026-11-17); one-version board v4 `2270:2` (x 6700). Lens and I shortcut removed from case study pages (D21). Owner likes the direction and edited the hero (no display word) and footer by hand (2026-11-17). v4 audited the same day (audit.md "Case study v4"). v5 `2285:2` (x 8340) applies the P1 fixes, the Garden facts from Engram and the "Two things I got wrong" section (design.md "Case study v5"). **Next session** (owner, 2026-11-17: "continuamos en la próxima"): owner reviews v5 in Figma; then either the audit's P2 list or tablet 768 and mobile 390. Owner content still needed: [Draft] copy (problem, both wrong-section stories, closing), terminal wording `[Owner: confirm wording]`, Viora "My part".
 - [x] 5.2 Work index (v2: desktop `2239:17`, tablet `2247:2`, mobile `2248:2`; approved by the owner 2026-11-16, "de momento queda"; the owner will make some manual adjustments)
-- [ ] 5.3 Writing index and post template
+- [ ] 5.3 Writing index and post template. Desktop proposal built 2026-11-17: Notes index v3 `2301:86`, post template v3 `2303:2` (design.md "Notes index and post template v3"). Next: owner review; then tablet and mobile.
 
 ## Phase 6 — Hi-fi
 

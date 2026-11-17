@@ -188,7 +188,7 @@ Pages:
 |---|---|
 | Brand — Identity v1 (palette sheet `2025:130`, type sheet) | `2005:130` |
 | Portfolio — Home | `2029:2` |
-| Case study — Inspiration Garden (latest board: v5 `2285:2`, x 8340; v4 `2270:2` kept as reference) | `2047:13` |
+| Case study — Inspiration Garden (latest board: v6 `2298:2`, x 10000; v4 `2270:2` kept as reference; v5 deleted by the owner) | `2047:13` |
 | Work — all projects | `2065:2` |
 | Writing — blog | `2066:2` |
 | Archive (old portfolio, Home v1) | `0:1` |
@@ -425,3 +425,50 @@ Same day, after checking the `my-inspiration-garden` Engram memory (owner-author
 - The dark glass of day 35 was a "Viora-style liquid glass"; its 5.3:1 over white is confirmed by the session record.
 - **Second story, applied (owner: "dale").** "What I got wrong" is now "Two things I got wrong.": the sky story, then "An agent wiped the tags of 58 items" (day 53, 2026-11-15): a Zod `.default([])` survived `.partial()`, so a PATCH that omitted `tags` cleared them; restored from a local snapshot; hotfix v1.2.1 (`c6aaead`, "keep stored tags and categories when a patch omits them") the same day. Two code cards (before v1.2.0 / after v1.2.1) show it. Decision 02's cost now names the incident.
 - The `&amp;` in the screenshots was already decoded in the data on 2026-11-15, so recapturing the screenshots fixes it.
+
+### Case study v6 — whiter surfaces (2026-11-17)
+
+Board `2298:2` (x 10000), a clone of v5 `2285:2` with only the backgrounds changed. Owner: "me gustaría que el fondo reduzca los tonos amarillos... una tendencia hacia los colores más 'blancos' de la paleta. El amarillentismo queda bien en el home pero no tanto acá."
+
+- Section bands shift one step lighter: cream `#FAF6E8` → card `#FFFDF7`, sand `#F3EDD6` → cream `#FAF6E8`. Sand is no longer used on the case study.
+- Each "bg / gradient into next section" now ends in the next section's new fill.
+- The sun-soft glows (`bg / light`, sections 03, 05, 07) drop from 55% to 15%; the green glows stay at 22%.
+- Hero, Contact and footer are unchanged. The home keeps the warm cream/sand bands.
+
+#### Scannability: claim first (v6, 2026-11-17)
+
+Owner: "no es tan fácil de escanear con la vista... no se identifica al instante qué son cifras relevantes, o por qué son relevantes... revisar cómo se presenta la información y cómo rápidamente el visitante puede entender el valor (de criterio, o aporte mío)". Not a font problem.
+
+Principle: each block leads with what it shows; the figure is the proof; the date is metadata. Reading only the large text must give the value.
+
+Applied to "How it grew" (`2298:955`) as the pilot:
+- Day labels drop from Epilogue Medium 34 to IBM Plex Mono Medium 13 (`DAY 0`).
+- Milestone titles become claims in Epilogue SemiBold 26: "The foundation came first", "In daily use within a week", "Shipped in small steps", "v1.0 without a rewrite". Bodies carry the facts already on the board.
+- The mono footnote is replaced by a proof row in the Home proof pattern (sun dot, "33 releases" in Epilogue Medium 34 green-700, caption). The old footnote stays hidden as `2298:1140`.
+
+Next: owner validates the pattern, then it is applied to the other sections.
+
+## Notes index and post template v3 (task 5.3) — desktop proposal, 2026-11-17
+
+Boards on "Writing — blog" (`2066:2`), to the right of the 2026-11-09 v2 boards (kept as reference). Built from the Work index v2 board (hero, Contact, footer) and the Home v3.5 Notes section, so they share the Home look. The page is "Notes", following the nav label (D15).
+
+**Notes index v3 `2301:86`** (x 3400):
+- Hero: Work v2 landscape with the display word "Notes", right-aligned at 64 px from the edge. The intro copy is [Draft].
+- 01 Writing `2301:629`: the Home Notes section, extended. "Essays and tutorials" + "RSS feed →"; the latest post featured (the real boundary-checker post, 2 min read, Nov 20, 2024); then rows with type chip, title, a one-line description under it and date · minutes on the right. "Hello, world" is real; the other three rows are placeholders. Elsewhere stays as the right column (placeholders). Background is cream `#FAF6E8` (whiter, as on case study v6), so the `#FFFDF7` featured card still reads.
+- 02 Contact and the footer: Work v2 clones.
+
+**Post template v3 `2303:2`** (x 5040), shown with the real post "Why this site enforces its own architecture with a zero-dependency script":
+- Compact hero (560): sky and far hills, no display word. Meta line "← ALL NOTES · ESSAY · date · read time", title Epilogue SemiBold 56, the description as the dek.
+- 02 Article `2303:25`: reading column 680 (Hanken 19/165), H2 in Epilogue SemiBold 32, inline code in IBM Plex Mono green-700, a plain code block (green-950, file name and Copy, no highlighting), a pull quote with a green-700 rule, a green-50 note, an optional figure with a caption, then "Updated · tags" and "Keep reading" rows. On the right, a sticky "In this post" list and "First published on dev.to ↗" (from `canonicalUrl`).
+- Body copy is condensed from the real post; the quote paraphrases its "a lock, not a vault" line.
+
+Open points:
+- **Code highlighting.** `openspec/config.yaml` says Shiki; `CLAUDE.md` says code fences render unhighlighted by design. The template follows `CLAUDE.md` (plain). Owner decision still needed before the post page is built.
+- **Post type.** The chips show Essay / Tutorial, but the `posts` schema has no type field. Add it at implementation or drop the chips.
+- **Bytes.** Not regenerated: the Notes section keeps the Home masks (stretched section), the Article bytes layer is hidden. Regenerate after the owner approves the layout.
+- Tutorial blocks (step label) from v2 are not shown on v3; the essay is the example.
+- Tablet and mobile not started.
+- Owner, 2026-11-17: "ajusta el hero de notes index y footer de ambos para que sean como en el caso de estudio". The index hero is now a clone of the case study v6 hero (`2304:2`): no display word, intro with "NOTES · WRITING AND ELSEWHERE", title "Notes", sub [Draft]; back link and buttons hidden. Both footers are clones of the case study v6 footer (index `2304:29`, post `2304:51`). The post hero is unchanged.
+- Owner, same day: "el hero del notes index necesita un rework, eso no va a cambiar así que podemos usar ese factor. En el caso de estudio quité el texto en grande porque el titular cambiaba de acuerdo al nombre del proyecto, en este caso no." The display word "Notes" (`2305:3`) is back between the sky and the near hill, right-aligned at 64 px, on the case study hero layers. Because the word names the page, the intro has no title: marker, headline (Epilogue SemiBold 34) and sub, both [Draft]. **Rule:** use the display word only on pages whose title never changes (Home, Work, Notes); not on case studies.
+- **Contact on posts is compact (owner approved, 2026-11-17).** The full Contact section stays on Home, Work, case studies and the Notes index: every page is an entry point and the site has one goal. On a post the reader came to read, so a full "Let's talk" sky reads as a sales pitch. The post ends with an author card `2306:2` between the tags line and "Keep reading": avatar placeholder (JT on green-100, to be replaced by the profile photo), "Written by Jahat Trinidad", "Design engineer, frontend and product. Open to an internship, now.", and a "Write to me →" button that goes to Contact. The full Contact section on the post board is hidden (`2303:128`), so the footer hill rises straight out of the article background. Suggested, not applied: a Contact headline per page context (for example on case studies) so the repeated block does not become invisible.
+- Owner: "sin el cta de antes el footer queda horrible". The footer hill needs a sky to rise out of. On the post, the Contact section is kept as a **sky band** `2303:128` (420 px, its content hidden) with a cream-to-transparent fade `2307:2` (220 px) at the top, so the article fades into the sunset and the hill rises from it. Rule: the footer always sits under a sky; a page without the full Contact gets the sky band.
