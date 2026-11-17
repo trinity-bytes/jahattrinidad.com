@@ -188,7 +188,7 @@ Pages:
 |---|---|
 | Brand — Identity v1 (palette sheet `2025:130`, type sheet) | `2005:130` |
 | Portfolio — Home | `2029:2` |
-| Case study — Inspiration Garden | `2047:13` |
+| Case study — Inspiration Garden (latest board: v5 `2285:2`, x 8340; v4 `2270:2` kept as reference) | `2047:13` |
 | Work — all projects | `2065:2` |
 | Writing — blog | `2066:2` |
 | Archive (old portfolio, Home v1) | `0:1` |
@@ -401,3 +401,27 @@ Open: all new copy is [Draft]; decision 04 trade-off is [Owner: …]; the "befor
 Board `2270:2` (x 6700), a clone of the v3 Outside board with the technical layer from v3 Inside merged in, section by section: a stack line in the hero; three ink annotations below the product shot (one origin, ⌘K search, three.js canvas) and technical captions on the figures; "Requirements" and "Constraint" rows in the problem; an "Under the hood" row after each feature; a mono technical subtitle under each decision title, with the Why and Trade-off texts from Inside; technical lines in the milestones and the CI release workflow in the footnote. No lens dock. Bytes masks were regenerated on every section.
 
 Owner review of v4 (2026-11-17): "me gusta la dirección", with manual edits on the hero and footer. Read back the same day: the hero is 745 px tall and no longer has the "Garden" display word (sky, near hill, Nav and Intro remain; the sky and hill transforms were changed by hand); the footer is 561 px, its columns start at y 67 and the ghost name sits at y 261. The owner's version wins: re-read both before building tablet and mobile.
+
+### Case study v5 — audit P1 fixes (2026-11-17)
+
+Board `2285:2` (x 8340), a clone of v4 `2270:2` (owner's hero and footer kept). It applies the P1 findings of the v4 audit, which the owner accepted ("dale"):
+
+- **Repetition cut.** The three ink annotations under the product shot are gone. At a glance is now four facts in the Contact pattern (My role / Built with / Status / Who adds to it) instead of 46 days · 7 days · 33 releases · 1 person, which the timeline already carries. The stack line left the hero (it lives in At a glance) and the meta drops "SOLO".
+- **One fact, one place.** Under the hood 02 now covers link unfurl, R2 preview copies and colour indexing (the hybrid model stays in decision 03); Under the hood 03 covers the PWA and the sub-480 px bottom sheets (thumbnails stay in decision 04). Sources: Garden `docs/api.md`, `apps/web/src/styles/glass.css`.
+- **The agents are shown.** New feature row "AI agents keep it tidy" with a terminal card. The session is illustrative and marked `[Owner: replace with a real agent session]`; tags, endpoints and the 64-tag count come from the live API on 2026-11-17.
+- **Numbering.** Only sections are numbered; feature and decision numbers are gone and Contact has no number.
+- **Phone vs slow phones.** Decision 04 is renamed "Thumbnails, never originals" (mobile arrived in v1.0.0, so "phones first" was not true).
+- **What I got wrong, corrected.** The repo contradicts the v4 copy: PR #1 (day 11) was about the sky going unnoticed, the glass no longer fitting and navigation speed, not contrast; and glass came back on day 35 (v0.3.0) as dark glass at 75% (`--glass-fill`), documented at 5.3:1 over a pure white card. The v0.1.0 placeholder is replaced by three panels rebuilt from each release's tokens (v0.1.0 light glass at 65%; day 11 solid cartoon, ink ~14:1; day 35 to today dark glass). No v0.1.0 build is needed.
+- **Closing.** How it grew ends with "Where it is now" (item count is `[Owner: …]`; the API has no total and the garden is not paged) and "What I would do differently" [Draft].
+
+Bytes masks were rebuilt on every edited section. Still open from the audit (P2): repeated canvas look in features 01/02 (only re-cropped), the `&amp;` and doubled titles inside the screenshots, the Viora next-card size and placeholder, Work active state in the nav, availability repeated in the footer, fewer bytes bands, a design-process artifact.
+
+Same day, after checking the `my-inspiration-garden` Engram memory (owner-authorized):
+
+- The terminal now shows the real 2026-11-15 cleanup session, reconstructed from its record (75 → 64 tags, ~35 items translated, 26 titled, a 2-level category tree of 4 roots and 9 leaves, 190 items sorted), marked `[Owner: confirm wording]`. The earlier illustrative session used the tag `inspiration`, which that cleanup deleted.
+- Era panels show current tags (design 137 · portfolio 61 · ai 39, live API).
+- Decision 04 is filled: originals cost 265 MB per phone session, thumbnails brought media to about 1.2 MB (p99 frame ~600 → ~60 ms in the same benchmark); trade-off is the Cloudflare Images dependency, with a fall-back to the original.
+- The item count is filled: about 190 items (Status fact and "Where it is now").
+- The dark glass of day 35 was a "Viora-style liquid glass"; its 5.3:1 over white is confirmed by the session record.
+- **Second story, applied (owner: "dale").** "What I got wrong" is now "Two things I got wrong.": the sky story, then "An agent wiped the tags of 58 items" (day 53, 2026-11-15): a Zod `.default([])` survived `.partial()`, so a PATCH that omitted `tags` cleared them; restored from a local snapshot; hotfix v1.2.1 (`c6aaead`, "keep stored tags and categories when a patch omits them") the same day. Two code cards (before v1.2.0 / after v1.2.1) show it. Decision 02's cost now names the incident.
+- The `&amp;` in the screenshots was already decoded in the data on 2026-11-15, so recapturing the screenshots fixes it.

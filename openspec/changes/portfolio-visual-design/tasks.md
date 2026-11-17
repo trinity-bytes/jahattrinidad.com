@@ -2,7 +2,7 @@
 
 > Authority: `proposal.md` (decisions, open questions), `design.md` (values, Figma map), `assets.md` (images).
 > This change is design work in Figma. There is no test runner and nothing to build: the check for a design task is a screenshot reviewed against `design.md`, then the owner's verdict.
-> Last updated: 2026-11-16 (Home closed; Work index v2 approved at all three breakpoints; next: case study).
+> Last updated: 2026-11-17 (case study v5 `2285:2` built from the v4 audit; next: owner review of v5, then the audit's P2 or tablet/mobile).
 
 ## Phase 1 — Brand foundation
 
@@ -86,7 +86,7 @@ Unblocked 2026-11-16 (3.7 and 3.8 done). Start from the v3.5 boards; the v2 tabl
 
 Unblocked: Home v3.5 approved at desktop, tablet and mobile (2026-11-16). The owner chose this as the next session's work: "diseñar las 3 vistas faltantes, los casos de estudio, proyectos y el blog". Start from the v3.5 boards (patterns, backgrounds D20, nav D19, lens D11, Outside/Inside D18); the 2026-11-09 v2 pages listed in design.md §6 are reference only. 5.2 Work index approved the same day. **Next session: 5.1 Case study** (owner, 2026-11-16).
 
-- [ ] 5.1 Case study — Inspiration Garden, Outside and Inside. Desktop proposal built 2026-11-16: Outside `2257:2`, Inside `2263:2` on the case study page (design.md "Case study v3"). Owner rejected the Outside/Inside split for case studies (D21, 2026-11-17); one-version board v4 `2270:2` (x 6700). Lens and I shortcut removed from case study pages (D21). Owner likes the direction and edited the hero (no display word) and footer by hand (2026-11-17). Next session: re-read v4, then tablet 768 and mobile 390.
+- [ ] 5.1 Case study — Inspiration Garden, Outside and Inside. Desktop proposal built 2026-11-16: Outside `2257:2`, Inside `2263:2` on the case study page (design.md "Case study v3"). Owner rejected the Outside/Inside split for case studies (D21, 2026-11-17); one-version board v4 `2270:2` (x 6700). Lens and I shortcut removed from case study pages (D21). Owner likes the direction and edited the hero (no display word) and footer by hand (2026-11-17). v4 audited the same day (audit.md "Case study v4"). v5 `2285:2` (x 8340) applies the P1 fixes, the Garden facts from Engram and the "Two things I got wrong" section (design.md "Case study v5"). **Next session** (owner, 2026-11-17: "continuamos en la próxima"): owner reviews v5 in Figma; then either the audit's P2 list or tablet 768 and mobile 390. Owner content still needed: [Draft] copy (problem, both wrong-section stories, closing), terminal wording `[Owner: confirm wording]`, Viora "My part".
 - [x] 5.2 Work index (v2: desktop `2239:17`, tablet `2247:2`, mobile `2248:2`; approved by the owner 2026-11-16, "de momento queda"; the owner will make some manual adjustments)
 - [ ] 5.3 Writing index and post template
 

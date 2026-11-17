@@ -162,3 +162,47 @@ Applied on v3.3 (Outside `2162:74`, Inside `2162:444`) after re-reading this aud
 - Findings 10–12 are superseded by the v3.3 rule in `design.md` (pin on the target's bound, label in free space, redundant annotations removed).
 
 Still open, not design decisions: placeholders (task 3.14), the [Draft] Inside copy and the [Owner] Viora rows (both need the owner's content), and finding 8 (WCAG 2.1.4, for implementation). The state mocks inside the Lens spec are illustrations: their hero headline still breaks into three lines and their Inside annotations use the old sun style; the boards are the reference.
+
+---
+
+# Audit: Case study v4 `2270:2` (Inspiration Garden)
+
+> Date: 2026-11-17. Read-only review of the full desktop board (1440 × 9897) at 1:1, section by section. Owner's request: "aun siento que no me convence del todo… una auditoría completa: diseño, arquitectura de la información, redundancias, ux, ui".
+
+## Verdict
+
+Well executed, but it repeats itself, so it is long (about ten screens) and says less than it seems. Three causes:
+
+1. The same canvas screenshot appears four times (product shot, feature 01, feature 02, "after").
+2. Facts repeat two or three times: 46 days, 7 days and 33 releases sit in At a glance and again in the timeline; each technical fact sits in an annotation, an Under the hood row and a decision; "solo" is said three times.
+3. No high point and no ending: the differentiator (AI agents write to the garden) is never shown, and the page stops at the timeline with no outcome or reflection.
+
+## Findings
+
+P1 = before responsive, P2 = before hi-fi, P3 = polish. Status as of v5 `2285:2`.
+
+| # | Sev | Finding | Status |
+|---|---|---|---|
+| 1 | P1 | Same screenshot four times | Partly: annotations removed, features 01/02 re-cropped, "after" replaced by the era panels; 01/02 still share the canvas look (needs recapture) |
+| 2 | P1 | At a glance and the timeline repeat the same numbers | Fixed: At a glance is four facts (role, built with, status, who adds to it) |
+| 3 | P1 | Each technical fact appears two or three times | Fixed: one place per fact |
+| 4 | P1 | The agents are never shown | Fixed: feature "AI agents keep it tidy" with the 15 Nov cleanup session |
+| 5 | P1 | No outcome or reflection | Fixed: "Where it is now" + "What I would do differently" |
+| 6 | P1 | Three numbering systems; Contact "04" after "05" | Fixed: sections only; Contact unnumbered |
+| 7 | P1 | "Works on a phone, too" vs "Built for slow phones first" | Fixed: decision 04 is "Thumbnails, never originals" |
+| 8 | P2 | `&amp;` and doubled card titles inside the screenshots | Open: data fixed on 2026-11-15, recapture the screenshots |
+| 9 | P2 | Bytes band between every section (8+) | Open: keep it to 2–3 transitions |
+| 10 | P2 | Viora next-card is the full Home card (~650 px) with an [Owner] placeholder | Open: compact teaser |
+| 11 | P2 | Phone in a large white card | Fixed in v5: no card, phone at full row height |
+| 12 | P2 | Nav: Work has no active state inside a project | Open |
+| 13 | P2 | Availability said in Contact and again in the footer | Open (Home inheritance, see v3.1 audit) |
+| 14 | P2 | No design-process artifact | Partly: the three era panels are one |
+| 15 | P3 | [Draft] copy; decision 04 trade-off | Trade-off filled; [Draft] copy remains |
+| 16 | P3 | Contrast of the green one-liner on the orange sky and of 12 px mono over bytes | Open: measure before hi-fi |
+| 17 | P3 | Sun-soft markers plus yellow dots: double emphasis | Moot: the figures were removed |
+
+## Found while fixing (not in the original audit)
+
+- The v4 "What I got wrong" copy was wrong. PR #1 (day 11) was made because the sky went unnoticed, the glass no longer fit and navigation was slow, not because of contrast; and glass came back on day 35 (v0.3.0) as dark glass. Source: the Garden repo (`odd/tasks/solid-cartoon-style.md`, tokens at each tag) and the Garden Engram memory.
+- The v0.1.0 screenshot is not needed: the panels were rebuilt from each release's design tokens.
+- The tag `inspiration` no longer exists (deleted on 2026-11-15); do not use it in mockups.
