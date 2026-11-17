@@ -245,6 +245,7 @@ Built as clones of v3.4 (which were clones of v3.3 with Values and Contact repla
 
 - **Backgrounds (D20)** in sections 02–05 of both boards. Layer names inside each section, bottom to top: `bg / gradient into next section (C)`, `bg / light (C)` (a frame holding the radial lights), `bg / grain`, `bg / bytes (kept off text, soft edge)` (five stacked copies of the bytes layer, `step 1…5 · margin 40…120px`, each at 20% opacity and masked by "section minus every text box + margin"). The masks are computed from the current text boxes: if copy changes, regenerate them.
 - **Footer fade (D17 revision):** `ground fade` inside `ground edge (hill clipped)` on both boards.
+- **Responsive footer spacing (2026-11-16, owner request):** on the mobile 390 (`2210:86`, `2212:86`) and tablet 768 (`2211:86`, `2213:86`) boards, the footer content sat 200 px below the footer top, leaving an empty dark band under the hill ridge. All footer content except `ground edge` moved up (mobile 112 px, tablet 104 px) and the footer frame shrank by the same amount: the statement now starts at 88 px (mobile) / 96 px (tablet). The hill and the Contact bottom padding are unchanged, so the ridge still rises over Contact.
 - **Nav (D19):** the hero navs on the boards are still plain frames in the Top state, not instances of the Nav set.
 - **Fixes from the 2026-11-16 review:** Values row 2 proof on Outside ("1 person · product, design and code"); Tranqui "[canvas glyph field]" annotation moved off the screenshot headline; Inside Contact "sun mask" re-centred on the real sun, 64 px, blur 16 (it sat about 100 px off, so the sun leaked as a dot).
 
@@ -334,3 +335,41 @@ These are implications to carry into the implementation tasks, not instructions 
 - **Backgrounds (D20):** decorative only, `aria-hidden="true"`, never real text in the DOM (screen readers and find-in-page must not see the bytes). Render the bytes as a generated SVG or canvas background per section. Keep them off text with a CSS `mask-image` built from the text blocks' boxes, feathered from 40 px to 120 px (one real feathered mask replaces the five stacked copies used in Figma). The lights and the gradient into the next section are CSS radial and linear gradients; the grain is an SVG `feTurbulence` noise at low opacity. Hide the bytes under `prefers-reduced-transparency` and in forced-colors mode. Do not add progressive blur near text: the owner rejected it.
 - **Footer (D17):** the fade is a linear gradient over the bottom 240 px of the hill layer.
 - `openspec/config.yaml` says syntax highlighting is Shiki while `CLAUDE.md` says code fences render unhighlighted. The post template in Figma shows a plain unhighlighted block. This contradiction predates this change and needs an owner decision before the post page is built.
+
+## Work index (task 5.2) — project inventory
+
+Decided by the owner on 2026-11-16, from the public repos on GitHub (`trinity-bytes`) plus Viora and the Bionutricel catalog. 12 projects:
+
+| Tier | Project | Notes |
+| --- | --- | --- |
+| Case study | Viora | Team of 5, 2026; groups the five `viora-*` repos |
+| Case study | Mink'a | 2026; groups `minka` (landing) and `minka-android` |
+| Case study | Inspiration Garden | Solo, 2026 |
+| Case study | Tranqui | Team of 5, 2025–2026 |
+| Shipped | Trama | Curriculum prerequisite graphs, 2025 |
+| Shipped | ASM8 | 8-bit assembler IDE; the owner's remake and update of an old, abandoned project (the repo is a fork), 2026 |
+| Shipped | Grayscale Studio | 2026 |
+| Shipped | AllinBand | Landing, UPC course, team, 2025 |
+| Shipped | Bionutricel catalog | Client work, solo, 2026. Repo `bionutricel-peru/catalogo-web` is private (no public code link). Design in Figma file `jd2kWdP7un13KLzflDm2Qf` (desktop home `81:4552`, og:image `76:4331`); the cover on the Work index is a 1280×720 crop of that desktop home's first viewport. Live URL pending |
+| Shipped | Queens | Logic puzzle game, 2026 |
+| Small builds | coursera-clone | C++ console, 2025 |
+| Small builds | forest-hero-2 | Pixel-art game, C++, 2024 |
+
+Left out: GitHub Stats Extended and the certificates web service (owner); Green Circuit until the owner reworks it ("lo volvere a agregar cuano le haga un rework"); omarchy-lock-keys-osd, zapa-facil, assembly-scripts, forest-hero (owner kept only two archive entries); private repos and the profile repo.
+
+First draft board: Proposal A · three shelves `2234:2` on the "Work — all projects" page, synced to this table on 2026-11-16. The third tier is named "Small builds" (owner: "que se queden en sall builds"), kept as its own section rather than folded into Shipped. Hanken Grotesk has no "↗" glyph (it falls back to an emoji); link arrows on this board use "→".
+
+Directions A (three shelves), B (one index) and C (by year), built 2026-11-16, were rejected and deleted by the owner, verbatim: "no me convencen para nada. sompelmete horribles. ya las borre." The cloned Home footer was rejected on this page too: "el footer esta horrible."
+
+Hierarchy the owner set for the next attempt: **Featured projects → More projects → Small experiments** ("que l jerarquia sea: proyectos destacados, mas proyectos, pequeños experimentos").
+
+**Work index v2** `2239:17` (2026-11-16), built from clones of Home v3.5 Outside sections so it carries the Home's look:
+
+- Hero `2239:18`: Home hero layers with the portrait removed; the display word "Work" sits between the sky and the near hill. The intro copy is [Draft].
+- 01 Featured `2239:46`: the Home Work section (light, grain, bytes) with Viora wide, Mink'a + Tranqui paired, and Inspiration Garden wide and mirrored (image on the right). Years are removed from the meta lines so the page stays timeless (owner: "es importante que sea atemporal").
+- 02 More projects + 03 Small experiments `2239:187`: the Home Experience background (light, grain, gradient; its bytes layer is removed because the masks were computed for the old text). There are 6 cards in a 3-column grid, each with a real live-site capture inside a browser frame (captured 2026-11-16 at 1440×900). Small experiments are two dark terminal-style tiles.
+- 04 Contact `2239:363` and the footer `2239:401`: Home clones, so the hill rises out of the Contact sky as it does on Home.
+- Owner review (2026-11-16): "me gusta mucho mas este diseño". The owner adjusted the hero by hand and deleted every other board on the Work page. They asked for the bytes back, as on Home ("aca no se ven").
+- Bytes regenerated on 01 Featured (`2239:51`) and 02/03 (`2242:52`). Each layer covers the full current section. The "where the light falls" fields sit in the open areas: Featured at the top right and around Garden; More projects at the top right, the left middle and beside Small experiments. The seams sit at the top and bottom. Each of the 5 steps (20% opacity) is masked by the section minus the text that sits on the background, expanded by the step margin with rounded corners. The cards are opaque, so they cover the bytes without any mask. If you change copy or layout, regenerate the masks.
+- Responsive (2026-11-16): tablet 768 `2247:2` and mobile 390 `2248:2`, to the right of the desktop board. Each is built from that breakpoint's Home v3.5 sections (hero, Work, the Experience background, Contact, footer) plus the desktop v2 content: the hero has no portrait and the word "Work" is right-aligned behind the hill, following the owner's desktop adjustment. Featured: Viora, Mink'a + Tranqui (paired on tablet, stacked on mobile), then Garden. More projects: 2 columns on tablet, 1 on mobile. Small experiments: 2 columns on tablet, stacked on mobile. Bytes were regenerated on all four sections (Featured `2247:44` / `2248:49`, More `2247:355` / `2248:360`).
+- Approved 2026-11-16 at all three breakpoints ("de momento queda"). The owner will make manual adjustments on the boards; re-read them before building on them. Possible mobile improvement, not applied: compact horizontal cards for More projects, which would cut about 2,700 px of scroll and make the hierarchy clearer.
