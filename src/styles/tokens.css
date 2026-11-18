@@ -104,7 +104,8 @@
     --font-mono: var(--font-plex-mono);
   }
 
-  :root[data-lens='inside'] {
+  /* Matches <html> and the lens preview clone, which carries the same attribute. */
+  [data-lens='inside'] {
     color-scheme: dark;
     /* Hero: 1.5px name stroke and the near hill at exposure -0.4. */
     --hero-stroke-width: 1.5px;
