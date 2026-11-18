@@ -1,0 +1,97 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ExperienceRow from '../content/ExperienceRow.astro';
+import Backgrounds from './Backgrounds.astro';
+import { formatPeriod } from '../../lib/format';
+import type { Dictionary } from '../../lib/i18n';
+
+interface Props {
+  lang: 'en' | 'es';
+  marker: string;
+  headline: string;
+  sub: string;
+  strings: Dictionary['experience'];
+  /** From listExperience(lang), already ordered. */
+  entries: CollectionEntry<'experience'>[];
+  seed?: number;
+}
+
+const { lang, marker, headline, sub, strings, entries, seed = 4 } = Astro.props;
+
+const groups = (['work', 'volunteering', 'beyond-class'] as const)
+  .map((group) => ({ group, label: strings.groups[group], items: entries.filter((entry) => entry.data.group === group) }))
+  .filter(({ items }) => items.length > 0);
+
+const carriesOver = entries
+  .flatMap((entry) => (entry.data.carriesOver ? [entry.data.carriesOver] : []))
+  .sort((a, b) => a.order - b.order);
+---
+<section id="experience" class="experience" aria-labelledby="experience-heading">
+  <Backgrounds variant="experience" next="surface" seed={seed} />
+  <div class="layout">
+    <div class="intro">
+      <p class="marker" data-background-text>{marker}</p>
+      <h2 id="experience-heading" data-background-text>{headline}</h2>
+      <p class="sub" data-background-text>{sub}</p>
+      {carriesOver.length > 0 && (
+        <div class="carries">
+          <h3 class="carries-label" data-background-text>{strings.carriesOver}</h3>
+          <ul>
+            {carriesOver.map((item) => (
+              <li>
+                <p class="carries-title" data-background-text>{item.title}</p>
+                <p class="carries-from" data-background-text>{item.from}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+    <div class="groups">
+      {groups.map(({ group, label, items }) => (
+        <div class="group">
+          <h3 class="group-label" data-background-text>{label}</h3>
+          <ul>
+            {items.map((entry) => (
+              <ExperienceRow
+                period={formatPeriod(entry.data.start, entry.data.end, lang, strings.now)}
+                role={entry.data.role}
+                organisation={entry.data.organisation}
+                description={entry.data.description}
+                tags={entry.data.tags}
+                image={entry.data.image}
+                imageAlt={entry.data.imageAlt}
+              />
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .experience { position: relative; background: var(--color-bg); }
+  .layout { position: relative; max-width: calc(var(--content-max) + 2 * var(--gutter)); margin-inline: auto; padding: 4.5rem var(--gutter); display: flex; flex-direction: column; gap: 4rem; }
+  .intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
+  .marker { margin: 0; font: 500 0.8125rem/1.3 var(--font-mono); letter-spacing: 0.08em; color: var(--color-text-muted); }
+  h2 { margin: 0; max-width: 24rem; font: 600 var(--font-size-heading-md)/1.1 var(--font-display); letter-spacing: -0.03em; color: var(--color-heading); }
+  .sub { margin: 0; max-width: 22.5rem; font: 400 var(--font-size-body)/1.55 var(--font-sans); color: var(--color-text); }
+  .carries { width: 100%; padding-top: var(--space-2xl); }
+  .carries-label { margin: 0; padding-bottom: var(--space-sm); font: 500 var(--font-size-label)/1.33 var(--font-mono); text-transform: uppercase; color: var(--color-text-muted); }
+  .carries ul, .group ul { margin: 0; padding: 0; list-style: none; }
+  .carries li { display: flex; flex-direction: column; gap: var(--space-2xs); padding-block: var(--space-md); border-top: 1px solid var(--color-border); }
+  .carries-title { margin: 0; font: 600 1.25rem/1.25 var(--font-display); letter-spacing: -0.01em; color: var(--color-heading); }
+  .carries-from { margin: 0; font: 400 1rem/1.45 var(--font-sans); color: var(--color-text-muted); }
+  .groups { display: flex; flex-direction: column; gap: var(--space-3xl); min-width: 0; }
+  .group-label { display: flex; align-items: center; gap: 0.625rem; margin: 0; padding-bottom: 0.875rem; font: 500 var(--font-size-label)/1.33 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); }
+  .group-label::before { content: ''; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--color-signal); }
+  @media (min-width: 48rem) {
+    .layout { padding-block: 6rem; gap: 5rem; }
+    .carries-title { font-size: 1.375rem; letter-spacing: -0.01em; }
+  }
+  @media (min-width: 64.0625rem) {
+    .layout { padding-block: 7.5rem; flex-direction: row; gap: 6rem; align-items: flex-start; }
+    .intro { flex: none; width: 23.75rem; position: sticky; top: 7.5rem; }
+    .groups { flex: 1; }
+  }
+</style>
