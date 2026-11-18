@@ -92,7 +92,7 @@ The shipped collections MUST contain only real content: the scaffold samples (`r
 
 ### Requirement: Experience Collection Schema
 
-The `experience` collection schema MUST define: `id` (string, required), `lang` (`'en' | 'es'`, required), `role` (string, required), `organisation` (string, required), `start` (string, required, year or year-month), `end` (string, optional; absent means "now"), `carriesOver` (string, required, the "what carries over to your team" line), `tools` (string array, default `[]`, the Inside tags) and `order` (integer, required). It MUST be read through `listExperience(lang)` in `src/lib/content.ts`.
+The `experience` collection schema MUST define: `id` (string, required), `lang` (`'en' | 'es'`, required), `group` (`'work' | 'volunteering' | 'beyond-class'`, required), `role` (string, required), `organisation` (string, required), `start` (string, required, year or year-month), `end` (string, optional; absent means "now"), `description` (string, required), `tags` (string array, default `[]`, the visible Outside tags), `tools` (string array, default `[]`, the Inside tags), `carriesOver` (optional object `{ title, from, order }`: the "what carries over to your team" item the role produced, ordered by its own `order`), `image` (optional, through `image()`), `imageAlt` (string, optional; required in practice when `image` is set) and `order` (integer, required). (Changed 2026-11-18 to match the approved Experience board `2191:236`: groups, descriptions, tags and the choir photo; `carriesOver` is no longer a required string per entry.) It MUST be read through `listExperience(lang)` in `src/lib/content.ts`.
 
 #### Scenario: Experience is ordered by its field
 

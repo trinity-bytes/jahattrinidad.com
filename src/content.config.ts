@@ -72,17 +72,26 @@ const links = defineCollection({
 
 const experience = defineCollection({
   loader: file('src/content/experience.json'),
-  schema: z.object({
-    id: z.string(),
-    lang: z.enum(LOCALES),
-    role: z.string(),
-    organisation: z.string(),
-    start: z.string(),
-    end: z.string().optional(),
-    carriesOver: z.string(),
-    tools: z.array(z.string()).default([]),
-    order: z.number().int(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      id: z.string(),
+      lang: z.enum(LOCALES),
+      group: z.enum(['work', 'volunteering', 'beyond-class']),
+      role: z.string(),
+      organisation: z.string(),
+      start: z.string(), // 'YYYY' or 'YYYY-MM'
+      end: z.string().optional(), // absent means "now"
+      description: z.string(),
+      tags: z.array(z.string()).default([]), // visible Outside tags
+      tools: z.array(z.string()).default([]), // Inside tags
+      // The "what carries over to your team" item this role produced, if any.
+      carriesOver: z
+        .object({ title: z.string(), from: z.string(), order: z.number().int() })
+        .optional(),
+      image: image().optional(),
+      imageAlt: z.string().optional(),
+      order: z.number().int(),
+    }),
 });
 
 export const collections = { projects, posts, links, experience };
