@@ -110,6 +110,15 @@ export interface Dictionary {
     contactMarker: string;
     essay: string;
     tutorial: string;
+    writingLatest: string;
+    elsewhereLatest: string;
+    allWriting: string;
+    minutes: (minutes: number) => string;
+  };
+  experience: {
+    carriesOver: string;
+    now: string;
+    groups: Record<'work' | 'volunteering' | 'beyond-class', string>;
   };
   lens: {
     pointerHint: string;
@@ -126,6 +135,12 @@ export interface Dictionary {
     available: string;
     basedIn: string;
     or: string;
+    lookingForValue: string;
+    availableValue: string;
+    basedInValue: string;
+    composerLabel: string;
+    send: string;
+    copied: string;
   };
   chat: {
     greeting: string;
@@ -133,6 +148,7 @@ export interface Dictionary {
     project: string;
     hello: string;
     composerPlaceholder: string;
+    suggestionsLabel: string;
   };
   footer: {
     navigate: string;
@@ -335,9 +351,19 @@ const en: Dictionary = {
     contactMarker: '02 — CONTACT',
     essay: 'ESSAY',
     tutorial: 'TUTORIAL',
+    writingLatest: 'Writing · Latest',
+    elsewhereLatest: 'Elsewhere · Latest posts',
+    allWriting: 'All writing',
+    minutes: (minutes) => `${minutes} min`,
     intro:
       "Notes from building things: what worked, what broke, what I'd do again.",
     sub: 'Essays on how I think through decisions, and tutorials you can follow step by step.',
+  },
+  // Experience board 2191:236; the "carries over" label is the approved D14 copy.
+  experience: {
+    carriesOver: 'What carries over to your team',
+    now: 'now',
+    groups: { work: 'Work', volunteering: 'Volunteering', 'beyond-class': 'Beyond class' },
   },
   // Pointer hint: lens component 2168:10. Remaining text: implementation design §2.
   lens: {
@@ -356,6 +382,13 @@ const en: Dictionary = {
     available: 'Available',
     basedIn: 'Based in',
     or: 'Or',
+    // Facts: owner-provided (D16). The line break follows the board.
+    lookingForValue: 'An internship in frontend\nor product design engineering',
+    availableValue: 'Now',
+    basedInValue: 'Lima, Peru\nopen to remote',
+    composerLabel: 'Your message',
+    send: 'Send',
+    copied: 'Email copied',
   },
   // Greeting and chips: visual-design design.md §4. Composer: approved draft copy.
   chat: {
@@ -364,6 +397,7 @@ const en: Dictionary = {
     project: 'I have a project',
     hello: 'Just saying hi',
     composerPlaceholder: 'What are you building, and where could I help?',
+    suggestionsLabel: 'Suggestions',
   },
   // Footer labels: Home board 2191:86; shortcut label describes the required control.
   footer: {
