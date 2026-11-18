@@ -1,69 +1,101 @@
 ---
 import type { Dictionary } from '../../lib/i18n';
 import Backgrounds from './Backgrounds.astro';
+import Annotation from '../ui/Annotation.astro';
+import AnnotationList from '../ui/annotation/AnnotationList.astro';
 
 interface Props {
   copy: Dictionary['home']['outside']['values'];
+  /** The Inside copy: another reading of the same section, shown only in the Inside lens. */
+  insideCopy: Dictionary['home']['inside']['values'];
   /** The Garden case study. */
   gardenHref: string;
   gardenImage: { src: string; alt: string };
 }
 
-const { copy, gardenHref, gardenImage } = Astro.props;
+const { copy, insideCopy, gardenHref, gardenImage } = Astro.props;
+
+// The table and the proof card are rendered once per lens; the app shell shows the active one.
+const lenses = [
+  { show: 'outside', copy },
+  { show: 'inside', copy: insideCopy },
+] as const;
+const notes = [insideCopy.annotations.source];
 ---
 
 <section class="values" aria-labelledby="values-heading">
   <Backgrounds variant="values" next="surface" seed={2} />
   <div class="container content">
     <header>
-      <p class="marker" data-background-text>{copy.marker}</p>
-      <h2 id="values-heading" data-background-text>{copy.headline}</h2>
-      <p class="sub" data-background-text>{copy.sub}</p>
+      <p class="marker" data-background-text>
+        <span data-show="outside">{copy.marker}</span><span data-show="inside">{insideCopy.marker}</span>
+      </p>
+      <h2 id="values-heading" data-background-text>
+        <span data-show="outside">{copy.headline}</span><span data-show="inside">{insideCopy.headline}</span>
+      </h2>
+      <p class="sub" data-show="outside" data-background-text>{copy.sub}</p>
+      <div class="sub sub-frame" data-show="inside">
+        <p data-background-text>{insideCopy.sub}</p>
+        <Annotation
+          n={1}
+          x="calc(100% + 8px)"
+          y="50%"
+          pinX="-8px"
+          pinY="-8px"
+          bound={{ x: '-8px', y: '-8px', width: 'calc(100% + 16px)', height: 'calc(100% + 16px)' }}
+          {...notes[0]}
+        />
+      </div>
     </header>
 
-    <div class="layout">
-      <div class="table">
-        <p class="column-labels label" aria-hidden="true">
-          <span>{copy.valueLabel}</span>
-          <span>{copy.teamLabel}</span>
-        </p>
-        <ul class="rows">
-          {
-            copy.rows.map((row) => (
-              <li>
-                <h3 data-background-text>{row.title}</h3>
-                <p data-background-text>{row.description}</p>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-
-      <aside class="proof" aria-labelledby="proof-label">
-        <p id="proof-label" class="label" data-background-text>{copy.proofLabel}</p>
-        <div class="card">
-          <img src={gardenImage.src} alt={gardenImage.alt} width="376" height="196" loading="lazy" />
-          <div class="card-body">
-            <h3 data-background-text>{copy.gardenTitle}</h3>
-            <p data-background-text>{copy.gardenDescription}</p>
-            <dl>
+    {
+      lenses.map(({ show, copy }) => (
+        <div class="layout" data-show={show}>
+          <div class="table">
+            <p class="column-labels label" aria-hidden="true">
+              <span>{copy.valueLabel}</span>
+              <span>{copy.teamLabel}</span>
+            </p>
+            <ul class="rows">
               {
-                copy.facts.map((fact) => (
-                  <div>
-                    <dt><span data-background-text>{fact.figure}</span></dt>
-                    <dd data-background-text>{fact.description}</dd>
-                  </div>
+                copy.rows.map((row) => (
+                  <li>
+                    <h3 data-background-text>{row.title}</h3>
+                    <p data-background-text>{row.description}</p>
+                  </li>
                 ))
               }
-            </dl>
-            <a href={gardenHref} data-background-text>
-              <span class="underlined">{copy.gardenLink}</span> <span aria-hidden="true">→</span>
-            </a>
+            </ul>
           </div>
+
+          <aside class="proof" aria-labelledby={`proof-label-${show}`}>
+            <p id={`proof-label-${show}`} class="label" data-background-text>{copy.proofLabel}</p>
+            <div class="card">
+              <img src={gardenImage.src} alt={gardenImage.alt} width="376" height="196" loading="lazy" />
+              <div class="card-body">
+                <h3 data-background-text>{copy.gardenTitle}</h3>
+                <p data-background-text>{copy.gardenDescription}</p>
+                <dl>
+                  {
+                    copy.facts.map((fact) => (
+                      <div>
+                        <dt><span data-background-text>{fact.figure}</span></dt>
+                        <dd data-background-text>{fact.description}</dd>
+                      </div>
+                    ))
+                  }
+                </dl>
+                <a href={gardenHref} data-background-text>
+                  <span class="underlined">{copy.gardenLink}</span> <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </aside>
         </div>
-      </aside>
-    </div>
+      ))
+    }
   </div>
+  <AnnotationList items={notes} label={insideCopy.notesLabel} />
 </section>
 
 <style>
@@ -110,6 +142,12 @@ const { copy, gardenHref, gardenImage } = Astro.props;
     margin-top: var(--space-xl);
     font-size: var(--font-size-body);
     line-height: 1.6;
+  }
+
+  /* The Inside sub is narrower than the Outside one, and carries the annotation. */
+  .sub-frame {
+    position: relative;
+    max-width: 38.75rem;
   }
 
   .layout {
@@ -204,6 +242,12 @@ const { copy, gardenHref, gardenImage } = Astro.props;
     color: var(--color-heading);
     background: var(--color-light-sun);
     border-radius: 0.25rem;
+  }
+
+  /* Inside: the figure marker flips to the accent colors instead of the sun. */
+  [data-show='inside'] dt span {
+    color: var(--color-accent-text);
+    background: var(--color-accent);
   }
 
   dd {

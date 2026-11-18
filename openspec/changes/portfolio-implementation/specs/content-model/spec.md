@@ -32,7 +32,7 @@ The system MUST define exactly four content collections in `src/content.config.t
 
 ### Requirement: Projects Collection Schema
 
-The `projects` collection schema MUST define every field it defined before, plus: `tier` (`'case-study' | 'project' | 'experiment'`, required), `team` (object, optional: `size` positive integer, `solo` boolean), `myPart` (string, optional, the short "My part" line shown on cards), and the other Home card lines, all optional strings: `kind` (the card meta, e.g. "University SaaS"), `problem` and `whatItDoes`. `role` and `timeframe` MUST be optional, as originally specified. Whether a project appears in the Featured group (`featured`) MUST stay independent of whether it has a case study (`tier`): the owner decided case studies are not limited to featured projects.
+The `projects` collection schema MUST define every field it defined before, plus: `tier` (`'case-study' | 'project' | 'experiment'`, required), `team` (object, optional: `size` positive integer, `solo` boolean), `myPart` (string, optional, the short "My part" line shown on cards), and the other Home card lines, all optional strings: `kind` (the card meta, e.g. "University SaaS"), `problem` and `whatItDoes`; and the Inside lines of the Home card, optional strings `insideStack` and `insideDecision` (the Inside "What I owned" row reuses `myPart`). `role` and `timeframe` MUST be optional, as originally specified. Whether a project appears in the Featured group (`featured`) MUST stay independent of whether it has a case study (`tier`): the owner decided case studies are not limited to featured projects.
 (Previously: no `tier`, `team` or `myPart`; the code had drifted to make `role` and `timeframe` required.)
 
 #### Scenario: A minimal valid entry builds
