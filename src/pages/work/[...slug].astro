@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { projectRoutes, getTranslationGroup, renderEntry, type Project } from '../../lib/content';
+import { entryPath, projectRoutes, getTranslationGroup, renderEntry, type Project } from '../../lib/content';
 import { buildSeo } from '../../lib/seo';
 import { getDictionary } from '../../lib/i18n';
 
@@ -30,7 +30,7 @@ const group = await getTranslationGroup('projects', entry);
 const seo = buildSeo({
   title: entry.data.title,
   description: entry.data.description,
-  path: `/projects/${entry.id}`,
+  path: entryPath('projects', lang, entry.id),
   lang,
   site,
   group,
@@ -45,12 +45,8 @@ const { Content } = await renderEntry(entry);
 <Base lang={lang} seo={seo}>
   <article>
     <h1>{entry.data.title}</h1>
-    <p>
-      <strong>{t.project.role}:</strong> {entry.data.role}
-    </p>
-    <p>
-      <strong>{t.project.timeframe}:</strong> {entry.data.timeframe}
-    </p>
+    {entry.data.role && <p><strong>{t.project.role}:</strong> {entry.data.role}</p>}
+    {entry.data.timeframe && <p><strong>{t.project.timeframe}:</strong> {entry.data.timeframe}</p>}
     <p>
       <strong>{t.project.stack}:</strong> {entry.data.stack.join(', ')}
     </p>
