@@ -1,0 +1,206 @@
+---
+/*
+ * Home hero, Outside state. Paint order (visual-design design.md §5), back to front:
+ * sky + far hills, display name, near hill, portrait. The layers are separate
+ * elements so a depth effect can move them independently later.
+ *
+ * The page's h1 is the display name: it is the identity the board gives the most
+ * weight, and the descriptor, headline and sub read right after it as its context.
+ * On tablet and mobile the name overlaps the portrait, so an outline copy of it is
+ * drawn above the portrait, masked to the portrait's alpha (board layer 05).
+ *
+ * The hero always sits on the bright sky image, in light and dark mode alike, so its
+ * text uses fixed palette primitives instead of the light-dark() semantic tokens.
+ */
+import { Picture, getImage } from 'astro:assets';
+import sky from '../../assets/hero/sky.png';
+import hill from '../../assets/hero/near-hill.png';
+import portrait from '../../assets/hero/portrait.png';
+import Icon from '../ui/Icon.astro';
+import type { Dictionary } from '../../lib/i18n';
+
+interface Props {
+  strings: Dictionary['home']['outside']['hero'];
+  workHref: string;
+}
+const { strings, workHref } = Astro.props;
+
+const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040 });
+---
+
+<section
+  class="hero"
+  id="hero"
+  data-hero
+  aria-labelledby="hero-name"
+  style={`--portrait-mask: url(${portraitMask.src})`}
+>
+  <Picture
+    src={sky}
+    formats={['avif', 'webp']}
+    widths={[768, 1440, 2400, 3400]}
+    sizes="(min-width: 64.0625rem) 115vw, 260vw"
+    alt=""
+    class="layer sky"
+    loading="eager"
+    fetchpriority="high"
+  />
+  <h1 id="hero-name" class="name">{strings.name}</h1>
+  <Picture
+    src={hill}
+    formats={['avif', 'webp']}
+    widths={[768, 1440, 2400, 2952]}
+    sizes="(min-width: 64.0625rem) 115vw, 310vw"
+    alt=""
+    class="layer hill"
+    loading="eager"
+  />
+  <Picture
+    src={portrait}
+    formats={['avif', 'webp']}
+    widths={[300, 360, 520, 1040, 1400]}
+    sizes="(min-width: 64.0625rem) 520px, (min-width: 48rem) 360px, 300px"
+    alt=""
+    class="layer portrait"
+    loading="eager"
+  />
+  <div class="portrait-outline" aria-hidden="true">
+    <span class="name">{strings.name}</span>
+  </div>
+  <div class="intro">
+    <p class="eyebrow">{strings.eyebrow}</p>
+    <p class="headline">{strings.headline}</p>
+    <p class="sub">{strings.sub}</p>
+    <a class="cta" href={workHref}>{strings.cta}<Icon name="arrow-right" size={18} /></a>
+  </div>
+  <p class="footnote">
+    <span class="marker">{strings.marker}</span>
+    <span class="hint">{strings.hint}<span class="hint-arrow" aria-hidden="true"> ↘</span></span>
+  </p>
+</section>
+
+<style>
+  .hero {
+    --name-top: 628px;
+    --portrait-w: 300px;
+    --portrait-left: calc(50cqw - 138px);
+    --portrait-top: 412px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    container-type: inline-size;
+    height: 862px;
+    background: var(--color-light-sun);
+  }
+  .layer { position: absolute; display: block; max-width: none; height: auto; pointer-events: none; }
+  .sky { width: 1981.415px; left: calc(50% - 735.812px); top: -402.209px; }
+  .hill { width: 2371.52px; left: calc(50% - 929.202px); top: -412.142px; }
+  .portrait { width: var(--portrait-w); left: var(--portrait-left); top: var(--portrait-top); }
+
+  .name {
+    position: absolute;
+    left: var(--gutter);
+    top: var(--name-top);
+    margin: 0;
+    color: var(--white);
+    font: 500 var(--font-size-display) / 0.92 var(--font-display), sans-serif;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+
+  /* Same box as the portrait; the outline copy of the name is placed back in hero coordinates. */
+  .portrait-outline {
+    position: absolute;
+    left: var(--portrait-left);
+    top: var(--portrait-top);
+    width: var(--portrait-w);
+    aspect-ratio: 2 / 3;
+    pointer-events: none;
+    mask: var(--portrait-mask) center / 100% 100% no-repeat;
+  }
+  .portrait-outline .name {
+    left: calc(var(--gutter) - var(--portrait-left));
+    top: calc(var(--name-top) - var(--portrait-top));
+    color: transparent;
+    -webkit-text-stroke: 1px var(--white);
+  }
+
+  .intro {
+    position: absolute;
+    top: 100px;
+    left: var(--gutter);
+    right: var(--gutter);
+    max-width: 660px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .intro p { margin: 0; }
+  .eyebrow { font: 500 13px / 1.3 var(--font-mono), monospace; letter-spacing: 0.065em; color: var(--green-800); }
+  .headline {
+    font: 600 var(--font-size-heading-sm) / 1.15 var(--font-display), sans-serif;
+    letter-spacing: -0.02em;
+    color: var(--green-950);
+  }
+  .sub { max-width: 520px; font: 400 var(--font-size-body) / 1.5 var(--font-sans), sans-serif; color: var(--green-800); }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 49px;
+    padding: 14px 24px;
+    border-radius: 999px;
+    background: var(--green-950);
+    color: var(--white);
+    font: 500 16px / 1.3 var(--font-sans), sans-serif;
+    text-decoration: none;
+  }
+  .cta:hover { text-decoration: underline; }
+
+  .footnote {
+    position: absolute;
+    left: var(--gutter);
+    bottom: 19px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 166px;
+    color: var(--leaf-light);
+    font: 400 12px / 1.33 var(--font-mono), monospace;
+  }
+  .marker { font-weight: 500; letter-spacing: 0.08em; }
+  .hint-arrow { display: none; }
+
+  @media (min-width: 48rem) {
+    .hero {
+      --name-top: 530px;
+      --portrait-w: 360px;
+      --portrait-left: calc(50cqw + 12px);
+      --portrait-top: 327px;
+      height: 867px;
+    }
+    .sky { width: 2554.781px; left: calc(50% - 829.723px); top: -704.569px; }
+    .hill { width: 2831.111px; left: calc(50% - 872.667px); top: -704.71px; }
+    .intro { top: 136px; max-width: 600px; }
+    .footnote { bottom: 18px; max-width: none; flex-direction: row; gap: 32px; }
+  }
+
+  @media (min-width: 64.0625rem) {
+    .hero {
+      --name-top: 552px;
+      --portrait-w: 520px;
+      --portrait-left: calc(100cqw - 540px);
+      --portrait-top: 190px;
+      height: 900px;
+    }
+    .sky { width: 114.236%; left: 0; top: -197px; }
+    .hill { width: 112.292%; left: -5.972%; top: -13px; }
+    .intro { top: 180px; max-width: 660px; }
+    .footnote { bottom: 32px; }
+    .hint-arrow { display: inline; }
+  }
+
+  @media (forced-colors: active) { .cta { border: 1px solid ButtonText; } }
+</style>

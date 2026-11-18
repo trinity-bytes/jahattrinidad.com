@@ -4,6 +4,10 @@ import type { Locale } from './content';
 
 interface HomeLensCopy {
   hero: {
+    name: string;
+    eyebrow: string;
+    cta: string;
+    hint: string;
     marker: string;
     headline: string;
     sub: string;
@@ -173,6 +177,10 @@ const en: Dictionary = {
     // Markers and non-draft-copy text follow the Home boards 2191:86 and 2191:503.
     outside: {
       hero: {
+        name: 'Jahat',
+        eyebrow: 'DESIGN ENGINEER · FRONTEND & PRODUCT',
+        cta: 'See my work',
+        hint: 'drag the lens, or press I, to look inside',
         marker: '01 — OUTSIDE',
         headline:
           'I build products people actually use — designed and built by the same person.',
@@ -202,6 +210,11 @@ const en: Dictionary = {
     },
     inside: {
       hero: {
+        // TODO(phase 4): confirm the Inside hero labels.
+        name: 'Jahat',
+        eyebrow: 'DESIGN ENGINEER · FRONTEND & PRODUCT',
+        cta: 'See my work',
+        hint: 'drag the lens, or press I, to look inside',
         marker: '01 — INSIDE',
         headline:
           'The same page, taken apart — every layer, token and decision.',
