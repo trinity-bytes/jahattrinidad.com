@@ -1,7 +1,5 @@
 ---
-// Document shell only: <!doctype>, <html lang>, a <head> fed by a
-// SeoResult prop, the tokens.css import, and one <slot />. Zero visual
-// styling beyond that import — see design.md §1's scope clarification.
+import { Font } from 'astro:assets';
 import '../styles/tokens.css';
 import type { SeoResult } from '../lib/seo';
 
@@ -17,6 +15,9 @@ const { lang, seo } = Astro.props;
 <html lang={lang}>
   <head>
     <meta charset="utf-8" />
+    <Font cssVariable="--font-epilogue" />
+    <Font cssVariable="--font-hanken" />
+    <Font cssVariable="--font-plex-mono" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{seo.title}</title>
     <meta name="description" content={seo.description} />

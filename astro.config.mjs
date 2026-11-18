@@ -1,4 +1,5 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
+import theme from './src/styles/shiki-theme.json' with { type: 'json' };
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
@@ -20,5 +21,44 @@ export default defineConfig({
     sitemap({ i18n: { defaultLocale: 'en', locales: { en: 'en-US', es: 'es-ES' } } }),
   ],
 
-  fonts: [], // provider selection is a visual-design decision, deferred out of scope
+  markdown: { shikiConfig: { theme } },
+  fonts: [
+    {
+      provider: fontProviders.local(),
+      name: 'Epilogue',
+      cssVariable: '--font-epilogue',
+      fallbacks: ['sans-serif'],
+      options: {
+        variants: [
+          { weight: 500, style: 'normal', src: ['./src/assets/fonts/epilogue/epilogue-500.woff2'] },
+          { weight: 600, style: 'normal', src: ['./src/assets/fonts/epilogue/epilogue-600.woff2'] },
+        ],
+      },
+    },
+    {
+      provider: fontProviders.local(),
+      name: 'Hanken Grotesk',
+      cssVariable: '--font-hanken',
+      fallbacks: ['sans-serif'],
+      options: {
+        variants: [
+          { weight: 400, style: 'normal', src: ['./src/assets/fonts/hankengrotesk/hankengrotesk-400.woff2'] },
+          { weight: 500, style: 'normal', src: ['./src/assets/fonts/hankengrotesk/hankengrotesk-500.woff2'] },
+        ],
+      },
+    },
+    {
+      provider: fontProviders.local(),
+      name: 'IBM Plex Mono',
+      cssVariable: '--font-plex-mono',
+      fallbacks: ['monospace'],
+      options: {
+        variants: [
+          { weight: 400, style: 'normal', src: ['./src/assets/fonts/ibmplexmono/ibmplexmono-regular.woff2'] },
+          { weight: 500, style: 'normal', src: ['./src/assets/fonts/ibmplexmono/ibmplexmono-medium.woff2'] },
+          { weight: 400, style: 'italic', src: ['./src/assets/fonts/ibmplexmono/ibmplexmono-italic.woff2'] },
+        ],
+      },
+    },
+  ],
 });
