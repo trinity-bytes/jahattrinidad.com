@@ -16,9 +16,18 @@ interface HomeLensCopy {
     marker: string;
     headline: string;
     sub: string;
+    valueLabel: string;
+    teamLabel: string;
+    proofLabel: string;
+    rows: { title: string; description: string }[];
+    gardenTitle: string;
+    gardenDescription: string;
+    facts: { figure: string; description: string }[];
+    gardenLink: string;
   };
   work: {
     marker: string;
+    seeAll: (count: number) => string;
   };
   experience: {
     marker: string;
@@ -190,9 +199,26 @@ const en: Dictionary = {
         marker: '02 — WHAT YOU GET',
         headline: 'Faster launches. Fewer handoffs. Nothing rebuilt.',
         sub: 'What your team gets from one person who designs and builds. Each point is proven on a product I shipped.',
+        valueLabel: 'The value',
+        teamLabel: 'What it means for your team',
+        proofLabel: 'Proof · Inspiration Garden',
+        rows: [
+          { title: 'Ideas into working products, fast.', description: 'I take something from a rough idea to a product people can use — without waiting on a separate designer and developer.' },
+          { title: 'A bridge between design and engineering.', description: 'I speak both languages: designs your engineers can build, and code your designers recognize as theirs.' },
+          { title: 'Built to grow, not to be redone.', description: 'I plan for what comes next, so new features plug into what exists instead of starting over.' },
+        ],
+        gardenTitle: 'Inspiration Garden',
+        gardenDescription: 'A tool for saving the design references, tools, libraries, articles and tutorials I find on the web. Designed, built and launched by me.',
+        facts: [
+          { figure: '7 days', description: 'first commit to first release' },
+          { figure: '1 person', description: 'product, design and code' },
+          { figure: '1 week', description: 'from launch to new features' },
+        ],
+        gardenLink: 'Read how the Garden was built',
       },
       work: {
         marker: '03 — SELECTED WORK',
+        seeAll: (count) => `See all projects · ${count}`,
       },
       experience: {
         marker: '04 — EXPERIENCE',
@@ -224,9 +250,28 @@ const en: Dictionary = {
         marker: '02 — WHAT YOU GET · HOW IT WAS BUILT',
         headline: 'How each promise was built.',
         sub: "Every number below comes from the Garden's repository: its releases and the services it runs on.",
+        // TODO(phase 4): Replace these Outside details with Inside copy.
+        valueLabel: 'The value',
+        teamLabel: 'What it means for your team',
+        proofLabel: 'Proof · Inspiration Garden',
+        rows: [
+          { title: 'Ideas into working products, fast.', description: 'I take something from a rough idea to a product people can use — without waiting on a separate designer and developer.' },
+          { title: 'A bridge between design and engineering.', description: 'I speak both languages: designs your engineers can build, and code your designers recognize as theirs.' },
+          { title: 'Built to grow, not to be redone.', description: 'I plan for what comes next, so new features plug into what exists instead of starting over.' },
+        ],
+        gardenTitle: 'Inspiration Garden',
+        gardenDescription: 'A tool for saving the design references, tools, libraries, articles and tutorials I find on the web. Designed, built and launched by me.',
+        facts: [
+          { figure: '7 days', description: 'first commit to first release' },
+          { figure: '1 person', description: 'product, design and code' },
+          { figure: '1 week', description: 'from launch to new features' },
+        ],
+        gardenLink: 'Read how the Garden was built',
       },
       work: {
         marker: '03 — SELECTED WORK · HOW IT’S MADE',
+        // TODO(phase 4): Replace if the Inside label changes.
+        seeAll: (count) => `See all projects · ${count}`,
       },
       experience: {
         marker: '04 — EXPERIENCE · WHAT IT TRAINED',
