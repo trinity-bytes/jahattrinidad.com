@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { listProjects, listPosts } from '../lib/content';
+import { entryPath, listProjects, listPosts } from '../lib/content';
 import { buildSeo } from '../lib/seo';
 import { getDictionary } from '../lib/i18n';
 
@@ -34,7 +34,7 @@ const seo = buildSeo({
     <ul>
       {featuredProjects.map((project) => (
         <li>
-          <a href={`/projects/${project.id}/`}>{project.data.title}</a>
+          <a href={entryPath('projects', lang, project.id)}>{project.data.title}</a>
         </li>
       ))}
     </ul>
@@ -45,7 +45,7 @@ const seo = buildSeo({
     <ul>
       {recentPosts.map(({ entry, readingTime }) => (
         <li>
-          <a href={`/blog/${entry.id}/`}>{entry.data.title}</a> — {t.post.readingTime(readingTime)}
+          <a href={entryPath('posts', lang, entry.id)}>{entry.data.title}</a> — {t.post.readingTime(readingTime)}
         </li>
       ))}
     </ul>

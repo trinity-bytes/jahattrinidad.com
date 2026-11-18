@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { listProjects } from '../../lib/content';
+import { collectionPath, entryPath, listProjects } from '../../lib/content';
 import { buildSeo } from '../../lib/seo';
 import { getDictionary } from '../../lib/i18n';
 
@@ -19,7 +19,7 @@ const projects = await listProjects({ lang });
 const seo = buildSeo({
   title: t.nav.projects,
   description: 'Selected projects and case studies.',
-  path: '/projects',
+  path: collectionPath('projects', lang),
   lang,
   site,
 });
@@ -30,7 +30,7 @@ const seo = buildSeo({
   <ul>
     {projects.map((project) => (
       <li>
-        <a href={`/projects/${project.id}/`}>{project.data.title}</a>
+        <a href={entryPath('projects', lang, project.id)}>{project.data.title}</a>
         <p>{project.data.description}</p>
       </li>
     ))}

@@ -14,7 +14,7 @@ export interface Alternate {
 export interface SeoInput {
   title: string;
   description: string;
-  /** Site-relative path of THIS page, e.g. '/blog/hello-world' */
+  /** Site-relative path of THIS page, e.g. '/notes/hello-world' */
   path: string;
   lang: Locale;
   site: URL;

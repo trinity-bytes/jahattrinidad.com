@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { listPosts } from '../../lib/content';
+import { collectionPath, entryPath, listPosts } from '../../lib/content';
 import { buildSeo } from '../../lib/seo';
 import { getDictionary } from '../../lib/i18n';
 
@@ -19,7 +19,7 @@ const posts = await listPosts({ lang });
 const seo = buildSeo({
   title: t.nav.blog,
   description: 'Posts about building and shipping this site.',
-  path: '/blog',
+  path: collectionPath('posts', lang),
   lang,
   site,
 });
@@ -30,7 +30,7 @@ const seo = buildSeo({
   <ul>
     {posts.map(({ entry, readingTime }) => (
       <li>
-        <a href={`/blog/${entry.id}/`}>{entry.data.title}</a>
+        <a href={entryPath('posts', lang, entry.id)}>{entry.data.title}</a>
         <p>{entry.data.description} — {t.post.readingTime(readingTime)}</p>
       </li>
     ))}

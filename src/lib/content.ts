@@ -19,6 +19,7 @@ const DEFAULT_LOCALE: Locale = 'en';
 export type Project = CollectionEntry<'projects'>;
 export type Post = CollectionEntry<'posts'>;
 export type Link = CollectionEntry<'links'>;
+export type Experience = CollectionEntry<'experience'>;
 
 /** Collections that are translatable. `links` is not. */
 export type TranslatableCollection = 'projects' | 'posts';
@@ -46,7 +47,7 @@ export interface PostListItem {
 export interface TranslationLink {
   lang: Locale;
   slug: string;
-  /** Site-relative, locale-aware, trailing slash. e.g. '/es/blog/hola-mundo/' */
+  /** Site-relative, locale-aware, trailing slash. e.g. '/es/notes/hola-mundo/' */
   path: string;
 }
 
@@ -59,10 +60,13 @@ export interface EntryRoute<E> {
 const INCLUDE_DRAFTS = import.meta.env.DEV;
 const isVisible = (data: { draft: boolean }) => INCLUDE_DRAFTS || !data.draft;
 
-function entryPath(collection: TranslatableCollection, lang: Locale, slug: string): string {
-  const base = ROUTE_BASE[collection];
+export function collectionPath(collection: TranslatableCollection, lang: Locale): string {
   const prefix = lang === DEFAULT_LOCALE ? '' : `${lang}/`;
-  return `/${prefix}${base}/${slug}/`;
+  return `/${prefix}${ROUTE_BASE[collection]}/`;
+}
+
+export function entryPath(collection: TranslatableCollection, lang: Locale, slug: string): string {
+  return `${collectionPath(collection, lang)}${slug}/`;
 }
 
 function sortByPublishDate<E extends { data: { publishDate: Date } }>(
@@ -97,6 +101,11 @@ export async function listPosts(o: ListOptions): Promise<PostListItem[]> {
 /** No `lang` parameter — the `links` collection is language-agnostic (D5 exception). */
 export async function listLinks(): Promise<Link[]> {
   const entries = await getCollection('links', (e) => e.data.enabled);
+  return [...entries].sort((a, b) => a.data.order - b.data.order);
+}
+
+export async function listExperience(lang: Locale): Promise<Experience[]> {
+  const entries = await getCollection('experience', (entry) => entry.data.lang === lang);
   return [...entries].sort((a, b) => a.data.order - b.data.order);
 }
 

@@ -1,0 +1,11 @@
+[
+  {
+    "id": "sample-experience",
+    "lang": "en",
+    "role": "Developer",
+    "organisation": "Sample organisation",
+    "start": "2024",
+    "carriesOver": "Building and shipping software.",
+    "order": 1
+  }
+]
