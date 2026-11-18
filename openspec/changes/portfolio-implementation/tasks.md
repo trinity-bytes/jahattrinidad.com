@@ -7,9 +7,9 @@
 
 ## Phase 0 — Close the loose ends
 
-- [ ] 0.1 Fix `CLAUDE.md`: code fences are highlighted by Shiki with the brand theme; `color-scheme` is driven by `data-lens`, not the OS (project-scaffold delta)
-- [ ] 0.2 Fix `design.md` §8 of visual-design: the Shiki note is outdated (resolved by "Code theme")
-- [ ] 0.3 Confirm `node --test` runs `.ts` files on the Node version in `engines` (`>=22.12.0`); if not, raise the floor to the first version that strips types without a flag
+- [x] 0.1 Fix `CLAUDE.md`: code fences are highlighted by Shiki with the brand theme; `color-scheme` is driven by `data-lens`, not the OS (project-scaffold delta)
+- [x] 0.2 Fix `design.md` §8 of visual-design: the Shiki note is outdated (resolved by "Code theme")
+- [x] 0.3 Confirm `node --test` runs `.ts` files on the Node version in `engines` (`>=22.12.0`); if not, raise the floor to the first version that strips types without a flag. Result: 22.12.0 fails with `ERR_UNKNOWN_FILE_EXTENSION`, 22.18.0 passes; floor raised to `>=22.18.0`
 
 ## Phase 1 — Foundations
 
@@ -63,7 +63,7 @@
 - [ ] 7.1 Engine: `chat-engine.ts` with `next` and `detect`, tests under `node --test` for every scenario in the contact-chat spec; add the tests to `npm run check`
 - [ ] 7.2 Script: the questions, chips, placeholders and replies from 6.3 into the `Dictionary`
 - [ ] 7.3 UI: composer → conversation view, typing indicator, chips, editable summary, sent and failed states, live region, focus management
-- [ ] 7.4 Form service: pick it (open question 2), wire the POST, honeypot, privacy note, retry and "Copy my email" fallback; send a real test message end to end
+- [ ] 7.4 Form service: Web3Forms (open question 2, resolved), wire the POST, honeypot, privacy note, retry and "Copy my email" fallback; send a real test message end to end
 
 ## Phase 8 — Content
 
@@ -82,7 +82,7 @@
 
 ## Phase 10 — Launch
 
-- [ ] 10.1 Pick hosting (open question 1) and configure the deploy
+- [ ] 10.1 Configure the Cloudflare deploy for the static build (open question 1, resolved: Cloudflare)
 - [ ] 10.2 Responsive pass at 390, 768 and 1440 against every board
 - [ ] 10.3 Accessibility: Lighthouse 100 on Home, Work, a case study and a post; keyboard and screen reader walk-through of the lens, menu and chat
 - [ ] 10.4 SEO: titles, descriptions, Open Graph images, canonical, sitemap, RSS

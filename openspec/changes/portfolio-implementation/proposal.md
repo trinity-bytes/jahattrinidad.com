@@ -120,8 +120,8 @@ Work happens on a feature branch off `develop`, in commits of about 400 changed 
 
 ## Open questions
 
-1. **Hosting.** Where the static build is deployed (Cloudflare Pages, Netlify, GitHub Pages). Needed before phase 10.
-2. **Form service.** Which one (Web3Forms or Formspree class). Needed before task 7.4.
+1. **Hosting.** Resolved 2026-11-18: Cloudflare, where the domain already lives. The static build is served as-is; no Astro adapter.
+2. **Form service.** Resolved 2026-11-18: Web3Forms (free tier, 250 submissions a month), until a more capable or more private option is needed. The fallback path is a Cloudflare Worker that emails the owner's verified inbox; the endpoint lives in one constant, so the switch is local.
 3. **Chat questions and email template.** Designed with the chat view in Figma (visual-design task 7.11). Needed before task 7.2.
 
 ## Success criteria

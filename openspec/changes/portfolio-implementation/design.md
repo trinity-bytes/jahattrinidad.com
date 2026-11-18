@@ -118,7 +118,7 @@ function detect(text: string): { email?: string; branch?: Branch };
 
 ### Sending
 
-`POST` with `fetch` to the form service endpoint (configured in one constant; the access key of these services is public by design). Payload: branch, name, company, detail, email, and a plain-text body built from the email template. Honeypot field included. On failure the summary stays on screen with a retry and the "Copy my email" fallback.
+`POST` with `fetch` to the Web3Forms endpoint (configured in one constant; its access key is public by design). Payload: branch, name, company, detail, email, and a plain-text body built from the email template. Honeypot field included. On failure the summary stays on screen with a retry and the "Copy my email" fallback.
 
 ## 4. Routes and paths
 
