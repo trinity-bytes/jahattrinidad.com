@@ -3,7 +3,7 @@
 > Authority: `proposal.md` (scope, decisions I1–I6), `design.md` (structure, lens, chat), `specs/` (requirements). Values and boards: `openspec/changes/portfolio-visual-design/design.md`. Final copy: `docs/draft-copy.md`.
 > Check for every task: `npm run check` green. Page tasks also get a side-by-side check against their Figma board at 390, 768 and 1440. Chat tasks also run `node --test`.
 > Work on a feature branch off `develop`, one commit per task or per ~400 changed lines, Conventional Commits.
-> Last updated: 2026-11-18 (phases 0 and 1 done).
+> Last updated: 2026-11-18 (phases 0–2 done; Footer and Backgrounds are built but wired into pages in phase 3).
 
 ## Phase 0 — Close the loose ends
 
@@ -24,10 +24,10 @@
 
 ## Phase 2 — Shell
 
-- [ ] 2.1 `Base.astro`: fonts, tokens, `data-lens="outside"` on `<html>`, skip link, `aria-live` region
-- [ ] 2.2 Nav: Top and Scrolled states (IntersectionObserver on the hero), sticky glass bar with the opaque fallbacks, `aria-current` on the active section; language switch hidden until a second locale exists (D10)
-- [ ] 2.3 Footer: ground, the soft fade over the hill (D17), ghost name `aria-hidden`, the I-shortcut toggle
-- [ ] 2.4 Backgrounds: bytes generated as SVG at build, light gradients, grain; masks off text (40 → 120 px); hidden under reduced transparency and forced colors
+- [x] 2.1 `Base.astro`: fonts, tokens, `data-lens="outside"` on `<html>`, skip link, `aria-live` region
+- [x] 2.2 Nav: Top and Scrolled states (IntersectionObserver on the hero), sticky glass bar with the opaque fallbacks, `aria-current` on the active section; language switch hidden until a second locale exists (D10)
+- [x] 2.3 Footer: ground, the soft fade over the hill (D17), ghost name `aria-hidden`, the I-shortcut toggle
+- [x] 2.4 Backgrounds: bytes generated as SVG at build, light gradients, grain; masks off text (40 → 120 px); hidden under reduced transparency and forced colors
 
 ## Phase 3 — Home, Outside
 
