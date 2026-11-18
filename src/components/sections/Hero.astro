@@ -1,6 +1,6 @@
 ---
 /*
- * Home hero, Outside state. Paint order (visual-design design.md §5), back to front:
+ * Home hero, both states. Paint order (visual-design design.md §5), back to front:
  * sky + far hills, display name, near hill, portrait. The layers are separate
  * elements so a depth effect can move them independently later.
  *
@@ -9,21 +9,34 @@
  * On tablet and mobile the name overlaps the portrait, so an outline copy of it is
  * drawn above the portrait, masked to the portrait's alpha (board layer 05).
  *
- * The hero always sits on the bright sky image, in light and dark mode alike, so its
- * text uses fixed palette primitives instead of the light-dark() semantic tokens.
+ * Inside (design.md §5 "Inside differences") adds a dusk overlay right above the sky, a
+ * dimmed sun, an outlined name, a darker near hill, the Inside copy, and the annotations:
+ * side labels on desktop, numbered pins plus a notes band below the hero on tablet and
+ * mobile. Everything that differs only in colour is a token (tokens.css) that flips with
+ * the lens; copy that differs is rendered twice with data-show (design.md §2).
+ *
+ * The sky layer's position is kept in custom properties (--sky-*), so the sun pin and the
+ * dimmed-sun mask follow it at every width.
  */
 import { Picture, getImage } from 'astro:assets';
 import sky from '../../assets/hero/sky.png';
 import hill from '../../assets/hero/near-hill.png';
 import portrait from '../../assets/hero/portrait.png';
 import Icon from '../ui/Icon.astro';
+import Annotation from '../ui/Annotation.astro';
+import AnnotationList from '../ui/annotation/AnnotationList.astro';
 import type { Dictionary } from '../../lib/i18n';
 
 interface Props {
   strings: Dictionary['home']['outside']['hero'];
+  insideStrings: Dictionary['home']['inside']['hero'];
   workHref: string;
 }
-const { strings, workHref } = Astro.props;
+const { strings, insideStrings, workHref } = Astro.props;
+
+// Annotation order is the number shown on tablet and mobile.
+const note = insideStrings.annotations;
+const notes = [note.sky, note.hill, note.name, note.portrait];
 
 const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040 });
 ---
@@ -45,6 +58,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     loading="eager"
     fetchpriority="high"
   />
+  <div class="dusk" data-show="inside" aria-hidden="true"></div>
+  <div class="sun-mask" data-show="inside" aria-hidden="true"></div>
   <h1 id="hero-name" class="name">{strings.name}</h1>
   <Picture
     src={hill}
@@ -69,15 +84,56 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
   </div>
   <div class="intro">
     <p class="eyebrow">{strings.eyebrow}</p>
-    <p class="headline">{strings.headline}</p>
-    <p class="sub">{strings.sub}</p>
+    <p class="headline" data-show="outside">{strings.headline}</p>
+    <p class="headline" data-show="inside">{insideStrings.headline}</p>
+    <p class="sub" data-show="outside">{strings.sub}</p>
+    <p class="sub" data-show="inside">{insideStrings.sub}</p>
     <a class="cta" href={workHref}>{strings.cta}<Icon name="arrow-right" size={18} /></a>
   </div>
   <p class="footnote">
-    <span class="marker">{strings.marker}</span>
-    <span class="hint">{strings.hint}<span class="hint-arrow" aria-hidden="true"> ↘</span></span>
+    <span class="marker" data-show="outside">{strings.marker}</span>
+    <span class="hint" data-show="outside">{strings.hint}<span class="hint-arrow" aria-hidden="true"> ↘</span></span>
+    <span class="marker" data-show="inside">{insideStrings.marker}</span>
+    <span class="hint" data-show="inside">{insideStrings.hint}<span aria-hidden="true"> ↑</span></span>
   </p>
+
+  <Annotation
+    n={1}
+    x="var(--sun-x)"
+    y="var(--sun-y)"
+    side="above"
+    leader="max(0px, calc(var(--sun-y) - var(--name-top) + 49px))"
+    {...note.sky}
+  />
+  <Annotation n={2} x="483px" y="calc(100% - 40px)" side="right" pinX="var(--hill-pin-x)" pinY="var(--hill-pin-y)" {...note.hill} />
+  <Annotation
+    n={3}
+    x="calc(var(--gutter) + 36px)"
+    y="var(--name-top)"
+    side="above"
+    leader={49}
+    pinX="var(--gutter)"
+    pinY="calc(var(--name-top) + var(--font-size-display) * 0.276)"
+    bound={{
+      x: 'var(--gutter)',
+      y: 'var(--name-top)',
+      width: 'calc(var(--font-size-display) * 2.69)',
+      height: 'calc(var(--font-size-display) * 0.92)',
+    }}
+    {...note.name}
+  />
+  <Annotation
+    n={4}
+    x="var(--portrait-left)"
+    y="calc(var(--portrait-top) + 230px)"
+    side="left"
+    pinX="calc(var(--portrait-left) + var(--portrait-w))"
+    pinY="calc(var(--portrait-top) + (100% - var(--portrait-top)) * 0.35)"
+    bound={{ x: 'var(--portrait-left)', y: 'var(--portrait-top)', width: 'var(--portrait-w)', height: 'calc(100% - var(--portrait-top))' }}
+    {...note.portrait}
+  />
 </section>
+<AnnotationList items={notes} label={insideStrings.notesLabel} />
 
 <style>
   .hero {
@@ -85,6 +141,15 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     --portrait-w: 300px;
     --portrait-left: calc(50cqw - 138px);
     --portrait-top: 412px;
+    --sky-w: 1981.415px;
+    --sky-left: calc(50cqw - 735.812px);
+    --sky-top: -402.209px;
+    /* Where the sun sits inside the sky image (30.1% across, 43.94% of the width down). */
+    --sun-x: calc(var(--sky-left) + var(--sky-w) * 0.301);
+    --sun-y: calc(var(--sky-top) + var(--sky-w) * 0.4394);
+    /* Inside pin of the near hill on small screens: just below the name bound, at its right edge (mobile). */
+    --hill-pin-x: calc(100cqw - var(--gutter) - 3px);
+    --hill-pin-y: calc(var(--name-top) + var(--font-size-display) * 0.92 - 1px);
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -93,8 +158,23 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     background: var(--color-light-sun);
   }
   .layer { position: absolute; display: block; max-width: none; height: auto; pointer-events: none; }
-  .sky { width: 1981.415px; left: calc(50% - 735.812px); top: -402.209px; }
-  .hill { width: 2371.52px; left: calc(50% - 929.202px); top: -412.142px; }
+  .sky { width: var(--sky-w); left: var(--sky-left); top: var(--sky-top); }
+  .hill { width: 2371.52px; left: calc(50% - 929.202px); top: -412.142px; filter: var(--hero-hill-filter); }
+
+  /* Inside: the dusk overlay sits directly above the sky; the mask dims the sun under it. */
+  .dusk { position: absolute; inset: 0; background: var(--color-dusk); pointer-events: none; }
+  .sun-mask {
+    --size: calc(var(--sky-w) * 0.0224);
+    position: absolute;
+    left: calc(var(--sun-x) - var(--size) / 2);
+    top: calc(var(--sun-y) - var(--size) / 2);
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: var(--dusk-sun);
+    filter: blur(calc(var(--size) / 12));
+    pointer-events: none;
+  }
   .portrait { width: var(--portrait-w); left: var(--portrait-left); top: var(--portrait-top); }
 
   .name {
@@ -102,7 +182,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     left: var(--gutter);
     top: var(--name-top);
     margin: 0;
-    color: var(--white);
+    color: var(--color-hero-name-fill);
+    -webkit-text-stroke: var(--hero-stroke-width) var(--color-hero-name-stroke);
     font: 500 var(--font-size-display) / 0.92 var(--font-display), sans-serif;
     letter-spacing: -0.04em;
     white-space: nowrap;
@@ -122,7 +203,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     left: calc(var(--gutter) - var(--portrait-left));
     top: calc(var(--name-top) - var(--portrait-top));
     color: transparent;
-    -webkit-text-stroke: 1px var(--white);
+    -webkit-text-stroke: var(--hero-stroke-width) var(--color-hero-outline);
   }
 
   .intro {
@@ -137,13 +218,13 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     gap: 20px;
   }
   .intro p { margin: 0; }
-  .eyebrow { font: 500 13px / 1.3 var(--font-mono), monospace; letter-spacing: 0.065em; color: var(--green-800); }
+  .eyebrow { font: 500 13px / 1.3 var(--font-mono), monospace; letter-spacing: 0.065em; color: var(--color-hero-text); }
   .headline {
     font: 600 var(--font-size-heading-sm) / 1.15 var(--font-display), sans-serif;
     letter-spacing: -0.02em;
-    color: var(--green-950);
+    color: var(--color-heading);
   }
-  .sub { max-width: 520px; font: 400 var(--font-size-body) / 1.5 var(--font-sans), sans-serif; color: var(--green-800); }
+  .sub { max-width: 520px; font: 400 var(--font-size-body) / 1.5 var(--font-sans), sans-serif; color: var(--color-hero-text); }
   .cta {
     display: inline-flex;
     align-items: center;
@@ -151,8 +232,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     min-height: 49px;
     padding: 14px 24px;
     border-radius: 999px;
-    background: var(--green-950);
-    color: var(--white);
+    background: var(--color-accent);
+    color: var(--color-accent-text);
     font: 500 16px / 1.3 var(--font-sans), sans-serif;
     text-decoration: none;
   }
@@ -167,7 +248,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     flex-direction: column;
     gap: 6px;
     max-width: 166px;
-    color: var(--leaf-light);
+    color: var(--color-hero-footnote);
     font: 400 12px / 1.33 var(--font-mono), monospace;
   }
   .marker { font-weight: 500; letter-spacing: 0.08em; }
@@ -181,7 +262,13 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
       --portrait-top: 327px;
       height: 867px;
     }
-    .sky { width: 2554.781px; left: calc(50% - 829.723px); top: -704.569px; }
+    .hero {
+      --sky-w: 2554.781px;
+      --sky-left: calc(50cqw - 829.723px);
+      --sky-top: -704.569px;
+      --hill-pin-x: calc(var(--gutter) + 14px);
+      --hill-pin-y: calc(var(--name-top) + var(--font-size-display) * 0.92 + 8px);
+    }
     .hill { width: 2831.111px; left: calc(50% - 872.667px); top: -704.71px; }
     .intro { top: 136px; max-width: 600px; }
     .footnote { bottom: 18px; max-width: none; flex-direction: row; gap: 32px; }
@@ -193,9 +280,11 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
       --portrait-w: 520px;
       --portrait-left: calc(100cqw - 540px);
       --portrait-top: 190px;
+      --sky-w: 114.236cqw;
+      --sky-left: 0px;
+      --sky-top: -197px;
       height: 900px;
     }
-    .sky { width: 114.236%; left: 0; top: -197px; }
     .hill { width: 112.292%; left: -5.972%; top: -13px; }
     .intro { top: 180px; max-width: 660px; }
     .footnote { bottom: 32px; }

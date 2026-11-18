@@ -2,16 +2,24 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import type { Locale } from './content';
 
+interface HeroCopy {
+  name: string;
+  eyebrow: string;
+  cta: string;
+  hint: string;
+  marker: string;
+  headline: string;
+  sub: string;
+}
+
+/** Inside annotations of the hero, in list order (the number shown on small screens). */
+interface InsideHeroCopy extends HeroCopy {
+  notesLabel: string;
+  annotations: Record<'sky' | 'hill' | 'name' | 'portrait', { title: string; note: string }>;
+}
+
 interface HomeLensCopy {
-  hero: {
-    name: string;
-    eyebrow: string;
-    cta: string;
-    hint: string;
-    marker: string;
-    headline: string;
-    sub: string;
-  };
+  hero: HeroCopy;
   values: {
     marker: string;
     headline: string;
@@ -62,7 +70,7 @@ export interface Dictionary {
     workHeadline: string;
     notesHeadline: string;
     outside: HomeLensCopy;
-    inside: HomeLensCopy;
+    inside: Omit<HomeLensCopy, 'hero'> & { hero: InsideHeroCopy };
   };
   work: {
     intro: string;
@@ -254,15 +262,21 @@ const en: Dictionary = {
     },
     inside: {
       hero: {
-        // TODO(phase 4): confirm the Inside hero labels.
         name: 'Jahat',
         eyebrow: 'DESIGN ENGINEER · FRONTEND & PRODUCT',
         cta: 'See my work',
-        hint: 'drag the lens, or press I, to look inside',
+        hint: 'press Esc or I to go back outside',
         marker: '01 — INSIDE',
         headline:
           'The same page, taken apart — every layer, token and decision.',
         sub: 'Press I anywhere to see how a thing is built: what it is made of, and why.',
+        notesLabel: 'Hero layer notes',
+        annotations: {
+          sky: { title: '[layer 01 · sky + far hills]', note: 'sky.png · moves slowest' },
+          hill: { title: '[layer 02 · near hill]', note: 'near-hill.png · moves fastest' },
+          name: { title: '[layer 03 · display name]', note: 'Epilogue Medium · 300 px · sits behind the hill' },
+          portrait: { title: '[layer 04 · portrait]', note: 'generated from my own reference photos' },
+        },
       },
       values: {
         marker: '02 — WHAT YOU GET · HOW IT WAS BUILT',
