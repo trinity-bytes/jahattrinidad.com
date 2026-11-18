@@ -1,0 +1,55 @@
+---
+/*
+ * AnnotationList: the numbered stacked list of a section's Inside annotations, shown
+ * instead of the side labels below 64.0625rem (tablet and mobile). Hidden outside the
+ * Inside lens. It carries the same text as the desktop labels, so nothing a desktop
+ * reader sees is lost on small screens. Numbering restarts per section: the number is the
+ * item's position, and each <Annotation n={...}> uses the same number.
+ *
+ * Needs the `data-show` rule of the app shell (Base.astro) to hide itself Outside.
+ * Text arrives as props; `label` names the list for assistive technology.
+ * The component brings the band padding (16 top, 24 bottom, page gutter at the sides);
+ * pass `class` to adjust it.
+ *
+ * Usage, one array feeds both the pins and the list:
+ *
+ *   const notes = [{ title: '[layer 01]', note: 'bg.png' }, { title: '[layer 02]', note: 'hill.png' }];
+ *   notes.map((note, i) => <Annotation n={i + 1} x={100} y={200} {...note} />)   // inside the section
+ *   <AnnotationList items={notes} label="Layer notes" />                         // right below it
+ */
+import NumberPin from './NumberPin.astro';
+
+interface Props {
+  items: { title: string; note: string }[];
+  label: string;
+  class?: string;
+}
+const { items, label, class: className } = Astro.props;
+---
+
+<div class:list={['annotation-list', className]} data-show="inside">
+  <ol aria-label={label}>
+    {items.map((item, i) => (
+      <li>
+        <NumberPin n={i + 1} />
+        <p>
+          <span class="title">{item.title}</span>
+          <span class="note">{item.note}</span>
+        </p>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .annotation-list { padding: var(--space-md) var(--gutter) var(--space-xl); }
+  ol { display: flex; flex-direction: column; gap: var(--space-xs); margin: 0; padding: 0; list-style: none; }
+  li { display: flex; gap: 10px; align-items: flex-start; }
+  p { display: flex; flex-direction: column; gap: 2px; min-width: 0; margin: 0; font: 400 0.6875rem / normal var(--font-mono), monospace; }
+  .title { color: var(--annotation-title); opacity: 0.85; }
+  .note { color: var(--annotation-note); }
+
+  @media (min-width: 64.0625rem) {
+    .annotation-list { display: none; }
+  }
+</style>

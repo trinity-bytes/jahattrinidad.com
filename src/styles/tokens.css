@@ -26,6 +26,7 @@
     --ground: #010903;
     --ground-name: #0f1f0c;
     --white: #ffffff;
+    --dusk-sun: #3a4117;
 
     --color-bg: light-dark(var(--cream), var(--green-950));
     --color-surface: light-dark(var(--sand), var(--green-900));
@@ -43,6 +44,25 @@
     --color-light-sun: var(--sun-soft);
     --color-light-warm: light-dark(var(--sun-soft), var(--dusk-light));
     --color-light-leaf: light-dark(var(--leaf-light), var(--centre-light));
+    /* Home hero: the sky stays bright in both lenses, so Outside keeps its fixed ink and Inside flips to the dusk palette. */
+    --color-hero-text: light-dark(var(--green-800), var(--green-300));
+    --color-hero-footnote: light-dark(var(--leaf-light), var(--green-300));
+    --color-hero-name-fill: light-dark(var(--white), transparent);
+    --color-hero-name-stroke: light-dark(transparent, var(--green-300));
+    --color-hero-outline: light-dark(var(--white), var(--green-300));
+    --color-dusk: color-mix(in srgb, var(--green-950) 80%, transparent);
+    --hero-stroke-width: 1px;
+    --hero-hill-filter: none;
+
+    /* Inside annotations (design.md "Annotations, anchored and quiet"): one neutral, cream at low opacity. Used only in Inside. */
+    --annotation-pin: color-mix(in srgb, var(--cream) 60%, transparent);
+    --annotation-leader: color-mix(in srgb, var(--cream) 30%, transparent);
+    --annotation-title: color-mix(in srgb, var(--cream) 62%, transparent);
+    --annotation-note: color-mix(in srgb, var(--cream) 40%, transparent);
+    --annotation-bound: color-mix(in srgb, var(--cream) 20%, transparent);
+    --annotation-pin-ring: color-mix(in srgb, var(--cream) 45%, transparent);
+    --annotation-pin-number: color-mix(in srgb, var(--cream) 75%, transparent);
+
     --color-footer: var(--ground);
     --color-footer-name: var(--ground-name);
 
@@ -86,6 +106,9 @@
 
   :root[data-lens='inside'] {
     color-scheme: dark;
+    /* Hero: 1.5px name stroke and the near hill at exposure -0.4. */
+    --hero-stroke-width: 1.5px;
+    --hero-hill-filter: brightness(0.76);
   }
 
   @media (min-width: 48rem) {
