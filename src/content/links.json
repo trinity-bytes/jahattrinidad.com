@@ -2,17 +2,41 @@
   {
     "id": "github",
     "label": "GitHub",
-    "url": "https://github.com/jahattrinidad",
+    "url": "https://github.com/trinity-bytes",
     "icon": "github",
     "order": 1,
     "enabled": true
   },
   {
-    "id": "old-twitter",
-    "label": "Twitter",
-    "url": "https://twitter.com/jahattrinidad",
-    "icon": "twitter",
+    "id": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/trinitybytes",
+    "icon": "linkedin",
     "order": 2,
-    "enabled": false
+    "enabled": true
+  },
+  {
+    "id": "instagram",
+    "label": "Instagram",
+    "url": "https://www.instagram.com/trinitybytes/",
+    "icon": "instagram",
+    "order": 3,
+    "enabled": true
+  },
+  {
+    "id": "youtube",
+    "label": "YouTube",
+    "url": "https://www.youtube.com/@jahattrinidad",
+    "icon": "youtube",
+    "order": 4,
+    "enabled": true
+  },
+  {
+    "id": "x",
+    "label": "X",
+    "url": "https://x.com/trinitybytes",
+    "icon": "x",
+    "order": 5,
+    "enabled": true
   }
 ]

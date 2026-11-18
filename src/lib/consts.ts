@@ -18,3 +18,6 @@ export const BCP47 = { en: 'en-US', es: 'es-ES' } as const;
 
 /** Public contact address, shown by Contact and used by the chat fallback. */
 export const CONTACT_EMAIL = 'jahatjassiel@outlook.com';
+
+/** This site's source repository, linked from the footer. */
+export const SOURCE_URL = 'https://github.com/trinity-bytes/jahattrinidad.com';

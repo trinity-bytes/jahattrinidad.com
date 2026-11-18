@@ -17,7 +17,7 @@ import {
   listProjects,
   type Project,
 } from '../lib/content';
-import { CONTACT_EMAIL } from '../lib/consts';
+import { CONTACT_EMAIL, SOURCE_URL } from '../lib/consts';
 import { buildSeo } from '../lib/seo';
 import { getDictionary } from '../lib/i18n';
 // Placeholder for the Garden screenshot until the real entry lands (task 8.1).
@@ -124,7 +124,7 @@ const seo = buildSeo({
       ...links.map((link) => ({ label: link.data.label, href: link.data.url })),
       { label: t.footer.rss, href: '/rss.xml' },
     ]}
-    source={{ label: t.footer.builtWith, href: linkOf('github') ?? '/' }}
+    source={{ label: t.footer.builtWith, href: SOURCE_URL }}
     copyright={t.footer.copyright(new Date().getFullYear())}
     outsideName={copy.hero.name}
     insideName={t.nav.brandInside}
