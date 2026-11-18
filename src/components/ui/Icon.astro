@@ -32,7 +32,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-type IconName = 'search' | 'menu' | 'x' | 'arrow-up-right' | 'message-circle' | 'copy' | 'send';
+type IconName = 'search' | 'menu' | 'x' | 'arrow-right' | 'arrow-up-right' | 'message-circle' | 'copy' | 'send';
 interface Props {
   name: IconName;
   size?: number;
@@ -60,6 +60,7 @@ const { name, size = 24, label, class: className } = Astro.props;
   {name === 'search' && <><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></>}
   {name === 'menu' && <><path d="M4 5h16" /><path d="M4 12h16" /><path d="M4 19h16" /></>}
   {name === 'x' && <><path d="M18 6 6 18" /><path d="m6 6 12 12" /></>}
+  {name === 'arrow-right' && <><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></>}
   {name === 'arrow-up-right' && <><path d="M7 7h10v10" /><path d="M7 17 17 7" /></>}
   {name === 'message-circle' && <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />}
   {name === 'copy' && <><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></>}
