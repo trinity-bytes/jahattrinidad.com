@@ -3,7 +3,7 @@
 > Authority: `proposal.md` (scope, decisions I1–I6), `design.md` (structure, lens, chat), `specs/` (requirements). Values and boards: `openspec/changes/portfolio-visual-design/design.md`. Final copy: `docs/draft-copy.md`.
 > Check for every task: `npm run check` green. Page tasks also get a side-by-side check against their Figma board at 390, 768 and 1440. Chat tasks also run `node --test`.
 > Work on a feature branch off `develop`, one commit per task or per ~400 changed lines, Conventional Commits.
-> Last updated: 2026-11-18 (phases 0–3 done; the Home runs on scaffold projects until phase 8 content).
+> Last updated: 2026-11-18 (phases 0–4 done; spike 4.1 kept the full-page clone: 16.7 ms frames at 390 with 4× CPU throttle).
 
 ## Phase 0 — Close the loose ends
 
@@ -40,10 +40,10 @@
 
 ## Phase 4 — Inside and the lens
 
-- [ ] 4.1 Spike: preview layer as an `aria-hidden` Inside clone clipped by `circle()`; measure on a mid-range phone; pick the full-page clone or the per-section fallback (design.md §2)
-- [ ] 4.2 Inside copy for every Home section (`data-show` pairs), annotations as `ui/Annotation`, note opacity 60%
-- [ ] 4.3 Lens control: drag, click, Enter, I (ignored in text inputs), Esc, "Back outside", announcement, touch hint
-- [ ] 4.4 Inside on tablet and mobile: numbered pins plus the stacked list (visual-design 4.3)
+- [x] 4.1 Spike: preview layer as an `aria-hidden` Inside clone clipped by `circle()`; measure on a mid-range phone; pick the full-page clone or the per-section fallback (design.md §2)
+- [x] 4.2 Inside copy for every Home section (`data-show` pairs), annotations as `ui/Annotation`, note opacity 60%
+- [x] 4.3 Lens control: drag, click, Enter, I (ignored in text inputs), Esc, "Back outside", announcement, touch hint
+- [x] 4.4 Inside on tablet and mobile: numbered pins plus the stacked list (visual-design 4.3)
 
 ## Phase 5 — Other pages
 
