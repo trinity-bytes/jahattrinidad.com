@@ -35,6 +35,7 @@ const { strings, navigation, elsewhere, source, copyright, outsideName, insideNa
         <h2>{strings.thisSite}</h2>
         <ul>
           <li><a href={source.href}>{source.label}</a></li>
+          <li class="hint" data-show="inside">{strings.insideHint}</li>
           {showShortcut && <li><button type="button" data-shortcut-toggle aria-pressed="false">{strings.shortcut}</button></li>}
         </ul>
       </div>
@@ -74,8 +75,10 @@ const { strings, navigation, elsewhere, source, copyright, outsideName, insideNa
   a:focus-visible, button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
   .ghost { margin-top: 14px; color: var(--color-footer-name); font: 500 clamp(7rem, 20.84vw, 18.75rem)/1 var(--font-display); letter-spacing: -.04em; white-space: nowrap; overflow: hidden; }
   .ghost::before { content: attr(data-outside); }
-  :global([data-lens='inside']) .ghost { font-family: var(--font-mono); font-size: clamp(2rem, 8vw, 7.5rem); letter-spacing: -.06em; }
+  /* Inside: "@trinitybytes" in mono, 12 characters spanning the content width (boards: about 173 / 92 / 47px, fitting the content width at 1440 / 768 / 390). */
+  :global([data-lens='inside']) .ghost { font-family: var(--font-mono); font-size: 12vw; letter-spacing: -.06em; }
   :global([data-lens='inside']) .ghost::before { content: attr(data-inside); }
+  .hint { font: 500 16px/21px var(--font-sans); color: var(--color-heading); }
   .copyright { margin: 0; font: 400 14px/20px var(--font-sans); color: var(--color-text); }
   @media (max-width: 64rem) {
     .content { padding: 96px var(--gutter-tablet) 25px; }

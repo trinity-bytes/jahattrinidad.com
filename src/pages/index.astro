@@ -93,6 +93,7 @@ const seo = buildSeo({
     headline={copy.experience.headline}
     sub={copy.experience.sub}
     strings={t.experience}
+    inside={t.home.inside.experience}
     entries={experience}
   />
   <Notes
@@ -100,6 +101,7 @@ const seo = buildSeo({
     marker={copy.notes.marker}
     headline={t.home.notesHeadline}
     strings={t.notes}
+    inside={t.home.inside.notes}
     posts={posts}
     allWritingHref={notesPath}
   />
@@ -107,6 +109,7 @@ const seo = buildSeo({
     marker={copy.contact.marker}
     headline={copy.contact.headline}
     strings={t.contact}
+    inside={t.home.inside.contact}
     chat={t.chat}
     email={CONTACT_EMAIL}
     linkedInHref={linkOf('linkedin')}
