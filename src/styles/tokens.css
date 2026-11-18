@@ -37,6 +37,14 @@
     --color-text-muted: light-dark(var(--green-700), var(--green-300));
     --color-border: light-dark(var(--hairline-warm), var(--green-700));
     --color-tag-border: light-dark(var(--green-500), var(--green-700));
+    /* Experience chips: Inside they turn sun yellow (Home Inside board 2191:503). */
+    --color-chip-border: light-dark(var(--green-500), color-mix(in srgb, var(--sun) 45%, transparent));
+    /* Post rules and chips: Outside they are ink, Inside green (Home Inside board 2191:503). */
+    --color-rule: light-dark(var(--green-950), var(--green-700));
+    --color-tutorial-chip: light-dark(var(--sun-soft), var(--green-950));
+    --color-tutorial-chip-text: light-dark(var(--green-950), var(--green-200));
+    --color-chip-text: light-dark(var(--green-700), var(--sun));
+    --color-placeholder: light-dark(color-mix(in srgb, var(--green-900) 70%, transparent), color-mix(in srgb, var(--green-300) 70%, transparent));
     --color-accent: light-dark(var(--green-950), var(--green-300));
     --color-accent-text: light-dark(var(--white), var(--green-950));
     --color-focus: light-dark(var(--green-700), var(--green-300));
@@ -84,6 +92,10 @@
     /* Content width at 1440: 1440 − 2 × 64px gutter. */
     --content-max: 82rem;
 
+    /* Padding of the featured post card. The card and the Inside annotation of its type chip share it. */
+    --post-card-pad-x: var(--space-xl);
+    --post-card-pad-y: var(--space-xl);
+
     --font-size-label: 0.75rem;
     /* Home 2210:86 / 2211:86 / 2191:86: 16 / 17 / 18px. */
     --font-size-body: clamp(1rem, 0.93551587rem + 0.26455026vw, 1.0625rem);
@@ -106,6 +118,8 @@
 
   /* Matches <html> and the lens preview clone, which carries the same attribute. */
   [data-lens='inside'] {
+    /* Footer name: brighter ghost Inside (board 2191:881). */
+    --color-footer-name: var(--green-900);
     color-scheme: dark;
     /* Hero: 1.5px name stroke and the near hill at exposure -0.4. */
     --hero-stroke-width: 1.5px;
@@ -115,6 +129,8 @@
   @media (min-width: 48rem) {
     :root {
       --gutter: var(--gutter-tablet);
+      --post-card-pad-x: 2rem;
+      --post-card-pad-y: 2.25rem;
       /* Home 2210:86 / 2211:86 / 2191:86: 16 / 17 / 18px. */
       --font-size-body: clamp(1.0625rem, 0.99107143rem + 0.14880952vw, 1.125rem);
       /* Home 2210:86 / 2211:86 / 2191:86: 26 / 30 / 34px. */
@@ -133,6 +149,7 @@
   @media (min-width: 64.0625rem) {
     :root {
       --gutter: var(--gutter-desktop);
+      --post-card-pad-x: var(--space-2xl);
     }
   }
 }

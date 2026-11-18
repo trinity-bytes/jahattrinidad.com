@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import Annotation from '../ui/Annotation.astro';
 
 interface Props {
   /** Already formatted, e.g. "Mar–Dec 2023". */
@@ -11,9 +12,11 @@ interface Props {
   tags: string[];
   image?: ImageMetadata;
   imageAlt?: string;
+  /** Inside: an annotation on the chip whose text is `tag`. `n` is its number in the section's list. */
+  toolNote?: { n: number; tag: string; title: string; note: string };
 }
 
-const { period, role, organisation, description, tags, image, imageAlt = '' } = Astro.props;
+const { period, role, organisation, description, tags, image, imageAlt = '', toolNote } = Astro.props;
 ---
 <li class="row">
   <p class="period" data-background-text>{period}</p>
@@ -21,7 +24,23 @@ const { period, role, organisation, description, tags, image, imageAlt = '' } = 
     <h4 class="heading" data-background-text><span class="role">{role}</span> <span class="organisation">{organisation}</span></h4>
     <p class="description" data-background-text>{description}</p>
     {image && <div class="photo"><Image src={image} alt={imageAlt} width={640} height={400} widths={[320, 640, 960]} sizes="(min-width: 48rem) 320px, 100vw" /></div>}
-    {tags.length > 0 && <ul class="tags">{tags.map((tag) => <li data-background-text>{tag}</li>)}</ul>}
+    {tags.length > 0 && <ul class="tags">{tags.map((tag) => (
+      <li data-background-text>
+        {tag}
+        {toolNote?.tag === tag && (
+          <Annotation
+            n={toolNote.n}
+            x="calc(100% + 5px)"
+            y="50%"
+            pinX="-5px"
+            pinY="-5px"
+            title={toolNote.title}
+            note={toolNote.note}
+            bound={{ x: '-5px', y: '-5px', width: 'calc(100% + 10px)', height: 'calc(100% + 10px)' }}
+          />
+        )}
+      </li>
+    ))}</ul>}
   </div>
 </li>
 <style>
@@ -35,7 +54,7 @@ const { period, role, organisation, description, tags, image, imageAlt = '' } = 
   .photo { width: 100%; aspect-ratio: 35 / 24; overflow: hidden; border-radius: var(--space-sm); }
   .photo :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
   .tags { display: flex; flex-wrap: wrap; gap: 0 var(--space-xs); margin: 0; padding: 0; list-style: none; }
-  .tags li { padding: var(--space-2xs) 0.625rem; border: 1px solid var(--color-tag-border); border-radius: 999px; font: 400 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text-muted); }
+  .tags li { position: relative; padding: var(--space-2xs) 0.625rem; border: 1px solid var(--color-chip-border); border-radius: 999px; font: 400 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-chip-text); }
   @media (min-width: 48rem) {
     .row { grid-template-columns: 7rem 1fr; gap: var(--space-xl); }
     .heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.625rem; }

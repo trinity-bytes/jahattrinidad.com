@@ -23,6 +23,13 @@ interface InsideNote {
   note: string;
 }
 
+/** Inside-only copy of the lower sections: what differs from HomeLensCopy, plus their annotations. */
+interface InsideLowerCopy {
+  experience: { carriesOver: string; notesLabel: string };
+  notes: { notesLabel: string; annotations: Record<'feed' | 'collection' | 'callSite', InsideNote> };
+  contact: { notesLabel: string; annotations: Record<'composer', InsideNote> };
+}
+
 interface HomeLensCopy {
   hero: HeroCopy;
   values: {
@@ -75,7 +82,7 @@ export interface Dictionary {
     workHeadline: string;
     notesHeadline: string;
     outside: HomeLensCopy;
-    inside: Omit<HomeLensCopy, 'hero' | 'values' | 'work'> & {
+    inside: Omit<HomeLensCopy, 'hero' | 'values' | 'work' | 'experience' | 'notes' | 'contact'> & {
       hero: InsideHeroCopy;
       values: HomeLensCopy['values'] & { notesLabel: string; annotations: { source: InsideNote } };
       work: HomeLensCopy['work'] & {
@@ -83,6 +90,9 @@ export interface Dictionary {
         /** Labels of the Inside card rows; the row text is project content. */
         rowLabels: { stack: string; owned: string; decision: string };
       };
+      experience: HomeLensCopy['experience'] & InsideLowerCopy['experience'];
+      notes: HomeLensCopy['notes'] & InsideLowerCopy['notes'];
+      contact: HomeLensCopy['contact'] & InsideLowerCopy['contact'];
     };
   };
   work: {
@@ -178,6 +188,8 @@ export interface Dictionary {
     elsewhere: string;
     thisSite: string;
     shortcut: string;
+    /** Inside only: how to leave the lens. */
+    insideHint: string;
     builtWith: string;
     availability: string;
     github: string;
@@ -329,13 +341,27 @@ const en: Dictionary = {
         marker: '04 — EXPERIENCE · WHAT IT TRAINED',
         headline: 'What each job left in my toolkit',
         sub: 'Brand work taught me systems, teaching taught me to explain, and running community channels taught me to listen to users. I use all three every time I build.',
+        carriesOver: 'What carries into how I build',
+        notesLabel: 'Experience tool notes',
       },
       notes: {
         marker: '05 — NOTES · HOW A POST GETS PUBLISHED',
+        notesLabel: 'Notes pipeline notes',
+        // Facts: src/pages/rss.xml.ts, the posts collection in src/content.config.ts, listPosts in src/lib/content.ts.
+        annotations: {
+          feed: { title: '[feed · /rss.xml]', note: '@astrojs/rss · generated at build' },
+          collection: { title: '[MDX · content collection]', note: 'src/content/posts/*.mdx, glob loader' },
+          callSite: { title: '[one call site · both rows]', note: 'src/lib/content.ts · boundary-checked' },
+        },
       },
       contact: {
         marker: '06 — CONTACT · FOR DEVELOPERS',
         headline: "You've seen how I build. What should we build together?",
+        notesLabel: 'Contact notes',
+        // Chat design: openspec/changes/portfolio-implementation/design.md §3 (scripted, no language model).
+        annotations: {
+          composer: { title: '[component · composer]', note: 'free text or a chip · scripted, no AI model' },
+        },
       },
     },
   },
@@ -443,6 +469,7 @@ const en: Dictionary = {
     elsewhere: 'Elsewhere',
     thisSite: 'This site',
     shortcut: 'Turn off the I shortcut',
+    insideHint: 'Press Esc or I to go back outside',
     builtWith: 'Built with Astro · source on GitHub',
     availability: 'Open to an internship, now.\nLima, Peru · remote.',
     github: 'GitHub',

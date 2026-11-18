@@ -9,7 +9,8 @@
     "end": "2023-12",
     "description": "Designed a course that introduced students to web development and content creation tools.",
     "tags": ["Teaching", "Web development"],
-    "carriesOver": { "title": "Explaining hard things simply", "from": "from teaching a secondary school course, 2023", "order": 1 },
+    "carriesOver": { "title": "Explaining hard things simply", "insideTitle": "Writing docs a beginner can follow", "from": "from teaching a secondary school course, 2023", "order": 1 },
+    "toolNote": { "tag": "Web development", "title": "[method · course design]", "note": "web basics for secondary students" },
     "order": 1
   },
   {
@@ -22,7 +23,7 @@
     "end": "2023",
     "description": "Monitored 30+ cameras and ran the office's social media, giving the patrol team's work visibility.",
     "tags": ["Community management", "Reporting"],
-    "carriesOver": { "title": "Listening to real users", "from": "from running a municipality’s community channels, 2022–2023", "order": 3 },
+    "carriesOver": { "title": "Listening to real users", "insideTitle": "Turning user feedback into reports", "from": "from running a municipality’s community channels, 2022–2023", "order": 3 },
     "order": 2
   },
   {
@@ -35,7 +36,7 @@
     "end": "2022",
     "description": "Built the brand from market research up, then its social media and print materials.",
     "tags": ["Branding", "Graphic design"],
-    "carriesOver": { "title": "Brand and visual design", "from": "from three years as a graphic designer, 2019–2022", "order": 2 },
+    "carriesOver": { "title": "Brand and visual design", "insideTitle": "Visual systems, from research up", "from": "from three years as a graphic designer, 2019–2022", "order": 2 },
     "order": 3
   },
   {
@@ -48,6 +49,7 @@
     "end": "2022",
     "description": "Redesigned the brand identity across TV broadcast and social media.",
     "tags": ["Brand identity", "vMix"],
+    "toolNote": { "tag": "vMix", "title": "[tool · vMix]", "note": "live video production for broadcast" },
     "order": 4
   },
   {
@@ -71,7 +73,7 @@
     "start": "2024",
     "description": "Performing for big audiences turned stage nerves into confidence, and keeps me growing beyond tech.",
     "tags": ["Stage presence", "Interpersonal skills"],
-    "carriesOver": { "title": "Presenting with confidence", "from": "from singing on stage with the UPC choir, 2024–now", "order": 4 },
+    "carriesOver": { "title": "Presenting with confidence", "insideTitle": "Demoing work in front of a crowd", "from": "from singing on stage with the UPC choir, 2024–now", "order": 4 },
     "image": "./experience/upc-choir.jpg",
     "imageAlt": "Jahat singing a solo with arms open in front of the UPC choir at an outdoor performance.",
     "order": 6

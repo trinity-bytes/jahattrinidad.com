@@ -90,9 +90,12 @@ const experience = defineCollection({
       tags: z.array(z.string()).default([]), // visible Outside tags
       tools: z.array(z.string()).default([]), // Inside tags
       // The "what carries over to your team" item this role produced, if any.
+      // `insideTitle` is the Inside lens's own line ("What carries into how I build").
       carriesOver: z
-        .object({ title: z.string(), from: z.string(), order: z.number().int() })
+        .object({ title: z.string(), insideTitle: z.string().optional(), from: z.string(), order: z.number().int() })
         .optional(),
+      // Inside annotation on one of this role's tags: `tag` names the chip it points at.
+      toolNote: z.object({ tag: z.string(), title: z.string(), note: z.string() }).optional(),
       image: image().optional(),
       imageAlt: z.string().optional(),
       order: z.number().int(),
