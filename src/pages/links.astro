@@ -29,6 +29,7 @@ const seo = buildSeo({
 ---
 
 <Base lang={lang} seo={seo}>
+  <div class="container">
   <h1>{t.nav.links}</h1>
   <ul>
     {links.map((link) => (
@@ -37,4 +38,5 @@ const seo = buildSeo({
       </li>
     ))}
   </ul>
+  </div>
 </Base>

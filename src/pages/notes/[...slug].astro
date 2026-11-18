@@ -51,9 +51,11 @@ const { Content } = await renderEntry(entry);
 ---
 
 <Base lang={lang} seo={seo}>
+  <div class="container">
   <article>
     <h1>{entry.data.title}</h1>
     <p>{t.post.readingTime(readingTime)}</p>
     <Content />
   </article>
+  </div>
 </Base>

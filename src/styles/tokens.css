@@ -59,6 +59,10 @@
     --gutter-mobile: 1.25rem;
     --gutter-tablet: 2.5rem;
     --gutter-desktop: 4rem;
+    /* Active page gutter: mobile, then tablet from 48rem, desktop above 64rem (the nav's breakpoints). */
+    --gutter: var(--gutter-mobile);
+    /* Content width at 1440: 1440 − 2 × 64px gutter. */
+    --content-max: 82rem;
 
     --font-size-label: 0.75rem;
     /* Home 2210:86 / 2211:86 / 2191:86: 16 / 17 / 18px. */
@@ -86,6 +90,7 @@
 
   @media (min-width: 48rem) {
     :root {
+      --gutter: var(--gutter-tablet);
       /* Home 2210:86 / 2211:86 / 2191:86: 16 / 17 / 18px. */
       --font-size-body: clamp(1.0625rem, 0.99107143rem + 0.14880952vw, 1.125rem);
       /* Home 2210:86 / 2211:86 / 2191:86: 26 / 30 / 34px. */
@@ -98,6 +103,12 @@
       --font-size-heading-lg: clamp(3rem, 2.14285714rem + 1.78571429vw, 3.75rem);
       /* Home 2210:86 / 2211:86 / 2191:86: 130 / 210 / 300px. */
       --font-size-display: clamp(13.125rem, 6.69642857rem + 13.39285714vw, 18.75rem);
+    }
+  }
+
+  @media (min-width: 64.0625rem) {
+    :root {
+      --gutter: var(--gutter-desktop);
     }
   }
 }

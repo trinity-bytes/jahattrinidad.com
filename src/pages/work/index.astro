@@ -26,6 +26,7 @@ const seo = buildSeo({
 ---
 
 <Base lang={lang} seo={seo}>
+  <div class="container">
   <h1>{t.nav.work}</h1>
   <ul>
     {projects.map((project) => (
@@ -35,4 +36,5 @@ const seo = buildSeo({
       </li>
     ))}
   </ul>
+  </div>
 </Base>

@@ -26,6 +26,7 @@ const seo = buildSeo({
 ---
 
 <Base lang={lang} seo={seo}>
+  <div class="container">
   <h1>{t.nav.notes}</h1>
   <ul>
     {posts.map(({ entry, readingTime }) => (
@@ -35,4 +36,5 @@ const seo = buildSeo({
       </li>
     ))}
   </ul>
+  </div>
 </Base>
