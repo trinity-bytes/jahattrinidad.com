@@ -16,6 +16,9 @@
     --green-950: #0a200b;
     --sun: #f6d653;
     --sun-soft: #fbeba0;
+    --leaf-light: #b3f3b4;
+    --dusk-light: #2e7a33;
+    --centre-light: #2b6e30;
     --cream: #faf6e8;
     --sand: #f3edd6;
     --card: #fffdf7;
@@ -37,6 +40,9 @@
     --color-accent-text: light-dark(var(--white), var(--green-950));
     --color-focus: light-dark(var(--green-700), var(--green-300));
     --color-signal: var(--sun);
+    --color-light-sun: var(--sun-soft);
+    --color-light-warm: light-dark(var(--sun-soft), var(--dusk-light));
+    --color-light-leaf: light-dark(var(--leaf-light), var(--centre-light));
     --color-footer: var(--ground);
     --color-footer-name: var(--ground-name);
 

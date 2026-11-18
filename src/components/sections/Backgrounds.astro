@@ -1,0 +1,140 @@
+---
+import { bytesImage } from './backgrounds/bytes';
+
+interface Props {
+  /** Values and Experience use the warm light; Work and Notes use the leaf light. */
+  variant: 'values' | 'work' | 'experience' | 'notes';
+  /** The surface of the next section. Use none before the Contact landscape. */
+  next?: 'bg' | 'surface' | 'none';
+  /** A stable seed keeps the decoration reproducible. */
+  seed?: number;
+}
+
+const { variant, next = 'none', seed = 1 } = Astro.props;
+const warm = variant === 'values' || variant === 'experience';
+---
+<div
+  class:list={['backgrounds', variant, { warm, leaf: !warm }]}
+  data-backgrounds
+  data-next={next}
+  style={`--bytes-image: ${bytesImage(seed)}; --highlight-image: ${bytesImage(seed, true)};`}
+  aria-hidden="true"
+>
+  <div class="transition"></div>
+  <div class="light"></div>
+  <svg class="grain" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <filter id={`grain-${variant}-${seed}`}><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" seed={seed} stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter>
+    <rect width="100%" height="100%" filter={`url(#grain-${variant}-${seed})`} />
+  </svg>
+  <div class="bytes-mask" data-bytes-mask>
+    <div class="byte-field"><div class="bytes"></div><div class="highlight"></div></div>
+  </div>
+</div>
+
+<script>
+  // Place this component directly inside a positioned section and mark each
+  // text block with data-background-text. The mask follows its actual boxes.
+  for (const background of document.querySelectorAll<HTMLElement>('[data-backgrounds]')) {
+    const section = background.parentElement;
+    const layer = background.querySelector<HTMLElement>('[data-bytes-mask]');
+    if (!section || !layer) continue;
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const bounds = background.getBoundingClientRect();
+        if (!bounds.width || !bounds.height) return;
+        const margin = bounds.width < 600 ? 12 : bounds.width < 1000 ? 20 : 40;
+        const outer = bounds.width < 600 ? 36 : bounds.width < 1000 ? 52 : 120;
+        const blur = (outer - margin) / 4;
+        const padding = (outer + margin) / 2;
+        const boxes = [...section.querySelectorAll<HTMLElement>('[data-background-text]')].flatMap((element) => {
+          if (!element.getClientRects().length) return [];
+          const range = document.createRange();
+          range.selectNodeContents(element);
+          return [...range.getClientRects()].filter((box) => box.width > 0 && box.height > 0);
+        });
+        const rectangles = (inset: number) => boxes.map((box) =>
+          `<rect x="${box.left - bounds.left - inset}" y="${box.top - bounds.top - inset}" width="${box.width + inset * 2}" height="${box.height + inset * 2}"/>`
+        ).join('');
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${bounds.width}" height="${bounds.height}"><rect width="100%" height="100%" fill="white"/><g fill="black" filter="url(#blur)">${rectangles(padding)}</g><g fill="black">${rectangles(margin)}</g><filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${blur}"/></filter></svg>`;
+        layer.style.maskImage = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+        layer.style.visibility = 'visible';
+      });
+    };
+    const observer = new ResizeObserver(update);
+    observer.observe(background);
+    section.querySelectorAll<HTMLElement>('[data-background-text]').forEach((element) => observer.observe(element));
+    window.addEventListener('resize', update);
+    document.fonts.ready.then(update);
+    update();
+  }
+</script>
+
+<style>
+  .backgrounds { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .transition, .light, .grain, .bytes-mask, .byte-field, .bytes, .highlight { position: absolute; inset: 0; }
+  .transition { top: auto; height: 320px; }
+  [data-next='bg'] .transition { background: linear-gradient(to bottom, transparent, var(--color-bg)); }
+  [data-next='surface'] .transition { background: linear-gradient(to bottom, transparent, var(--color-surface)); }
+  .warm .light { background: radial-gradient(ellipse at 78% 0%, color-mix(in srgb, var(--color-light-warm) 55%, transparent), transparent 65%); }
+  .leaf .light { background: radial-gradient(ellipse at 15% 80%, color-mix(in srgb, var(--color-light-leaf) 22%, transparent), transparent 65%); }
+  .grain { opacity: .06; mix-blend-mode: multiply; }
+  :global([data-lens="inside"]) .transition { height: 360px; }
+  :global([data-lens="inside"]) .grain { opacity: .22; }
+  :global([data-lens="inside"]) .warm .light { background: radial-gradient(ellipse at 78% 0%, color-mix(in srgb, var(--color-light-warm) 45%, transparent), transparent 65%), radial-gradient(ellipse at 20% 5%, color-mix(in srgb, var(--color-light-sun) 6%, transparent), transparent 55%); }
+  :global([data-lens="inside"]) .leaf .light { background: radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--color-light-leaf) 35%, transparent), transparent 65%); }
+  .bytes-mask { visibility: hidden; mask-mode: luminance; mask-repeat: no-repeat; mask-size: 100% 100%; }
+  .byte-field {
+    mask-image:
+      radial-gradient(ellipse 680px 360px at calc(100% - 120px) 0, black 0%, black 30%, transparent 100%),
+      linear-gradient(to top, rgb(0 0 0 / .25), transparent 180px);
+  }
+  .leaf .byte-field {
+    mask-image:
+      radial-gradient(ellipse 600px 420px at 150px calc(100% - 360px), black 0%, black 25%, transparent 100%),
+      linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px),
+      linear-gradient(to top, rgb(0 0 0 / .2), transparent 180px);
+  }
+  :global([data-lens="inside"]) .warm .byte-field {
+    mask-image:
+      radial-gradient(ellipse 900px 500px at calc(100% - 120px) 0, black 0%, black 30%, transparent 100%),
+      linear-gradient(to top, rgb(0 0 0 / .25), transparent 180px);
+  }
+  .experience .byte-field {
+    mask-image:
+      radial-gradient(ellipse 680px 360px at calc(100% - 120px) 0, black 0%, black 30%, transparent 100%),
+      linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px),
+      linear-gradient(to top, rgb(0 0 0 / .25), transparent 180px);
+  }
+  :global([data-lens="inside"]) .experience .byte-field {
+    mask-image:
+      radial-gradient(ellipse 900px 500px at calc(100% - 120px) 0, black 0%, black 30%, transparent 100%),
+      linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px),
+      linear-gradient(to top, rgb(0 0 0 / .25), transparent 180px);
+  }
+  :global([data-lens="inside"]) .leaf .byte-field {
+    mask-image:
+      radial-gradient(ellipse 700px 650px at 720px 0, black 0%, black 25%, transparent 100%),
+      linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px),
+      linear-gradient(to top, rgb(0 0 0 / .2), transparent 180px);
+  }
+  .leaf[data-next="none"] .byte-field {
+    mask-image:
+      radial-gradient(ellipse 600px 420px at 150px calc(100% - 360px), black 0%, black 25%, transparent 100%),
+      linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px);
+  }
+  :global([data-lens="inside"]) .leaf[data-next="none"] .byte-field {
+    mask-image:
+      radial-gradient(ellipse 700px 650px at 720px 0, black 0%, black 25%, transparent 100%),
+      linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px);
+  }
+  .bytes, .highlight { mask-size: 1440px 320px; }
+  .bytes { background: var(--color-text-muted); opacity: .045; mask-image: var(--bytes-image); mask-repeat: repeat; mask-position: right top; }
+  .highlight { background: light-dark(var(--color-text-muted), var(--color-signal)); opacity: .34; mask-image: var(--highlight-image); mask-repeat: no-repeat; mask-position: right 120px; }
+  :global([data-lens="inside"]) .bytes { opacity: .07; }
+  .leaf .highlight { mask-position: -1002px calc(100% - 70px); }
+  :global([data-lens="inside"]) .highlight { opacity: .4; mask-position: right 0px; }
+  :global([data-lens="inside"]) .leaf .highlight { mask-position: -432px 120px; }
+  @media (prefers-reduced-transparency: reduce), (forced-colors: active) { .backgrounds { display: none; } }
+</style>
