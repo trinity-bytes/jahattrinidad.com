@@ -199,7 +199,7 @@ All text added on 2026-11-16 was written by an agent and must be reviewed by the
 
 | Area | Change |
 |---|---|
-| `src/styles/tokens.css` | Replace placeholder primitives with the brand palette. Keep `color-scheme: light dark` on `:root` unless Open Question 3 decides otherwise. |
+| `src/styles/tokens.css` | Replace placeholder primitives with the brand palette. Set `color-scheme: light` on `:root` and `dark` under `[data-lens="inside"]` (Open Question 3, resolved 2026-11-17). |
 | Fonts | Epilogue, Hanken Grotesk, IBM Plex Mono through Astro's native Fonts API, self-hosted. `@fontsource` and Google Fonts CDN stay forbidden. |
 | `src/lib/i18n.ts` | Every UI string from the designs goes into the `Dictionary`. Outside and Inside copy are both UI strings. |
 | `src/content.config.ts` | Likely new fields: posts `type` (essay or tutorial); projects `tier` (case-study, project, archive) and team info (solo or team size, plus "my part"). Not decided here. |
@@ -212,7 +212,7 @@ All text added on 2026-11-16 was written by an agent and must be reviewed by the
 | Hero assets are not in git by decision (D8). A fresh clone has no images. | Export from Figma (image hashes in `assets.md`). The prompts can also regenerate them, but results will differ. |
 | Figma node IDs change if boards are rebuilt. | Boards are also findable by name; names are in `design.md`. |
 | Draft copy ships as if it were approved. | D7 and the task list keep it flagged. |
-| Inside/Outside state collides with OS light/dark through `light-dark()`. | Open Question 3. Do not implement theming before it is answered. |
+| Inside/Outside state collides with OS light/dark through `light-dark()`. | Resolved by Open Question 3 (2026-11-17): the lens drives `color-scheme`, the OS preference is ignored. |
 
 ## Rollback Plan
 
@@ -222,10 +222,10 @@ Nothing in `src/` changes, so there is nothing to roll back in code. In Figma, e
 
 1. ~~Name hidden by the portrait.~~ Resolved 2026-11-16: the hero shows "Jahat" only, the full name is the nav logo. See D9.
 2. ~~Experience left column is empty.~~ Resolved on v3.1 by D14.
-3. **Inside/Outside vs OS color scheme.** `tokens.css` uses `light-dark()`, which follows the OS. The design makes dark a user-toggled content state. Are they the same switch, two switches, or does the site ignore the OS preference?
-4. **Opacity.** Palette v1 says "no opacity fades". The Inside hero uses a `#0A200B` overlay at 0.8 and an exposure filter on the hill. Keep the rule and bake dark image variants, or relax the rule for image dimming? (The footer now uses a fade, D17, and the backgrounds use translucent light layers, D20.)
+3. ~~**Inside/Outside vs OS color scheme.** `tokens.css` uses `light-dark()`, which follows the OS. The design makes dark a user-toggled content state. Are they the same switch, two switches, or does the site ignore the OS preference?~~ Resolved 2026-11-17: **the site ignores the OS preference; the lens is the only source of truth** (owner, verbatim: "el 3 debe seri, de otro modo estariamos contradiciendo el diseño"). Outside is always light, Inside always dark. `light-dark()` stays: it resolves against the element's used `color-scheme`, so `:root { color-scheme: light }` plus `:root[data-lens="inside"] { color-scheme: dark }` drives every token from the lens, and the drag preview circle can mark only its own subtree. Rejected: the OS decides (a dark-OS recruiter would land on the technical copy, breaking the Outside/Inside messaging rule); two switches (four states, two of them never designed). When `tokens.css` changes, rewrite the `CLAUDE.md` rule about `color-scheme: light dark`.
+4. ~~**Opacity.** Palette v1 says "no opacity fades". The Inside hero uses a `#0A200B` overlay at 0.8 and an exposure filter on the hill. Keep the rule and bake dark image variants, or relax the rule for image dimming? (The footer now uses a fade, D17, and the backgrounds use translucent light layers, D20.)~~ Resolved 2026-11-17: relaxed for image dimming (task 3.13).
 5. ~~Toggle placement.~~ Resolved 2026-11-16: the lens, D11.
-6. **Sun yellow.** The owner showed slight doubt about yellow on 2026-11-09 ("maybe no es tan mi estilo"). Re-check now that it is on real pages.
+6. ~~**Sun yellow.** The owner showed slight doubt about yellow on 2026-11-09 ("maybe no es tan mi estilo"). Re-check now that it is on real pages.~~ Resolved 2026-11-17: accepted (task 1.5).
 7. **Parallax amounts.** Inside labels say "moves slowest / moves fastest". No values are specified.
 8. ~~Where do the image assets live?~~ Resolved 2026-11-16: untracked, Figma holds them. See D8.
 9. **Placeholders still in the design:** `[N]` project count, the email address, post titles, Elsewhere rows, Viora "My part", Mink'a problem and code part. (Value 02 proof resolved by D12; city resolved by D16.)
@@ -247,3 +247,13 @@ Owner, verbatim: "creo que en el caso de estudio no tienen mucho sentido dividir
 - **Supersedes** D2 and D18 for case study pages only; Home and other pages keep both states.
 - No lens and no I shortcut on case study pages (owner, 2026-11-17: "quitalas"): the lens dock and the footer line "Press I to look inside" are removed on these pages. Implementation: the footer's "This site" column omits that line on case study routes, and the I key handler is not mounted there.
 - Rejected: the v3 Outside `2257:2` and Inside `2263:2` pair (kept on the page as reference).
+
+### D22 — URLs follow the nav: `/work/` and `/notes/`; `/links/` stays — Accepted (2026-11-17, owner)
+
+Routes are renamed before anything is public: `/projects/` → `/work/` (and `/work/<slug>/`), `/blog/` → `/notes/` (and `/notes/<slug>/`). Owner: "va, renombreamos y links se queda como pagina de enlaces tipo linktree".
+
+- **Why now:** nothing is published, so renaming is free. Later, every rename needs a permanent redirect, and a static site with no server can only redirect with `meta refresh` pages.
+- **Why these names:** the URL says what the nav says. A visitor who clicks "Notes" should not land on `/blog/`.
+- **Unchanged:** collection names `projects` and `posts` (internal), `/rss.xml`.
+- **`/links/` stays** as a link-in-bio page (linktree style). It has no design in Figma yet (see task 7.10).
+- **Implementation touches:** `src/pages/` folders, `projectRoutes`/`postRoutes` and any route helper in `src/lib/content.ts`, every `localizedPath` call, the RSS item links, the sitemap output.

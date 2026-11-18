@@ -506,3 +506,20 @@ Open points for the owner:
 - Mobile Contact fact rows (inherited from the approved Home mobile): the divider sits right under the value text with no breathing room; applies to every page that uses the Contact clone.
 - The index bytes masks were stretched, not regenerated around the responsive text.
 - Inspiration Garden product screenshots contain doubled text and an encoded "&amp;" from the source images (also on desktop).
+
+## Code theme (Shiki, custom) — approved 2026-11-17
+
+Owner decision: code blocks are highlighted with Shiki using a custom brand theme (task 7.3). One dark theme serves Outside and Inside, because the block is green-950 in both. Figma: post v3.1 clone `2332:2`, highlighted block `2332:82`, roles card `2332:192`. Contrast is WCAG against `#0A200B`.
+
+| Role | Color | Contrast |
+|---|---|---|
+| Background | green-950 `#0A200B` | — |
+| Text, variables | cream `#FAF6E8` | 16.0:1 |
+| Keywords | sun `#F6D653` | 12.0:1 |
+| Functions, methods | green-300 `#88E88C` | 11.4:1 |
+| Strings, regex | `#61D56A` | 9.2:1 |
+| Numbers, constants, types | sun-soft `#FBEBA0` | 14.3:1 |
+| Comments (italic) | `#7FA882` (new, not in the palette) | 6.4:1 |
+| Punctuation, operators | green-200 `#B3F3B4` | 13.4:1 |
+
+Rejected: existing themes (Everforest Dark bg `#2D353B`, Vitesse Dark bg `#121212`) would need their background and most token colors overridden. green-700 for comments fails AA (2.65:1). Known weak spot: strings and functions are both greens and sit close; the owner saw it and kept it (alternative offered: strings in sun-soft).

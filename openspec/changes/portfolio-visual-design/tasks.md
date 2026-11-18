@@ -10,7 +10,7 @@
 - [x] 1.2 Type system: Epilogue, Hanken Grotesk, IBM Plex Mono (2026-11-09)
 - [x] 1.3 Palette v1: green ramp + sun yellow (2026-11-09)
 - [x] 1.4 Messaging rule: Outside = outcomes, Inside = technical how (2026-11-09)
-- [ ] 1.5 Re-check sun yellow with the owner now that it is on real pages (Open Question 6)
+- [x] 1.5 Re-check sun yellow with the owner now that it is on real pages (Open Question 6): accepted 2026-11-17, it is on every approved board and in the approved code theme
 
 ## Phase 2 — Page designs, v2 (2026-11-09)
 
@@ -30,12 +30,12 @@
 - [x] 3.6 Inside board `2084:314`: dark state, layer annotations, "How I actually do it"
 - [x] 3.7 Owner verdict on Outside, section by section (approved on v3.5 `2191:86`, 2026-11-16)
 - [x] 3.8 Owner verdict on Inside (approved on v3.5 `2191:503`, 2026-11-16)
-- [ ] 3.9 Owner reviews all Draft copy (proposal D7, texts in `design.md` section 4)
+- [x] 3.9 Owner reviews all Draft copy (proposal D7, texts in `design.md` section 4). Every current [Draft] text is collected in `docs/draft-copy.md` (2026-11-17) for the owner's verdict. Closed 2026-11-17 after three rounds; the final texts are in that file (Figma boards still show the old drafts).
 - [x] 3.10 Resolve the name hidden by the portrait (Open Question 1): hero shows "Jahat", full name is the logo (proposal D9, 2026-11-16)
 - [x] 3.10a Logo: wordmark "Jahat Trinidad" / "@trinitybytes" tied to Outside/Inside, states spec `2093:2` (proposal D9)
 - [x] 3.11 Design the empty left column of Experience (Open Question 2): D14
 - [x] 3.12 Decide toggle placement (Open Question 5): superseded by the lens, proposal D11
-- [ ] 3.13 Decide the opacity rule for Inside image dimming (Open Question 4). The footer no longer needs a fade (D17).
+- [x] 3.13 Decide the opacity rule for Inside image dimming (Open Question 4). The footer no longer needs a fade (D17). Decided 2026-11-17: the "no opacity fades" rule is relaxed for image dimming; the footer fade (D17) and the backgrounds (D20) already break it, so baked dark variants buy nothing
 - [x] 3.15 Language switch "EN / ES / PT" in the nav of both v3.1 boards (proposal D10)
 - [x] 3.16 Lens replaces the Work toggle; "Back outside" in the same corner; states spec `2109:103` (proposal D11, supersedes 3.12)
 - [x] 3.17 Values section as a scannable table with Garden proof `2112:29` (proposal D12; timeline version rejected)
@@ -69,7 +69,11 @@
 - [x] 3.25 (owner, 2026-11-16: the button does not come back) Decide whether the hero "Look inside" button stays now that the lens exists (D11 open point)
 - [ ] 3.26 Promote v3.1 over v3 once the owner approves it (rename boards, keep v3 as reference)
 - [x] 3.20 Inside version of the values table (D12): the third column shows how each proof was built (done within 3.27, board `2137:2`)
-- [ ] 3.14 Fill remaining placeholders: `[N]` project count, email address, post titles, Elsewhere rows, Viora "My part", Mink'a problem and code part (value 02 proof and city are done)
+- [x] 3.14 Fill remaining placeholders: `[N]` project count, email address, post titles, Elsewhere rows, Viora "My part", Mink'a problem and code part (value 02 proof and city are done)
+  - 2026-11-17 owner answers: contact email `jahatjassiel@outlook.com`; Viora "My part" given in full (recorded in `docs/draft-copy.md` 1.2–1.3, short card version proposed in 1.1); Viora key decision "Spring Boot for the mobile apps' backend" (the why is still missing); Mink'a problem confirmed real, and Mink'a is about waste management in Lima.
+  - Not owner copy: `[N]` project count, `[N] min`, `[date]` are calculated at build time.
+  - Resolved in the copy review: the Viora decision rationale (team already knew Spring vs ASP.NET Core) and the case study caption rewrite.
+  - Owner rule (2026-11-17): owner facts (this task) block launch; [Draft] copy (3.9) does not block implementation and is reviewed in `docs/draft-copy.md`.
 
 ## Phase 4 — Home v3, responsive
 
@@ -79,7 +83,7 @@ Unblocked 2026-11-16 (3.7 and 3.8 done). Start from the v3.5 boards; the v2 tabl
 - [x] 4.2 Mobile 390, Outside and Inside. Start from v3.5. The owner rejected name and photo side by side on mobile: intro and CTAs on top, then the name full width, then the subject. Built 2026-11-16 as proposals: Outside `2210:86`, Inside `2212:86`.
 - [x] 4.3 Mobile annotation pattern for Inside: numbered pins on the image plus a stacked numbered list below. Applied on both Inside boards, tablet included (2026-11-16).
 - [x] 4.4 Owner verdict on the four responsive boards: approved after one review round (owner, 2026-11-16: "queda. de momento no tengo observaciones").
-- [ ] 4.6 Still undecided, carried forward (owner raised no objection, but did not decide): note opacity in the Inside lists (40%, fails AA; 60% would pass) and a touch variant of the hero hint ("press I" on phones). See design.md "Home v3.5 responsive".
+- [x] 4.6 Still undecided, carried forward (owner raised no objection, but did not decide): note opacity in the Inside lists (40%, fails AA; 60% would pass) and a touch variant of the hero hint ("press I" on phones). See design.md "Home v3.5 responsive". Decided 2026-11-17: note opacity 60% (passes AA); on touch screens the hint reads "Tap the lens".
 - [ ] 4.5 Design the open state of the mobile menu (links + EN / ES / PT); only the closed button exists.
 
 ## Phase 5 — Other pages in the v3 direction
@@ -92,20 +96,24 @@ Unblocked: Home v3.5 approved at desktop, tablet and mobile (2026-11-16). The ow
 
 ## Phase 6 — Hi-fi
 
-- [ ] 6.1 Motion and depth: parallax amounts per hero layer (Open Question 7)
-- [ ] 6.2 The "Look inside" interaction: trigger, scope (element or page), transition. Designed as the lens (D11); motion values still open.
-- [ ] 6.3 Prototype
-- [ ] 6.4 Owner approves the hi-fi
+- [ ] 6.1 (moved to implementation, 2026-11-17: motion is tuned in the browser, not in Figma) Motion and depth: parallax amounts per hero layer (Open Question 7)
+- [ ] 6.2 (moved to implementation with 6.1) The "Look inside" interaction: trigger, scope (element or page), transition. Designed as the lens (D11); motion values still open.
+- [x] 6.3 Prototype: dropped 2026-11-17, a Figma prototype cannot simulate dragging the lens; the dev site is the prototype
+- [ ] 6.4 Owner approves the hi-fi. 2026-11-17: the owner moved to implementation; remaining Figma work is only 4.5 (mobile menu open) and 7.10 (`/links/`), and motion is approved on the running site
 
 ## Phase 7 — Hand-off to implementation
 
 Blocked on 6.4. Code starts only after this phase.
 
-- [ ] 7.1 Answer Open Question 3 (Inside/Outside vs OS color scheme)
+- [x] 7.1 Answer Open Question 3 (Inside/Outside vs OS color scheme): the lens is the only source of truth, the OS preference is ignored (2026-11-17)
 - [x] 7.2 Answer Open Question 8 (where image assets live): untracked, Figma holds them (proposal D8, 2026-11-16)
-- [ ] 7.3 Resolve the Shiki vs unhighlighted contradiction between `openspec/config.yaml` and `CLAUDE.md`
-- [ ] 7.4 Promote `specs/visual-identity/spec.md` from Draft, add the specs the final design needs
-- [ ] 7.5 Write implementation tasks (tokens, fonts, dictionary strings, schema fields, sections)
-- [ ] 7.6 Export web-sized hero images from Figma into `src/` when implementation starts
+- [x] 7.3 Resolve the Shiki vs unhighlighted contradiction between `openspec/config.yaml` and `CLAUDE.md`. Decided 2026-11-17: **highlighted with Shiki** (owner: "prefiero resaltado, es algo que deberiamos actualizar en el figma"). Shiki was already active by default (the build emits `astro-code`), so `CLAUDE.md` was the wrong side. Owner chose a **custom brand theme** over an existing one (Everforest/Vitesse backgrounds do not match green-950). Proposal built 2026-11-17: clone `2332:2` (post v3.1, code block `2332:82`) and roles card `2332:192`; values in design.md "Code theme". Owner approved the theme as built (2026-11-17: "va. me gusta"). At implementation: fix `CLAUDE.md` and write the Shiki theme JSON at implementation.
+- [x] 7.4 Promote `specs/visual-identity/spec.md` from Draft, add the specs the final design needs: done 2026-11-18 in `openspec/changes/portfolio-implementation/specs/` (visual-identity binding, new contact-chat, deltas for i18n-routing, project-scaffold, content-model, architecture-boundaries)
+- [x] 7.5 Write implementation tasks (tokens, fonts, dictionary strings, schema fields, sections): `openspec/changes/portfolio-implementation/tasks.md` (2026-11-18)
+- [ ] 7.6 Export web-sized hero images from Figma into `src/` when implementation starts (implementation task 1.7)
 - [ ] 7.7 Decide how the contact chat works (scripted or model-written), its questions and the email template. Since v3.4 it must accept free text from the composer, not only the two suggestions. Deferred by the owner on 2026-11-16: do not raise during the design phase (D16).
+  - 2026-11-17 owner decision: **scripted state machine, no model** (owner: "lo agentico agrega una capa de complejidad que es un tradeoff que en este momento no estoy dispuesto a asumir, simplemente hay que tratar de disfrazar lo mas posible para que parezca agentico"). Flow modeled on a reference video the owner shared: composer → conversation view with the first message pinned, questions with suggestion chips and context-specific placeholders, an editable summary card, confirm, then a payoff step. Rejected: model-written replies and the hybrid (model only extracts fields from free text). Delivery decided the same day: **a form service** (Web3Forms or Formspree class) receives a POST from the browser and emails the owner, so the chat ends with "Sent" inside the site. Rejected: `mailto:` (leaves the site and fails without a mail client), own Worker plus email service (one more deploy). Still open: the questions and the email template (design them in 7.11); pick the service at implementation.
+- [ ] 7.11 Design the chat conversation view in Figma: transition from the composer, messages, chips, typing state, editable summary card, sending, sent and error states (D16 only designed the composer)
+- [x] 7.9 Decide URLs (proposal D22, 2026-11-17): `/work/` and `/notes/`; `/links/` stays as a link-in-bio page
+- [ ] 7.10 Design the `/links/` page (link-in-bio) in the v3 direction; it has no board yet
 - [ ] 7.8 Spanish and Portuguese dictionaries and routes, only when there is content in those languages (D10)
