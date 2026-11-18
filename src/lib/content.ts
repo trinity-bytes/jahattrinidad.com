@@ -5,16 +5,10 @@
  * `scripts/check-boundaries.mjs` enforces this mechanically.
  */
 import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
-import { ROUTE_BASE } from './consts';
+import { entryPath } from './paths';
+export { collectionPath, entryPath } from './paths';
 
 export type Locale = 'en' | 'es';
-
-/**
- * Used only for URL path construction (unprefixed default-locale routes),
- * never as a default parameter value — see D5: `lang` is required
- * everywhere below except `listLinks()`.
- */
-const DEFAULT_LOCALE: Locale = 'en';
 
 export type Project = CollectionEntry<'projects'>;
 export type Post = CollectionEntry<'posts'>;
@@ -59,15 +53,6 @@ export interface EntryRoute<E> {
 // ── Draft gate (D4) — applied by every function below ──
 const INCLUDE_DRAFTS = import.meta.env.DEV;
 const isVisible = (data: { draft: boolean }) => INCLUDE_DRAFTS || !data.draft;
-
-export function collectionPath(collection: TranslatableCollection, lang: Locale): string {
-  const prefix = lang === DEFAULT_LOCALE ? '' : `${lang}/`;
-  return `/${prefix}${ROUTE_BASE[collection]}/`;
-}
-
-export function entryPath(collection: TranslatableCollection, lang: Locale, slug: string): string {
-  return `${collectionPath(collection, lang)}${slug}/`;
-}
 
 function sortByPublishDate<E extends { data: { publishDate: Date } }>(
   entries: E[],

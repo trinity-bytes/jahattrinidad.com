@@ -33,6 +33,10 @@ interface HomeLensCopy {
 export interface Dictionary {
   nav: {
     home: string;
+    brand: string;
+    brandInside: string;
+    navigation: string;
+    skipToContent: string;
     links: string;
     work: string;
     experience: string;
@@ -149,6 +153,10 @@ export interface Dictionary {
 const en: Dictionary = {
   nav: {
     home: 'Home',
+    brand: 'Jahat Trinidad',
+    brandInside: '@trinitybytes',
+    navigation: 'Main navigation',
+    skipToContent: 'Skip to content',
     links: 'Links',
     work: 'Work',
     experience: 'Experience',
