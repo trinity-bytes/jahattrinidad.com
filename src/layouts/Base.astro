@@ -2,6 +2,7 @@
 import { Font } from 'astro:assets';
 import '../styles/tokens.css';
 import Nav from '../components/sections/Nav.astro';
+import Lens from '../components/sections/Lens.astro';
 import { getDictionary, localizedPath } from '../lib/i18n';
 import { collectionPath } from '../lib/paths';
 import type { SeoResult } from '../lib/seo';
@@ -9,9 +10,11 @@ import type { SeoResult } from '../lib/seo';
 export interface Props {
   lang: 'en' | 'es';
   seo: SeoResult;
+  /** Pages with an Inside state (the Home) opt in to the lens control. */
+  lens?: boolean;
 }
 
-const { lang, seo } = Astro.props;
+const { lang, seo, lens = false } = Astro.props;
 const t = getDictionary(lang);
 ---
 
@@ -46,6 +49,7 @@ const t = getDictionary(lang);
     <main id="main-content" tabindex="-1"><slot /></main>
     <slot name="footer" />
     <div class="visually-hidden" aria-live="polite" aria-atomic="true" id="announcements"></div>
+    {lens && <Lens strings={t.lens} />}
   </body>
 </html>
 
@@ -61,8 +65,10 @@ const t = getDictionary(lang);
     .skip-link { position: fixed; z-index: 100; top: var(--space-sm); left: var(--space-sm); padding: var(--space-sm); background: var(--color-bg); color: var(--color-text); transform: translateY(-200%); }
     .skip-link:focus { transform: translateY(0); }
     /* Copy that differs by lens is rendered twice; only the active state shows (design.md §2). */
-    :root:not([data-lens='inside']) [data-show='inside'],
-    :root[data-lens='inside'] [data-show='outside'] { display: none !important; }
+    /* The lens preview is an Inside clone: it follows the Inside copy whatever the page state is. */
+    :root:not([data-lens='inside']) [data-show='inside']:not([data-lens-preview] *),
+    :root[data-lens='inside'] [data-show='outside'],
+    [data-lens-preview] [data-show='outside'] { display: none !important; }
     .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
   }
 </style>
