@@ -30,7 +30,7 @@ const seo = buildSeo({
   <h1>{t.nav.home}</h1>
 
   <section>
-    <h2>{t.home.featuredProjects}</h2>
+    <h2>{t.home.workHeadline}</h2>
     <ul>
       {featuredProjects.map((project) => (
         <li>
@@ -41,7 +41,7 @@ const seo = buildSeo({
   </section>
 
   <section>
-    <h2>{t.home.recentPosts}</h2>
+    <h2>{t.home.notesHeadline}</h2>
     <ul>
       {recentPosts.map(({ entry, readingTime }) => (
         <li>

@@ -3,7 +3,7 @@
 > Authority: `proposal.md` (scope, decisions I1–I6), `design.md` (structure, lens, chat), `specs/` (requirements). Values and boards: `openspec/changes/portfolio-visual-design/design.md`. Final copy: `docs/draft-copy.md`.
 > Check for every task: `npm run check` green. Page tasks also get a side-by-side check against their Figma board at 390, 768 and 1440. Chat tasks also run `node --test`.
 > Work on a feature branch off `develop`, one commit per task or per ~400 changed lines, Conventional Commits.
-> Last updated: 2026-11-18 (written).
+> Last updated: 2026-11-18 (phases 0 and 1 done).
 
 ## Phase 0 — Close the loose ends
 
@@ -13,14 +13,14 @@
 
 ## Phase 1 — Foundations
 
-- [ ] 1.1 Tokens: replace the placeholder primitives with the brand palette and warm neutrals; semantic aliases with `light-dark()`; `:root { color-scheme: light }` and `:root[data-lens="inside"] { color-scheme: dark }`; remove the `[data-theme]` hook; spacing and type scale from the boards
-- [ ] 1.2 Fonts: commit Epilogue, Hanken Grotesk and IBM Plex Mono `.woff2` (only the weights the boards use) under `src/assets/fonts/`, register them with `fontProviders.local()`, wire the CSS variables into the tokens
-- [ ] 1.3 Routes: `ROUTE_BASE` → `work` / `notes`; rename `src/pages/projects/` → `work/` and `blog/` → `notes/`; expose the path builder from `src/lib/content.ts`; replace every hardcoded `/projects/`, `/blog/` (pages, RSS, SEO)
-- [ ] 1.4 Shiki theme: write the JSON theme from the approved roles table, pass it to `markdown.shikiConfig.theme`; verify contrast of every role in the built output
-- [ ] 1.5 Schemas: projects `tier`, `team`, `myPart`, `role`/`timeframe` back to optional; posts `type`; new `experience` collection and `listExperience(lang)`
-- [ ] 1.6 Icons: one `ui/Icon.astro` with the Lucide paths the boards use (`search`, `menu`, `x`, `arrow-up-right`, `message-circle`, `copy`, `send`), ISC notice kept
-- [ ] 1.7 Hero assets: export the web-sized sky, near hill and portrait from Figma into `src/assets/hero/` (visual-design `assets.md`), check sizes and alpha
-- [ ] 1.8 Dictionary skeleton: the section groups for Home (Outside and Inside), Work, case study, Notes, Contact, chat, nav and footer, typed so a missing Inside string is a compile error
+- [x] 1.1 Tokens: replace the placeholder primitives with the brand palette and warm neutrals; semantic aliases with `light-dark()`; `:root { color-scheme: light }` and `:root[data-lens="inside"] { color-scheme: dark }`; remove the `[data-theme]` hook; spacing and type scale from the boards
+- [x] 1.2 Fonts: commit Epilogue, Hanken Grotesk and IBM Plex Mono `.woff2` (only the weights the boards use) under `src/assets/fonts/`, register them with `fontProviders.local()`, wire the CSS variables into the tokens
+- [x] 1.3 Routes: `ROUTE_BASE` → `work` / `notes`; rename `src/pages/projects/` → `work/` and `blog/` → `notes/`; expose the path builder from `src/lib/content.ts`; replace every hardcoded `/projects/`, `/blog/` (pages, RSS, SEO)
+- [x] 1.4 Shiki theme: write the JSON theme from the approved roles table, pass it to `markdown.shikiConfig.theme`; verify contrast of every role in the built output
+- [x] 1.5 Schemas: projects `tier`, `team`, `myPart`, `role`/`timeframe` back to optional; posts `type`; new `experience` collection and `listExperience(lang)`
+- [x] 1.6 Icons: one `ui/Icon.astro` with the Lucide paths the boards use (`search`, `menu`, `x`, `arrow-up-right`, `message-circle`, `copy`, `send`), ISC notice kept
+- [x] 1.7 Hero assets: export the web-sized sky, near hill and portrait from Figma into `src/assets/hero/` (visual-design `assets.md`), check sizes and alpha
+- [x] 1.8 Dictionary skeleton: the section groups for Home (Outside and Inside), Work, case study, Notes, Contact, chat, nav and footer, typed so a missing Inside string is a compile error
 
 ## Phase 2 — Shell
 

@@ -15,3 +15,6 @@
 export const ROUTE_BASE = { projects: 'work', posts: 'notes' } as const;
 
 export const BCP47 = { en: 'en-US', es: 'es-ES' } as const;
+
+/** Public contact address, shown by Contact and used by the chat fallback. */
+export const CONTACT_EMAIL = 'jahatjassiel@outlook.com';

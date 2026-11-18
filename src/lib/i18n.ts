@@ -33,8 +33,6 @@ interface HomeLensCopy {
 export interface Dictionary {
   nav: {
     home: string;
-    projects: string;
-    blog: string;
     links: string;
     work: string;
     experience: string;
@@ -44,8 +42,6 @@ export interface Dictionary {
     closeMenu: string;
   };
   home: {
-    featuredProjects: string;
-    recentPosts: string;
     workHeadline: string;
     notesHeadline: string;
     outside: HomeLensCopy;
@@ -153,8 +149,6 @@ export interface Dictionary {
 const en: Dictionary = {
   nav: {
     home: 'Home',
-    projects: 'Projects',
-    blog: 'Blog',
     links: 'Links',
     work: 'Work',
     experience: 'Experience',
@@ -165,8 +159,6 @@ const en: Dictionary = {
     closeMenu: 'Close menu',
   },
   home: {
-    featuredProjects: 'Featured projects',
-    recentPosts: 'Recent posts',
     // Shared across both views; board 2191:86 and approved R9.
     workHeadline: 'Selected work',
     notesHeadline: 'Notes on building things',

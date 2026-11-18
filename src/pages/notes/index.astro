@@ -17,7 +17,7 @@ if (!site) {
 const posts = await listPosts({ lang });
 
 const seo = buildSeo({
-  title: t.nav.blog,
+  title: t.nav.notes,
   description: 'Posts about building and shipping this site.',
   path: collectionPath('posts', lang),
   lang,
@@ -26,7 +26,7 @@ const seo = buildSeo({
 ---
 
 <Base lang={lang} seo={seo}>
-  <h1>{t.nav.blog}</h1>
+  <h1>{t.nav.notes}</h1>
   <ul>
     {posts.map(({ entry, readingTime }) => (
       <li>
