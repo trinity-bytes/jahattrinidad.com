@@ -1,0 +1,95 @@
+---
+import hill from '../../assets/hero/near-hill.png';
+import type { Dictionary } from '../../lib/i18n';
+
+type Link = { label: string; href: string };
+interface Props {
+  strings: Dictionary['footer'];
+  navigation: Link[];
+  elsewhere: Link[];
+  source: Link;
+  copyright: string;
+  outsideName: string;
+  insideName: string;
+  showShortcut?: boolean;
+}
+const { strings, navigation, elsewhere, source, copyright, outsideName, insideName, showShortcut = true } = Astro.props;
+---
+<footer class="footer">
+  <div class="hill" aria-hidden="true">
+    <img src={hill.src} alt="" />
+    <div class="fade"></div>
+  </div>
+  <div class="content">
+    <p class="availability">{strings.availability}</p>
+    <div class="columns">
+      <div class="column">
+        <h2>{strings.navigate}</h2>
+        <ul>{navigation.map((link) => <li><a href={link.href}>{link.label}</a></li>)}</ul>
+      </div>
+      <div class="column">
+        <h2>{strings.elsewhere}</h2>
+        <ul>{elsewhere.map((link) => <li><a href={link.href}>{link.label}</a></li>)}</ul>
+      </div>
+      <div class="column site">
+        <h2>{strings.thisSite}</h2>
+        <ul>
+          <li><a href={source.href}>{source.label}</a></li>
+          {showShortcut && <li><button type="button" data-shortcut-toggle aria-pressed="false">{strings.shortcut}</button></li>}
+        </ul>
+      </div>
+    </div>
+    <div class="ghost" aria-hidden="true" data-outside={outsideName} data-inside={insideName}></div>
+    <p class="copyright">{copyright}</p>
+  </div>
+</footer>
+<script>
+  const key = 'lens-shortcut-disabled';
+  document.querySelectorAll<HTMLButtonElement>('[data-shortcut-toggle]').forEach((button) => {
+    let disabled = false;
+    try { disabled = localStorage.getItem(key) === 'true'; } catch { /* Storage can be unavailable. */ }
+    button.setAttribute('aria-pressed', String(disabled));
+    button.addEventListener('click', () => {
+      disabled = !disabled;
+      button.setAttribute('aria-pressed', String(disabled));
+      try { localStorage.setItem(key, String(disabled)); } catch { /* Keep the current-page setting. */ }
+      window.dispatchEvent(new CustomEvent('lens-shortcut-change', { detail: { disabled } }));
+    });
+  });
+</script>
+<style>
+  .footer { position: relative; background: var(--color-footer); color-scheme: dark; color: var(--color-heading); }
+  .hill { position: absolute; z-index: 0; inset: -260px 0 auto; height: 380px; overflow: hidden; pointer-events: none; }
+  .hill img { position: absolute; width: 1746.36px; max-width: none; height: 1244.16px; left: 50%; top: -670px; transform: translateX(-50%); filter: brightness(.38); }
+  .fade { position: absolute; inset: auto 0 0; height: 240px; background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-footer) 55%, transparent) 45%, color-mix(in srgb, var(--color-footer) 92%, transparent) 80%, var(--color-footer)); }
+  .content { position: relative; padding: 200px var(--gutter-desktop) 25px; }
+  .columns { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .availability { position: absolute; top: 200px; right: var(--gutter-desktop); width: calc((100% - 2 * var(--gutter-desktop)) / 4); margin: 0; white-space: pre-line; font: 600 22px/1.25 var(--font-display); letter-spacing: -.01em; color: var(--color-heading); }
+  h2 { margin: 0 0 14px; font: 500 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text-muted); }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { margin: 0 0 9px; }
+  a, button { color: var(--color-heading); font: 500 16px/21px var(--font-sans); text-decoration: none; }
+  button { padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
+  a:hover, button:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+  .ghost { margin-top: 14px; color: var(--color-footer-name); font: 500 clamp(7rem, 20.84vw, 18.75rem)/1 var(--font-display); letter-spacing: -.04em; white-space: nowrap; overflow: hidden; }
+  .ghost::before { content: attr(data-outside); }
+  :global([data-lens='inside']) .ghost { font-family: var(--font-mono); font-size: clamp(2rem, 8vw, 7.5rem); letter-spacing: -.06em; }
+  :global([data-lens='inside']) .ghost::before { content: attr(data-inside); }
+  .copyright { margin: 0; font: 400 14px/20px var(--font-sans); color: var(--color-text); }
+  @media (max-width: 75rem) {
+    .content { padding: 96px var(--gutter-tablet) 25px; }
+    .availability { position: static; width: auto; margin-bottom: 40px; }
+    .columns { grid-template-columns: 29% 29% minmax(0, 1fr); }
+    .ghost { margin-top: 40px; font-size: 34vw; }
+  }
+  @media (max-width: 47.99rem) {
+    .hill { top: -250px; }
+    .content { padding: 88px var(--gutter-mobile) 25px; }
+    .availability { font-size: 20px; }
+    .columns { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 30px; }
+    .site { grid-column: 1 / -1; }
+    .ghost { font-size: 34vw; margin-top: 66px; }
+  }
+  @media (prefers-reduced-transparency: reduce), (forced-colors: active) { .ghost { display: none; } }
+</style>
