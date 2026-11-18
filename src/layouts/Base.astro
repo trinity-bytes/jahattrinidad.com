@@ -1,6 +1,9 @@
 ---
 import { Font } from 'astro:assets';
 import '../styles/tokens.css';
+import Nav from '../components/sections/Nav.astro';
+import { getDictionary, localizedPath } from '../lib/i18n';
+import { collectionPath } from '../lib/paths';
 import type { SeoResult } from '../lib/seo';
 
 export interface Props {
@@ -9,10 +12,11 @@ export interface Props {
 }
 
 const { lang, seo } = Astro.props;
+const t = getDictionary(lang);
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} data-lens="outside">
   <head>
     <meta charset="utf-8" />
     <Font cssVariable="--font-epilogue" />
@@ -31,6 +35,27 @@ const { lang, seo } = Astro.props;
     <meta property="og:type" content={seo.openGraph['og:type']} />
   </head>
   <body>
-    <slot />
+    <a class="skip-link" href="#main-content">{t.nav.skipToContent}</a>
+    <Nav
+      home={localizedPath(lang, '')}
+      workPath={collectionPath('projects', lang)}
+      notesPath={collectionPath('posts', lang)}
+      strings={t.nav}
+    />
+    <slot name="backgrounds" />
+    <main id="main-content" tabindex="-1"><slot /></main>
+    <slot name="footer" />
+    <div class="visually-hidden" aria-live="polite" aria-atomic="true" id="announcements"></div>
   </body>
 </html>
+
+<style is:global>
+  @layer base {
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--font-sans), sans-serif; font-size: var(--font-size-body); background: var(--color-bg); color: var(--color-text); }
+    :focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+    .skip-link { position: fixed; z-index: 100; top: var(--space-sm); left: var(--space-sm); padding: var(--space-sm); background: var(--color-bg); color: var(--color-text); transform: translateY(-200%); }
+    .skip-link:focus { transform: translateY(0); }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+  }
+</style>
