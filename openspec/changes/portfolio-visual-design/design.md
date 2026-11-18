@@ -318,6 +318,10 @@ Tooling facts learned the hard way:
 | Cloned sections that were FILL collapse inside a HUG auto-layout column | Fix the column width to 1440 and the children to FIXED |
 | The `NOISE` effect rejects a `blendMode` key; text has no `setRangeCharacters` | Omit `blendMode`; edit ranges with `setRangeFills` |
 | Smoothing a step an agent thinks is a defect can remove an effect the owner chose | Ask before "fixing" something the owner picked from a proposal (the lit section tops of C, D20) |
+| Codex agents (launched through Herdr) ended their first turn after about a minute, having only read the sources and saved an Engram summary | The prompt must say: do not end the turn until every board exists in Figma and has been screenshot-checked |
+| Codex needs its own Figma MCP login | `codex mcp login figma`, then `codex mcp list` shows `figma` with OAuth |
+| A tall board at the default screenshot size is unreadable | `get_screenshot` with a large `maxDimension`, then slice it with `sharp` into side-by-side pairs to review |
+| Stacked responsive figures that stretch to the column width keep their desktop content positions, so the content sits left with an empty half | Keep figures at their natural desktop size and centre them in the column; do not fill the width "just because" (owner, 2026-11-17) |
 
 ## 8. Implementation notes (not authorized yet)
 
@@ -467,8 +471,38 @@ Open points:
 - **Post type.** The chips show Essay / Tutorial, but the `posts` schema has no type field. Add it at implementation or drop the chips.
 - **Bytes.** Not regenerated: the Notes section keeps the Home masks (stretched section), the Article bytes layer is hidden. Regenerate after the owner approves the layout.
 - Tutorial blocks (step label) from v2 are not shown on v3; the essay is the example.
-- Tablet and mobile not started.
+- Tablet and mobile: see "Notes v3 responsive" below.
 - Owner, 2026-11-17: "ajusta el hero de notes index y footer de ambos para que sean como en el caso de estudio". The index hero is now a clone of the case study v6 hero (`2304:2`): no display word, intro with "NOTES · WRITING AND ELSEWHERE", title "Notes", sub [Draft]; back link and buttons hidden. Both footers are clones of the case study v6 footer (index `2304:29`, post `2304:51`). The post hero is unchanged.
 - Owner, same day: "el hero del notes index necesita un rework, eso no va a cambiar así que podemos usar ese factor. En el caso de estudio quité el texto en grande porque el titular cambiaba de acuerdo al nombre del proyecto, en este caso no." The display word "Notes" (`2305:3`) is back between the sky and the near hill, right-aligned at 64 px, on the case study hero layers. Because the word names the page, the intro has no title: marker, headline (Epilogue SemiBold 34) and sub, both [Draft]. **Rule:** use the display word only on pages whose title never changes (Home, Work, Notes); not on case studies.
 - **Contact on posts is compact (owner approved, 2026-11-17).** The full Contact section stays on Home, Work, case studies and the Notes index: every page is an entry point and the site has one goal. On a post the reader came to read, so a full "Let's talk" sky reads as a sales pitch. The post ends with an author card `2306:2` between the tags line and "Keep reading": avatar placeholder (JT on green-100, to be replaced by the profile photo), "Written by Jahat Trinidad", "Design engineer, frontend and product. Open to an internship, now.", and a "Write to me →" button that goes to Contact. The full Contact section on the post board is hidden (`2303:128`), so the footer hill rises straight out of the article background. Suggested, not applied: a Contact headline per page context (for example on case studies) so the repeated block does not become invisible.
 - Owner: "sin el cta de antes el footer queda horrible". The footer hill needs a sky to rise out of. On the post, the Contact section is kept as a **sky band** `2303:128` (420 px, its content hidden) with a cream-to-transparent fade `2307:2` (220 px) at the top, so the article fades into the sunset and the hill rises from it. Rule: the footer always sits under a sky; a page without the full Contact gets the sky band.
+
+## Case study v6 and Notes v3 responsive — proposals, 2026-11-17
+
+Built by two Codex agents (gpt-6.1-terra, launched through Herdr) and reviewed by the supervising session with full-board screenshots; one correction round each. Same rules as "Home v3.5 responsive" (gutters 20 / 40, type steps, mobile nav with menu button, footer under a sky). Owner closed the design on 2026-11-17 ("listo cerramos el diseño").
+
+| Board | Id | Page | Position |
+|---|---|---|---|
+| Case study v6 · TABLET 768 | `2312:2` | Case study `2047:13` | x 11640, y 0 |
+| Case study v6 · MOBILE 390 | `2312:1330` | Case study `2047:13` | x 12608, y 0 |
+| Notes index v3 · TABLET 768 | `2312:2658` | Writing `2066:2` | x 6680, y 0 |
+| Notes index v3 · MOBILE 390 | `2312:2850` | Writing `2066:2` | x 7648, y 0 |
+| Post template v3 · TABLET 768 | `2312:3042` | Writing `2066:2` | x 8238, y 0 |
+| Post template v3 · MOBILE 390 | `2312:3232` | Writing `2066:2` | x 9206, y 0 |
+
+Case study:
+- Feature rows, decisions and era figures stack on both widths (figure above text). Fact rows (label | text) span the full content width on tablet and stack on mobile.
+- "How it grew" is a vertical timeline on both widths: dots aligned to the DAY labels, line from first to last dot, then the "33 releases" proof row.
+- "An agent wiped the tags": BEFORE and AFTER code cards stack on tablet too; code at 13 px, "58 items" moved to its own comment line so no token wraps.
+- Terminal card on mobile: IBM Plex Mono 12/18, long lines wrap with a hanging indent.
+- Bytes masks rebuilt so bytes never sit behind text.
+- Era figures ("The sky I loved went unnoticed", tablet): the tiles stretch to 688 × 300 but their content was left-aligned for the 416 desktop tile, leaving the right half empty. The tiles now keep their desktop size and composition (416 × 300, centred in the column; each caption stays under its card) instead of filling the width (owner, 2026-11-17: "se ve rara esta sección en la vista tablet" / "queda raro rellenar ancho solo porque sí"), and the stacked eras are 40 apart (was 20) so each caption reads as part of its own tile. Section 06 grew 40 px; its `bg /` layers and bytes bands were refitted.
+
+Notes:
+- Index: display word "Notes" fitted inside the gutters; Writing and Elsewhere stack on both widths. Post rows keep the desktop three-column row on tablet (chip | title + description | date · min) and stack on mobile (chip, title, description, meta; 12 / 4 / 8 spacing).
+- Post: meta split into "← ALL NOTES" (44 px hit area) and "ESSAY · date · read time"; mobile hero 620. "In this post" and "First published on dev.to" move above the article. H2 spacing 40 above / 12 below on mobile, 48 / 16 on tablet. Code block keeps its size and is clipped with a fade at the right (horizontal scroll). "Updated …" and tags on two lines. Author card stacks on mobile. Sky band and fade kept above the footer.
+
+Open points for the owner:
+- Mobile Contact fact rows (inherited from the approved Home mobile): the divider sits right under the value text with no breathing room; applies to every page that uses the Contact clone.
+- The index bytes masks were stretched, not regenerated around the responsive text.
+- Inspiration Garden product screenshots contain doubled text and an encoded "&amp;" from the source images (also on desktop).
