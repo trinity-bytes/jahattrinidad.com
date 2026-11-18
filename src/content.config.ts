@@ -23,6 +23,9 @@ const projects = defineCollection({
       tier: z.enum(['case-study', 'project', 'experiment']),
       team: z.object({ size: z.number().int().positive(), solo: z.boolean() }).optional(),
       myPart: z.string().optional(),
+      kind: z.string().optional(), // card meta, e.g. 'University SaaS'
+      problem: z.string().optional(), // one line for the card's "The problem"
+      whatItDoes: z.string().optional(), // one line for the card's "What it does"
       role: z.string().optional(),
       timeframe: z.string().optional(),
       constraints: z.array(z.string()).default([]), // short records; narrative in the body

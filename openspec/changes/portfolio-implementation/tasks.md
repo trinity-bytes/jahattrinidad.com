@@ -3,7 +3,7 @@
 > Authority: `proposal.md` (scope, decisions I1–I6), `design.md` (structure, lens, chat), `specs/` (requirements). Values and boards: `openspec/changes/portfolio-visual-design/design.md`. Final copy: `docs/draft-copy.md`.
 > Check for every task: `npm run check` green. Page tasks also get a side-by-side check against their Figma board at 390, 768 and 1440. Chat tasks also run `node --test`.
 > Work on a feature branch off `develop`, one commit per task or per ~400 changed lines, Conventional Commits.
-> Last updated: 2026-11-18 (phases 0–2 done; Footer and Backgrounds are built but wired into pages in phase 3).
+> Last updated: 2026-11-18 (phases 0–3 done; the Home runs on scaffold projects until phase 8 content).
 
 ## Phase 0 — Close the loose ends
 
@@ -31,12 +31,12 @@
 
 ## Phase 3 — Home, Outside
 
-- [ ] 3.1 Hero: four layers in paint order, live display name, intro and CTAs; responsive compositions from the tablet and mobile boards
-- [ ] 3.2 Values: the scannable table with the Garden proof column
-- [ ] 3.3 Work: Viora wide, Mink'a and Tranqui paired, "See all projects" with the count from content
-- [ ] 3.4 Experience: sticky left column, list from `listExperience('en')`
-- [ ] 3.5 Notes: featured latest post and rows from `listPosts`
-- [ ] 3.6 Contact: facts, the composer (static for now), chips, "Copy my email" and LinkedIn
+- [x] 3.1 Hero: four layers in paint order, live display name, intro and CTAs; responsive compositions from the tablet and mobile boards
+- [x] 3.2 Values: the scannable table with the Garden proof column
+- [x] 3.3 Work: Viora wide, Mink'a and Tranqui paired, "See all projects" with the count from content
+- [x] 3.4 Experience: sticky left column, list from `listExperience('en')`
+- [x] 3.5 Notes: featured latest post and rows from `listPosts`
+- [x] 3.6 Contact: facts, the composer (static for now), chips, "Copy my email" and LinkedIn
 
 ## Phase 4 — Inside and the lens
 

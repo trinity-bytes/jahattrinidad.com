@@ -161,6 +161,7 @@ export interface Dictionary {
     instagram: string;
     youtube: string;
     rss: string;
+    copyright: (year: number) => string;
   };
   project: {
     role: string;
@@ -175,6 +176,7 @@ export interface Dictionary {
     problem: string;
     myPart: string;
     whatItDoes: string;
+    teamOf: (size: number) => string;
   };
 }
 
@@ -411,6 +413,7 @@ const en: Dictionary = {
     instagram: 'Instagram',
     youtube: 'YouTube',
     rss: 'RSS',
+    copyright: (year) => `© ${year} Jahat Trinidad`,
   },
   project: {
     role: 'Role',
@@ -426,6 +429,7 @@ const en: Dictionary = {
     problem: 'The problem',
     myPart: 'My part',
     whatItDoes: 'What it does',
+    teamOf: (size) => (size === 1 ? 'Solo' : `Team of ${size}`),
   },
 };
 

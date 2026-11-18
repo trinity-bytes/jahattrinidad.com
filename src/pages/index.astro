@@ -1,11 +1,31 @@
 ---
+import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { entryPath, listProjects, listPosts } from '../lib/content';
+import Hero from '../components/sections/Hero.astro';
+import Values from '../components/sections/Values.astro';
+import Work from '../components/sections/Work.astro';
+import Experience from '../components/sections/Experience.astro';
+import Notes from '../components/sections/Notes.astro';
+import Contact from '../components/sections/Contact.astro';
+import Footer from '../components/sections/Footer.astro';
+import {
+  collectionPath,
+  entryPath,
+  listExperience,
+  listLinks,
+  listPosts,
+  listProjects,
+  type Project,
+} from '../lib/content';
+import { CONTACT_EMAIL } from '../lib/consts';
 import { buildSeo } from '../lib/seo';
 import { getDictionary } from '../lib/i18n';
+// Placeholder for the Garden screenshot until the real entry lands (task 8.1).
+import gardenPlaceholder from '../content/projects/cover.jpg';
 
 const lang = 'en' as const;
 const t = getDictionary(lang);
+const copy = t.home.outside;
 
 const site = Astro.site;
 if (!site) {
@@ -14,12 +34,38 @@ if (!site) {
   );
 }
 
-const featuredProjects = await listProjects({ lang, featuredOnly: true });
-const recentPosts = await listPosts({ lang, order: 'newest', limit: 5 });
+const [allProjects, featuredProjects, posts, experience, links] = await Promise.all([
+  listProjects({ lang }),
+  listProjects({ lang, featuredOnly: true, limit: 3 }),
+  listPosts({ lang, order: 'newest', limit: 3 }),
+  listExperience(lang),
+  listLinks(),
+]);
+
+const workPath = collectionPath('projects', lang);
+const notesPath = collectionPath('posts', lang);
+const linkOf = (id: string) => links.find((link) => link.id === id)?.data.url;
+
+/** Card meta line, e.g. "University SaaS · Team of 5 · 2026". */
+function projectMeta({ data }: Project): string | undefined {
+  const parts = [data.kind, data.team && t.common.teamOf(data.team.size), data.timeframe];
+  const meta = parts.filter(Boolean).join(' · ');
+  return meta || undefined;
+}
+
+const workProjects = featuredProjects.map((project) => ({
+  data: project.data,
+  href: entryPath('projects', lang, project.id),
+  meta: projectMeta(project),
+  problem: project.data.problem,
+  whatItDoes: project.data.whatItDoes,
+}));
+
+const gardenImage = await getImage({ src: gardenPlaceholder, width: 752 });
 
 const seo = buildSeo({
   title: 'Jahat Trinidad',
-  description: 'Personal portfolio and blog of Jahat Trinidad, software engineer.',
+  description: copy.hero.sub,
   path: '/',
   lang,
   site,
@@ -27,29 +73,60 @@ const seo = buildSeo({
 ---
 
 <Base lang={lang} seo={seo}>
-  <div class="container">
-  <h1>{t.nav.home}</h1>
-
-  <section>
-    <h2>{t.home.workHeadline}</h2>
-    <ul>
-      {featuredProjects.map((project) => (
-        <li>
-          <a href={entryPath('projects', lang, project.id)}>{project.data.title}</a>
-        </li>
-      ))}
-    </ul>
-  </section>
-
-  <section>
-    <h2>{t.home.notesHeadline}</h2>
-    <ul>
-      {recentPosts.map(({ entry, readingTime }) => (
-        <li>
-          <a href={entryPath('posts', lang, entry.id)}>{entry.data.title}</a> — {t.post.readingTime(readingTime)}
-        </li>
-      ))}
-    </ul>
-  </section>
-  </div>
+  <Hero strings={copy.hero} workHref={workPath} />
+  <Values
+    copy={copy.values}
+    gardenHref={entryPath('projects', lang, 'inspiration-garden')}
+    gardenImage={{ src: gardenImage.src, alt: '' }}
+  />
+  <Work
+    copy={copy.work}
+    headline={t.home.workHeadline}
+    labels={{ ...t.common, seeProject: t.work.seeProject }}
+    projects={workProjects}
+    count={allProjects.length}
+    allProjectsHref={workPath}
+  />
+  <Experience
+    lang={lang}
+    marker={copy.experience.marker}
+    headline={copy.experience.headline}
+    sub={copy.experience.sub}
+    strings={t.experience}
+    entries={experience}
+  />
+  <Notes
+    lang={lang}
+    marker={copy.notes.marker}
+    headline={t.home.notesHeadline}
+    strings={t.notes}
+    posts={posts}
+    allWritingHref={notesPath}
+  />
+  <Contact
+    marker={copy.contact.marker}
+    headline={copy.contact.headline}
+    strings={t.contact}
+    chat={t.chat}
+    email={CONTACT_EMAIL}
+    linkedInHref={linkOf('linkedin')}
+  />
+  <Footer
+    slot="footer"
+    strings={t.footer}
+    navigation={[
+      { label: t.nav.work, href: '#work' },
+      { label: t.nav.experience, href: '#experience' },
+      { label: t.nav.notes, href: '#notes' },
+      { label: t.nav.contact, href: '#contact' },
+    ]}
+    elsewhere={[
+      ...links.map((link) => ({ label: link.data.label, href: link.data.url })),
+      { label: t.footer.rss, href: '/rss.xml' },
+    ]}
+    source={{ label: t.footer.builtWith, href: linkOf('github') ?? '/' }}
+    copyright={t.footer.copyright(new Date().getFullYear())}
+    outsideName={copy.hero.name}
+    insideName={t.nav.brandInside}
+  />
 </Base>

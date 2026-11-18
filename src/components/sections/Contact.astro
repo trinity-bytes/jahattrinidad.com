@@ -11,7 +11,8 @@ interface Props {
   chat: Dictionary['chat'];
   /** CONTACT_EMAIL from src/lib/consts.ts. */
   email: string;
-  linkedInHref: string;
+  /** Left out until the profile URL is in the links collection. */
+  linkedInHref?: string;
 }
 
 const { marker, headline, strings, chat, email, linkedInHref } = Astro.props;
@@ -58,10 +59,12 @@ const facts = [
         <Icon name="copy" size={20} />
         <span data-copy-label>{strings.copyEmail}</span>
       </button>
-      <a class="link" href={linkedInHref} target="_blank" rel="noopener noreferrer">
-        {strings.linkedIn}
-        <Icon name="arrow-up-right" size={18} />
-      </a>
+      {linkedInHref && (
+        <a class="link" href={linkedInHref} target="_blank" rel="noopener noreferrer">
+          {strings.linkedIn}
+          <Icon name="arrow-up-right" size={18} />
+        </a>
+      )}
     </div>
   </div>
 </section>
