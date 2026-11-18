@@ -18,6 +18,11 @@ interface InsideHeroCopy extends HeroCopy {
   annotations: Record<'sky' | 'hill' | 'name' | 'portrait', { title: string; note: string }>;
 }
 
+interface InsideNote {
+  title: string;
+  note: string;
+}
+
 interface HomeLensCopy {
   hero: HeroCopy;
   values: {
@@ -70,7 +75,15 @@ export interface Dictionary {
     workHeadline: string;
     notesHeadline: string;
     outside: HomeLensCopy;
-    inside: Omit<HomeLensCopy, 'hero'> & { hero: InsideHeroCopy };
+    inside: Omit<HomeLensCopy, 'hero' | 'values' | 'work'> & {
+      hero: InsideHeroCopy;
+      values: HomeLensCopy['values'] & { notesLabel: string; annotations: { source: InsideNote } };
+      work: HomeLensCopy['work'] & {
+        headline: string;
+        /** Labels of the Inside card rows; the row text is project content. */
+        rowLabels: { stack: string; owned: string; decision: string };
+      };
+    };
   };
   work: {
     intro: string;
@@ -284,28 +297,33 @@ const en: Dictionary = {
         marker: '02 — WHAT YOU GET · HOW IT WAS BUILT',
         headline: 'How each promise was built.',
         sub: "Every number below comes from the Garden's repository: its releases and the services it runs on.",
-        // TODO(phase 4): Replace these Outside details with Inside copy.
-        valueLabel: 'The value',
-        teamLabel: 'What it means for your team',
-        proofLabel: 'Proof · Inspiration Garden',
+        valueLabel: 'The practice',
+        teamLabel: 'How I work',
+        proofLabel: 'How the proof was built · Inspiration Garden',
         rows: [
-          { title: 'Ideas into working products, fast.', description: 'I take something from a rough idea to a product people can use — without waiting on a separate designer and developer.' },
-          { title: 'A bridge between design and engineering.', description: 'I speak both languages: designs your engineers can build, and code your designers recognize as theirs.' },
-          { title: 'Built to grow, not to be redone.', description: 'I plan for what comes next, so new features plug into what exists instead of starting over.' },
+          { title: 'A working slice in the first week.', description: 'A deployable first version early, then small tagged releases on top of it, instead of a long build nobody sees.' },
+          { title: 'Small, versioned releases.', description: 'Interface and performance work ship as small tagged versions, many in a single day, never one big drop.' },
+          { title: 'Extend the foundation, never fork it.', description: 'New features land on the same Worker API, so the first version is never thrown away.' },
         ],
         gardenTitle: 'Inspiration Garden',
-        gardenDescription: 'A tool for saving the design references, tools, libraries, articles and tutorials I find on the web. Designed, built and launched by me.',
+        // Approved copy: docs/draft-copy.md, "Values proof".
+        gardenDescription: 'A pnpm monorepo: a Cloudflare Worker API and a static front end. 33 releases so far, from v0.1.0 to v1.2.1.',
         facts: [
-          { figure: '7 days', description: 'first commit to first release' },
-          { figure: '1 person', description: 'product, design and code' },
-          { figure: '1 week', description: 'from launch to new features' },
+          { figure: '7 days', description: 'to v0.1.0, tagged on day 7' },
+          { figure: '10 releases', description: 'tagged on Oct 29' },
+          { figure: '1 week', description: 'to tags + search, same API' },
         ],
-        gardenLink: 'Read how the Garden was built',
+        gardenLink: 'Read the Garden’s build log',
+        notesLabel: 'Values notes',
+        annotations: {
+          source: { title: '[source · git tags]', note: 'counted from the repo, not estimated' },
+        },
       },
       work: {
         marker: '03 — SELECTED WORK · HOW IT’S MADE',
-        // TODO(phase 4): Replace if the Inside label changes.
+        headline: 'How each one is made',
         seeAll: (count) => `See all projects · ${count}`,
+        rowLabels: { stack: 'Stack', owned: 'What I owned', decision: 'Key decision' },
       },
       experience: {
         marker: '04 — EXPERIENCE · WHAT IT TRAINED',

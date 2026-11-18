@@ -26,6 +26,8 @@ const projects = defineCollection({
       kind: z.string().optional(), // card meta, e.g. 'University SaaS'
       problem: z.string().optional(), // one line for the card's "The problem"
       whatItDoes: z.string().optional(), // one line for the card's "What it does"
+      insideStack: z.string().optional(), // Inside card "Stack" line; falls back to `stack` joined
+      insideDecision: z.string().optional(), // Inside card "Key decision" line
       role: z.string().optional(),
       timeframe: z.string().optional(),
       constraints: z.array(z.string()).default([]), // short records; narrative in the body

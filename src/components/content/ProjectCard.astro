@@ -7,6 +7,8 @@ interface Props {
   /** Link to the project page, built by the page with `entryPath`. */
   href: string;
   labels: Pick<Dictionary['common'], 'problem' | 'whatItDoes' | 'myPart'> & Pick<Dictionary['work'], 'seeProject'>;
+  /** Row labels of the Inside card: how it was made instead of what it is for. */
+  insideLabels: Dictionary['home']['inside']['work']['rowLabels'];
   /** The mono line above the title, e.g. "UNIVERSITY SAAS · TEAM OF 5 · 2026". */
   meta?: string;
   problem?: string;
@@ -15,13 +17,26 @@ interface Props {
   featured?: boolean;
 }
 
-const { project, href, labels, meta, problem, whatItDoes, featured = false } = Astro.props;
+const { project, href, labels, insideLabels, meta, problem, whatItDoes, featured = false } = Astro.props;
 
 const facts = [
   { label: labels.problem, value: problem },
   { label: labels.myPart, value: project.myPart },
   { label: labels.whatItDoes, value: whatItDoes },
 ].filter((fact) => fact.value);
+
+// Inside rows: the stack falls back to the project's own list; the other lines are project prose.
+const insideFacts = [
+  { label: insideLabels.stack, value: project.insideStack ?? project.stack.join(', ') },
+  { label: insideLabels.owned, value: project.myPart },
+  { label: insideLabels.decision, value: project.insideDecision },
+].filter((fact) => fact.value);
+
+// The card is rendered with one fact list per lens; the app shell shows the active one.
+const factLists = [
+  { show: 'outside', facts },
+  { show: 'inside', facts: insideFacts },
+] as const;
 ---
 
 <article class:list={['card', { featured }]}>
@@ -35,15 +50,18 @@ const facts = [
     <h3 data-background-text>{project.title}</h3>
     <p class="description" data-background-text>{project.description}</p>
     {
-      facts.length > 0 && (
-        <dl>
-          {facts.map((fact) => (
-            <div class="fact">
-              <dt data-background-text>{fact.label}</dt>
-              <dd data-background-text>{fact.value}</dd>
-            </div>
-          ))}
-        </dl>
+      factLists.map(
+        ({ show, facts }) =>
+          facts.length > 0 && (
+            <dl data-show={show}>
+              {facts.map((fact) => (
+                <div class="fact">
+                  <dt data-background-text>{fact.label}</dt>
+                  <dd data-background-text>{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )
       )
     }
     <a class="link" href={href} data-background-text>
@@ -58,7 +76,7 @@ const facts = [
     flex-direction: column;
     min-width: 0;
     overflow: hidden;
-    background: var(--color-card);
+    background: var(--color-card-alt);
     border-radius: 1rem;
   }
 
