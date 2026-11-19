@@ -548,7 +548,7 @@ Owner: "primero el menu, luego el chat y al final lo de los links". Six mobile b
 | 05 Sent + next step (hiring) | `2354:245` |
 | 06 Failed + fallback | `2354:320` |
 
-**Layout.** On the first message the composer grows into a conversation card in place (`card` fill, ink 1 px border, radius 28, same width as the composer). The section marker stays; the headline and facts give way on mobile (they stay on tablet and desktop, where the card takes the composer's column, max 560 wide, 640 tall). Card, top to bottom: header (JT avatar on `green-100`, "Jahat Trinidad", sun dot + "OPEN TO AN INTERNSHIP"), the visitor's first message pinned on cream ("YOU WROTE"), the message log (bottom-anchored, scrolls), suggestion chips, the composer with the per-question placeholder, and a one-line mono note.
+**Layout.** On the first message the composer grows into a conversation card in place (`card` fill, ink 1 px border, radius 28, same width as the composer). The section marker stays; the headline and facts give way on mobile (they stay on tablet and desktop). **Tablet 768 `2358:302`:** headline and facts on top as before; the card replaces the composer at full content width (688 × 640). **Desktop 1440 `2358:226`:** the headline (560 wide) and the facts, stacked, form the left column; the card (620 × 640) takes the right column from the marker line, so the context stays visible during the conversation. Card, top to bottom: header (JT avatar on `green-100`, "Jahat Trinidad", sun dot + "OPEN TO AN INTERNSHIP"), the visitor's first message pinned on cream ("YOU WROTE"), the message log (bottom-anchored, scrolls), suggestion chips, the composer with the per-question placeholder, and a one-line mono note.
 
 **Messages.** Visitor: `green-950` bubble, white Hanken 16/22, tail bottom-right. Jahat: cream bubble with `hairline-warm` border, tail bottom-left. Typing: the same bubble with three `green-700` dots (100 / 60 / 30%). Error reply: `sun-soft` bubble, ink border, Lucide `circle-alert`. Sent reply: Lucide `check` in `green-700`. The composer is dimmed while Jahat is typing.
 
@@ -585,7 +585,7 @@ Email: {email}
 
 **Accessibility and motion.** The log is `role="log"` / `aria-live="polite"`; chips, pencils and the action buttons are real buttons; focus returns to the composer after each reply (to the first pencil on Summary, to "Try again" on Failed). The card grows from the composer with a 240 ms height/opacity transition; messages fade up 8 px; reduced motion: no growth, no typing delay, no fade.
 
-Not designed as separate boards: tablet and desktop (rule above) and the project / other branches (same components, different copy).
+Tablet and desktop show state 02; the other states use the same card at those sizes. The project and other branches are not drawn (same components, different copy).
 
 ## `/links/` page (task 7.10) — proposal, 2026-11-18
 
@@ -594,5 +594,6 @@ Board **`2356:86`** on "Portfolio" (`2029:2`), x 13626, 390 × 940. It is the li
 - Background: the Home sky and near hill (the hill rises at the bottom, as the footer does elsewhere), with a cream veil (55% → 0) over the top half for legibility. No nav and no footer: the page is a launcher.
 - Identity: the portrait cropped into an 84 px circle with a white ring, "Jahat Trinidad" (Epilogue SemiBold 34), the Home hero line "I design and build products, from the first sketch to the live site." and "OPEN TO AN INTERNSHIP · LIMA, PERU" with the sun dot.
 - Four link cards (radius 20, ink border, `card` fill), each a title in Hanken Medium 17, a mono subline and an arrow: See my work (counts come from the `projects` collection), Read my notes, the latest note (title + read time, from `posts`), and **Write to me** as the one filled card (ink), which goes to Home `#contact` and focuses the chat composer.
-- "ELSEWHERE": the profiles from `links.json` as outline pills.
+- "ELSEWHERE": the profiles from `links.json` as 52 px circular logo buttons (`card` fill, ink border, 20 px monochrome ink logo, `aria-label` with the network name). Owner, 2026-11-18: "me gustaria que uses los logos en lugar del nombre, porque X queda raro". Logos are Simple Icons paths (CC0); LinkedIn comes from simple-icons 9.21.0, since later versions removed it at the brand's request.
+- **Tablet 768 `2358:101`:** the mobile column (440) centred on the rescaled landscape. **Desktop 1440 `2358:162`:** two columns centred on the desktop Home hero layers (sky `2191:88`, near hill `2191:90`, same positions): identity (avatar 96, name 56, description 20/28) and Elsewhere on the left (460), the four link cards on the right (520).
 - `jahattrinidad.com` in white mono on the hill closes the page.
