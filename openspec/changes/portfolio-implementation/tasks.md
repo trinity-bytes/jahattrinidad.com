@@ -67,11 +67,11 @@
 
 ## Phase 8 — Content
 
-- [ ] 8.1 Projects: Viora, Mink'a, Tranqui, Inspiration Garden and the Work index "More projects" and "Small experiments", with covers, `tier`, `team`, `myPart` and the approved copy
-- [ ] 8.2 Experience entries
-- [ ] 8.3 Posts: the boundary-checker post with `type`; remove `hello-world`
-- [ ] 8.4 Links: the real `links.json`
-- [ ] 8.5 Remove the scaffold samples and add the coverage fixture (content-model delta)
+- [x] 8.1 Projects: Viora, Mink'a, Tranqui, Inspiration Garden and the Work index "More projects" and "Small experiments", with covers, `tier`, `team`, `myPart` and the approved copy. Done 2026-11-18: covers exported from Work index v2 `2239:17`; facts checked against each repo. Owner-approved corrections to the board copy: Grayscale Studio "Team of 3", AllinBand "Team of 4", ASM8 credits Marco Schweighauser's original instead of calling it abandoned, Mink'a Inside stack drops Room (only planned), Trama moved to Small experiments as a discrete mathematics course demo. Tranqui's repo is `trinity-bytes/tranqui` (not `safe-map`). Bionutricel has no Code link (private repo). Only `case-study` projects get a page; the other tiers link straight to Live and Code. Home now limits featured projects after dropping the Garden, so it always shows three
+- [x] 8.2 Experience entries (already real since phase 3; 2026-11-18 adds only the coverage fixture entry)
+- [x] 8.3 Posts: the boundary-checker post with `type`; remove `hello-world`. 2026-11-18: title fixed to "…with a zero-dependency script" (visual-design 3.30), the dev.to `canonicalUrl` removed (it returned 404), dates set to the day the script landed (2026-09-18)
+- [x] 8.4 Links: the real `links.json` (already real, checked 2026-11-18)
+- [x] 8.5 Remove the scaffold samples and add the coverage fixture (content-model delta). Fixture entries have ids starting with `coverage-fixture` (projects, posts, experience); `src/lib/content.ts` drops them from every list and route, in dev too
 
 ## Phase 9 — Motion
 

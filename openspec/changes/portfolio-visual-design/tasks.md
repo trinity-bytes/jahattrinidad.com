@@ -46,7 +46,7 @@
 - [x] 3.21 Owner verdict on D13–D17 (covered by the v3.5 approval; their Draft copy stays under 3.9)
 - [x] 3.22 Prepare v3.1 Inside `2105:310`: recolored clones of the v3.1 Outside sections, footer name "@trinitybytes" (2026-11-16)
 - [x] 3.27 Design the Inside content of each v3.1 section, following the table "Inside v3.1 — what to design next" in `design.md`. Proposal on board `2137:2` (clone of `2105:310`, original untouched), annotation component `2137:416` (2026-11-16)
-- [ ] 3.28 Audit and owner verdict on the Inside content board `2137:2`. Audit done 2026-11-16 on both boards: `audit.md` (8 P1, 15 P2); owner verdict pending. Checklist:
+- [x] 3.28 (superseded 2026-11-18: board `2137:2` was deleted by the owner on 2026-11-16 and the v3.5 approval in 3.40 covers its content) Audit and owner verdict on the Inside content board `2137:2`. Audit done 2026-11-16 on both boards: `audit.md` (8 P1, 15 P2); owner verdict pending. Checklist:
   - Only real facts: every annotation and Work row traces to a repo or to the owner (sources in `design.md`, Inside v3.1 table and the "Resolved 2026-11-16" note below it)
   - [Draft] text: section headlines 02/03/04/05, sub of 02/04, Tranqui key decision
   - [Owner: …] text: Viora key decision and pieces built
@@ -65,9 +65,9 @@
 - [x] 3.38 Footer transition as a soft fade (D17 revision, 2026-11-16)
 - [x] 3.39 Backgrounds: proposals A/B/C, A1–A5 iteration, then A5 bytes + C light on v3.5, kept off text with a soft edge (D20, 2026-11-16)
 - [x] 3.40 Owner approves Home v3.5 as the finished desktop mockup (2026-11-16)
-- [ ] 3.41 Replace the hero navs on the v3.5 boards with instances of the Nav set (Top state)
+- [x] 3.41 Replace the hero navs on the v3.5 boards with instances of the Nav set (Top state). Done 2026-11-18 on the desktop boards: instances `2360:86` (Outside) and `2360:100` (Inside); the old frames stay hidden beside them. The mobile and tablet boards keep plain frames: the Nav set has no menu-button variant, and the mobile nav is already built and approved in code (phase 6)
 - [x] 3.25 (owner, 2026-11-16: the button does not come back) Decide whether the hero "Look inside" button stays now that the lens exists (D11 open point)
-- [ ] 3.26 Promote v3.1 over v3 once the owner approves it (rename boards, keep v3 as reference)
+- [x] 3.26 (superseded 2026-11-18: the v3 and v3.1 boards were deleted on 2026-11-16; v3.5 is the approved board) Promote v3.1 over v3 once the owner approves it (rename boards, keep v3 as reference)
 - [x] 3.20 Inside version of the values table (D12): the third column shows how each proof was built (done within 3.27, board `2137:2`)
 - [x] 3.14 Fill remaining placeholders: `[N]` project count, email address, post titles, Elsewhere rows, Viora "My part", Mink'a problem and code part (value 02 proof and city are done)
   - 2026-11-17 owner answers: contact email `jahatjassiel@outlook.com`; Viora "My part" given in full (recorded in `docs/draft-copy.md` 1.2–1.3, short card version proposed in 1.1); Viora key decision "Spring Boot for the mobile apps' backend" (the why is still missing); Mink'a problem confirmed real, and Mink'a is about waste management in Lima.
