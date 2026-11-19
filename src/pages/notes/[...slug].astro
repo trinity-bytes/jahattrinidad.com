@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import profile from '../../assets/profile/jahat.jpg';
 import PostRow from '../../components/content/PostRow.astro';
 import PullQuote from '../../components/content/PullQuote.astro';
 import Note from '../../components/content/Note.astro';
@@ -92,7 +94,7 @@ const typeLabel = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial
         <div class="prose" data-copy={t.post.copy} data-copied={t.post.copied} data-code={t.post.code}><Content components={{ PullQuote, Note, Figure }} /></div>
         <div class="article-end">
           {(entry.data.updatedDate || entry.data.tags.length > 0) && <p class="updated">{entry.data.updatedDate && <span>{t.post.updated} {formatDate(entry.data.updatedDate, lang)}</span>}{entry.data.updatedDate && entry.data.tags.length > 0 && <span aria-hidden="true"> · </span>}{entry.data.tags.join(' · ')}</p>}
-          <div class="author"><span class="avatar" aria-hidden="true">JT</span><div><p class="author-name">{t.post.author}</p><p class="author-role">{t.post.authorRole}</p></div><a class="author-link" href={`${localizedPath(lang, '/')}#contact`}>{t.post.write} <span aria-hidden="true">→</span></a></div>
+          <div class="author"><Image class="avatar" src={profile} alt="" width={112} height={112} densities={[1, 2]} loading="lazy" /><div><p class="author-name">{t.post.author}</p><p class="author-role">{t.post.authorRole}</p></div><a class="author-link" href={`${localizedPath(lang, '/')}#contact`}>{t.post.write} <span aria-hidden="true">→</span></a></div>
           {morePosts.length > 0 && <div class="more"><h2>{t.post.keepReading}</h2><ul>{morePosts.map(({ entry: post, readingTime }) => <li><PostRow detailed href={entryPath('posts', lang, post.id)} title={post.data.title} description={post.data.description} type={post.data.type} typeLabel={t.notes[post.data.type]} meta={`${formatDate(post.data.publishDate, lang)} · ${t.notes.minutes(readingTime)}`} /></li>)}</ul></div>}
         </div>
       </article>
@@ -177,7 +179,7 @@ const typeLabel = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial
   .article-end { border-top: 1px solid color-mix(in srgb, var(--green-950) 20%, transparent); padding-top: 1.5rem; }
   .updated { margin: 0 0 1.5rem; color: var(--green-700); font: 400 .75rem/1.5 var(--font-mono); }
   .author { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; padding: 1.5rem; background: var(--card); border: 1px solid color-mix(in srgb, var(--green-950) 12%, transparent); border-radius: 1rem; }
-  .avatar { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; flex: none; border-radius: 50%; background: var(--green-200); font: 600 1.125rem var(--font-display); }
+  .avatar { width: 3.5rem; height: 3.5rem; flex: none; border-radius: 50%; object-fit: cover; background: var(--green-200); }
   .author > div { flex: 1; min-width: 12rem; } .author p { margin: 0; } .author-name { font: 500 1.0625rem/1.4 var(--font-sans); } .author-role { margin-top: .25rem !important; font: 400 .9375rem/1.5 var(--font-sans); color: var(--green-900); }
   .author-link { padding: .75rem 1.25rem; border-radius: 999px; background: var(--green-950); color: var(--white); text-decoration: none; font: 500 .9375rem/1.3 var(--font-sans); }
   .more { margin-top: 1.5rem; }

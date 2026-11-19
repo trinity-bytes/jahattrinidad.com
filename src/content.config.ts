@@ -115,7 +115,7 @@ const links = defineCollection({
     id: z.string(), // required by the file() loader as the entry key
     label: z.string(),
     url: z.url(),
-    icon: z.string(), // key into an inline SVG sprite — no icon dependency
+    icon: z.enum(['brand-github', 'brand-linkedin', 'brand-instagram', 'brand-youtube', 'brand-x']), // explicit key into ui/Icon.astro — no icon dependency
     order: z.number().int(), // explicit sort key, not JSON array position
     enabled: z.boolean().default(true), // retire a link without deleting the record
   }),

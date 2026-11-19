@@ -12,9 +12,11 @@ export interface Props {
   seo: SeoResult;
   /** Pages with an Inside state (the Home) opt in to the lens control. */
   lens?: boolean;
+  /** Launcher pages (/links/) render without the nav; the skip link and landmarks stay. */
+  nav?: boolean;
 }
 
-const { lang, seo, lens = false } = Astro.props;
+const { lang, seo, lens = false, nav = true } = Astro.props;
 const t = getDictionary(lang);
 ---
 
@@ -39,12 +41,12 @@ const t = getDictionary(lang);
   </head>
   <body>
     <a class="skip-link" href="#main-content">{t.nav.skipToContent}</a>
-    <Nav
+    {nav && <Nav
       home={localizedPath(lang, '')}
       workPath={collectionPath('projects', lang)}
       notesPath={collectionPath('posts', lang)}
       strings={t.nav}
-    />
+    />}
     <slot name="backgrounds" />
     <main id="main-content" tabindex="-1"><slot /></main>
     <slot name="footer" />

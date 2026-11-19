@@ -221,6 +221,18 @@ export interface Dictionary {
     readingTime: (minutes: number) => string;
     inThisPost: string; published: string; updated: string; author: string; authorRole: string; write: string; keepReading: string; copy: string; copied: string; code: string; note: string;
   };
+  links: {
+    description: string;
+    availability: string;
+    workTitle: string;
+    workSub: (projects: number, caseStudies: number) => string;
+    notesTitle: string;
+    notesSub: string;
+    latestSub: (minutes: number) => string;
+    writeTitle: string;
+    writeSub: string;
+    elsewhere: string;
+  };
   common: {
     readMore: string;
     problem: string;
@@ -516,6 +528,19 @@ const en: Dictionary = {
     inThisPost: 'In this post', published: 'First published on dev.to', updated: 'Updated', author: 'Written by Jahat Trinidad', authorRole: 'Design engineer, frontend and product. Open to an internship, now.', write: 'Write to me', keepReading: 'Keep reading', copy: 'Copy', copied: 'Copied', code: 'Code', note: 'Note',
   },
   // Labels reused by Work and case-study cards (boards 2239:17 and 2298:2).
+  links: {
+    description: 'I design and build products, from the first sketch to the live site.',
+    availability: 'Open to an internship · Lima, Peru',
+    workTitle: 'See my work',
+    workSub: (projects, caseStudies) =>
+      `${projects} ${projects === 1 ? 'project' : 'projects'} · ${caseStudies} ${caseStudies === 1 ? 'case study' : 'case studies'}`,
+    notesTitle: 'Read my notes',
+    notesSub: 'Essays and tutorials',
+    latestSub: (minutes) => `Latest note · ${minutes} min read`,
+    writeTitle: 'Write to me',
+    writeSub: 'A short chat, straight to my inbox',
+    elsewhere: 'Elsewhere',
+  },
   common: {
     readMore: 'Read more',
     problem: 'The problem',
