@@ -36,7 +36,7 @@ if (!site) {
 
 const [allProjects, featuredProjects, posts, experience, links] = await Promise.all([
   listProjects({ lang }),
-  listProjects({ lang, featuredOnly: true, limit: 3 }),
+  listProjects({ lang, featuredOnly: true }),
   listPosts({ lang, order: 'newest', limit: 3 }),
   listExperience(lang),
   listLinks(),
@@ -53,7 +53,15 @@ function projectMeta({ data }: Project): string | undefined {
   return meta || undefined;
 }
 
-const workProjects = featuredProjects.map((project) => ({
+// Limit after dropping the Garden (homeFeatured: false, shown in Values), so
+// Home always gets three Work cards. Non-home entries stay in the list because
+// Work.astro subtracts them from the "see all" count.
+const homeProjects = [
+  ...featuredProjects.filter((project) => project.data.homeFeatured).slice(0, 3),
+  ...featuredProjects.filter((project) => !project.data.homeFeatured),
+];
+
+const workProjects = homeProjects.map((project) => ({
   data: project.data,
   href: entryPath('projects', lang, project.id),
   meta: projectMeta(project),

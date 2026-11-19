@@ -28,7 +28,7 @@ const { projects, experiments, strings: t } = Astro.props;
                 <h3>{data.title}</h3>
                 <p>{data.description}</p>
                 <div class="links">
-                  {data.demoUrl && <a href={data.demoUrl}>{t.live} →</a>}
+                  {data.demoUrl && <a href={data.demoUrl}>{data.demoLabel ?? t.live} →</a>}
                   {data.repoUrl && <a href={data.repoUrl}>{t.code} →</a>}
                 </div>
               </div>

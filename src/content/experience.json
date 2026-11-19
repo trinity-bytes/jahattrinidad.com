@@ -89,5 +89,16 @@
     "description": "Where I test my skills and push ideas that could make a real difference in people's lives.",
     "tags": ["Innovation"],
     "order": 7
+  },
+  {
+    "id": "coverage-fixture",
+    "lang": "en",
+    "group": "beyond-class",
+    "role": "Fixture",
+    "organisation": "Coverage fixture",
+    "start": "2026",
+    "description": "Sets the optional experience fields that no real entry uses. Never listed.",
+    "tools": ["Fixture"],
+    "order": 999
   }
 ]

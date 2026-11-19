@@ -1,0 +1,31 @@
+---
+title: Viora
+description: A SaaS platform for olive growers in southern Peru.
+lang: en
+tier: case-study
+publishDate: 2026-11-14
+featured: true
+kind: University SaaS
+team: { size: 5, solo: false }
+timeframe: '2026'
+coverImage: './viora/cover.png'
+coverImageAlt: 'Viora landing page: "Anticipa la próxima cosecha" over an illustration of an olive grove'
+problem: 'Olive harvests swing between good and bad years, and growers plan each season without data.'
+whatItDoes: 'A web platform for planning, a phone app for producers in the field and one for cooperatives, all on the same data.'
+myPart: 'Full stack on a team of five: the Vue web app, a Spring Boot backend with an in-app AI assistant, offline harvest settlements on Android, and alerts for cooperatives in Flutter.'
+stack: [Vue, Angular, Spring Boot, ASP.NET Core, Spring AI, PostgreSQL, Kotlin, Jetpack Compose, Flutter]
+insideStack: 'Spring Boot + Angular and ASP.NET Core + Vue on the web, a Kotlin app and a Flutter app, all on one API.'
+insideDecision: "For the mobile apps' API we picked Spring Boot over ASP.NET Core. The team already knew it, and Spring Data, Spring Security and Spring AI gave us storage, sign-in and the in-app assistant without building them from scratch."
+demoUrl: 'https://viora-landing-page-sable.vercel.app/'
+repoUrl: 'https://github.com/upc-pre-1acc0238-2620-4951-arcadiadevs/viora-platform'
+---
+
+A platform that helps olive growers in southern Peru run their season: web planning, a phone app for producers in the field and one for cooperatives, all on the same data. Team of five.
+
+My part, across the whole product:
+
+- Web (Vue): shared layout and navigation, English/Spanish, alerts, the sign-in redesign, onboarding, and the releases that connected it to the real backend.
+- Web (Angular, first version): the alerts module.
+- Backend (Spring Boot): an in-app assistant built with Spring AI, cooperative membership codes and harvest settlements.
+- Android (Kotlin): harvest settlements that work offline and sync later.
+- Cooperative app (Flutter): manager alerts and member plot dossiers.
