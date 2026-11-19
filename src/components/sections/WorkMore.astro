@@ -17,12 +17,12 @@ const { projects, experiments, strings: t } = Astro.props;
         <div class="grid">
           {projects.map(({ data }) => (
             <article class="card">
-              {data.coverImage && (
-                <div class="frame">
-                  <div class="bar" aria-hidden="true">● ● ●</div>
-                  <Image src={data.coverImage} alt={data.coverImageAlt ?? ''} />
+              <div class="frame">
+                <div class="bar" aria-hidden="true">● ● ●</div>
+                <div class="capture">
+                  {data.coverImage && <Image src={data.coverImage} alt={data.coverImageAlt ?? ''} />}
                 </div>
-              )}
+              </div>
               <div class="body">
                 {data.kind && <p class="marker">{data.kind}</p>}
                 <h3>{data.title}</h3>
@@ -103,10 +103,18 @@ const { projects, experiments, strings: t } = Astro.props;
     padding: 8px;
     border-radius: 10px 10px 0 0;
   }
-  .frame img {
+  .capture {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--color-border);
+  }
+  .capture :global(img) {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
-    aspect-ratio: 16/10;
+    height: 100%;
     object-fit: cover;
   }
   .body {

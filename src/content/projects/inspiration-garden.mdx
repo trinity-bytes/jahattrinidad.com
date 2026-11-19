@@ -50,6 +50,7 @@ caseStudy:
       description: 'Install it like an app. Every window becomes a sheet you can reach with your thumb.'
       detail: 'Installable as a PWA. Below 480 px every dialog rises as a bottom sheet sized to its content; the canvas, search and API stay the same.'
       image: './inspiration-garden/mobile.png'
+      imagePresentation: phone
       imageAlt: 'Inspiration Garden on a phone'
     - title: AI agents keep it tidy
       description: 'Claude Code, Codex and OpenCode save, tag and clean up items for me, through the same API the app uses.'
@@ -75,28 +76,32 @@ caseStudy:
       text: 'Live and in daily use: about 190 items under 64 tags, sorted into four categories. An agent did that last cleanup through the API, and the canvas keeps up with all of it.'
     - title: What I would do differently
       text: 'Use the product with real content before polishing the look. The sky took days to build, and I only learned it went unnoticed by using the first release.'
-  decisions:
-    - choice: The site and its data live at one address
-      subtitle: 'one origin · API + app on one Worker'
-      why: 'My login is a cookie the browser sends on its own. With the API on another address that breaks: CORS becomes mandatory and the CSRF guard loses its same-origin check.'
-      cost: 'One deploy unit: the interface and the API always ship together.'
-    - choice: 'AI assistants are trusted helpers, not guests'
-      subtitle: 'agents write directly · no review inbox'
-      why: 'Agents use the same API as the app, with read or read + write tokens I can revoke one by one.'
-      cost: 'Trust over moderation. Revision history, soft delete and a recorded source soften it, but on day 53 one bad patch still cleared 58 items’ tags.'
-    - choice: One shape for every kind of item
-      subtitle: hybrid data model
-      why: 'Core columns for what every item shares and a JSON field for what each kind needs, so a new kind does not need a new table.'
-      cost: 'D1 cannot enforce the JSON, so shared Zod schemas validate it in the client and in the API.'
-    - choice: 'Thumbnails, never originals'
-      subtitle: thumbnails at the edge
-      why: 'Cards were downloading full originals: 265 MB per session on a phone. Cloudflare Images makes WebP thumbnails once per width, and media fell to about 1.2 MB.'
-      cost: 'A dependency on Cloudflare Images. If a thumbnail cannot be made, the card falls back to the original and retries later.'
   milestones:
     - { day: DAY 0, title: The foundation came first, description: 'Monorepo, data schema and FTS5 search in the first commit.' }
     - { day: DAY 7, title: In daily use within a week, description: 'v0.1.0 live on Cloudflare Workers.' }
     - { day: DAY 36, title: Shipped in small steps, description: '10 releases in one day: v0.5.0 → v0.8.1, interface and speed.' }
     - { day: DAY 46, title: v1.0 without a rewrite, description: 'Phones, PWA install and search on the same API.' }
+decisions:
+  - choice: The site and its data live at one address
+    rejected: 'Separate API address on its own origin, with CORS'
+    subtitle: 'one origin · API + app on one Worker'
+    because: 'My login is a cookie the browser sends on its own. With the API on another address that breaks: CORS becomes mandatory and the CSRF guard loses its same-origin check.'
+    cost: 'One deploy unit: the interface and the API always ship together.'
+  - choice: 'AI assistants are trusted helpers, not guests'
+    rejected: 'A review inbox or moderation queue for agent writes'
+    subtitle: 'agents write directly · no review inbox'
+    because: 'Agents use the same API as the app, with read or read + write tokens I can revoke one by one.'
+    cost: 'Trust over moderation. Revision history, soft delete and a recorded source soften it, but on day 53 one bad patch still cleared 58 items’ tags.'
+  - choice: One shape for every kind of item
+    rejected: 'One table per item kind'
+    subtitle: hybrid data model
+    because: 'Core columns for what every item shares and a JSON field for what each kind needs, so a new kind does not need a new table.'
+    cost: 'D1 cannot enforce the JSON, so shared Zod schemas validate it in the client and in the API.'
+  - choice: 'Thumbnails, never originals'
+    rejected: 'Serving original files to cards'
+    subtitle: thumbnails at the edge
+    because: 'Cards were downloading full originals: 265 MB per session on a phone. Cloudflare Images makes WebP thumbnails once per width, and media fell to about 1.2 MB.'
+    cost: 'A dependency on Cloudflare Images. If a thumbnail cannot be made, the card falls back to the original and retries later.'
 ---
 
 import { Image } from 'astro:assets';
@@ -130,9 +135,9 @@ export const tagsSchema = z
 PATCH /api/items/:id
 { "kind": "link", "title": "…" }
 → tags: []
-// 58 items
 ```
 
+<span className="code-annotation">58 items</span>
 <figcaption>BEFORE · v1.2.0 — a missing list meant an empty one</figcaption>
 </figure>
 <figure>

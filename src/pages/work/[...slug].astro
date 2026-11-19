@@ -66,7 +66,7 @@ const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
       </div>
     )}
   </PageHero>
-  {data.caseStudy ? <CaseStudy data={data.caseStudy} cover={data.coverImage} coverAlt={data.coverImageAlt} website={data.demoUrl} strings={t.caseStudy}><Content /></CaseStudy> : <div class="container">
+  {data.caseStudy ? <CaseStudy data={data.caseStudy} decisions={data.decisions} cover={data.coverImage} coverAlt={data.coverImageAlt} website={data.demoUrl} strings={t.caseStudy}><Content /></CaseStudy> : <div class="container">
   <article>
     {entry.data.role && <p><strong>{t.project.role}:</strong> {entry.data.role}</p>}
     {entry.data.timeframe && <p><strong>{t.project.timeframe}:</strong> {entry.data.timeframe}</p>}
