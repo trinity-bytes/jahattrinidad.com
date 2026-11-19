@@ -374,7 +374,7 @@ const en: Dictionary = {
   work: {
     eyebrow: 'WORK · PRODUCTS, TOOLS AND EXPERIMENTS',
     headline: 'Things I designed and built, from the first sketch to the live site.',
-    sub: 'The featured ones come with the whole story. After them, more projects, and at the end the small experiments where I try things out. [Draft]',
+    sub: 'The featured ones come with the whole story. After them, more projects, and at the end the small experiments where I try things out.',
     featuredMarker: '01 — FEATURED',
     moreMarker: '02 — MORE PROJECTS',
     moreHeading: 'More projects',
@@ -426,8 +426,8 @@ const en: Dictionary = {
     elsewhereLatest: 'Elsewhere · Latest posts',
     allWriting: 'All writing',
     minutes: (minutes) => `${minutes} min`,
-    headline: 'What I learn while building, written down so it sticks. [Draft]',
-    sub: 'Essays on how I decide, and tutorials you can follow step by step. [Draft]',
+    headline: 'What I learn while building, written down so it sticks.',
+    sub: 'Essays on how I decide, and tutorials you can follow step by step.',
     allNotes: 'All notes',
   },
   // Experience board 2191:236; the "carries over" label is the approved D14 copy.
