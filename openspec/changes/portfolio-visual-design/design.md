@@ -534,3 +534,55 @@ Owner: "encargate tu de diseñar esa pantalla". Boards on "Portfolio" (`2029:2`)
 - Below the links: availability with the sun dot ("Open to an internship, now.", Hanken Medium 16) and an "ELSEWHERE" row with the profile links from `links.json`.
 - **No EN / ES / PT switch.** D1 (English-first, 2026-09-18) creates no Spanish pages until there is Spanish content, so the switch would point nowhere. It returns to this sheet, under Elsewhere, when Spanish ships.
 - Behaviour for implementation: the lens dock hides while the menu is open; Esc and the scrim close it; focus moves to the first link and returns to the menu button on close; `body` scroll is locked; the sheet slides 16 px and fades (reduced motion: fade only).
+
+## Chat conversation view (task 7.11) — proposal, 2026-11-18
+
+Owner: "primero el menu, luego el chat y al final lo de los links". Six mobile boards on "Portfolio" (`2029:2`), right of the menu boards, each a 390 × 855 Contact section on the Contact sky:
+
+| State | Board |
+|---|---|
+| 01 Conversation + typing | `2353:103` |
+| 02 Question with chips | `2353:135` |
+| 03 Editable summary | `2354:132` |
+| 04 Sending | `2354:194` |
+| 05 Sent + next step (hiring) | `2354:245` |
+| 06 Failed + fallback | `2354:320` |
+
+**Layout.** On the first message the composer grows into a conversation card in place (`card` fill, ink 1 px border, radius 28, same width as the composer). The section marker stays; the headline and facts give way on mobile (they stay on tablet and desktop, where the card takes the composer's column, max 560 wide, 640 tall). Card, top to bottom: header (JT avatar on `green-100`, "Jahat Trinidad", sun dot + "OPEN TO AN INTERNSHIP"), the visitor's first message pinned on cream ("YOU WROTE"), the message log (bottom-anchored, scrolls), suggestion chips, the composer with the per-question placeholder, and a one-line mono note.
+
+**Messages.** Visitor: `green-950` bubble, white Hanken 16/22, tail bottom-right. Jahat: cream bubble with `hairline-warm` border, tail bottom-left. Typing: the same bubble with three `green-700` dots (100 / 60 / 30%). Error reply: `sun-soft` bubble, ink border, Lucide `circle-alert`. Sent reply: Lucide `check` in `green-700`. The composer is dimmed while Jahat is typing.
+
+**Summary.** White card inside the log: "HERE'S WHAT I'LL SEND", then Name / Company / Message / Reply to, each a mono label + Hanken Medium value + a 36 px pencil button that reopens only that question. "Looks good, send it →" below. Sending: the button reads "Sending…" with Lucide `loader-circle`, pencils at 35%. Sent: the summary dims and its pencils go away. Failed: the summary stays editable, with "Try again" and "Copy my email".
+
+**Script** (all [Draft]; strings go to the `Dictionary`, `{name}` and `{company}` are echoes):
+
+| Step | Hiring | Project | Other ("Just saying hi") | Placeholder |
+|---|---|---|---|---|
+| Intent (no branch detected) | "Happy to help. Is this about a role, a project, or something else?" + chips I'm hiring / I have a project / Just saying hi | | | "Tell me a bit more" |
+| AskName | "Nice, I'm open to an internship right now. Who am I talking to?" | "Sounds fun. Who am I talking to?" | "Hi! Who am I talking to?" | "Your name" |
+| AskCompany | "Thanks, {name}. Which company is it?" | "Thanks, {name}. Is this for a company, or for you?" + chip Just me | (skipped) | "Your company" |
+| AskDetail | "Got it. Anything I should know before I reply? Dates, stack, how you found me." + chips Starts in January / Remote is fine / Nothing else | "What are you building, and when would you like it ready?" | "What's on your mind?" | "Dates, stack, anything else" / "What you're building" / "Your message" |
+| AskEmail | "Last one: where should I write back?" | same | same | "you@company.com" |
+| Invalid email | "That address doesn't look right. Could you check it?" | same | same | "you@company.com" |
+| Summary | (card) "Tap a pencil to change one answer." | same | same | — |
+| Sent | "Sent. I'll write back to {email} soon. While you wait:" → See the Garden case study / Download my CV | "Sent. I'll write back to {email} soon. While you wait:" → See my work | "Sent. Thanks for saying hi." | "Send another message" |
+| Failed | "That didn't go through. Your message is still here." → Try again / Copy my email | same | same | — |
+
+**Email template** (plain text, subject `[jahattrinidad.com] {Branch} — {name}{, company}`):
+
+```
+{Branch}: hiring | project | other
+Name: {name}
+Company: {company or "—"}
+Email: {email}
+
+{first message}
+
+{detail}
+
+— Sent from the Contact chat on jahattrinidad.com
+```
+
+**Accessibility and motion.** The log is `role="log"` / `aria-live="polite"`; chips, pencils and the action buttons are real buttons; focus returns to the composer after each reply (to the first pencil on Summary, to "Try again" on Failed). The card grows from the composer with a 240 ms height/opacity transition; messages fade up 8 px; reduced motion: no growth, no typing delay, no fade.
+
+Not designed as separate boards: tablet and desktop (rule above) and the project / other branches (same components, different copy).
