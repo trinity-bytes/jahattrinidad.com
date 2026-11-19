@@ -23,3 +23,8 @@ export const WEB3FORMS_ACCESS_KEY = '016fe820-1be9-49e5-b050-0f92b4598891';
 
 /** This site's source repository, linked from the footer. */
 export const SOURCE_URL = 'https://github.com/trinity-bytes/jahattrinidad.com';
+
+/** Slug of the case study the hiring branch links to after a message is sent. */
+export const GARDEN_CASE_STUDY = 'inspiration-garden';
+/** CV download URL. There is no CV file yet: while this is undefined the "Download my CV" step is left out. */
+export const CV_URL: string | undefined = undefined;

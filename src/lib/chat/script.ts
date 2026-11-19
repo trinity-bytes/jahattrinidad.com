@@ -66,5 +66,20 @@ export interface ChatCopy {
   hello: string;
   composerPlaceholder: string;
   suggestionsLabel: string;
+  /** Chrome of the conversation card that is not part of the scripted dialogue. */
+  ui: {
+    author: string;
+    status: string;
+    youWrote: string;
+    /** One-line note under the composer. */
+    privacy: string;
+    /** Note under the composer while the failed state is shown. */
+    failedNote: string;
+    /** Accessible names of the card and of its message log. */
+    cardLabel: string;
+    logLabel: string;
+    /** Read out while the typing indicator is shown. */
+    typing: string;
+  };
   script: ChatScript;
 }

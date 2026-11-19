@@ -37,6 +37,8 @@
     --color-surface: light-dark(var(--sand), var(--green-900));
     --color-card: light-dark(var(--card), var(--green-900));
     --color-card-alt: light-dark(var(--card), var(--green-950));
+    /* The summary card inside the chat card: white on cream, one step darker than the card Inside. */
+    --color-card-raised: light-dark(var(--white), var(--green-950));
     --color-heading: light-dark(var(--green-950), var(--white));
     --color-text: light-dark(var(--green-950), var(--green-200));
     --color-text-muted: light-dark(var(--green-700), var(--green-300));

@@ -18,6 +18,17 @@ export const chatEn: ChatCopy = {
   hello,
   composerPlaceholder,
   suggestionsLabel: 'Suggestions',
+  // Card chrome: boards 2353:103 to 2354:320 (visual-design task 7.11).
+  ui: {
+    author: 'Jahat Trinidad',
+    status: 'OPEN TO AN INTERNSHIP',
+    youWrote: 'YOU WROTE',
+    privacy: 'Goes straight to my inbox.',
+    failedNote: 'Nothing was lost.',
+    cardLabel: 'Conversation with Jahat',
+    logLabel: 'Messages',
+    typing: 'Jahat is typing',
+  },
   script: {
     idle: {
       reply: greeting,
@@ -81,7 +92,7 @@ export const chatEn: ChatCopy = {
       labels: { name: 'Name', company: 'Company', detail: 'Message', email: 'Reply to' },
       empty: 'Just me',
       edit: (label) => `Edit ${label}`,
-      confirm: 'Looks good, send it →',
+      confirm: 'Looks good, send it',
       sending: 'Sending…',
     },
     sent: {
