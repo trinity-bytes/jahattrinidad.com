@@ -586,3 +586,13 @@ Email: {email}
 **Accessibility and motion.** The log is `role="log"` / `aria-live="polite"`; chips, pencils and the action buttons are real buttons; focus returns to the composer after each reply (to the first pencil on Summary, to "Try again" on Failed). The card grows from the composer with a 240 ms height/opacity transition; messages fade up 8 px; reduced motion: no growth, no typing delay, no fade.
 
 Not designed as separate boards: tablet and desktop (rule above) and the project / other branches (same components, different copy).
+
+## `/links/` page (task 7.10) — proposal, 2026-11-18
+
+Board **`2356:86`** on "Portfolio" (`2029:2`), x 13626, 390 × 940. It is the link-in-bio page for Instagram, YouTube and X profiles, so it is designed mobile first; on tablet and desktop the same column (max 440) is centred on the landscape.
+
+- Background: the Home sky and near hill (the hill rises at the bottom, as the footer does elsewhere), with a cream veil (55% → 0) over the top half for legibility. No nav and no footer: the page is a launcher.
+- Identity: the portrait cropped into an 84 px circle with a white ring, "Jahat Trinidad" (Epilogue SemiBold 34), the Home hero line "I design and build products, from the first sketch to the live site." and "OPEN TO AN INTERNSHIP · LIMA, PERU" with the sun dot.
+- Four link cards (radius 20, ink border, `card` fill), each a title in Hanken Medium 17, a mono subline and an arrow: See my work (counts come from the `projects` collection), Read my notes, the latest note (title + read time, from `posts`), and **Write to me** as the one filled card (ink), which goes to Home `#contact` and focuses the chat composer.
+- "ELSEWHERE": the profiles from `links.json` as outline pills.
+- `jahattrinidad.com` in white mono on the hill closes the page.
