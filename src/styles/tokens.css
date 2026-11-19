@@ -27,6 +27,11 @@
     --ground-name: #0f1f0c;
     --white: #ffffff;
     --dusk-sun: #3a4117;
+    /* Historical Inspiration Garden UI, shown only in the case study's era comparison. */
+    --garden-era-sky-start: #e9e3f3;
+    --garden-era-light: #f6f3fa;
+    --garden-era-dark: #1c1830;
+    --garden-era-ink: #2a2140;
 
     --color-bg: light-dark(var(--cream), var(--green-950));
     --color-surface: light-dark(var(--sand), var(--green-900));

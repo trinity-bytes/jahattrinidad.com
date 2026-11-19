@@ -102,6 +102,9 @@ export interface Dictionary {
     featuredMarker: string;
     moreMarker: string;
     moreHeading: string;
+    featuredHeading: string;
+    solo: string;
+    moreSub: string;
     experimentsMarker: string;
     experimentsHeading: string;
     contactMarker: string;
@@ -115,7 +118,6 @@ export interface Dictionary {
     allWork: string;
     eyebrow: string;
     contactMarker: string;
-    openGarden: string;
     openProject: string;
     source: string;
     atAGlance: string;
@@ -135,6 +137,11 @@ export interface Dictionary {
     mistakesMarker: string;
     growthMarker: string;
     nextCaseStudy: string;
+    problemHeading: string;
+    featuresHeading: string;
+    decisionsHeading: string;
+    mistakesHeading: string;
+    growthHeading: string;
   };
   notes: {
     headline: string;
@@ -381,6 +388,9 @@ const en: Dictionary = {
     featuredMarker: '01 — FEATURED',
     moreMarker: '02 — MORE PROJECTS',
     moreHeading: 'More projects',
+    featuredHeading: 'Featured projects',
+    solo: 'Solo',
+    moreSub: 'Tools, landings and games that are live. Smaller in scope, built with the same care.',
     experimentsMarker: '03 — SMALL EXPERIMENTS',
     experimentsHeading: 'Small experiments',
     contactMarker: '04 — CONTACT',
@@ -396,7 +406,6 @@ const en: Dictionary = {
     // The project's `kind` follows it on the hero: "CASE STUDY · PERSONAL PRODUCT".
     eyebrow: 'CASE STUDY',
     contactMarker: 'CONTACT',
-    openGarden: 'Open the garden',
     openProject: 'Open the project',
     source: 'Source on GitHub',
     atAGlance: 'AT A GLANCE',
@@ -416,6 +425,11 @@ const en: Dictionary = {
     mistakesMarker: '04 — WHAT I GOT WRONG',
     growthMarker: '05 — HOW IT GREW',
     nextCaseStudy: 'NEXT CASE STUDY',
+    problemHeading: 'The problem',
+    featuresHeading: 'What it does',
+    decisionsHeading: 'Decisions',
+    mistakesHeading: 'What I got wrong',
+    growthHeading: 'How it grew',
   },
   // Notes index board 2301:86; intro and sub are approved draft copy.
   notes: {
