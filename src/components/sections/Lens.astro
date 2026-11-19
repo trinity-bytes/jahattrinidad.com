@@ -45,7 +45,8 @@ const { strings } = Astro.props;
 <script>
   import { createPreview, type Preview } from './lens/preview';
 
-  const RADIUS = 95;
+  /** Circle radius: 190 px, measured on the Lens states board (2109:103, drawn at half scale). */
+  const RADIUS = 190;
   const DRAG_THRESHOLD = 6;
   /** On touch the circle sits above the thumb: lens radius + gap + circle radius. */
   const TOUCH_LIFT = 40 + 8 + RADIUS;
@@ -62,6 +63,7 @@ const { strings } = Astro.props;
   const coarsePointer = matchMedia('(pointer: coarse)');
 
   if (dock && lens && back && ring && main) {
+    ring.style.setProperty('--lens-radius', `${RADIUS}px`);
     type Lens = 'inside' | 'outside';
     type Drag = { id: number; startX: number; startY: number; preview?: Preview; center: { x: number; y: number } };
 
@@ -293,8 +295,8 @@ const { strings } = Astro.props;
     position: fixed;
     top: 0;
     left: 0;
-    width: calc(2 * 95px);
-    height: calc(2 * 95px);
+    width: calc(2 * var(--lens-radius));
+    height: calc(2 * var(--lens-radius));
     border: 2px solid var(--sun);
     border-radius: 50%;
     pointer-events: none;

@@ -75,7 +75,7 @@
 
 ## Phase 9 — Motion
 
-- [ ] 9.1 Hero parallax per layer, tuned in the browser
+- [ ] 9.1 Hero parallax per layer, tuned in the browser: sky slowest, near hill fastest (owner confirmed 2026-11-18; the Inside annotations "moves slowest" / "moves fastest" describe it)
 - [ ] 9.2 Lens switch transition and nav state transitions
 - [ ] 9.3 Reduced-motion pass over everything in this phase
 - [ ] 9.4 Owner approves the motion on the running site (closes visual-design 6.1, 6.2, 6.4)

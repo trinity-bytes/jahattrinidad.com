@@ -41,7 +41,7 @@ sequenceDiagram
 
   alt Drag
     U->>L: pointerdown + move
-    L->>P: show Inside copy of the page, clip-path circle(95px at pointer)
+    L->>P: show Inside copy of the page, clip-path circle(190px at pointer)
     U->>L: pointerup
     L->>R: data-lens = "inside"
     L->>P: hide preview
