@@ -1,0 +1,153 @@
+---
+title: Inspiration Garden
+description: A library where people and AI agents collect inspiration together.
+heroDescription: A library where people and AI agents collect inspiration together. I designed and built all of it, from the first commit to version 1.0 in 46 days.
+lang: en
+tier: case-study
+publishDate: 2026-11-16
+featured: true
+homeFeatured: false
+kind: Personal product
+team: { size: 1, solo: true }
+coverImage: './inspiration-garden/cover.png'
+coverImageAlt: 'Inspiration Garden library showing a collection of visual references'
+problem: 'References end up spread across bookmarks, screenshots and chats, and AI agents have nowhere shared to look.'
+myPart: 'All of it, on my own: product, design and code.'
+whatItDoes: 'One library where people and AI agents save, tag and find references through the same API.'
+stack: ['Cloudflare Workers', Hono, D1, R2, React, three.js, Zod]
+demoUrl: 'https://inspo.jahattrinidad.com'
+demoLabel: Open the garden
+repoUrl: 'https://github.com/trinity-bytes/my-inspiration-garden'
+caseStudy:
+  headlines:
+    problem: My references were everywhere, so I could never find them.
+    features: One place to save, find and reuse what inspires me.
+    decisions: Four decisions, and what each one cost.
+    mistakes: Two things I got wrong.
+    growth: Small releases, one foundation, no rebuilds.
+  glance:
+    - { label: My role, value: 'Product, design and code, on my own' }
+    - { label: Built with, value: 'Cloudflare Workers, Hono, D1, R2, React, three.js and Zod' }
+    - { label: Status, value: 'Live at inspo.jahattrinidad.com, about 190 items, in daily use' }
+    - { label: Who adds to it, value: 'Me, plus Claude Code, Codex and OpenCode through the same API' }
+  problem:
+    - 'Ideas I saved lived in bookmarks, screenshots, chats and a hundred open tabs. When a project needed them, they were gone.'
+    - 'I wanted one place that is quick to fill and easy to search, and that an AI assistant can help keep in order, not only me.'
+  requirements: 'Six item kinds with shared and specific fields. Public reads; writes only from the owner and owner-issued agent tokens.'
+  constraint: 'No server to babysit and no database that sleeps: Cloudflare Workers, D1, R2, Images and Access.'
+  features:
+    - title: Find anything in seconds
+      description: 'Search with filters for kind, tag and colour, all inside one bar at the bottom of the screen.'
+      detail: 'FTS5 prefix search over D1, with kind, category tree, tags and dominant colour as filters on the same request.'
+      image: './inspiration-garden/search.png'
+      imageAlt: 'Search and filters in Inspiration Garden'
+    - title: Six kinds of things, one place
+      description: 'Images, links, notes, videos, colour palettes and fonts, each one with its tags and where it came from.'
+      detail: 'Links unfurl their title and preview on save, and the preview image is copied to R2 so it outlives the source page. Image colours are indexed for search.'
+      image: './inspiration-garden/kinds.png'
+      imageAlt: 'Different kinds of items in Inspiration Garden'
+    - title: Works on a phone, too
+      description: 'Install it like an app. Every window becomes a sheet you can reach with your thumb.'
+      detail: 'Installable as a PWA. Below 480 px every dialog rises as a bottom sheet sized to its content; the canvas, search and API stay the same.'
+      image: './inspiration-garden/mobile.png'
+      imageAlt: 'Inspiration Garden on a phone'
+    - title: AI agents keep it tidy
+      description: 'Claude Code, Codex and OpenCode save, tag and clean up items for me, through the same API the app uses.'
+      detail: 'An Agent Skill teaches them to search narrowly, so a page of 100 items (about 70 KB) never floods their context. The OpenAPI 3.1 spec comes from the same Zod schemas.'
+      terminal: |-
+        ~/projects · claude
+
+        > organize the garden: clean up the tags, put everything in English and sort it into categories
+
+        ● Loading skill inspiration-garden
+          GET /api/tags          75 tags
+          PATCH /api/tags/:id    merge ia → ai, ui → ux/ui …
+          PATCH /api/items/:id   ~35 translated, 26 titled
+          POST /api/categories   4 roots, 9 leaves
+
+        Done: 75 → 64 tags, 190 items sorted into Web Design, AI, Learning and Dev Resources.
+      note: 'Reconstructed from the 15 Nov cleanup session [Owner: confirm wording]'
+  proof:
+    title: 33 releases
+    text: 'Each one runs lint, typecheck, tests, D1 migrations, deploy and a health check on its own. Shipping small is cheap when the checks are automatic.'
+  closing:
+    - title: Where it is now
+      text: 'Live and in daily use: about 190 items under 64 tags, sorted into four categories. An agent did that last cleanup through the API, and the canvas keeps up with all of it.'
+    - title: What I would do differently
+      text: 'Use the product with real content before polishing the look. The sky took days to build, and I only learned it went unnoticed by using the first release.'
+  decisions:
+    - choice: The site and its data live at one address
+      subtitle: 'one origin · API + app on one Worker'
+      why: 'My login is a cookie the browser sends on its own. With the API on another address that breaks: CORS becomes mandatory and the CSRF guard loses its same-origin check.'
+      cost: 'One deploy unit: the interface and the API always ship together.'
+    - choice: 'AI assistants are trusted helpers, not guests'
+      subtitle: 'agents write directly · no review inbox'
+      why: 'Agents use the same API as the app, with read or read + write tokens I can revoke one by one.'
+      cost: 'Trust over moderation. Revision history, soft delete and a recorded source soften it, but on day 53 one bad patch still cleared 58 items’ tags.'
+    - choice: One shape for every kind of item
+      subtitle: hybrid data model
+      why: 'Core columns for what every item shares and a JSON field for what each kind needs, so a new kind does not need a new table.'
+      cost: 'D1 cannot enforce the JSON, so shared Zod schemas validate it in the client and in the API.'
+    - choice: 'Thumbnails, never originals'
+      subtitle: thumbnails at the edge
+      why: 'Cards were downloading full originals: 265 MB per session on a phone. Cloudflare Images makes WebP thumbnails once per width, and media fell to about 1.2 MB.'
+      cost: 'A dependency on Cloudflare Images. If a thumbnail cannot be made, the card falls back to the original and retries later.'
+  milestones:
+    - { day: DAY 0, title: The foundation came first, description: 'Monorepo, data schema and FTS5 search in the first commit.' }
+    - { day: DAY 7, title: In daily use within a week, description: 'v0.1.0 live on Cloudflare Workers.' }
+    - { day: DAY 36, title: Shipped in small steps, description: '10 releases in one day: v0.5.0 → v0.8.1, interface and speed.' }
+    - { day: DAY 46, title: v1.0 without a rewrite, description: 'Phones, PWA install and search on the same API.' }
+---
+
+import { Image } from 'astro:assets';
+import eraCover from './inspiration-garden/cover.png';
+
+### The sky I loved went unnoticed
+
+The first version had a sky behind the canvas and light frosted glass panels. After a few days of real use, nobody noticed the sky and the glass no longer fit. On day 11 (PR #1) I cleared the canvas to a solid dark colour, swapped the glass for solid cartoon panels and made navigation faster. Glass came back on day 35: dark, 75% opaque, and tuned so text stays at WCAG AA even over a pure white card.
+
+<div className="eras">
+  <figure><div className="era era-sky"><Image class="era-image era-image-one" src={eraCover} alt="" /><Image class="era-image era-image-two" src={eraCover} alt="" /><div className="filter"><b>Filters</b><p>KIND</p><span>Image　 Link　 Video　 Font</span><p>TAGS</p><span>design 137 · portfolio 61 · ai 39</span></div></div><figcaption>v0.1.0 · DAY 7 — sky and light glass<br />Lavender sky, glass at 65%, ink text</figcaption></figure>
+  <figure><div className="era era-solid"><div className="filter"><b>Filters</b><p>KIND</p><span>Image　 Link　 Video　 Font</span><p>TAGS</p><span>design 137 · portfolio 61 · ai 39</span></div></div><figcaption>DAY 11 · PR #1 — solid ground, cartoon panels<br />Ink on solid lavender: about 14:1</figcaption></figure>
+  <figure><div className="era era-dark"><Image class="era-image era-image-bg" src={eraCover} alt="" /><div className="filter"><b>Filters</b><p>KIND</p><span>Image　 Link　 Video　 Font</span><p>TAGS</p><span>design 137 · portfolio 61 · ai 39</span></div></div><figcaption>DAY 35 → TODAY — dark glass, 75% opaque<br />Text 5.3:1 even over a pure white card</figcaption></figure>
+</div>
+
+Panels rebuilt from each release's design tokens, not screenshots.
+
+### An agent wiped the tags of 58 items
+
+On day 53 an agent cleaned up the garden for me, and 58 items lost every tag. The API read a missing tags field as an empty list: a Zod default survives .partial(), so a patch that only fixed a title also cleared the tags. I restored them from a local snapshot, and hotfix v1.2.1 shipped the same day: an omitted list now keeps the stored one.
+
+<div className="code-pair">
+<figure>
+
+```ts
+// packages/shared/src/primitives.ts
+export const tagsSchema = z
+  …
+  .default([]);
+
+PATCH /api/items/:id
+{ "kind": "link", "title": "…" }
+→ tags: []
+// 58 items
+```
+
+<figcaption>BEFORE · v1.2.0 — a missing list meant an empty one</figcaption>
+</figure>
+<figure>
+
+```ts
+// patch schema: no defaults
+// omitted ≠ cleared
+tags: tagListSchema.optional(),
+
+
+PATCH /api/items/:id
+{ "kind": "link", "title": "…" }
+→ tags: unchanged
+```
+
+<figcaption>AFTER · v1.2.1, same day — omitted keeps the stored list</figcaption>
+</figure>
+</div>

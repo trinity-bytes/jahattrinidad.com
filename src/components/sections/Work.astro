@@ -11,6 +11,7 @@ interface WorkProject {
   meta?: string;
   problem?: string;
   whatItDoes?: string;
+  mirrored?: boolean;
 }
 
 interface Props {
@@ -23,10 +24,16 @@ interface Props {
   /** Total number of projects, computed by the page from content. */
   count: number;
   allProjectsHref: string;
+  index?: boolean;
 }
 
-const { copy, insideCopy, headline, labels, projects, count, allProjectsHref } = Astro.props;
-const [featured, ...pair] = projects;
+const { copy, insideCopy, headline, labels, projects: allProjects, count, allProjectsHref, index = false } = Astro.props;
+const projects = index ? allProjects : allProjects.filter(project => project.data.homeFeatured);
+const displayedCount = index ? count : count - (allProjects.length - projects.length);
+const regular = index ? projects.filter(project => !project.mirrored) : projects;
+const [featured, ...rest] = regular;
+const pair = index ? rest.slice(0, 2) : rest;
+const remaining = index ? [...rest.slice(2), ...projects.filter(project => project.mirrored)] : [];
 ---
 
 <section id="work" class="work" aria-labelledby="work-heading">
@@ -41,12 +48,12 @@ const [featured, ...pair] = projects;
           <span data-show="outside">{headline}</span><span data-show="inside">{insideCopy.headline}</span>
         </h2>
       </div>
-      <a class="all" href={allProjectsHref} data-background-text>
-        <span class="underlined">{copy.seeAll(count)}</span> <span aria-hidden="true">→</span>
-      </a>
+      {!index && <a class="all" href={allProjectsHref} data-background-text>
+        <span class="underlined">{copy.seeAll(displayedCount)}</span> <span aria-hidden="true">→</span>
+      </a>}
     </header>
     <div class="projects">
-      <ProjectCard
+      {featured && <ProjectCard
         project={featured.data}
         href={featured.href}
         meta={featured.meta}
@@ -55,8 +62,9 @@ const [featured, ...pair] = projects;
         labels={labels}
         insideLabels={insideCopy.rowLabels}
         featured
-      />
-      <div class="pair">
+        optimized={index}
+      />}
+      {(pair.length > 0 || !index) && <div class="pair">
         {
           pair.map((project) => (
             <ProjectCard
@@ -70,7 +78,8 @@ const [featured, ...pair] = projects;
             />
           ))
         }
-      </div>
+      </div>}
+      {remaining.map((project) => <ProjectCard project={project.data} href={project.href} meta={project.meta} problem={project.problem} whatItDoes={project.whatItDoes} labels={labels} insideLabels={insideCopy.rowLabels} featured mirrored optimized />)}
     </div>
   </div>
 </section>

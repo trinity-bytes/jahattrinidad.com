@@ -4,7 +4,9 @@ import PageHero from '../../components/sections/PageHero.astro';
 import PageContact from '../../components/sections/PageContact.astro';
 import PageFooter from '../../components/sections/PageFooter.astro';
 import Icon from '../../components/ui/Icon.astro';
-import { collectionPath, entryPath, listLinks, projectRoutes, getTranslationGroup, renderEntry, type Project } from '../../lib/content';
+import CaseStudy from '../../components/sections/CaseStudy.astro';
+import NextCaseStudy from '../../components/sections/NextCaseStudy.astro';
+import { collectionPath, entryPath, listLinks, listProjects, projectRoutes, getTranslationGroup, renderEntry, type Project } from '../../lib/content';
 import { buildSeo } from '../../lib/seo';
 import { getDictionary } from '../../lib/i18n';
 
@@ -45,6 +47,7 @@ const seo = buildSeo({
 });
 
 const { Content } = await renderEntry(entry);
+const nextCase = (await listProjects({ lang })).find(project => project.id !== entry.id && project.data.tier === 'case-study');
 
 const { data } = entry;
 const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
@@ -55,15 +58,15 @@ const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
     <a class="back" href={collectionPath('projects', lang)}><span aria-hidden="true">←</span>{t.caseStudy.allWork}</a>
     <p class="eyebrow">{eyebrow}</p>
     <h1 class="title">{data.title}</h1>
-    <p class="sub">{data.description}</p>
+    <p class="sub">{data.heroDescription ?? data.description}</p>
     {(data.demoUrl || data.repoUrl) && (
       <div class="actions">
-        {data.demoUrl && <a class="button primary" href={data.demoUrl} target="_blank" rel="noopener noreferrer">{t.caseStudy.openProject}<Icon name="arrow-right" size={18} /></a>}
+        {data.demoUrl && <a class="button primary" href={data.demoUrl} target="_blank" rel="noopener noreferrer">{data.demoLabel ?? t.caseStudy.openProject}<Icon name="arrow-right" size={18} /></a>}
         {data.repoUrl && <a class="button secondary" href={data.repoUrl} target="_blank" rel="noopener noreferrer">{t.caseStudy.source}<Icon name="arrow-right" size={18} /></a>}
       </div>
     )}
   </PageHero>
-  <div class="container">
+  {data.caseStudy ? <CaseStudy data={data.caseStudy} cover={data.coverImage} coverAlt={data.coverImageAlt} website={data.demoUrl} strings={t.caseStudy}><Content /></CaseStudy> : <div class="container">
   <article>
     {entry.data.role && <p><strong>{t.project.role}:</strong> {entry.data.role}</p>}
     {entry.data.timeframe && <p><strong>{t.project.timeframe}:</strong> {entry.data.timeframe}</p>}
@@ -72,7 +75,8 @@ const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
     </p>
     <Content />
   </article>
-  </div>
+  </div>}
+  {data.caseStudy && nextCase && <NextCaseStudy project={nextCase} href={entryPath('projects', lang, nextCase.id)} allWorkHref={collectionPath('projects', lang)} strings={t} />}
   <PageContact lang={lang} links={links} marker={t.caseStudy.contactMarker} />
   <PageFooter slot="footer" lang={lang} links={links} compact />
 </Base>

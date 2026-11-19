@@ -1,0 +1,151 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import type { Dictionary } from '../../lib/i18n';
+import Backgrounds from './Backgrounds.astro';
+interface Props { projects: CollectionEntry<'projects'>[]; experiments: CollectionEntry<'projects'>[]; lang: string; strings: Dictionary['work'] }
+const { projects, experiments, strings: t } = Astro.props;
+---
+<section class="more">
+  <Backgrounds variant="experience" next="none" />
+  <div class="container inner">
+    {projects.length > 0 && (
+      <div>
+        <p class="marker" data-background-text>{t.moreMarker}</p>
+        <h2 data-background-text>{t.moreHeading}</h2>
+        <p class="intro" data-background-text>{t.moreSub}</p>
+        <div class="grid">
+          {projects.map(({ data }) => (
+            <article class="card">
+              {data.coverImage && (
+                <div class="frame">
+                  <div class="bar" aria-hidden="true">● ● ●</div>
+                  <Image src={data.coverImage} alt={data.coverImageAlt ?? ''} />
+                </div>
+              )}
+              <div class="body">
+                {data.kind && <p class="marker">{data.kind}</p>}
+                <h3>{data.title}</h3>
+                <p>{data.description}</p>
+                <div class="links">
+                  {data.demoUrl && <a href={data.demoUrl}>{t.live} →</a>}
+                  {data.repoUrl && <a href={data.repoUrl}>{t.code} →</a>}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    )}
+    {experiments.length > 0 && (
+      <div class="experiments">
+        <p class="marker" data-background-text>{t.experimentsMarker}</p>
+        <h2 data-background-text>{t.experimentsHeading}</h2>
+        <div class="grid">
+          {experiments.map(({ data }) => (
+            <article class="experiment">
+              <p class="experiment-meta">$ {data.kind ?? data.stack.join(' · ')}</p>
+              <h3>{data.title}</h3>
+              <p>{data.description}</p>
+              <p class="experiment-meta">{data.stack.join(' · ')}</p>
+              {data.repoUrl && <a href={data.repoUrl}>{t.code} →</a>}
+            </article>
+          ))}
+        </div>
+        <a href="https://github.com/trinity-bytes" data-background-text>{t.moreExperiments} →</a>
+      </div>
+    )}
+  </div>
+</section>
+<style>
+  .more {
+    position: relative;
+    padding: 7.5rem 0;
+    background: var(--color-bg);
+  }
+  .inner {
+    position: relative;
+  }
+  .marker {
+    font: 500 13px var(--font-mono);
+    color: var(--color-text-muted);
+  }
+  h2 {
+    font: 600 var(--font-size-heading-lg)/1.05 var(--font-display);
+    margin: 12px 0;
+  }
+  h3 {
+    font: 600 var(--font-size-heading-sm)/1.1 var(--font-display);
+    margin: 10px 0;
+  }
+  .intro {
+    max-width: 620px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 48px 0;
+  }
+  .card {
+    background: var(--color-card);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .frame {
+    background: var(--color-surface);
+    padding: 20px 20px 0;
+  }
+  .bar {
+    background: var(--color-bg);
+    color: var(--green-500);
+    font: 10px var(--font-mono);
+    padding: 8px;
+    border-radius: 10px 10px 0 0;
+  }
+  .frame img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16/10;
+    object-fit: cover;
+  }
+  .body {
+    padding: 28px;
+  }
+  .links {
+    display: flex;
+    gap: 24px;
+  }
+  .experiments {
+    margin-top: 7rem;
+  }
+  .experiment {
+    background: var(--green-950);
+    color: var(--cream);
+    padding: 32px;
+    border-radius: 16px;
+  }
+  .experiment a {
+    color: var(--green-300);
+  }
+  .experiment-meta {
+    font: 12px/1.5 var(--font-mono);
+    color: var(--green-300);
+  }
+  @media (max-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .more {
+      padding: 6rem 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .more {
+      padding: 5rem 0;
+    }
+  }
+</style>

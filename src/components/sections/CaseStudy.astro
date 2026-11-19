@@ -1,0 +1,403 @@
+---
+import { Image } from 'astro:assets';
+import { Code } from 'astro:components';
+import theme from '../../styles/shiki-theme.json';
+import type { CollectionEntry } from 'astro:content';
+import type { Dictionary } from '../../lib/i18n';
+import Backgrounds from './Backgrounds.astro';
+type Data = NonNullable<CollectionEntry<'projects'>['data']['caseStudy']>;
+interface Props { data: Data; cover?: ImageMetadata; coverAlt?: string; website?: string; strings: Dictionary['caseStudy'] }
+const { data, cover, coverAlt = '', website, strings: t } = Astro.props;
+---
+<article class="case-study">
+  <section class="overview band">
+    <Backgrounds variant="work" next="none" />
+    <div class="container inner">
+      {cover && <div class="browser"><div class="browser-bar"><i></i><i></i><i></i>{website && <span>{new URL(website).hostname}</span>}</div><Image src={cover} alt={coverAlt} /></div>}
+      <p class="marker" data-background-text>{t.atAGlance}</p>
+      <dl class="glance">{data.glance.map(f => <div><dt data-background-text>{f.label}</dt><dd data-background-text>{f.value}</dd></div>)}</dl>
+    </div>
+  </section>
+  <section class="problem band pale"><Backgrounds variant="experience" next="none" /><div class="container inner split">
+    <div><p class="marker" data-background-text>{t.problemMarker}</p><h2 data-background-text>{data.headlines.problem}</h2></div>
+    <div>{data.problem.map(p => <p data-background-text>{p}</p>)}<dl class="facts"><div><dt data-background-text>{t.requirements}</dt><dd data-background-text>{data.requirements}</dd></div><div><dt data-background-text>{t.constraint}</dt><dd data-background-text>{data.constraint}</dd></div></dl></div>
+  </div></section>
+  <section class="features band"><Backgrounds variant="work" next="none" /><div class="container inner">
+    <p class="marker" data-background-text>{t.featuresMarker}</p><h2 data-background-text>{data.headlines.features}</h2>
+    {data.features.map((f) => <div class="feature">{f.image ? <Image src={f.image} alt={f.imageAlt ?? ''} /> : <div class="terminal">{f.terminal && <Code code={f.terminal} lang="bash" theme={{ ...theme, type: "dark" }} />}{f.note && <small>{f.note}</small>}</div>}<div><h3 data-background-text>{f.title}</h3><p data-background-text>{f.description}</p><dl class="facts"><div><dt data-background-text>{t.underTheHood}</dt><dd data-background-text>{f.detail}</dd></div></dl></div></div>)}
+  </div></section>
+  <section class="decisions band pale"><Backgrounds variant="experience" next="none" /><div class="container inner"><p class="marker" data-background-text>{t.decisionsMarker}</p><h2 data-background-text>{data.headlines.decisions}</h2><div class="table-head"><span>{t.choice}</span><span>{t.why}</span><span>{t.cost}</span></div>{data.decisions.map(d => <div class="decision"><div><h3 data-background-text>{d.choice}</h3><small>{d.subtitle}</small></div><p data-background-text>{d.why}</p><p data-background-text>{d.cost}</p></div>)}</div></section>
+  <section class="mistakes band"><Backgrounds variant="work" next="none" /><div class="container inner"><p class="marker" data-background-text>{t.mistakesMarker}</p><h2 data-background-text>{data.headlines.mistakes}</h2><div class="prose" data-background-text><slot /></div></div></section>
+  <section class="growth band pale"><Backgrounds variant="experience" next="none" /><div class="container inner"><p class="marker" data-background-text>{t.growthMarker}</p><h2 data-background-text>{data.headlines.growth}</h2><div class="timeline">{data.milestones.map(m => <div><p class="marker" data-background-text>{m.day}</p><h3 data-background-text>{m.title}</h3><p data-background-text>{m.description}</p></div>)}</div>{data.proof && <div class="proof"><strong>{data.proof.title}</strong><p>{data.proof.text}</p></div>}{data.closing && <div class="closing">{data.closing.map(c => <div><h3 data-background-text>{c.title}</h3><p data-background-text>{c.text}</p></div>)}</div>}</div></section>
+</article>
+<style>
+  .pale :global(.warm .light) {
+    background: radial-gradient(
+      ellipse at 78% 0%,
+      color-mix(in srgb, var(--sun-soft) 15%, transparent),
+      transparent 65%
+    );
+  }
+  .band {
+    position: relative;
+    background: var(--cream);
+    padding: 7.5rem 0;
+  }
+  .pale {
+    background: var(--card);
+  }
+  .inner {
+    position: relative;
+  }
+  .overview {
+    padding-top: 0;
+  }
+  .browser {
+    position: relative;
+    max-width: 72rem;
+    margin: -4rem auto 7.5rem;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: var(--card);
+    box-shadow: 0 24px 64px color-mix(in srgb, var(--green-950) 18%, transparent);
+  }
+  .browser img,
+  .feature img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .browser-bar {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px;
+    color: var(--green-700);
+    font: 12px var(--font-mono);
+  }
+  .browser-bar i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--green-300);
+  }
+  .browser-bar span {
+    margin: auto;
+  }
+  .marker,
+  dt,
+  small {
+    font: 500 13px/1.5 var(--font-mono);
+    color: var(--green-700);
+  }
+  h2 {
+    font: 600 var(--font-size-heading-lg)/1.05 var(--font-display);
+    letter-spacing: -0.02em;
+    margin: 0.75rem 0 3rem;
+  }
+  h3 {
+    font: 600 var(--font-size-heading-sm)/1.12 var(--font-display);
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem;
+  }
+  p {
+    line-height: 1.5;
+  }
+  dl,
+  dd {
+    margin: 0;
+  }
+  .glance {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .glance > div {
+    border-top: 1px solid var(--green-950);
+    padding-top: 16px;
+  }
+  .glance dd {
+    font-size: 20px;
+  }
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+  .facts > div {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 24px;
+    border-top: 1px solid var(--color-border);
+    padding: 16px 0;
+  }
+  .feature {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 5rem;
+  }
+  .feature img {
+    border-radius: 1rem;
+  }
+  .terminal {
+    background: var(--green-950);
+    color: var(--cream);
+    padding: 2rem;
+    border-radius: 1rem;
+  }
+  .terminal :global(pre) {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 13px/1.7 var(--font-mono);
+  }
+  .terminal small {
+    color: var(--green-300);
+  }
+  .table-head,
+  .decision {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr 1fr;
+    gap: 2rem;
+  }
+  .table-head {
+    font: 500 13px var(--font-mono);
+    color: var(--green-700);
+  }
+  .decision {
+    border-top: 1px solid var(--color-border);
+    padding: 28px 0;
+  }
+  .decision h3 {
+    font-size: 26px;
+  }
+  .decision p {
+    margin: 0;
+  }
+  .prose {
+    max-width: 75rem;
+  }
+  .prose :global(h3) {
+    margin-top: 4rem;
+  }
+  .prose :global(p) {
+    max-width: 45rem;
+  }
+  .prose :global(.code-pair) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .prose :global(.code-pair figure) {
+    width: 100%;
+  }
+  .prose :global(pre) {
+    display: block;
+    width: 100%;
+    padding: 2rem;
+    border-radius: 1rem;
+    overflow: auto;
+    font: 13px/1.7 var(--font-mono);
+  }
+  .prose :global(.eras) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin: 48px 0 24px;
+  }
+  .prose :global(figure) {
+    margin: 0;
+  }
+  .prose :global(.era) {
+    position: relative;
+    height: 300px;
+    border-radius: 16px;
+    padding: 48px 32px;
+    overflow: hidden;
+  }
+  .prose :global(.era-sky) {
+    background: linear-gradient(
+      var(--garden-era-sky-start),
+      var(--garden-era-light)
+    );
+  }
+  .prose :global(.era-solid) {
+    background: var(--garden-era-dark);
+  }
+  .prose :global(.era-dark) {
+    background: var(--garden-era-dark);
+  }
+  .prose :global(.era-image) {
+    position: absolute;
+    object-fit: cover;
+  }
+  .prose :global(.era-image-one) {
+    width: 180px;
+    height: 120px;
+    left: 196px;
+    top: 40px;
+  }
+  .prose :global(.era-image-two) {
+    width: 180px;
+    height: 120px;
+    left: 236px;
+    top: 176px;
+  }
+  .prose :global(.era-image-bg) {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .prose :global(.filter) {
+    position: relative;
+    max-width: 268px;
+    padding: 20px;
+    border-radius: 14px;
+    background: color-mix(in srgb, white 75%, transparent);
+    font: 12px var(--font-sans);
+    box-shadow: 0 8px 30px #0002;
+  }
+  .prose :global(.filter p) {
+    font: 10px var(--font-mono);
+    margin: 14px 0 8px;
+  }
+  .prose :global(.era-solid .filter) {
+    background: var(--garden-era-light);
+    color: var(--garden-era-ink);
+    border: 3px solid var(--garden-era-ink);
+    box-shadow: 4px 4px var(--garden-era-ink);
+  }
+  .prose :global(.era-dark .filter) {
+    background: color-mix(in srgb, var(--garden-era-dark) 75%, transparent);
+    backdrop-filter: blur(12px);
+    color: var(--garden-era-light);
+  }
+  .prose :global(figcaption) {
+    font: 12px/1.8 var(--font-mono);
+    margin-top: 12px;
+  }
+  .closing {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 4rem;
+    border-top: 1px solid var(--color-border);
+    padding-top: 2rem;
+  }
+  .closing h3 {
+    font: 500 13px var(--font-mono);
+  }
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    border-top: 1px solid var(--green-700);
+    margin-top: 4rem;
+  }
+  .timeline > div {
+    position: relative;
+    padding-top: 24px;
+  }
+  .timeline > div:before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--green-700);
+  }
+  .timeline h3 {
+    font-size: 26px;
+  }
+  .proof {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 4rem;
+  }
+  .proof strong {
+    white-space: nowrap;
+    color: var(--green-700);
+    font: 500 34px var(--font-display);
+  }
+  .proof p {
+    max-width: 40rem;
+  }
+  @media (max-width: 1024px) {
+    .band {
+      padding: 6rem 0;
+    }
+    .overview {
+      padding-top: 0;
+    }
+    .glance {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .closing,
+    .split,
+    .feature,
+    .decision {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .table-head {
+      display: none;
+    }
+    .prose :global(.eras),
+    .prose :global(.code-pair) {
+      grid-template-columns: 1fr;
+    }
+    .prose :global(figure) {
+      width: min(100%, 416px);
+      margin: auto;
+    }
+    .timeline {
+      display: block;
+      border-top: 0;
+      border-left: 1px solid var(--green-700);
+      margin-left: 6px;
+    }
+    .timeline > div {
+      padding: 0 0 2rem 28px;
+    }
+    .timeline > div:before {
+      top: 0;
+      left: -6px;
+    }
+    .prose :global(pre) {
+      display: block;
+      width: 100%;
+    }
+  }
+  @media (max-width: 767px) {
+    .band {
+      padding: 5rem 0;
+    }
+    .overview {
+      padding-top: 0;
+    }
+    .browser {
+      margin: -4rem auto 4rem;
+    }
+    .glance {
+      grid-template-columns: 1fr;
+    }
+    .facts > div {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+    .proof {
+      display: block;
+    }
+    .terminal {
+      padding: 1.25rem;
+    }
+    .terminal :global(pre) {
+      font-size: 12px;
+    }
+  }
+</style>

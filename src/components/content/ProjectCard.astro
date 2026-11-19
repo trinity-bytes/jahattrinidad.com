@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import type { Dictionary } from '../../lib/i18n';
 
@@ -15,9 +16,11 @@ interface Props {
   whatItDoes?: string;
   /** The wide card: image beside the text on desktop, inset image above it below. */
   featured?: boolean;
+  mirrored?: boolean;
+  optimized?: boolean;
 }
 
-const { project, href, labels, insideLabels, meta, problem, whatItDoes, featured = false } = Astro.props;
+const { project, href, labels, insideLabels, meta, problem, whatItDoes, featured = false, mirrored = false, optimized = false } = Astro.props;
 
 const facts = [
   { label: labels.problem, value: problem },
@@ -39,10 +42,10 @@ const factLists = [
 ] as const;
 ---
 
-<article class:list={['card', { featured }]}>
+<article class:list={['card', { featured, mirrored }]}>
   {
     project.coverImage && (
-      <img class="cover" src={project.coverImage.src} width={project.coverImage.width} height={project.coverImage.height} alt={project.coverImageAlt ?? ''} loading="lazy" />
+      optimized ? <Image class="cover" src={project.coverImage} alt={project.coverImageAlt ?? ''} loading="lazy" /> : <img class="cover" src={project.coverImage.src} width={project.coverImage.width} height={project.coverImage.height} alt={project.coverImageAlt ?? ''} loading="lazy" />
     )
   }
   <div class="body">
@@ -216,6 +219,9 @@ const factLists = [
       gap: 3rem;
       padding: 2.5rem;
     }
+
+    .featured.mirrored { grid-template-columns: minmax(0, 456fr) minmax(0, 720fr); }
+    .featured.mirrored .cover { order: 2; }
 
     .featured .body {
       padding: 0;

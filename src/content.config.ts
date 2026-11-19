@@ -16,6 +16,7 @@ const projects = defineCollection({
       updatedDate: z.coerce.date().optional(),
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
+      homeFeatured: z.boolean().default(true),
       coverImage: image().optional(), // validated at build; missing file = Zod error
       coverImageAlt: z.string().optional(),
       tags: z.array(z.string()).default([]), // what KIND of thing it is
@@ -34,6 +35,18 @@ const projects = defineCollection({
       outcome: z.string().optional(), // one-line quantified result for cards
       repoUrl: z.url().optional(),
       demoUrl: z.url().optional(),
+      demoLabel: z.string().optional(),
+      heroDescription: z.string().optional(),
+      caseStudy: z.object({
+        headlines: z.object({ problem: z.string(), features: z.string(), decisions: z.string(), mistakes: z.string(), growth: z.string() }),
+        glance: z.array(z.object({ label: z.string(), value: z.string() })),
+        problem: z.array(z.string()), requirements: z.string(), constraint: z.string(),
+        features: z.array(z.object({ title: z.string(), description: z.string(), detail: z.string(), image: image().optional(), imageAlt: z.string().optional(), terminal: z.string().optional(), note: z.string().optional() })),
+        decisions: z.array(z.object({ choice: z.string(), subtitle: z.string(), why: z.string(), cost: z.string() })),
+        closing: z.array(z.object({ title: z.string(), text: z.string() })).optional(),
+        proof: z.object({ title: z.string(), text: z.string() }).optional(),
+        milestones: z.array(z.object({ day: z.string(), title: z.string(), description: z.string() })),
+      }).optional(),
       decisions: z
         .array(
           z.object({
