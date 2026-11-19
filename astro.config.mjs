@@ -3,6 +3,16 @@ import theme from './src/styles/shiki-theme.json' with { type: 'json' };
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
+// Preserve code-fence titles on the highlighted pre element.
+const fenceTitle = {
+  name: 'fence-title',
+  pre(node) {
+    const raw = this.options.meta?.__raw;
+    const match = typeof raw === 'string' && raw.match(/(?:^|\s)title=(?:"([^"]*)"|'([^']*)')/);
+    if (match) node.properties['data-title'] = match[1] ?? match[2];
+  },
+};
+
 export default defineConfig({
   site: 'https://jahattrinidad.com',
   output: 'static', // no adapter, no SSR
@@ -21,14 +31,7 @@ export default defineConfig({
     sitemap({ i18n: { defaultLocale: 'en', locales: { en: 'en-US', es: 'es-ES' } } }),
   ],
 
-  markdown: { shikiConfig: { theme, transformers: [{
-    name: 'fence-title',
-    pre(node) {
-      const raw = this.options.meta?.__raw;
-      const match = typeof raw === 'string' && raw.match(/(?:^|\s)title=(?:"([^"]*)"|'([^']*)')/);
-      if (match) node.properties['data-title'] = match[1] ?? match[2];
-    },
-  }] } },
+  markdown: { shikiConfig: { theme, transformers: [fenceTitle] } },
   fonts: [
     {
       provider: fontProviders.local(),
