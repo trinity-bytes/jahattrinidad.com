@@ -60,8 +60,8 @@
 
 ## Phase 7 — Contact chat
 
-- [ ] 7.1 Engine: `chat-engine.ts` with `next` and `detect`, tests under `node --test` for every scenario in the contact-chat spec; add the tests to `npm run check`
-- [ ] 7.2 Script: the questions, chips, placeholders and replies from 6.3 into the `Dictionary`
+- [x] 7.1 Engine: `chat-engine.ts` with `next` and `detect`, tests under `node --test` for every scenario in the contact-chat spec; add the tests to `npm run check`
+- [x] 7.2 Script: the questions, chips, placeholders and replies from 6.3 into the `Dictionary`
 - [ ] 7.3 UI: composer → conversation view, typing indicator, chips, editable summary, sent and failed states, live region, focus management
 - [ ] 7.4 Form service: Web3Forms (open question 2, resolved), wire the POST, honeypot, privacy note, retry and "Copy my email" fallback; send a real test message end to end
 
