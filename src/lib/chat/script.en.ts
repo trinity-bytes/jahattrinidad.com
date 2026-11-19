@@ -8,6 +8,9 @@ const hello = 'Just saying hi';
 const composerPlaceholder = 'What are you building, and where could I help?';
 const greeting = "Hi, I'm Jahat. What brings you here?";
 
+/** Echoes address the visitor by first name, as people do in a chat ("Thanks, Sam."). */
+const firstName = (name: string) => name.trim().split(/\s+/)[0] || name;
+
 const emailAsk = 'you@company.com';
 const sentTail = (email: string) => `Sent. I'll write back to ${email} soon. While you wait:`;
 
@@ -50,7 +53,7 @@ export const chatEn: ChatCopy = {
     branches: {
       hiring: {
         askName: "Nice, I'm open to an internship right now. Who am I talking to?",
-        askCompany: (name) => `Thanks, ${name}. Which company is it?`,
+        askCompany: (name) => `Thanks, ${firstName(name)}. Which company is it?`,
         askDetail: 'Got it. Anything I should know before I reply? Dates, stack, how you found me.',
         companyChips: [],
         detailChips: [
@@ -66,7 +69,7 @@ export const chatEn: ChatCopy = {
       },
       project: {
         askName: 'Sounds fun. Who am I talking to?',
-        askCompany: (name) => `Thanks, ${name}. Is this for a company, or for you?`,
+        askCompany: (name) => `Thanks, ${firstName(name)}. Is this for a company, or for you?`,
         askDetail: 'What are you building, and when would you like it ready?',
         companyChips: [{ value: 'just-me', label: 'Just me' }],
         detailChips: [],
@@ -89,7 +92,7 @@ export const chatEn: ChatCopy = {
     summary: {
       reply: 'Tap a pencil to change one answer.',
       title: "HERE'S WHAT I'LL SEND",
-      labels: { name: 'Name', company: 'Company', detail: 'Message', email: 'Reply to' },
+      labels: { name: 'Name', company: 'Company', detail: 'Details', email: 'Reply to' },
       empty: 'Just me',
       edit: (label) => `Edit ${label}`,
       confirm: 'Looks good, send it',

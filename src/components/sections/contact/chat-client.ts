@@ -107,7 +107,16 @@ class Chat {
   private open(): void {
     const before = this.root.getBoundingClientRect().height;
     this.root.dataset.open = '';
-    if (this.section) this.section.dataset.chatting = '';
+    if (this.section) {
+      this.section.dataset.chatting = '';
+      // The lens dock is fixed bottom-right and would cover the composer: hide it while the
+      // open conversation is on screen (Lens.astro reads this attribute).
+      const root = document.documentElement;
+      new IntersectionObserver(([entry]) => {
+        if (entry?.isIntersecting) root.dataset.chatInView = '';
+        else delete root.dataset.chatInView;
+      }).observe(this.section);
+    }
     if (!this.reduced.matches) {
       const after = this.root.getBoundingClientRect().height;
       const options = { duration: 240, easing: 'ease-out' };

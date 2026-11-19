@@ -208,7 +208,7 @@ const { strings } = Astro.props;
 </script>
 
 <style>
-  :global(html[data-menu-open]) .dock { display: none; }
+  :global(html[data-menu-open]) .dock, :global(html[data-chat-in-view]) .dock { display: none; }
   .dock {
     position: fixed;
     z-index: 60;
