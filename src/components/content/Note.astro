@@ -1,0 +1,11 @@
+---
+import { getDictionary } from '../../lib/i18n';
+interface Props { lang: 'en' | 'es' }
+const { lang } = Astro.props;
+---
+<aside class="note"><span>{getDictionary(lang).post.note}</span><slot /></aside>
+<style>
+  .note { padding: 1.25rem 1.5rem; border-radius: .75rem; background: var(--green-50); font: 400 1.0625rem/1.55 var(--font-sans); }
+  span { display: block; margin-bottom: .5rem; color: var(--green-700); font: 500 .75rem/1.3 var(--font-mono); text-transform: uppercase; }
+  .note :global(p) { margin: 0; }
+</style>
