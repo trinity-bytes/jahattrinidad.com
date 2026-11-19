@@ -72,7 +72,7 @@ const seo = buildSeo({
 });
 ---
 
-<Base lang={lang} seo={seo} lens>
+<Base lang={lang} seo={seo} lens profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
   <Hero strings={copy.hero} insideStrings={t.home.inside.hero} workHref={workPath} />
   <Values
     copy={copy.values}

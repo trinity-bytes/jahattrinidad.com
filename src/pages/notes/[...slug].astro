@@ -68,7 +68,7 @@ const morePosts = (await listPosts({ lang })).filter((post) => post.entry.id !==
 const typeLabel = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial;
 ---
 
-<Base lang={lang} seo={seo}>
+<Base lang={lang} seo={seo} profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
   <PageHero variant="post">
     <div class="meta">
       <a href={collectionPath('posts', lang)}><span aria-hidden="true">←&nbsp;</span>{t.notes.allNotes}</a>

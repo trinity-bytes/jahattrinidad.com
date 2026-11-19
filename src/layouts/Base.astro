@@ -14,9 +14,11 @@ export interface Props {
   lens?: boolean;
   /** Launcher pages (/links/) render without the nav; the skip link and landmarks stay. */
   nav?: boolean;
+  /** Profile links for the mobile menu; pages read them from content.ts (layouts may not). */
+  profileLinks?: { label: string; href: string }[];
 }
 
-const { lang, seo, lens = false, nav = true } = Astro.props;
+const { lang, seo, lens = false, nav = true, profileLinks = [] } = Astro.props;
 const t = getDictionary(lang);
 ---
 
@@ -46,6 +48,7 @@ const t = getDictionary(lang);
       workPath={collectionPath('projects', lang)}
       notesPath={collectionPath('posts', lang)}
       strings={t.nav}
+      profileLinks={profileLinks}
     />}
     <slot name="backgrounds" />
     <main id="main-content" tabindex="-1"><slot /></main>
