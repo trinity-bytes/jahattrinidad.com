@@ -3,7 +3,7 @@
     "id": "github",
     "label": "GitHub",
     "url": "https://github.com/trinity-bytes",
-    "icon": "github",
+    "icon": "brand-github",
     "order": 1,
     "enabled": true
   },
@@ -11,7 +11,7 @@
     "id": "linkedin",
     "label": "LinkedIn",
     "url": "https://www.linkedin.com/in/trinitybytes",
-    "icon": "linkedin",
+    "icon": "brand-linkedin",
     "order": 2,
     "enabled": true
   },
@@ -19,7 +19,7 @@
     "id": "instagram",
     "label": "Instagram",
     "url": "https://www.instagram.com/trinitybytes/",
-    "icon": "instagram",
+    "icon": "brand-instagram",
     "order": 3,
     "enabled": true
   },
@@ -27,7 +27,7 @@
     "id": "youtube",
     "label": "YouTube",
     "url": "https://www.youtube.com/@jahattrinidad",
-    "icon": "youtube",
+    "icon": "brand-youtube",
     "order": 4,
     "enabled": true
   },
@@ -35,7 +35,7 @@
     "id": "x",
     "label": "X",
     "url": "https://x.com/trinitybytes",
-    "icon": "x",
+    "icon": "brand-x",
     "order": 5,
     "enabled": true
   }
