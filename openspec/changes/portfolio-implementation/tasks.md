@@ -54,8 +54,8 @@
 
 ## Phase 6 — Designs still owed in Figma (visual-design tasks)
 
-- [ ] 6.1 Mobile menu open state (visual-design 4.5), then implement it
-- [ ] 6.2 `/links/` page (visual-design 7.10), then implement it
+- [x] 6.1 Mobile menu open state (visual-design 4.5), then implement it
+- [x] 6.2 `/links/` page (visual-design 7.10), then implement it
 - [x] 6.3 Chat conversation view, questions and email template (visual-design 7.11)
 
 ## Phase 7 — Contact chat
