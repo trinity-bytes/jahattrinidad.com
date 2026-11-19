@@ -40,6 +40,16 @@ const t = getDictionary(lang);
     <meta property="og:description" content={seo.openGraph['og:description']} />
     <meta property="og:url" content={seo.openGraph['og:url']} />
     <meta property="og:type" content={seo.openGraph['og:type']} />
+    <meta property="og:image" content={seo.openGraph['og:image']} />
+    <meta property="og:image:width" content={seo.openGraph['og:image:width']} />
+    <meta property="og:image:height" content={seo.openGraph['og:image:height']} />
+    <meta property="og:image:alt" content={t.meta.ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0a200b" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">{t.nav.skipToContent}</a>

@@ -66,6 +66,10 @@ interface HomeLensCopy {
 }
 
 export interface Dictionary {
+  meta: {
+    /** Alt text of the site-wide social preview image (og:image:alt). */
+    ogImageAlt: string;
+  };
   nav: {
     home: string;
     brand: string;
@@ -243,6 +247,9 @@ export interface Dictionary {
 
 /** Populated for `en` only — D1 creates no Spanish UI strings in this change. */
 const en: Dictionary = {
+  meta: {
+    ogImageAlt: 'Jahat Trinidad on a hill at sunset, beside the line "I build products people actually use."',
+  },
   nav: {
     home: 'Home',
     brand: 'Jahat Trinidad',

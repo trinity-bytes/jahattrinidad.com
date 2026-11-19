@@ -86,5 +86,6 @@
 - [ ] 10.2 Responsive pass at 390, 768 and 1440 against every board
 - [ ] 10.3 Accessibility: Lighthouse 100 on Home, Work, a case study and a post; keyboard and screen reader walk-through of the lens, menu and chat
 - [ ] 10.4 SEO: titles, descriptions, Open Graph images, canonical, sitemap, RSS
+  - 2026-11-19: favicon set, `site.webmanifest`, theme-color and the default Open Graph image (`public/og/default.jpg`, from Figma `2374:231`) with width, height and alt in every page head; `buildSeo` emits `og:image`, pinned by `src/lib/seo.test.ts`. Still open: per-page OG from the template `2374:241`, and the review of titles, descriptions, sitemap and RSS
 - [ ] 10.5 Performance: image sizes, font subsets, no layout shift from the hero
 - [ ] 10.6 Owner sign-off, then archive this change and visual-design, merging the spec deltas into `openspec/specs/`

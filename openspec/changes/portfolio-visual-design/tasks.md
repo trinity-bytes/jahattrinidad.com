@@ -117,3 +117,16 @@ Blocked on 6.4. Code starts only after this phase.
 - [x] 7.9 Decide URLs (proposal D22, 2026-11-17): `/work/` and `/notes/`; `/links/` stays as a link-in-bio page
 - [x] 7.10 Design the `/links/` page (link-in-bio) in the v3 direction; it has no board yet. Proposal 2026-11-18: board `2356:86`; approved by the owner 2026-11-18 ("me encanta. aprobado").
 - [ ] 7.8 Spanish and Portuguese dictionaries and routes, only when there is content in those languages (D10)
+
+## Phase 8 — Launch assets (2026-11-19)
+
+Built on page "Launch assets" `2372:2`; the owner moved everything to the **Brand** page (sections at x 3528, new ids below) and the empty page remains. Owner, verbatim: "diseñalo todo en el figma. y si me refiero al thumbnail."
+
+- [x] 8.1 Favicon: round 1 proposals A "J" monogram, B sun over the hill, C lowercase j with the sun as its dot (section `2374:187`, masters `2372:4` / `2372:7` / `2372:17`), each shown at 180, 32 and 16 px and in light and dark browser tabs. Owner picks one; it then feeds `favicon.svg`, `favicon.ico`, `apple-touch-icon`, the 192/512 icons and `site.webmanifest` (implementation 10.4)
+  - Round 1 verdict (2026-11-19, owner): "me gusta el monograma pero me gustaria explorar mas, una simple J no me convence". Round 2, section `2376:103`: 1 J + sun `2376:77`, 2 JT ligature `2376:81`, 3 sun in the J `2376:87`, 4 J in the lens `2376:91`, 5 Outside / Inside split `2376:95`, 6 terminal J_ `2376:100`
+  - Round 2 verdict (2026-11-19, owner): "me gusta la direcicon 6. sigue explorando ese concepto de terminal". Round 3, section `2377:177` (IBM Plex Mono SemiBold): 1 J_ refined `2377:178`, 2 J + block cursor `2377:181`, 3 >J prompt `2377:184`, 4 j_ lowercase `2377:187`, 5 jt_ initials `2377:190`, 6 J_ on Outside `2377:193`, 7 J over the cursor `2377:196`, 8 <J/> component `2377:199`
+  - Pick (2026-11-19, owner): "me quedo con la 1, j rfined" — round 3 #1 J_ refined `2377:178`. Exported as `public/favicon.svg` (outlined text) and rendered to `favicon.ico` 16/32/48, `apple-touch-icon.png` 180 (full-bleed square), `icon-192.png`, `icon-512.png`
+- [x] 8.2 Open Graph 1200 × 630: default `2374:231` (hero crop with portrait) and the per-page template `2374:241` for notes and case studies (type + date, title, signature). Approved 2026-11-19 with owner adjustments in Figma (hill raised in both, sky lowered in the template); the Figma frames are the source
+- [x] 8.3 GitHub repository social preview 1280 × 640 `2374:250`, Inside identity because the audience is technical; content inside GitHub's 40 px safe border
+- [x] 8.4 Figma file thumbnail 1920 × 1080 (16:9, Figma help) `2374:269`: hero scene, "Jahat", portrait, the lens showing "@trinitybytes". Set as thumbnail after approval
+- [x] 8.5 Owner approves 8.1 (picked 2026-11-19; 8.2–8.4 approved 2026-11-19: "VA, LAS IMAGENES PROBADAS, CON UNOS AJUSTES EN EL OG")

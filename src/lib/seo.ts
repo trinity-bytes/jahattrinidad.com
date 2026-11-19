@@ -4,7 +4,13 @@
  * resolved values into canonical/alternate descriptors.
  */
 import type { Locale, TranslationLink } from './content';
-import { BCP47 } from './consts';
+import { BCP47 } from './consts.ts';
+
+/**
+ * The site-wide social preview (visual-design 8.2, Figma `2374:231`). Pages
+ * without their own image share it; its alt text lives in the Dictionary.
+ */
+export const OG_DEFAULT_IMAGE = { path: '/og/default.jpg', width: 1200, height: 630 } as const;
 
 export interface Alternate {
   hrefLang: string;
@@ -89,6 +95,9 @@ export function buildSeo(input: SeoInput): SeoResult {
       'og:description': input.description,
       'og:url': canonical,
       'og:type': input.type ?? 'website',
+      'og:image': absoluteUrl(OG_DEFAULT_IMAGE.path, input.site).href,
+      'og:image:width': String(OG_DEFAULT_IMAGE.width),
+      'og:image:height': String(OG_DEFAULT_IMAGE.height),
     },
   };
 }
