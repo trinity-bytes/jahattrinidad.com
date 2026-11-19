@@ -523,3 +523,14 @@ Owner decision: code blocks are highlighted with Shiki using a custom brand them
 | Punctuation, operators | green-200 `#B3F3B4` | 13.4:1 |
 
 Rejected: existing themes (Everforest Dark bg `#2D353B`, Vitesse Dark bg `#121212`) would need their background and most token colors overridden. green-700 for comments fails AA (2.65:1). Known weak spot: strings and functions are both greens and sit close; the owner saw it and kept it (alternative offered: strings in sun-soft).
+
+## Mobile menu open state (task 4.5) — proposal, 2026-11-18
+
+Owner: "encargate tu de diseñar esa pantalla". Boards on "Portfolio" (`2029:2`), to the right of the Home v3.5 mobile and tablet boards: **Outside `2349:86`** (x 9906) and **Inside `2349:159`** (x 10396), 390 × 844 each.
+
+- A sheet drops from the top over the hero: `card` surface (Inside `green-900`), bottom corners 28, soft green shadow. The hero stays visible under a `green-950` scrim (32% Outside, 50% Inside); tapping the scrim closes the menu.
+- The nav row stays where it is, on top of the sheet; the menu button shows Lucide `x` (1.5 stroke) in the same circular button.
+- Links: Work, Experience, Notes in Epilogue SemiBold 40 / 44, each with a mono index (`01`–`03`, IBM Plex Mono Medium 13, `green-700` / Inside `green-300`) echoing the section markers, rows between hairlines (`hairline-warm` / Inside `green-700`). Contact is not repeated: it is already the nav's button.
+- Below the links: availability with the sun dot ("Open to an internship, now.", Hanken Medium 16) and an "ELSEWHERE" row with the profile links from `links.json`.
+- **No EN / ES / PT switch.** D1 (English-first, 2026-09-18) creates no Spanish pages until there is Spanish content, so the switch would point nowhere. It returns to this sheet, under Elsewhere, when Spanish ships.
+- Behaviour for implementation: the lens dock hides while the menu is open; Esc and the scrim close it; focus moves to the first link and returns to the menu button on close; `body` scroll is locked; the sheet slides 16 px and fades (reduced motion: fade only).
