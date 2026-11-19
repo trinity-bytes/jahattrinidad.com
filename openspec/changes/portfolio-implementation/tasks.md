@@ -47,8 +47,8 @@
 
 ## Phase 5 — Other pages
 
-- [ ] 5.1 Work index: Featured, More projects, Small experiments, driven by `featured` and `tier`
-- [ ] 5.2 Case study template (D21: one version, no lens) and the Inspiration Garden entry as its first content
+- [x] 5.1 Work index: Featured, More projects, Small experiments, driven by `featured` and `tier`
+- [x] 5.2 Case study template (D21: one version, no lens) and the Inspiration Garden entry as its first content
 - [x] 5.3 Notes index: hero, featured post, rows with type chip
 - [x] 5.4 Post template: reading column, headings, code block chrome with file name and Copy, pull quote, note, figure
 
