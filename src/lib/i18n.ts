@@ -149,6 +149,8 @@ export interface Dictionary {
     writingLatest: string;
     elsewhereLatest: string;
     allWriting: string;
+    rssFeed: string;
+    latest: string;
     minutes: (minutes: number) => string;
   };
   experience: {
@@ -210,6 +212,7 @@ export interface Dictionary {
   };
   post: {
     readingTime: (minutes: number) => string;
+    inThisPost: string; published: string; updated: string; author: string; authorRole: string; write: string; keepReading: string; copy: string; copied: string; code: string; note: string;
   };
   common: {
     readMore: string;
@@ -425,6 +428,8 @@ const en: Dictionary = {
     writingLatest: 'Writing · Latest',
     elsewhereLatest: 'Elsewhere · Latest posts',
     allWriting: 'All writing',
+    rssFeed: 'RSS feed',
+    latest: 'Latest',
     minutes: (minutes) => `${minutes} min`,
     headline: 'What I learn while building, written down so it sticks.',
     sub: 'Essays on how I decide, and tutorials you can follow step by step.',
@@ -494,6 +499,7 @@ const en: Dictionary = {
   },
   post: {
     readingTime: (minutes) => `${minutes} min read`,
+    inThisPost: 'In this post', published: 'First published on dev.to', updated: 'Updated', author: 'Written by Jahat Trinidad', authorRole: 'Design engineer, frontend and product. Open to an internship, now.', write: 'Write to me', keepReading: 'Keep reading', copy: 'Copy', copied: 'Copied', code: 'Code', note: 'Note',
   },
   // Labels reused by Work and case-study cards (boards 2239:17 and 2298:2).
   common: {

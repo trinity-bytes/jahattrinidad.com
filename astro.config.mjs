@@ -21,7 +21,14 @@ export default defineConfig({
     sitemap({ i18n: { defaultLocale: 'en', locales: { en: 'en-US', es: 'es-ES' } } }),
   ],
 
-  markdown: { shikiConfig: { theme } },
+  markdown: { shikiConfig: { theme, transformers: [{
+    name: 'fence-title',
+    pre(node) {
+      const raw = this.options.meta?.__raw;
+      const match = typeof raw === 'string' && raw.match(/(?:^|\s)title=(?:"([^"]*)"|'([^']*)')/);
+      if (match) node.properties['data-title'] = match[1] ?? match[2];
+    },
+  }] } },
   fonts: [
     {
       provider: fontProviders.local(),

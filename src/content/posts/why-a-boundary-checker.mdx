@@ -50,7 +50,7 @@ one of eight layers by path prefix, extracts import statements with a
 handful of line-anchored regular expressions, and checks each import
 against a small forbidden-import matrix. No parser, no AST, no dependency.
 
-```js
+```js title="scripts/check-boundaries.mjs"
 const FROM_RE = /^[ \t]*(?:import|export)\b[^'"]*?\bfrom[ \t]*['"]([^'"]+)['"]/gm;
 ```
 

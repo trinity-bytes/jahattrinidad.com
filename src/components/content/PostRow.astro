@@ -10,14 +10,14 @@ interface Props {
   /** The featured post is a card with its description. */
   featured?: boolean;
   description?: string;
+  detailed?: boolean;
 }
 
-const { href, title, typeLabel, type, meta, featured = false, description } = Astro.props;
+const { href, title, typeLabel, type, meta, featured = false, description, detailed = false } = Astro.props;
 ---
-<a class:list={['post', { featured }]} href={href}>
+<a class:list={['post', { featured, detailed }]} href={href}>
   <span class={`chip ${type}`} data-background-text>{typeLabel}</span>
-  <span class="title" data-background-text>{title}</span>
-  {featured && description && <span class="description" data-background-text>{description}</span>}
+  {detailed ? <span class="details"><span class="title" data-background-text>{title}</span>{description && <span class="description" data-background-text>{description}</span>}</span> : <><span class="title" data-background-text>{title}</span>{featured && description && <span class="description" data-background-text>{description}</span>}</>}
   <span class="meta" data-background-text>{meta}{featured && <span class="arrow" aria-hidden="true">&nbsp; →</span>}</span>
 </a>
 <style>
@@ -26,9 +26,13 @@ const { href, title, typeLabel, type, meta, featured = false, description } = As
   .essay { background: var(--green-200); }
   .tutorial { background: var(--color-tutorial-chip); color: var(--color-tutorial-chip-text); }
   .title { font: 400 1.125rem/1.4 var(--font-sans); }
+  .details { display: flex; flex-direction: column; gap: 0.25rem; }
+  .detailed:not(.featured) .description { font: 400 1rem/1.5 var(--font-sans); color: var(--green-900); }
+  .detailed:not(.featured) .title { font: 500 1.1875rem/1.5 var(--font-sans); }
   .meta { font: 400 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text-muted); }
   .post:hover .title, .post:focus-visible .title { text-decoration: underline; }
   .featured { gap: var(--space-md); padding: var(--post-card-pad-y) var(--post-card-pad-x); border: 0; border-radius: var(--space-md); background: var(--color-card-alt); }
+  .featured .details { gap: var(--space-md); }
   .featured .title { font: 600 var(--font-size-heading-sm)/1.12 var(--font-display); letter-spacing: -0.015em; }
   .featured .description { font: 400 var(--font-size-body)/1.5 var(--font-sans); color: var(--color-text); }
   .featured .meta { font-size: 0.8125rem; }
