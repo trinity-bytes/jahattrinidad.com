@@ -60,6 +60,8 @@ const { variant, word } = Astro.props;
     --hill-left: calc(50cqw - 271.581px);
     --hill-top: 249.223px;
     --intro-top: 100px;
+    /* Left and right edge of the content: the page gutter, or the centred content column past 1440. */
+    --edge: max(var(--gutter), (100cqw - var(--content-max)) / 2);
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -85,8 +87,8 @@ const { variant, word } = Astro.props;
   .intro {
     position: absolute;
     top: var(--intro-top);
-    left: var(--gutter);
-    right: var(--gutter);
+    left: var(--edge);
+    right: var(--edge);
     max-width: 660px;
     display: flex;
     flex-direction: column;
@@ -180,13 +182,15 @@ const { variant, word } = Astro.props;
     .hero {
       --word-size: 300px;
       --word-top: 396px;
-      --word-right: 33px;
-      --sky-w: 114.236cqw;
-      --sky-left: 0px;
-      --sky-top: -284px;
+      --word-right: calc(var(--edge) - 31px);
+      /* Sky and hill tops keep the sun (65.9% down the sky, ratio 0.6668) and the ridge (69% down the
+         hill, ratio 0.7127) at the same height at every width; the px values are the 1440 board. */
+      --sky-w: max(114.236cqw, (var(--edge) + 431px) / 0.301);
+      --sky-left: calc(var(--edge) + 431px - var(--sky-w) * 0.301);
+      --sky-top: min(0px, calc(438.9px - var(--sky-w) * 0.4394));
       --hill-w: 106.458cqw;
       --hill-left: -20px;
-      --hill-top: -126px;
+      --hill-top: calc(627.9px - 52.35cqw);
       --intro-top: 180px;
       height: 704px;
     }
@@ -198,15 +202,17 @@ const { variant, word } = Astro.props;
     /* Case study and Notes: the landscape is mirrored, so the sun sits on the right. */
     .case, .notes {
       --sky-w: 100cqw;
-      --sky-top: -215px;
+      --sky-left: 0px;
+      --sky-top: min(0px, calc(417.8px - 43.94cqw));
       --hill-w: 112.292cqw;
-      --hill-left: -89px;
-      --hill-top: -167px;
+      /* The hill PNG ends in a transparent strip (3.4% of its width); mirrored, it sits on the left. */
+      --hill-left: min(-89px, -6cqw);
+      --hill-top: calc(628.2px - 55.22cqw);
       height: 745px;
     }
     .case .sky, .case .hill, .notes .sky, .notes .hill { transform: scaleX(-1); }
     .notes .intro :global(.headline) { line-height: 1.06; }
-    .notes { --word-top: 437px; --word-right: var(--gutter); }
+    .notes { --word-top: 437px; --word-right: var(--edge); }
     .case .intro { max-width: 660px; }
     .post .intro { max-width: 980px; }
     .post .intro :global(.title) { font-size: 3.5rem; }

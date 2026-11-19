@@ -62,10 +62,12 @@ const { strings, navigation, elsewhere, source, copyright, outsideName, insideNa
 </script>
 <style>
   .footer { position: relative; background: var(--color-footer); color-scheme: dark; color: var(--color-heading); }
-  .hill { position: absolute; z-index: 0; inset: -260px 0 auto; height: 380px; overflow: hidden; pointer-events: none; }
-  .hill img { position: absolute; width: 1746.36px; max-width: none; height: 1244.16px; left: 50%; top: -670px; transform: translateX(-50%); filter: brightness(.38); }
+  .hill { position: absolute; z-index: 0; inset: -260px 0 auto; height: 380px; overflow: hidden; pointer-events: none; container-type: inline-size; }
+  /* Never narrower than the footer, plus enough to push the PNG's transparent right strip (3.4%) off screen;
+     past 1746px the ridge (69% down, ratio 0.7124) stays at the same height. */
+  .hill img { position: absolute; width: max(1746.36px, 108cqw); max-width: none; height: auto; aspect-ratio: 1746.36 / 1244.16; left: 50%; top: calc(188.5px - 0.4916 * max(1746.36px, 108cqw)); transform: translateX(-50%); filter: brightness(.38); }
   .fade { position: absolute; inset: auto 0 0; height: 240px; background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-footer) 55%, transparent) 45%, color-mix(in srgb, var(--color-footer) 92%, transparent) 80%, var(--color-footer)); }
-  .content { position: relative; padding: 200px var(--gutter-desktop) 25px; }
+  .content { position: relative; box-sizing: border-box; max-width: calc(var(--content-max) + 2 * var(--gutter-desktop)); margin-inline: auto; padding: 200px var(--gutter-desktop) 25px; }
   .columns { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .availability { position: absolute; top: 200px; right: var(--gutter-desktop); width: calc((100% - 2 * var(--gutter-desktop)) / 4); margin: 0; white-space: pre-line; font: 600 22px/1.25 var(--font-display); letter-spacing: -.01em; color: var(--color-heading); }
   h2 { margin: 0 0 14px; font: 500 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text-muted); }
@@ -78,7 +80,7 @@ const { strings, navigation, elsewhere, source, copyright, outsideName, insideNa
   .ghost { margin-top: 14px; color: var(--color-footer-name); font: 500 clamp(7rem, 20.84vw, 18.75rem)/1 var(--font-display); letter-spacing: -.04em; white-space: nowrap; overflow: hidden; }
   .ghost::before { content: attr(data-outside); }
   /* Inside: "@trinitybytes" in mono, 12 characters spanning the content width (boards: about 173 / 92 / 47px, fitting the content width at 1440 / 768 / 390). */
-  :global([data-lens='inside']) .ghost { font-family: var(--font-mono); font-size: 12vw; letter-spacing: -.06em; }
+  :global([data-lens='inside']) .ghost { font-family: var(--font-mono); font-size: min(12vw, 10.8rem); letter-spacing: -.06em; }
   :global([data-lens='inside']) .ghost::before { content: attr(data-inside); }
   .hint { font: 500 16px/21px var(--font-sans); color: var(--color-heading); }
   .copyright { margin: 0; font: 400 14px/20px var(--font-sans); color: var(--color-text); }
