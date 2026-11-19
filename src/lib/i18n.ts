@@ -1,6 +1,8 @@
 /** UI strings and locale-aware link helpers, not a content access seam. */
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import type { Locale } from './content';
+import { chatEn } from './chat/script.en';
+import type { ChatCopy } from './chat/script';
 
 interface HeroCopy {
   name: string;
@@ -193,14 +195,7 @@ export interface Dictionary {
     send: string;
     copied: string;
   };
-  chat: {
-    greeting: string;
-    hiring: string;
-    project: string;
-    hello: string;
-    composerPlaceholder: string;
-    suggestionsLabel: string;
-  };
+  chat: ChatCopy;
   footer: {
     navigate: string;
     elsewhere: string;
@@ -501,15 +496,8 @@ const en: Dictionary = {
     send: 'Send',
     copied: 'Email copied',
   },
-  // Greeting and chips: visual-design design.md §4. Composer: approved draft copy.
-  chat: {
-    greeting: "Hi, I'm Jahat. What brings you here?",
-    hiring: "I'm hiring",
-    project: 'I have a project',
-    hello: 'Just saying hi',
-    composerPlaceholder: 'What are you building, and where could I help?',
-    suggestionsLabel: 'Suggestions',
-  },
+  // Greeting, chips and the conversation script live in chat/script.en.ts (pure, testable under node --test).
+  chat: chatEn,
   // Footer labels: Home board 2191:86; shortcut label describes the required control.
   footer: {
     navigate: 'Navigate',
