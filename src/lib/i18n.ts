@@ -96,7 +96,9 @@ export interface Dictionary {
     };
   };
   work: {
-    intro: string;
+    eyebrow: string;
+    headline: string;
+    sub: string;
     featuredMarker: string;
     moreMarker: string;
     moreHeading: string;
@@ -112,7 +114,9 @@ export interface Dictionary {
   caseStudy: {
     allWork: string;
     eyebrow: string;
+    contactMarker: string;
     openGarden: string;
+    openProject: string;
     source: string;
     atAGlance: string;
     myRole: string;
@@ -133,9 +137,10 @@ export interface Dictionary {
     nextCaseStudy: string;
   };
   notes: {
-    intro: string;
+    headline: string;
     sub: string;
     eyebrow: string;
+    allNotes: string;
     writingMarker: string;
     writingHeading: string;
     contactMarker: string;
@@ -365,10 +370,11 @@ const en: Dictionary = {
       },
     },
   },
-  // Work board 2239:17; intro is approved in draft-copy.md.
+  // Work board 2239:17 (hero copy is the board's approved draft).
   work: {
-    intro:
-      "Products I've designed and built, from client work to small experiments.",
+    eyebrow: 'WORK · PRODUCTS, TOOLS AND EXPERIMENTS',
+    headline: 'Things I designed and built, from the first sketch to the live site.',
+    sub: 'The featured ones come with the whole story. After them, more projects, and at the end the small experiments where I try things out. [Draft]',
     featuredMarker: '01 — FEATURED',
     moreMarker: '02 — MORE PROJECTS',
     moreHeading: 'More projects',
@@ -384,8 +390,11 @@ const en: Dictionary = {
   // Case study board 2298:2; project-specific prose belongs in content entries.
   caseStudy: {
     allWork: 'All work',
-    eyebrow: 'CASE STUDY · PERSONAL PRODUCT',
+    // The project's `kind` follows it on the hero: "CASE STUDY · PERSONAL PRODUCT".
+    eyebrow: 'CASE STUDY',
+    contactMarker: 'CONTACT',
     openGarden: 'Open the garden',
+    openProject: 'Open the project',
     source: 'Source on GitHub',
     atAGlance: 'AT A GLANCE',
     myRole: 'My role',
@@ -417,9 +426,9 @@ const en: Dictionary = {
     elsewhereLatest: 'Elsewhere · Latest posts',
     allWriting: 'All writing',
     minutes: (minutes) => `${minutes} min`,
-    intro:
-      "Notes from building things: what worked, what broke, what I'd do again.",
-    sub: 'Essays on how I think through decisions, and tutorials you can follow step by step.',
+    headline: 'What I learn while building, written down so it sticks. [Draft]',
+    sub: 'Essays on how I decide, and tutorials you can follow step by step. [Draft]',
+    allNotes: 'All notes',
   },
   // Experience board 2191:236; the "carries over" label is the approved D14 copy.
   experience: {

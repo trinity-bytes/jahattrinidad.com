@@ -1,6 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { entryPath, projectRoutes, getTranslationGroup, renderEntry, type Project } from '../../lib/content';
+import PageHero from '../../components/sections/PageHero.astro';
+import PageContact from '../../components/sections/PageContact.astro';
+import PageFooter from '../../components/sections/PageFooter.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { collectionPath, entryPath, listLinks, projectRoutes, getTranslationGroup, renderEntry, type Project } from '../../lib/content';
 import { buildSeo } from '../../lib/seo';
 import { getDictionary } from '../../lib/i18n';
 
@@ -15,6 +19,7 @@ export interface Props {
 const { entry } = Astro.props;
 const lang = 'en' as const;
 const t = getDictionary(lang);
+const links = (await listLinks()).map((link) => link.data);
 
 const site = Astro.site;
 if (!site) {
@@ -40,12 +45,26 @@ const seo = buildSeo({
 });
 
 const { Content } = await renderEntry(entry);
+
+const { data } = entry;
+const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
 ---
 
 <Base lang={lang} seo={seo}>
+  <PageHero variant="case">
+    <a class="back" href={collectionPath('projects', lang)}><span aria-hidden="true">←</span>{t.caseStudy.allWork}</a>
+    <p class="eyebrow">{eyebrow}</p>
+    <h1 class="title">{data.title}</h1>
+    <p class="sub">{data.description}</p>
+    {(data.demoUrl || data.repoUrl) && (
+      <div class="actions">
+        {data.demoUrl && <a class="button primary" href={data.demoUrl} target="_blank" rel="noopener noreferrer">{t.caseStudy.openProject}<Icon name="arrow-right" size={18} /></a>}
+        {data.repoUrl && <a class="button secondary" href={data.repoUrl} target="_blank" rel="noopener noreferrer">{t.caseStudy.source}<Icon name="arrow-right" size={18} /></a>}
+      </div>
+    )}
+  </PageHero>
   <div class="container">
   <article>
-    <h1>{entry.data.title}</h1>
     {entry.data.role && <p><strong>{t.project.role}:</strong> {entry.data.role}</p>}
     {entry.data.timeframe && <p><strong>{t.project.timeframe}:</strong> {entry.data.timeframe}</p>}
     <p>
@@ -54,4 +73,6 @@ const { Content } = await renderEntry(entry);
     <Content />
   </article>
   </div>
+  <PageContact lang={lang} links={links} marker={t.caseStudy.contactMarker} />
+  <PageFooter slot="footer" lang={lang} links={links} compact />
 </Base>

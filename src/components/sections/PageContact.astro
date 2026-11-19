@@ -1,0 +1,24 @@
+---
+/* Contact for the non-Home pages: Outside only, so the Inside copy is passed but never shown. */
+import Contact from './Contact.astro';
+import { CONTACT_EMAIL } from '../../lib/consts';
+import { getDictionary } from '../../lib/i18n';
+
+interface Props {
+  lang: 'en' | 'es';
+  marker: string;
+  /** The links collection's data, read by the page (sections never import content.ts). */
+  links: { id: string; url: string }[];
+}
+const { lang, marker, links } = Astro.props;
+const t = getDictionary(lang);
+---
+<Contact
+  marker={marker}
+  headline={t.home.outside.contact.headline}
+  strings={t.contact}
+  inside={t.home.inside.contact}
+  chat={t.chat}
+  email={CONTACT_EMAIL}
+  linkedInHref={links.find((link) => link.id === 'linkedin')?.url}
+/>
