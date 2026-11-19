@@ -84,6 +84,7 @@
 
 - [ ] 10.1 Configure the Cloudflare deploy for the static build (open question 1, resolved: Cloudflare)
   - 2026-11-19: repo side done: `wrangler.jsonc` (Workers Static Assets, the type Cloudflare recommends over Pages for new projects; `dist/` only, no Worker script) and `.node-version` 24.18.0 (preinstalled in the Workers Builds image, satisfies `engines >=22.18`). Pending, owner in the dashboard: connect the repo with build `npm run check` and deploy `npx wrangler deploy`, add `jahattrinidad.com` as a Custom Domain, redirect `www` to the apex
+  - 2026-11-19: live at https://jahattrinidad.com. Worker `jahattrinidad-com` created by a manual `wrangler deploy` (the Git connect form refuses a Worker that does not exist yet); the apex had two stale proxied A records (`54.149.79.189`, `34.216.117.25`, answering 522) that blocked the Custom Domain and were deleted. First release merged to `main` (`94c541c`). Still open: `www` redirect (no DNS record yet), "Always Use HTTPS" (plain http answers 200), a 404 page
 - [ ] 10.2 Responsive pass at 390, 768 and 1440 against every board
 - [ ] 10.3 Accessibility: Lighthouse 100 on Home, Work, a case study and a post; keyboard and screen reader walk-through of the lens, menu and chat
 - [ ] 10.4 SEO: titles, descriptions, Open Graph images, canonical, sitemap, RSS
