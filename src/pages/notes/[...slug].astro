@@ -1,7 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import SkyBand from '../../components/sections/SkyBand.astro';
+import PageFooter from '../../components/sections/PageFooter.astro';
 import {
+  collectionPath,
   entryPath,
+  listLinks,
   postRoutes,
   getReadingTime,
   getTranslationGroup,
@@ -10,6 +15,7 @@ import {
 } from '../../lib/content';
 import { buildSeo } from '../../lib/seo';
 import { getDictionary } from '../../lib/i18n';
+import { formatDate } from '../../lib/format';
 
 export async function getStaticPaths() {
   return postRoutes('en');
@@ -22,6 +28,7 @@ export interface Props {
 const { entry } = Astro.props;
 const lang = 'en' as const;
 const t = getDictionary(lang);
+const links = (await listLinks()).map((link) => link.data);
 
 const site = Astro.site;
 if (!site) {
@@ -48,14 +55,30 @@ const seo = buildSeo({
 });
 
 const { Content } = await renderEntry(entry);
+const typeLabel = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial;
 ---
 
 <Base lang={lang} seo={seo}>
+  <PageHero variant="post">
+    <div class="meta">
+      <a href={collectionPath('posts', lang)}><span aria-hidden="true">←&nbsp;</span>{t.notes.allNotes}</a>
+      <span class="meta-line">
+        <span class="lead" aria-hidden="true">·</span>
+        <span>{typeLabel}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime={entry.data.publishDate.toISOString()}>{formatDate(entry.data.publishDate, lang)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{t.post.readingTime(readingTime)}</span>
+      </span>
+    </div>
+    <h1 class="title">{entry.data.title}</h1>
+    <p class="sub">{entry.data.description}</p>
+  </PageHero>
   <div class="container">
   <article>
-    <h1>{entry.data.title}</h1>
-    <p>{t.post.readingTime(readingTime)}</p>
     <Content />
   </article>
   </div>
+  <SkyBand />
+  <PageFooter slot="footer" lang={lang} links={links} compact />
 </Base>

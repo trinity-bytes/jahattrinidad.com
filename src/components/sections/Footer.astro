@@ -12,10 +12,12 @@ interface Props {
   outsideName: string;
   insideName: string;
   showShortcut?: boolean;
+  /** Case study / Notes / Post boards: on desktop the columns start at 67px instead of 200px (board 2298:1304, 561px tall). */
+  compact?: boolean;
 }
-const { strings, navigation, elsewhere, source, copyright, outsideName, insideName, showShortcut = true } = Astro.props;
+const { strings, navigation, elsewhere, source, copyright, outsideName, insideName, showShortcut = true, compact = false } = Astro.props;
 ---
-<footer class="footer">
+<footer class:list={['footer', { compact }]}>
   <div class="hill" aria-hidden="true">
     <img src={hill.src} alt="" />
     <div class="fade"></div>
@@ -80,6 +82,12 @@ const { strings, navigation, elsewhere, source, copyright, outsideName, insideNa
   :global([data-lens='inside']) .ghost::before { content: attr(data-inside); }
   .hint { font: 500 16px/21px var(--font-sans); color: var(--color-heading); }
   .copyright { margin: 0; font: 400 14px/20px var(--font-sans); color: var(--color-text); }
+  @media (min-width: 64.0625rem) {
+    /* Compact desktop footer: the copyright line overlaps the ghost name's box, as on the board. */
+    .compact .content { padding: 67px var(--gutter-desktop) 19px; }
+    .compact .availability { top: 67px; }
+    .compact .copyright { margin-top: -39px; position: relative; }
+  }
   @media (max-width: 64rem) {
     .content { padding: 96px var(--gutter-tablet) 25px; }
     .availability { position: static; width: auto; margin-bottom: 40px; }
