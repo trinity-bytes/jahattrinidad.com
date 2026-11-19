@@ -1,0 +1,180 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Dictionary } from '../../lib/i18n';
+import ProjectCard from '../content/ProjectCard.astro';
+import Backgrounds from './Backgrounds.astro';
+
+interface WorkProject {
+  data: CollectionEntry<'projects'>['data'];
+  /** Link to the project page. */
+  href: string;
+  meta?: string;
+  problem?: string;
+  whatItDoes?: string;
+  mirrored?: boolean;
+}
+
+interface Props {
+  copy: Dictionary['home']['outside']['work'];
+  insideCopy: Dictionary['home']['inside']['work'];
+  headline: string;
+  labels: Pick<Dictionary['common'], 'problem' | 'whatItDoes' | 'myPart'> & Pick<Dictionary['work'], 'seeProject'>;
+  /** The first project is the wide card; the next two are paired. */
+  projects: WorkProject[];
+  /** Total number of projects, computed by the page from content. */
+  count: number;
+  allProjectsHref: string;
+  index?: boolean;
+}
+
+const { copy, insideCopy, headline, labels, projects: allProjects, count, allProjectsHref, index = false } = Astro.props;
+const projects = index ? allProjects : allProjects.filter(project => project.data.homeFeatured);
+const displayedCount = index ? count : count - (allProjects.length - projects.length);
+const regular = index ? projects.filter(project => !project.mirrored) : projects;
+const [featured, ...rest] = regular;
+const pair = index ? rest.slice(0, 2) : rest;
+const remaining = index ? [...rest.slice(2), ...projects.filter(project => project.mirrored)] : [];
+---
+
+<section id="work" class="work" aria-labelledby="work-heading">
+  <Backgrounds variant="work" next="bg" seed={3} />
+  <div class="container content">
+    <header>
+      <div>
+        <p class="marker" data-background-text>
+          <span data-show="outside">{copy.marker}</span><span data-show="inside">{insideCopy.marker}</span>
+        </p>
+        <h2 id="work-heading" data-background-text>
+          <span data-show="outside">{headline}</span><span data-show="inside">{insideCopy.headline}</span>
+        </h2>
+      </div>
+      {!index && <a class="all" href={allProjectsHref} data-background-text>
+        <span class="underlined">{copy.seeAll(displayedCount)}</span> <span aria-hidden="true">→</span>
+      </a>}
+    </header>
+    <div class="projects">
+      {featured && <ProjectCard
+        project={featured.data}
+        href={featured.href}
+        meta={featured.meta}
+        problem={featured.problem}
+        whatItDoes={featured.whatItDoes}
+        labels={labels}
+        insideLabels={insideCopy.rowLabels}
+        featured
+        optimized={index}
+      />}
+      {(pair.length > 0 || !index) && <div class="pair">
+        {
+          pair.map((project) => (
+            <ProjectCard
+              project={project.data}
+              href={project.href}
+              meta={project.meta}
+              problem={project.problem}
+              whatItDoes={project.whatItDoes}
+              labels={labels}
+              insideLabels={insideCopy.rowLabels}
+            />
+          ))
+        }
+      </div>}
+      {remaining.map((project) => <ProjectCard project={project.data} href={project.href} meta={project.meta} problem={project.problem} whatItDoes={project.whatItDoes} labels={labels} insideLabels={insideCopy.rowLabels} featured mirrored optimized />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .work {
+    position: relative;
+    padding: 5rem 0;
+    background: var(--color-surface);
+  }
+
+  .content {
+    position: relative;
+  }
+
+  header {
+    margin-bottom: var(--space-xl);
+  }
+
+  p,
+  h2 {
+    margin: 0;
+  }
+
+  .marker {
+    font: 500 0.8125rem / 1.5 var(--font-mono);
+    color: var(--color-text-muted);
+  }
+
+  h2 {
+    margin-top: var(--space-2xs);
+    font: 600 var(--font-size-heading-lg) / 1.05 var(--font-display);
+    letter-spacing: -0.02em;
+    color: var(--color-heading);
+  }
+
+  .all {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    flex-shrink: 0;
+    min-height: 2.75rem;
+    color: var(--color-heading);
+    white-space: nowrap;
+  }
+
+  .underlined {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+  }
+
+  .projects {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .pair {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 48rem) {
+    .work {
+      padding: 6rem 0;
+    }
+
+    header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--space-xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .projects {
+      gap: 2.5rem;
+    }
+
+    .pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64.0625rem) {
+    .work {
+      padding: 7.5rem 0;
+    }
+
+    header {
+      margin-bottom: var(--space-4xl);
+    }
+
+    .projects {
+      gap: var(--space-3xl);
+    }
+  }
+</style>

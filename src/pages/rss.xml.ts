@@ -1,15 +1,14 @@
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
-import { listPosts, type Locale } from '../lib/content';
+import { entryPath, listPosts, type Locale } from '../lib/content';
 import { absoluteUrl } from '../lib/seo';
 
 // ── every locale-dependent value lives in this one block ──
 const LOCALE: Locale = 'en';
 const FEED = {
-  title: 'Jahat Trinidad — Blog',
-  description: 'Posts about building and shipping this site.',
+  title: 'Jahat Trinidad — Notes',
+  description: "Essays on how I think through decisions, and tutorials you can follow step by step.",
   language: 'en-us',
-  base: '/blog',
 } as const;
 // ──────────────────────────────────────────────────────────
 
@@ -30,7 +29,7 @@ export async function GET(context: APIContext) {
       title: entry.data.title,
       description: entry.data.description,
       pubDate: entry.data.publishDate,
-      link: absoluteUrl(`${FEED.base}/${entry.id}`, site).pathname,
+      link: absoluteUrl(entryPath('posts', LOCALE, entry.id), site).pathname,
       categories: entry.data.tags,
     })),
   });

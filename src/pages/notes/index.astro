@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import Notes from '../../components/sections/Notes.astro';
+import { localizedPath } from '../../lib/i18n';
+import PageHero from '../../components/sections/PageHero.astro';
+import PageContact from '../../components/sections/PageContact.astro';
+import PageFooter from '../../components/sections/PageFooter.astro';
+import { collectionPath, listLinks, listPosts } from '../../lib/content';
+import { buildSeo } from '../../lib/seo';
+import { getDictionary } from '../../lib/i18n';
+
+const lang = 'en' as const;
+const t = getDictionary(lang);
+const links = (await listLinks()).map((link) => link.data);
+
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    'astro.config.mjs must define `site` before this page can compute canonical URLs.'
+  );
+}
+
+const posts = await listPosts({ lang });
+// The links collection contains profiles, not dated individual posts.
+const elsewhere = links.filter((link) => ['LinkedIn', 'Instagram', 'YouTube'].includes(link.label))
+  .map((link) => ({ platform: link.label, href: link.url }));
+
+const seo = buildSeo({
+  title: t.nav.notes,
+  description: 'Posts about building and shipping this site.',
+  path: collectionPath('posts', lang),
+  lang,
+  site,
+});
+---
+
+<Base lang={lang} seo={seo} profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
+  <PageHero variant="notes" word={t.nav.notes}>
+    <p class="eyebrow">{t.notes.eyebrow}</p>
+    <p class="headline">{t.notes.headline}</p>
+    <p class="sub">{t.notes.sub}</p>
+  </PageHero>
+  <!-- Writing content comes from the same collection as Home. -->
+  <Notes index lang={lang} marker={t.notes.writingMarker} headline={t.notes.writingHeading}
+    strings={{ ...t.notes, elsewhereLatest: t.footer.elsewhere }} inside={t.home.inside.notes} posts={posts} elsewhere={elsewhere} allWritingHref={`${localizedPath(lang, '/')}rss.xml`} />
+  <PageContact lang={lang} links={links} marker={t.notes.contactMarker} />
+  <PageFooter slot="footer" lang={lang} links={links} compact />
+</Base>

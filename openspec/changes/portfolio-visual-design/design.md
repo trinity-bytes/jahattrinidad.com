@@ -246,7 +246,7 @@ Built as clones of v3.4 (which were clones of v3.3 with Values and Contact repla
 - **Backgrounds (D20)** in sections 02–05 of both boards. Layer names inside each section, bottom to top: `bg / gradient into next section (C)`, `bg / light (C)` (a frame holding the radial lights), `bg / grain`, `bg / bytes (kept off text, soft edge)` (five stacked copies of the bytes layer, `step 1…5 · margin 40…120px`, each at 20% opacity and masked by "section minus every text box + margin"). The masks are computed from the current text boxes: if copy changes, regenerate them.
 - **Footer fade (D17 revision):** `ground fade` inside `ground edge (hill clipped)` on both boards.
 - **Responsive footer spacing (2026-11-16, owner request):** on the mobile 390 (`2210:86`, `2212:86`) and tablet 768 (`2211:86`, `2213:86`) boards, the footer content sat 200 px below the footer top, leaving an empty dark band under the hill ridge. All footer content except `ground edge` moved up (mobile 112 px, tablet 104 px) and the footer frame shrank by the same amount: the statement now starts at 88 px (mobile) / 96 px (tablet). The hill and the Contact bottom padding are unchanged, so the ridge still rises over Contact.
-- **Nav (D19):** the hero navs on the boards are still plain frames in the Top state, not instances of the Nav set.
+- **Nav (D19):** on the desktop boards the hero nav is an instance of the Nav set in the Top state (`2360:86` Outside, `2360:100` Inside, 2026-11-18); the old frames are hidden beside them. The mobile and tablet boards keep plain frames, because the Nav set has no menu-button variant.
 - **Fixes from the 2026-11-16 review:** Values row 2 proof on Outside ("1 person · product, design and code"); Tranqui "[canvas glyph field]" annotation moved off the screenshot headline; Inside Contact "sun mask" re-centred on the real sun, 64 px, blur 16 (it sat about 100 px off, so the sun leaked as a dot).
 
 Page reorganized 2026-11-16 at the owner's request: v3 and the first v3.1 Inside were deleted. The v2 boards (`2038:46`, `2049:2`, `2062:2`) no longer exist in the file (checked the same day), so tasks 4.1 and 4.2 must start from the v3.1 boards instead.
@@ -338,7 +338,7 @@ These are implications to carry into the implementation tasks, not instructions 
 - **Nav (D19):** `position: sticky; top: 0` on a full-width bar; the Scrolled state appears once the hero has left the viewport (IntersectionObserver on the hero). Glass is `backdrop-filter: blur(20px)` over the translucent surface; provide an opaque fallback under `@supports not (backdrop-filter: …)` and under `prefers-reduced-transparency: reduce`. Mark the current section with `aria-current="true"` on its link, not only with the dot.
 - **Backgrounds (D20):** decorative only, `aria-hidden="true"`, never real text in the DOM (screen readers and find-in-page must not see the bytes). Render the bytes as a generated SVG or canvas background per section. Keep them off text with a CSS `mask-image` built from the text blocks' boxes, feathered from 40 px to 120 px (one real feathered mask replaces the five stacked copies used in Figma). The lights and the gradient into the next section are CSS radial and linear gradients; the grain is an SVG `feTurbulence` noise at low opacity. Hide the bytes under `prefers-reduced-transparency` and in forced-colors mode. Do not add progressive blur near text: the owner rejected it.
 - **Footer (D17):** the fade is a linear gradient over the bottom 240 px of the hill layer.
-- `openspec/config.yaml` says syntax highlighting is Shiki while `CLAUDE.md` says code fences render unhighlighted. The post template in Figma shows a plain unhighlighted block. This contradiction predates this change and needs an owner decision before the post page is built.
+- ~~`openspec/config.yaml` says syntax highlighting is Shiki while `CLAUDE.md` says code fences render unhighlighted.~~ Resolved 2026-11-17 by "Code theme" below: Shiki with a custom brand theme. `CLAUDE.md` was corrected on 2026-11-18.
 
 ## Work index (task 5.2) — project inventory
 
@@ -523,3 +523,79 @@ Owner decision: code blocks are highlighted with Shiki using a custom brand them
 | Punctuation, operators | green-200 `#B3F3B4` | 13.4:1 |
 
 Rejected: existing themes (Everforest Dark bg `#2D353B`, Vitesse Dark bg `#121212`) would need their background and most token colors overridden. green-700 for comments fails AA (2.65:1). Known weak spot: strings and functions are both greens and sit close; the owner saw it and kept it (alternative offered: strings in sun-soft).
+
+## Mobile menu open state (task 4.5) — proposal, 2026-11-18
+
+Owner: "encargate tu de diseñar esa pantalla". Boards on "Portfolio" (`2029:2`), to the right of the Home v3.5 mobile and tablet boards: **Outside `2349:86`** (x 9906) and **Inside `2349:159`** (x 10396), 390 × 844 each.
+
+- A sheet drops from the top over the hero: `card` surface (Inside `green-900`), bottom corners 28, soft green shadow. The hero stays visible under a `green-950` scrim (32% Outside, 50% Inside); tapping the scrim closes the menu.
+- The nav row stays where it is, on top of the sheet; the menu button shows Lucide `x` (1.5 stroke) in the same circular button.
+- Links: Work, Experience, Notes in Epilogue SemiBold 40 / 44, each with a mono index (`01`–`03`, IBM Plex Mono Medium 13, `green-700` / Inside `green-300`) echoing the section markers, rows between hairlines (`hairline-warm` / Inside `green-700`). Contact is not repeated: it is already the nav's button.
+- Below the links: availability with the sun dot ("Open to an internship, now.", Hanken Medium 16) and an "ELSEWHERE" row with the profile links from `links.json`.
+- **No EN / ES / PT switch.** D1 (English-first, 2026-09-18) creates no Spanish pages until there is Spanish content, so the switch would point nowhere. It returns to this sheet, under Elsewhere, when Spanish ships.
+- Behaviour for implementation: the lens dock hides while the menu is open; Esc and the scrim close it; focus moves to the first link and returns to the menu button on close; `body` scroll is locked; the sheet slides 16 px and fades (reduced motion: fade only).
+
+## Chat conversation view (task 7.11) — proposal, 2026-11-18
+
+Owner: "primero el menu, luego el chat y al final lo de los links". Six mobile boards on "Portfolio" (`2029:2`), right of the menu boards, each a 390 × 855 Contact section on the Contact sky:
+
+| State | Board |
+|---|---|
+| 01 Conversation + typing | `2353:103` |
+| 02 Question with chips | `2353:135` |
+| 03 Editable summary | `2354:132` |
+| 04 Sending | `2354:194` |
+| 05 Sent + next step (hiring) | `2354:245` |
+| 06 Failed + fallback | `2354:320` |
+
+**Layout.** On the first message the composer grows into a conversation card in place (`card` fill, ink 1 px border, radius 28, same width as the composer). The section marker stays; the headline and facts give way on mobile (they stay on tablet and desktop). **Tablet 768 `2358:302`:** headline and facts on top as before; the card replaces the composer at full content width (688 × 640). **Desktop 1440 `2358:226`:** the headline (560 wide) and the facts, stacked, form the left column; the card (620 × 640) takes the right column from the marker line, so the context stays visible during the conversation. Card, top to bottom: header (JT avatar on `green-100`, "Jahat Trinidad", sun dot + "OPEN TO AN INTERNSHIP"), the visitor's first message pinned on cream ("YOU WROTE"), the message log (bottom-anchored, scrolls), suggestion chips, the composer with the per-question placeholder, and a one-line mono note.
+
+**Messages.** Visitor: `green-950` bubble, white Hanken 16/22, tail bottom-right. Jahat: cream bubble with `hairline-warm` border, tail bottom-left. Typing: the same bubble with three `green-700` dots (100 / 60 / 30%). Error reply: `sun-soft` bubble, ink border, Lucide `circle-alert`. Sent reply: Lucide `check` in `green-700`. The composer is dimmed while Jahat is typing.
+
+**Summary.** White card inside the log: "HERE'S WHAT I'LL SEND", then Name / Company / Message / Reply to, each a mono label + Hanken Medium value + a 36 px pencil button that reopens only that question. "Looks good, send it →" below. Sending: the button reads "Sending…" with Lucide `loader-circle`, pencils at 35%. Sent: the summary dims and its pencils go away. Failed: the summary stays editable, with "Try again" and "Copy my email".
+
+**Script** (all [Draft]; strings go to the `Dictionary`, `{name}` and `{company}` are echoes):
+
+| Step | Hiring | Project | Other ("Just saying hi") | Placeholder |
+|---|---|---|---|---|
+| Intent (no branch detected) | "Happy to help. Is this about a role, a project, or something else?" + chips I'm hiring / I have a project / Just saying hi | | | "Tell me a bit more" |
+| AskName | "Nice, I'm open to an internship right now. Who am I talking to?" | "Sounds fun. Who am I talking to?" | "Hi! Who am I talking to?" | "Your name" |
+| AskCompany | "Thanks, {name}. Which company is it?" | "Thanks, {name}. Is this for a company, or for you?" + chip Just me | (skipped) | "Your company" |
+| AskDetail | "Got it. Anything I should know before I reply? Dates, stack, how you found me." + chips Starts in January / Remote is fine / Nothing else | "What are you building, and when would you like it ready?" | "What's on your mind?" | "Dates, stack, anything else" / "What you're building" / "Your message" |
+| AskEmail | "Last one: where should I write back?" | same | same | "you@company.com" |
+| Invalid email | "That address doesn't look right. Could you check it?" | same | same | "you@company.com" |
+| Summary | (card) "Tap a pencil to change one answer." | same | same | — |
+| Sent | "Sent. I'll write back to {email} soon. While you wait:" → See the Garden case study / Download my CV | "Sent. I'll write back to {email} soon. While you wait:" → See my work | "Sent. Thanks for saying hi." | "Send another message" |
+| Failed | "That didn't go through. Your message is still here." → Try again / Copy my email | same | same | — |
+
+**Email template** (plain text, subject `[jahattrinidad.com] {Branch} — {name}{, company}`):
+
+```
+{Branch}: hiring | project | other
+Name: {name}
+Company: {company or "—"}
+Email: {email}
+
+{first message}
+
+{detail}
+
+— Sent from the Contact chat on jahattrinidad.com
+```
+
+**Accessibility and motion.** The log is `role="log"` / `aria-live="polite"`; chips, pencils and the action buttons are real buttons; focus returns to the composer after each reply (to the first pencil on Summary, to "Try again" on Failed). The card grows from the composer with a 240 ms height/opacity transition; messages fade up 8 px; reduced motion: no growth, no typing delay, no fade.
+
+Tablet and desktop show state 02; the other states use the same card at those sizes. The project and other branches are not drawn (same components, different copy).
+
+## `/links/` page (task 7.10) — proposal, 2026-11-18
+
+Board **`2356:86`** on "Portfolio" (`2029:2`), x 13626, 390 × 940. It is the link-in-bio page for Instagram, YouTube and X profiles, so it is designed mobile first; on tablet and desktop the same column (max 440) is centred on the landscape.
+
+- Background: the Home sky and near hill (the hill rises at the bottom, as the footer does elsewhere), with a cream veil (55% → 0) over the top half for legibility. No nav and no footer: the page is a launcher.
+- Identity: the owner's profile photo (`docs/linkedin.png`, 1254 × 1254, supplied 2026-11-18; placed in Figma as a 600 px JPEG fill) in an 84 px circle with a white ring, "Jahat Trinidad" (Epilogue SemiBold 34), the Home hero line "I design and build products, from the first sketch to the live site." and "OPEN TO AN INTERNSHIP · LIMA, PERU" with the sun dot.
+- Four link cards (radius 20, ink border, `card` fill), each a title in Hanken Medium 17, a mono subline and an arrow: See my work (counts come from the `projects` collection), Read my notes, the latest note (title + read time, from `posts`), and **Write to me** as the one filled card (ink), which goes to Home `#contact` and focuses the chat composer.
+- "ELSEWHERE": the profiles from `links.json` as 52 px circular logo buttons (`card` fill, ink border, 20 px monochrome ink logo, `aria-label` with the network name). Owner, 2026-11-18: "me gustaria que uses los logos en lugar del nombre, porque X queda raro". Logos are Simple Icons paths (CC0); LinkedIn comes from simple-icons 9.21.0, since later versions removed it at the brand's request.
+- **Tablet 768 `2358:101`:** the mobile column (440) centred on the rescaled landscape. **Desktop 1440 `2358:162`:** two columns centred on the desktop Home hero layers (sky `2191:88`, near hill `2191:90`, same positions): identity (avatar 96, name 56, description 20/28) and Elsewhere on the left (460), the four link cards on the right (520).
+- `jahattrinidad.com` in white mono on the hill closes the page.
+
+Owner approved the mobile menu, the chat view and `/links/` (all breakpoints) on 2026-11-18: "me encanta. aprobado". The profile photo also replaces the "JT" placeholder in the post author card and the chat header.

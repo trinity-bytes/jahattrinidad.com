@@ -28,8 +28,9 @@ explicit new decision recorded in `openspec/`:
   every schema need in `src/content.config.ts`).
 - Tailwind CSS.
 - `@fontsource/*` or any Google Fonts CDN link.
-- Prism (or any other syntax highlighter) — MDX code fences render as plain
-  `<pre><code>`, unhighlighted, by design.
+- Prism, or any syntax highlighter other than Astro's built-in Shiki. Code
+  fences are highlighted by Shiki with the custom brand theme passed to
+  `markdown.shikiConfig.theme` (visual-design "Code theme").
 - `@astrojs/markdown-remark` as a direct dependency.
 - Any `@astrojs/*-adapter` (Node, Vercel, Cloudflare, etc.) — this project
   is `output: 'static'`, no server runtime.
@@ -79,12 +80,16 @@ or anything from `src/lib/`.
 ## `light-dark()` requires `color-scheme` on `:root`
 
 `src/styles/tokens.css` uses `light-dark()` for every semantic color alias.
-This function only resolves against the light/dark values the browser
-actually offers, which requires `color-scheme: light dark;` to be set on
-`:root`. Deleting that one declaration silently breaks every color token —
-no build error, no lint warning, just colors that stop switching with the
-user's OS/browser preference. If you ever touch `:root` in `tokens.css`,
-confirm that line survives.
+This function only resolves against the `color-scheme` set on the element,
+so deleting that declaration silently breaks every color token — no build
+error, no lint warning, just colors that stop switching.
+
+The lens is the only source of truth for the scheme, not the OS: `:root`
+sets `color-scheme: light` (Outside) and `:root[data-lens="inside"]` sets
+`color-scheme: dark` (Inside). Do not reintroduce `light dark` or a
+`[data-theme]` hook. If you ever touch `:root` in `tokens.css`, confirm both
+declarations survive. (Until task 1.1 of `portfolio-implementation` lands,
+the scaffold `tokens.css` still has `color-scheme: light dark`.)
 
 ## `lang` is a required parameter in `src/lib/content.ts`
 

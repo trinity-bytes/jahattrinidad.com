@@ -4,3 +4,6 @@ dist
 .astro
 .env*
 design/
+
+# wrangler local state
+.wrangler/

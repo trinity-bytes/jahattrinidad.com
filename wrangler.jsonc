@@ -1,0 +1,12 @@
+// Cloudflare Workers Static Assets: the static build in dist/ is the whole
+// site; there is no Worker script (output: 'static', no adapter).
+{
+  "name": "jahattrinidad-com",
+  "compatibility_date": "2026-11-19",
+  "assets": {
+    "directory": "./dist",
+    // The build emits folder/index.html for every page (trailingSlash:
+    // 'always', D11), so this serves /work/ and redirects /work to it.
+    "html_handling": "auto-trailing-slash"
+  }
+}

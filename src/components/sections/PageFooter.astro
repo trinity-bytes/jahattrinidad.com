@@ -1,0 +1,39 @@
+---
+/*
+ * Footer for the non-Home pages. Its navigation points at the Home sections, built with
+ * localizedPath. There is no lens here, so the Inside shortcut is left out. The case study, Notes
+ * and post boards use the compact desktop footer; Work keeps the Home footer (board 2239:401).
+ */
+import Footer from './Footer.astro';
+import { SOURCE_URL } from '../../lib/consts';
+import { getDictionary, localizedPath } from '../../lib/i18n';
+
+interface Props {
+  lang: 'en' | 'es';
+  compact?: boolean;
+  /** The links collection's data, read by the page (sections never import content.ts). */
+  links: { label: string; url: string }[];
+}
+const { lang, compact = false, links } = Astro.props;
+const t = getDictionary(lang);
+const home = (section: string) => `${localizedPath(lang, '')}#${section}`;
+---
+<Footer
+  strings={t.footer}
+  navigation={[
+    { label: t.nav.work, href: home('work') },
+    { label: t.nav.experience, href: home('experience') },
+    { label: t.nav.notes, href: home('notes') },
+    { label: t.nav.contact, href: home('contact') },
+  ]}
+  elsewhere={[
+    ...links.map((link) => ({ label: link.label, href: link.url })),
+    { label: t.footer.rss, href: '/rss.xml' },
+  ]}
+  source={{ label: t.footer.builtWith, href: SOURCE_URL }}
+  copyright={t.footer.copyright(new Date().getFullYear())}
+  outsideName={t.home.outside.hero.name}
+  insideName={t.nav.brandInside}
+  showShortcut={false}
+  {compact}
+/>

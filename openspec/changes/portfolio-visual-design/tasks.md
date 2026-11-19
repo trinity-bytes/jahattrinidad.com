@@ -46,7 +46,7 @@
 - [x] 3.21 Owner verdict on D13–D17 (covered by the v3.5 approval; their Draft copy stays under 3.9)
 - [x] 3.22 Prepare v3.1 Inside `2105:310`: recolored clones of the v3.1 Outside sections, footer name "@trinitybytes" (2026-11-16)
 - [x] 3.27 Design the Inside content of each v3.1 section, following the table "Inside v3.1 — what to design next" in `design.md`. Proposal on board `2137:2` (clone of `2105:310`, original untouched), annotation component `2137:416` (2026-11-16)
-- [ ] 3.28 Audit and owner verdict on the Inside content board `2137:2`. Audit done 2026-11-16 on both boards: `audit.md` (8 P1, 15 P2); owner verdict pending. Checklist:
+- [x] 3.28 (superseded 2026-11-18: board `2137:2` was deleted by the owner on 2026-11-16 and the v3.5 approval in 3.40 covers its content) Audit and owner verdict on the Inside content board `2137:2`. Audit done 2026-11-16 on both boards: `audit.md` (8 P1, 15 P2); owner verdict pending. Checklist:
   - Only real facts: every annotation and Work row traces to a repo or to the owner (sources in `design.md`, Inside v3.1 table and the "Resolved 2026-11-16" note below it)
   - [Draft] text: section headlines 02/03/04/05, sub of 02/04, Tranqui key decision
   - [Owner: …] text: Viora key decision and pieces built
@@ -65,9 +65,9 @@
 - [x] 3.38 Footer transition as a soft fade (D17 revision, 2026-11-16)
 - [x] 3.39 Backgrounds: proposals A/B/C, A1–A5 iteration, then A5 bytes + C light on v3.5, kept off text with a soft edge (D20, 2026-11-16)
 - [x] 3.40 Owner approves Home v3.5 as the finished desktop mockup (2026-11-16)
-- [ ] 3.41 Replace the hero navs on the v3.5 boards with instances of the Nav set (Top state)
+- [x] 3.41 Replace the hero navs on the v3.5 boards with instances of the Nav set (Top state). Done 2026-11-18 on the desktop boards: instances `2360:86` (Outside) and `2360:100` (Inside); the old frames stay hidden beside them. The mobile and tablet boards keep plain frames: the Nav set has no menu-button variant, and the mobile nav is already built and approved in code (phase 6)
 - [x] 3.25 (owner, 2026-11-16: the button does not come back) Decide whether the hero "Look inside" button stays now that the lens exists (D11 open point)
-- [ ] 3.26 Promote v3.1 over v3 once the owner approves it (rename boards, keep v3 as reference)
+- [x] 3.26 (superseded 2026-11-18: the v3 and v3.1 boards were deleted on 2026-11-16; v3.5 is the approved board) Promote v3.1 over v3 once the owner approves it (rename boards, keep v3 as reference)
 - [x] 3.20 Inside version of the values table (D12): the third column shows how each proof was built (done within 3.27, board `2137:2`)
 - [x] 3.14 Fill remaining placeholders: `[N]` project count, email address, post titles, Elsewhere rows, Viora "My part", Mink'a problem and code part (value 02 proof and city are done)
   - 2026-11-17 owner answers: contact email `jahatjassiel@outlook.com`; Viora "My part" given in full (recorded in `docs/draft-copy.md` 1.2–1.3, short card version proposed in 1.1); Viora key decision "Spring Boot for the mobile apps' backend" (the why is still missing); Mink'a problem confirmed real, and Mink'a is about waste management in Lima.
@@ -84,7 +84,7 @@ Unblocked 2026-11-16 (3.7 and 3.8 done). Start from the v3.5 boards; the v2 tabl
 - [x] 4.3 Mobile annotation pattern for Inside: numbered pins on the image plus a stacked numbered list below. Applied on both Inside boards, tablet included (2026-11-16).
 - [x] 4.4 Owner verdict on the four responsive boards: approved after one review round (owner, 2026-11-16: "queda. de momento no tengo observaciones").
 - [x] 4.6 Still undecided, carried forward (owner raised no objection, but did not decide): note opacity in the Inside lists (40%, fails AA; 60% would pass) and a touch variant of the hero hint ("press I" on phones). See design.md "Home v3.5 responsive". Decided 2026-11-17: note opacity 60% (passes AA); on touch screens the hint reads "Tap the lens".
-- [ ] 4.5 Design the open state of the mobile menu (links + EN / ES / PT); only the closed button exists.
+- [x] 4.5 Design the open state of the mobile menu (links + EN / ES / PT); only the closed button exists. Proposal 2026-11-18: boards `2349:86` (Outside) and `2349:159` (Inside), no language switch (D1); approved by the owner 2026-11-18 ("me encanta. aprobado").
 
 ## Phase 5 — Other pages in the v3 direction
 
@@ -113,7 +113,20 @@ Blocked on 6.4. Code starts only after this phase.
 - [ ] 7.6 Export web-sized hero images from Figma into `src/` when implementation starts (implementation task 1.7)
 - [ ] 7.7 Decide how the contact chat works (scripted or model-written), its questions and the email template. Since v3.4 it must accept free text from the composer, not only the two suggestions. Deferred by the owner on 2026-11-16: do not raise during the design phase (D16).
   - 2026-11-17 owner decision: **scripted state machine, no model** (owner: "lo agentico agrega una capa de complejidad que es un tradeoff que en este momento no estoy dispuesto a asumir, simplemente hay que tratar de disfrazar lo mas posible para que parezca agentico"). Flow modeled on a reference video the owner shared: composer → conversation view with the first message pinned, questions with suggestion chips and context-specific placeholders, an editable summary card, confirm, then a payoff step. Rejected: model-written replies and the hybrid (model only extracts fields from free text). Delivery decided the same day: **a form service** (Web3Forms or Formspree class) receives a POST from the browser and emails the owner, so the chat ends with "Sent" inside the site. Rejected: `mailto:` (leaves the site and fails without a mail client), own Worker plus email service (one more deploy). Still open: the questions and the email template (design them in 7.11); pick the service at implementation.
-- [ ] 7.11 Design the chat conversation view in Figma: transition from the composer, messages, chips, typing state, editable summary card, sending, sent and error states (D16 only designed the composer)
+- [x] 7.11 Design the chat conversation view in Figma: transition from the composer, messages, chips, typing state, editable summary card, sending, sent and error states (D16 only designed the composer) Proposal 2026-11-18: six mobile boards (`2353:103` … `2354:320`), script per branch and email template in design.md; approved by the owner 2026-11-18 ("me encanta. aprobado").
 - [x] 7.9 Decide URLs (proposal D22, 2026-11-17): `/work/` and `/notes/`; `/links/` stays as a link-in-bio page
-- [ ] 7.10 Design the `/links/` page (link-in-bio) in the v3 direction; it has no board yet
+- [x] 7.10 Design the `/links/` page (link-in-bio) in the v3 direction; it has no board yet. Proposal 2026-11-18: board `2356:86`; approved by the owner 2026-11-18 ("me encanta. aprobado").
 - [ ] 7.8 Spanish and Portuguese dictionaries and routes, only when there is content in those languages (D10)
+
+## Phase 8 — Launch assets (2026-11-19)
+
+Built on page "Launch assets" `2372:2`; the owner moved everything to the **Brand** page (sections at x 3528, new ids below) and the empty page remains. Owner, verbatim: "diseñalo todo en el figma. y si me refiero al thumbnail."
+
+- [x] 8.1 Favicon: round 1 proposals A "J" monogram, B sun over the hill, C lowercase j with the sun as its dot (section `2374:187`, masters `2372:4` / `2372:7` / `2372:17`), each shown at 180, 32 and 16 px and in light and dark browser tabs. Owner picks one; it then feeds `favicon.svg`, `favicon.ico`, `apple-touch-icon`, the 192/512 icons and `site.webmanifest` (implementation 10.4)
+  - Round 1 verdict (2026-11-19, owner): "me gusta el monograma pero me gustaria explorar mas, una simple J no me convence". Round 2, section `2376:103`: 1 J + sun `2376:77`, 2 JT ligature `2376:81`, 3 sun in the J `2376:87`, 4 J in the lens `2376:91`, 5 Outside / Inside split `2376:95`, 6 terminal J_ `2376:100`
+  - Round 2 verdict (2026-11-19, owner): "me gusta la direcicon 6. sigue explorando ese concepto de terminal". Round 3, section `2377:177` (IBM Plex Mono SemiBold): 1 J_ refined `2377:178`, 2 J + block cursor `2377:181`, 3 >J prompt `2377:184`, 4 j_ lowercase `2377:187`, 5 jt_ initials `2377:190`, 6 J_ on Outside `2377:193`, 7 J over the cursor `2377:196`, 8 <J/> component `2377:199`
+  - Pick (2026-11-19, owner): "me quedo con la 1, j rfined" — round 3 #1 J_ refined `2377:178`. Exported as `public/favicon.svg` (outlined text) and rendered to `favicon.ico` 16/32/48, `apple-touch-icon.png` 180 (full-bleed square), `icon-192.png`, `icon-512.png`
+- [x] 8.2 Open Graph 1200 × 630: default `2374:231` (hero crop with portrait) and the per-page template `2374:241` for notes and case studies (type + date, title, signature). Approved 2026-11-19 with owner adjustments in Figma (hill raised in both, sky lowered in the template); the Figma frames are the source
+- [x] 8.3 GitHub repository social preview 1280 × 640 `2374:250`, Inside identity because the audience is technical; content inside GitHub's 40 px safe border
+- [x] 8.4 Figma file thumbnail 1920 × 1080 (16:9, Figma help) `2374:269`: hero scene, "Jahat", portrait, the lens showing "@trinitybytes". Set as thumbnail after approval
+- [x] 8.5 Owner approves 8.1 (picked 2026-11-19; 8.2–8.4 approved 2026-11-19: "VA, LAS IMAGENES PROBADAS, CON UNOS AJUSTES EN EL OG")
