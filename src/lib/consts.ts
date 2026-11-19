@@ -18,6 +18,8 @@ export const BCP47 = { en: 'en-US', es: 'es-ES' } as const;
 
 /** Public contact address, shown by Contact and used by the chat fallback. */
 export const CONTACT_EMAIL = 'jahatjassiel@outlook.com';
+/** Web3Forms access key for the Contact chat. Public by design: it ships in the browser. */
+export const WEB3FORMS_ACCESS_KEY = '016fe820-1be9-49e5-b050-0f92b4598891';
 
 /** This site's source repository, linked from the footer. */
 export const SOURCE_URL = 'https://github.com/trinity-bytes/jahattrinidad.com';
