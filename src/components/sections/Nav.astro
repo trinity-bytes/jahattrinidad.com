@@ -7,8 +7,9 @@ interface Props {
   workPath: string;
   notesPath: string;
   strings: Dictionary['nav'];
+  profileLinks?: { label: string; href: string }[];
 }
-const { home, workPath, notesPath, strings } = Astro.props;
+const { home, workPath, notesPath, strings, profileLinks = [] } = Astro.props;
 const links = [
   { label: strings.work, href: `${home}#work`, id: 'work', route: workPath },
   { label: strings.experience, href: `${home}#experience`, id: 'experience' },
@@ -28,8 +29,24 @@ const pathname = Astro.url.pathname;
       <span class="menu-icon"><Icon name="menu" size={20} /></span><span class="close-icon"><Icon name="x" size={20} /></span>
     </button>
   </nav>
-  <div id="mobile-navigation" class="mobile-links" hidden>
-    {links.map((link) => <a href={link.href} data-section-link={link.id} aria-current={link.route && pathname.startsWith(link.route) ? 'page' : undefined}>{link.label}</a>)}
+  <div id="mobile-navigation" class="mobile-menu" hidden>
+    <div class="scrim" data-menu-scrim></div>
+    <div class="sheet">
+      <ul class="sheet-links">
+        {links.map((link, index) => (
+          <li><a href={link.href} data-section-link={link.id} aria-current={link.route && pathname.startsWith(link.route) ? 'page' : undefined}><span class="index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><span class="label">{link.label}</span></a></li>
+        ))}
+      </ul>
+      <p class="availability"><span class="dot" aria-hidden="true"></span>{strings.availability}</p>
+      {profileLinks.length > 0 && (
+        <div class="elsewhere">
+          <p class="elsewhere-label" id="menu-elsewhere">{strings.elsewhere}</p>
+          <ul class="profiles" aria-labelledby="menu-elsewhere">
+            {profileLinks.map((link) => <li><a href={link.href} rel="me noopener">{link.label}</a></li>)}
+          </ul>
+        </div>
+      )}
+    </div>
   </div>
 </header>
 <script>
@@ -43,15 +60,44 @@ const pathname = Astro.url.pathname;
     }
     const button = nav.querySelector<HTMLButtonElement>('.menu-toggle');
     const menu = nav.querySelector<HTMLElement>('#mobile-navigation');
-    const setOpen = (open: boolean) => {
-      if (!button || !menu) return;
+    const root = document.documentElement;
+    const desktop = matchMedia('(min-width: 48rem)');
+    const isOpen = () => button?.getAttribute('aria-expanded') === 'true';
+    /** Everything outside the header is inert while the sheet is open, so focus and clicks cannot leave it. */
+    const setBackgroundInert = (inert: boolean) => {
+      for (const child of Array.from(document.body.children)) {
+        if (child === nav || child.id === 'announcements' || child.tagName === 'SCRIPT') continue;
+        (child as HTMLElement).inert = inert;
+      }
+    };
+    const setOpen = (open: boolean, returnFocus = true) => {
+      if (!button || !menu || open === isOpen()) return;
       button.setAttribute('aria-expanded', String(open));
       button.setAttribute('aria-label', open ? button.dataset.closeLabel! : button.dataset.openLabel!);
       menu.hidden = !open;
+      nav.dataset.menu = open ? 'open' : 'closed';
+      root.toggleAttribute('data-menu-open', open);
+      setBackgroundInert(open);
+      if (open) menu.querySelector<HTMLElement>('.sheet a')?.focus();
+      else if (returnFocus) button.focus();
     };
-    button?.addEventListener('click', () => setOpen(button.getAttribute('aria-expanded') !== 'true'));
-    menu?.addEventListener('click', (event) => { if ((event.target as Element).closest('a')) setOpen(false); });
-    nav.addEventListener('keydown', (event) => { if (event.key === 'Escape' && button?.getAttribute('aria-expanded') === 'true') { setOpen(false); button.focus(); } });
+    button?.addEventListener('click', () => setOpen(!isOpen()));
+    menu?.addEventListener('click', (event) => {
+      const target = event.target as Element;
+      if (target.closest('a')) setOpen(false, false);
+      else if (target.hasAttribute('data-menu-scrim')) setOpen(false);
+    });
+    desktop.addEventListener('change', () => { if (desktop.matches) setOpen(false, false); });
+    document.addEventListener('keydown', (event) => {
+      if (!isOpen()) return;
+      if (event.key === 'Escape') { event.preventDefault(); setOpen(false); return; }
+      if (event.key !== 'Tab') return;
+      const stops = Array.from(nav.querySelectorAll<HTMLElement>('a[href], button')).filter((el) => el.offsetParent !== null || el.closest('.sheet'));
+      const first = stops[0];
+      const last = stops[stops.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    });
     const sections = Array.from(document.querySelectorAll<HTMLElement>('#work, #experience, #notes, #contact'));
     if (sections.length && 'IntersectionObserver' in window) {
       const observer = new IntersectionObserver((entries) => {
@@ -88,8 +134,33 @@ const pathname = Astro.url.pathname;
   .menu-toggle { display: none; width: 44px; height: 44px; padding: 0; align-items: center; justify-content: center; border: 1px solid var(--color-border); border-radius: 50%; color: inherit; background: transparent; cursor: pointer; }
   .close-icon, [aria-expanded='true'] .menu-icon { display: none; }
   [aria-expanded='true'] .close-icon { display: block; }
-  .mobile-links { padding: var(--space-md) var(--gutter-mobile) var(--space-xl); background: var(--color-bg); }
-  .mobile-links:not([hidden]) { display: flex; flex-direction: column; gap: var(--space-lg); }
+  /* Mobile menu open state (boards 2349:86 / 2349:159). The header's backdrop-filter would trap the fixed scrim, so it is off while open. */
+  .site-nav[data-menu='open'] { background: transparent; border-bottom: 0; backdrop-filter: none; }
+  .site-nav[data-menu='open'][data-state='scrolled'] .nav-inner { top: 9.5px; }
+  .nav-inner { position: relative; z-index: 2; }
+  :global(html[data-menu-open]) { overflow: hidden; }
+  .mobile-menu { display: none; }
+  .mobile-menu:not([hidden]) { display: block; }
+  .scrim { position: fixed; inset: 0; z-index: 0; background: light-dark(color-mix(in srgb, var(--green-950) 32%, transparent), color-mix(in srgb, var(--green-950) 50%, transparent)); animation: menu-fade 200ms ease-out; }
+  .sheet { position: fixed; top: 0; left: 0; right: 0; z-index: 1; max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 32px; padding: 92px var(--gutter-mobile) 32px; background: var(--color-card); color: var(--color-heading); border-radius: 0 0 28px 28px; box-shadow: 0 16px 40px color-mix(in srgb, var(--green-950) 18%, transparent); animation: menu-sheet 200ms ease-out; }
+  .sheet ul { list-style: none; margin: 0; padding: 0; }
+  .sheet-links { border-top: 1px solid var(--color-border); }
+  .sheet-links li { border-bottom: 1px solid var(--color-border); }
+  .sheet-links a { display: flex; align-items: center; gap: var(--space-md); padding-block: 14px; }
+  .sheet-links a::before { content: none; }
+  .index { font-family: var(--font-mono), monospace; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.04em; color: var(--color-text-muted); }
+  .label { font-family: var(--font-display), sans-serif; font-size: 2.5rem; line-height: 2.75rem; font-weight: 600; letter-spacing: -0.02em; }
+  .sheet-links a[aria-current] .index { color: var(--color-heading); }
+  .availability { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 1rem; line-height: 22px; font-weight: 500; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-signal); flex: none; }
+  .elsewhere { display: flex; flex-direction: column; gap: 10px; }
+  .elsewhere-label { margin: 0; font-family: var(--font-mono), monospace; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-muted); }
+  .profiles { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .profiles a { font-size: 1rem; line-height: 22px; display: inline-block; padding-block: 4px; margin-block: -4px; }
+  @keyframes menu-fade { from { opacity: 0; } }
+  @keyframes menu-sheet { from { opacity: 0; transform: translateY(-16px); } }
+  @media (prefers-reduced-motion: reduce) { .sheet { animation-name: menu-fade; } }
+  @media (min-width: 48rem) { .mobile-menu { display: none !important; } }
   @media (max-width: 47.99rem) {
     .nav-inner { padding-inline: var(--gutter-tablet); gap: var(--space-xs); }
     .desktop-links { display: none; }

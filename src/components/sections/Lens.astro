@@ -208,6 +208,7 @@ const { strings } = Astro.props;
 </script>
 
 <style>
+  :global(html[data-menu-open]) .dock { display: none; }
   .dock {
     position: fixed;
     z-index: 60;

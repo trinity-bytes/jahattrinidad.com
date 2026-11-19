@@ -34,7 +34,7 @@ const seo = buildSeo({
 });
 ---
 
-<Base lang={lang} seo={seo}>
+<Base lang={lang} seo={seo} profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
   <PageHero variant="notes" word={t.nav.notes}>
     <p class="eyebrow">{t.notes.eyebrow}</p>
     <p class="headline">{t.notes.headline}</p>

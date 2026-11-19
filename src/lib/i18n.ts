@@ -77,6 +77,10 @@ export interface Dictionary {
     contact: string;
     openMenu: string;
     closeMenu: string;
+    /** Mobile menu sheet (board 2349:86). */
+    elsewhere: string;
+    availability: string;
+    menuLinks: string;
   };
   home: {
     workHeadline: string;
@@ -243,9 +247,12 @@ const en: Dictionary = {
     experience: 'Experience',
     notes: 'Notes',
     contact: 'Contact',
-    // The mobile menu open state has not yet been designed.
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
+    // Mobile menu open state: boards 2349:86 / 2349:159.
+    elsewhere: 'Elsewhere',
+    availability: 'Open to an internship, now.',
+    menuLinks: 'Profiles',
   },
   home: {
     // Shared across both views; board 2191:86 and approved R9.

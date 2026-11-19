@@ -12,9 +12,11 @@ export interface Props {
   seo: SeoResult;
   /** Pages with an Inside state (the Home) opt in to the lens control. */
   lens?: boolean;
+  /** Profile links for the mobile menu; pages read them from content.ts (layouts may not). */
+  profileLinks?: { label: string; href: string }[];
 }
 
-const { lang, seo, lens = false } = Astro.props;
+const { lang, seo, lens = false, profileLinks = [] } = Astro.props;
 const t = getDictionary(lang);
 ---
 
@@ -44,6 +46,7 @@ const t = getDictionary(lang);
       workPath={collectionPath('projects', lang)}
       notesPath={collectionPath('posts', lang)}
       strings={t.nav}
+      profileLinks={profileLinks}
     />
     <slot name="backgrounds" />
     <main id="main-content" tabindex="-1"><slot /></main>

@@ -28,7 +28,7 @@ const seo = buildSeo({
 });
 ---
 
-<Base lang={lang} seo={seo}>
+<Base lang={lang} seo={seo} profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
   <div class="container">
   <h1>{t.nav.links}</h1>
   <ul>
