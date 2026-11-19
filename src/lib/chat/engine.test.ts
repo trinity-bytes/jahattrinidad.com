@@ -218,3 +218,8 @@ test('email builder: empty company shows a dash and drops out of the subject', (
   assert.equal(subject, '[jahattrinidad.com] Project — Ana');
   assert.ok(body.includes('Company: —'));
 });
+
+test('replies echo the first name only', () => {
+  const s = run(initialState(), say("We're hiring a frontend intern"), say('Sam Rivera'));
+  assert.equal(view(s, script).reply, 'Thanks, Sam. Which company is it?');
+});

@@ -1,0 +1,228 @@
+---
+/*
+ * The Contact composer and the conversation it grows into (task 7.3, boards 2353:103 to 2354:320,
+ * tablet 2358:302, desktop 2358:226). One element: idle it is the composer with its suggestions;
+ * on the first message or chip the client (chat-client.ts) sets `data-open` and it becomes the card.
+ * Every message, summary and button the script produces is cloned from the <template>s below so the
+ * scoped styles reach it; the conversation logic itself lives in src/lib/chat/engine.ts.
+ *
+ * Without JavaScript the controls stay disabled and the section's "Copy my email" and mailto
+ * fallback are the way in.
+ */
+import { Image } from 'astro:assets';
+import photo from '../../../assets/profile/jahat.jpg';
+import { CONTACT_EMAIL, CV_URL, GARDEN_CASE_STUDY, WEB3FORMS_ACCESS_KEY } from '../../../lib/consts';
+import { collectionPath, entryPath } from '../../../lib/paths';
+import type { Dictionary } from '../../../lib/i18n';
+
+interface Props {
+  lang: 'en' | 'es';
+  strings: Dictionary['contact'];
+  chat: Dictionary['chat'];
+}
+
+const { lang, strings, chat } = Astro.props;
+const ui = chat.ui;
+const script = chat.script;
+const garden = entryPath('projects', lang, GARDEN_CASE_STUDY);
+const work = collectionPath('projects', lang);
+const svg = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false' } as const;
+const paths = {
+  up: '<path d="m5 12 7-7 7 7" /><path d="M12 19V5" />',
+  right: '<path d="M5 12h14" /><path d="m12 5 7 7-7 7" />',
+  pencil: '<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /><path d="m15 5 4 4" />',
+  alert: '<circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" />',
+  check: '<path d="M20 6 9 17l-5-5" />',
+  loader: '<path d="M21 12a9 9 0 1 1-6.219-8.56" />',
+  retry: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" />',
+  copy: '<rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />',
+};
+---
+<div
+  class="chat"
+  data-chat
+  data-lang={lang}
+  data-email={CONTACT_EMAIL}
+  data-key={WEB3FORMS_ACCESS_KEY}
+  data-garden={garden}
+  data-work={work}
+  data-cv={CV_URL}
+  data-copied={strings.copied}
+  data-mode="idle"
+  role="group"
+  aria-label={ui.cardLabel}
+>
+  <div class="head" data-card-part>
+    <Image class="avatar" src={photo} alt="" width={34} height={34} widths={[34, 68, 102]} sizes="34px" loading="lazy" />
+    <div class="who">
+      <p class="name">{ui.author}</p>
+      <p class="status"><span class="dot" aria-hidden="true"></span>{ui.status}</p>
+    </div>
+  </div>
+  <div class="pinned" data-card-part>
+    <p class="label">{ui.youWrote}</p>
+    <p class="first" data-pinned></p>
+  </div>
+  <div class="log" data-card-part data-log role="log" aria-live="polite" aria-relevant="additions" aria-label={ui.logLabel}></div>
+  <div class="area">
+    <ul class="chips" data-chips aria-label={chat.suggestionsLabel}>
+      {script.idle.chips.map((chip) => (
+        <li><button type="button" data-chip={chip.value} disabled>{chip.label}</button></li>
+      ))}
+    </ul>
+    <form class="composer" data-form novalidate>
+      <div class="field">
+        <input type="text" name="message" data-input autocomplete="off" aria-label={strings.composerLabel} placeholder={chat.composerPlaceholder} disabled />
+        <button type="submit" class="send" aria-label={strings.send} disabled>
+          <svg {...svg} width="20" height="20" set:html={paths.up} />
+        </button>
+        <slot name="annotation" />
+      </div>
+      <!-- Honeypot: people never see or fill it; bots that tick it are dropped by Web3Forms. -->
+      <input type="checkbox" name="botcheck" data-botcheck class="trap" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    </form>
+    <p class="note" data-note>{ui.privacy}</p>
+  </div>
+
+  <template data-tpl="chip"><li><button type="button" data-chip></button></li></template>
+  <template data-tpl="bot"><div class="msg bot"><div class="bubble"><p></p></div></div></template>
+  <template data-tpl="visitor"><div class="msg visitor"><div class="bubble"><p></p></div></div></template>
+  <template data-tpl="typing"><div class="msg bot" data-typing><div class="bubble typing"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="visually-hidden">{ui.typing}</span></div></div></template>
+  <template data-tpl="error"><div class="msg bot" data-transient><div class="bubble error"><svg {...svg} width="18" height="18" set:html={paths.alert} /><p></p></div></div></template>
+  <template data-tpl="sent"><div class="msg bot"><div class="bubble sent"><svg {...svg} width="18" height="18" set:html={paths.check} /><p></p></div></div></template>
+  <template data-tpl="next"><ul class="next"></ul></template>
+  <template data-tpl="step"><li><a class="pill" href="#"><span></span><svg {...svg} width="16" height="16" set:html={paths.right} /></a></li></template>
+  <template data-tpl="summary">
+    <div class="block" data-block data-state="summary">
+      <div class="card">
+        <p class="label">{script.summary.title}</p>
+        <ul class="rows"></ul>
+      </div>
+      <div class="confirm">
+        <button type="button" class="pill solid" data-confirm><span>{script.summary.confirm}</span><svg {...svg} width="16" height="16" set:html={paths.right} /></button>
+        <button type="button" class="pill solid sending" data-sending aria-disabled="true"><svg class="spin" {...svg} width="16" height="16" set:html={paths.loader} /><span>{script.summary.sending}</span></button>
+      </div>
+    </div>
+  </template>
+  <template data-tpl="row">
+    <li class="row">
+      <div class="text"><p class="key"></p><p class="value"></p></div>
+      <button type="button" class="pencil" data-edit><svg {...svg} width="16" height="16" set:html={paths.pencil} /></button>
+    </li>
+  </template>
+  <template data-tpl="actions">
+    <div class="actions" data-transient>
+      <button type="button" class="pill solid" data-retry><svg {...svg} width="16" height="16" set:html={paths.retry} /><span>{script.failed.retry}</span></button>
+      <button type="button" class="pill" data-copy><svg {...svg} width="16" height="16" set:html={paths.copy} /><span data-copy-label>{script.failed.copy}</span></button>
+    </div>
+  </template>
+</div>
+<script>
+  import { initChat } from './chat-client';
+  initChat();
+</script>
+<style>
+  /* Idle: the composer exactly as it was designed for Home (board 2191:86). */
+  .chat { display: flex; flex-direction: column; width: 100%; max-width: 38.75rem; color: var(--color-heading); }
+  .head, .pinned, .log { display: none; }
+  .area { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .composer { order: 1; }
+  .chips { order: 2; }
+  .note { order: 3; }
+  .field { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); height: 4rem; padding: 0 var(--space-xs) 0 1.75rem; border: 1px solid var(--color-heading); border-radius: 999px; background: var(--color-card); }
+  input[type='text'] { flex: 1; min-width: 0; text-overflow: ellipsis; border: 0; background: none; font: 400 1.125rem/1.3 var(--font-sans); color: var(--color-heading); }
+  input[type='text']::placeholder { color: var(--color-placeholder); opacity: 1; }
+  input[type='text']:focus-visible { outline: none; }
+  .field:has(input:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+  .send { display: grid; place-items: center; flex: none; width: 3rem; height: 3rem; padding: 0; border: 0; border-radius: 50%; background: var(--color-accent); color: var(--color-accent-text); cursor: pointer; }
+  .trap { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin: 0; padding: 0; list-style: none; }
+  .chips button, .pill { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; padding: 0.5625rem 1.125rem; border: 1.5px solid var(--color-heading); border-radius: 999px; background: var(--color-card); font: 500 0.9375rem/1.3 var(--font-sans); color: var(--color-heading); text-decoration: none; cursor: pointer; }
+  .note { margin: 0; font: 500 0.6875rem/1.3 var(--font-mono); letter-spacing: 0.02em; color: var(--color-text-muted); }
+  button:focus-visible, a:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+  /* Without JavaScript the controls stay disabled: keep them reading as the finished design. */
+  input:disabled, button:disabled { opacity: 1; cursor: default; }
+
+  /* Open: the conversation card (boards 2353:103 to 2354:320). */
+  .chat[data-open] { max-width: none; height: 44.6875rem; overflow: hidden; border: 1px solid var(--color-heading); border-radius: 28px; background: var(--color-card); }
+  .chat[data-open] .head, .chat[data-open] .pinned { display: flex; flex: none; }
+  .chat[data-open] .log { display: flex; }
+  .head { align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--color-border); }
+  .avatar { flex: none; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+  .who { display: flex; flex-direction: column; gap: 2px; }
+  .name { margin: 0; font: 500 0.9375rem/20px var(--font-sans); color: var(--color-heading); }
+  .status { display: flex; align-items: center; gap: 6px; margin: 0; font: 500 0.6875rem/1.3 var(--font-mono); letter-spacing: 0.04em; color: var(--color-text-muted); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-signal); }
+  .pinned { flex-direction: column; gap: 4px; padding: 10px 18px; border-bottom: 1px solid var(--color-border); background: var(--color-bg); }
+  .label { margin: 0; font: 500 0.6875rem/1.3 var(--font-mono); letter-spacing: 0.04em; color: var(--color-text-muted); }
+  .first { margin: 0; overflow-wrap: anywhere; font: 500 0.9375rem/20px var(--font-sans); color: var(--color-heading); }
+  .log { flex: 1; min-height: 0; flex-direction: column; gap: 10px; padding: 12px 16px; overflow-y: auto; overscroll-behavior: contain; }
+  /* Bottom-anchored but still scrollable: the first child's auto margin takes the free space. */
+  .log > :global(:first-child) { margin-top: auto; }
+  .chat[data-open] .area { flex: none; padding: 4px 16px 16px; gap: 10px; }
+  .chat[data-open] .composer { order: 2; }
+  .chat[data-open] .chips { order: 1; }
+  .chat[data-open] .field { height: auto; padding: 6px 6px 6px 20px; background: var(--color-bg); }
+  .chat[data-open] input[type='text'] { font: 400 1rem/1.3 var(--font-sans); }
+  .chat[data-open] .send { width: 2.75rem; height: 2.75rem; }
+  .chat[data-open] .chips button { padding: 11px 16px; border-width: 1px; font-size: 0.9375rem; line-height: 20px; }
+  .chat[data-open] .chips button, .chat[data-open] .pill { min-height: 0; }
+
+  .msg { display: flex; flex: none; }
+  .msg.visitor { justify-content: flex-end; }
+  .bubble { display: flex; gap: 8px; max-width: 17.5rem; padding: 10px 14px; border: 1px solid var(--color-border); border-radius: 20px 20px 20px 6px; background: var(--color-bg); font: 400 1rem/22px var(--font-sans); color: var(--color-heading); }
+  .bubble p { margin: 0; overflow-wrap: anywhere; }
+  .visitor .bubble { border-color: var(--color-accent); border-radius: 20px 20px 6px 20px; background: var(--color-accent); color: var(--color-accent-text); }
+  .bubble svg { flex: none; margin-top: 2px; }
+  .bubble.sent svg { color: var(--color-text-muted); }
+  .bubble.error { border-color: var(--color-heading); background: var(--color-tutorial-chip); color: var(--color-tutorial-chip-text); }
+  .bubble.typing { align-items: center; padding: 14px 16px; }
+  .dots { display: flex; gap: 5px; }
+  .dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--color-text-muted); }
+  .dots i:nth-child(2) { opacity: 0.6; }
+  .dots i:nth-child(3) { opacity: 0.3; }
+
+  .block { display: flex; flex: none; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .card { width: 100%; padding: 14px 16px 6px; border: 1px solid var(--color-border); border-radius: 20px; background: var(--color-card-raised); }
+  .rows { margin: 0; padding: 0; list-style: none; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+  .row:last-child { border-bottom: 0; }
+  .text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .key { margin: 0; font: 500 0.6875rem/1.3 var(--font-mono); letter-spacing: 0.02em; color: var(--color-text-muted); }
+  .value { margin: 0; overflow-wrap: anywhere; font: 500 0.9375rem/20px var(--font-sans); color: var(--color-heading); }
+  .pencil { display: grid; place-items: center; flex: none; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--color-heading); cursor: pointer; }
+  .pencil:hover { background: var(--color-bg); }
+  .pill { padding: 12px 18px; border-width: 1px; line-height: 20px; }
+  .pill.solid { border-color: var(--color-accent); background: var(--color-accent); color: var(--color-accent-text); }
+  .confirm .sending { display: none; }
+  .block[data-state='sending'] .confirm [data-confirm], .block[data-state='failed'] .confirm, .block[data-state='sent'] .confirm { display: none; }
+  .block[data-state='sending'] .confirm .sending { display: inline-flex; cursor: default; opacity: 0.75; }
+  .block[data-state='sending'] .pencil { opacity: 0.35; pointer-events: none; }
+  .block[data-state='sent'] .card { opacity: 0.6; }
+  .block[data-state='sent'] .pencil { display: none; }
+  .actions, .next { display: flex; flex-wrap: wrap; gap: 8px; flex: none; margin: 0; padding: 0; list-style: none; }
+  .next { flex-direction: column; align-items: flex-start; }
+
+  /* States that have no composer: summary, sending and failed show only the note. */
+  .chat[data-mode='summary'] .chips, .chat[data-mode='summary'] .composer,
+  .chat[data-mode='sending'] .chips, .chat[data-mode='sending'] .composer,
+  .chat[data-mode='failed'] .chips, .chat[data-mode='failed'] .composer { display: none; }
+  /* While Jahat is typing the composer waits. */
+  .chat[data-busy] .field { opacity: 0.6; }
+  .chat[data-busy] .chips { pointer-events: none; opacity: 0.6; }
+
+  @media (min-width: 48rem) {
+    .chat[data-open] { height: 40rem; }
+    .chat[data-open] .head, .chat[data-open] .pinned { padding-inline: 18px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .msg, .block, .next, .actions { animation: rise 240ms ease-out; }
+    .dots i { animation: pulse 1.2s ease-in-out infinite; }
+    .dots i:nth-child(2) { animation-delay: 0.2s; }
+    .dots i:nth-child(3) { animation-delay: 0.4s; }
+    .spin { animation: turn 1s linear infinite; }
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+  @keyframes pulse { 50% { transform: translateY(-2px); } }
+  @keyframes turn { to { transform: rotate(360deg); } }
+</style>
