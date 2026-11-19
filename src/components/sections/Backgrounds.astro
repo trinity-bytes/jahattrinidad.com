@@ -72,7 +72,8 @@ const warm = variant === 'values' || variant === 'experience';
 </script>
 
 <style>
-  .backgrounds { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  /* --shift follows the centred content column past 1440, so the light stays where the board puts it. */
+  .backgrounds { --shift: max(0px, (100% - 1440px) / 2); position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .transition, .light, .grain, .bytes-mask, .byte-field, .bytes, .highlight { position: absolute; inset: 0; }
   .transition { top: auto; height: 320px; }
   [data-next='bg'] .transition { background: linear-gradient(to bottom, transparent, var(--color-bg)); }
@@ -85,53 +86,56 @@ const warm = variant === 'values' || variant === 'experience';
   :global([data-lens="inside"]) .warm .light { background: radial-gradient(ellipse at 78% 0%, color-mix(in srgb, var(--color-light-warm) 45%, transparent), transparent 65%), radial-gradient(ellipse at 20% 5%, color-mix(in srgb, var(--color-light-sun) 6%, transparent), transparent 55%); }
   :global([data-lens="inside"]) .leaf .light { background: radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--color-light-leaf) 35%, transparent), transparent 65%); }
   .bytes-mask { visibility: hidden; mask-mode: luminance; mask-repeat: no-repeat; mask-size: 100% 100%; }
+  /* Seams: full strength at the section edge, fading out over 180px (bottom) or 140px (top), as on the board. */
   .byte-field {
     mask-image:
-      radial-gradient(ellipse 680px 360px at calc(100% - 120px) 0, black 0%, black 30%, transparent 100%),
-      linear-gradient(to top, rgb(0 0 0 / .25), transparent 180px);
+      radial-gradient(ellipse 680px 360px at calc(100% - 120px - var(--shift)) 0, black 0%, black 30%, transparent 100%),
+      linear-gradient(to top, black, transparent 180px);
   }
+  /* Leaf bytes are 7% where the light falls and 4.5% at the seams (.045 / .07 = .64). */
   .leaf .byte-field {
     mask-image:
-      radial-gradient(ellipse 600px 420px at 150px calc(100% - 360px), black 0%, black 25%, transparent 100%),
-      linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px),
-      linear-gradient(to top, rgb(0 0 0 / .2), transparent 180px);
+      radial-gradient(ellipse 600px 420px at calc(150px + var(--shift)) calc(100% - 360px), black 0%, black 25%, transparent 100%),
+      linear-gradient(to bottom, rgb(0 0 0 / .64), transparent 140px),
+      linear-gradient(to top, rgb(0 0 0 / .64), transparent 180px);
   }
   :global([data-lens="inside"]) .warm .byte-field {
     mask-image:
-      radial-gradient(ellipse 900px 500px at calc(100% - 120px) 0, black 0%, black 30%, transparent 100%),
+      radial-gradient(ellipse 900px 500px at calc(100% - 120px - var(--shift)) 0, black 0%, black 30%, transparent 100%),
       linear-gradient(to top, rgb(0 0 0 / .25), transparent 180px);
   }
   .experience .byte-field {
     mask-image:
-      radial-gradient(ellipse 680px 360px at calc(100% - 120px) 0, black 0%, black 30%, transparent 100%),
-      linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px),
-      linear-gradient(to top, rgb(0 0 0 / .25), transparent 180px);
+      radial-gradient(ellipse 680px 360px at calc(100% - 120px - var(--shift)) 0, black 0%, black 30%, transparent 100%),
+      linear-gradient(to bottom, black, transparent 140px),
+      linear-gradient(to top, black, transparent 180px);
   }
   :global([data-lens="inside"]) .experience .byte-field {
     mask-image:
-      radial-gradient(ellipse 900px 500px at calc(100% - 120px) 0, black 0%, black 30%, transparent 100%),
+      radial-gradient(ellipse 900px 500px at calc(100% - 120px - var(--shift)) 0, black 0%, black 30%, transparent 100%),
       linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px),
       linear-gradient(to top, rgb(0 0 0 / .25), transparent 180px);
   }
   :global([data-lens="inside"]) .leaf .byte-field {
     mask-image:
-      radial-gradient(ellipse 700px 650px at 720px 0, black 0%, black 25%, transparent 100%),
+      radial-gradient(ellipse 700px 650px at calc(720px + var(--shift)) 0, black 0%, black 25%, transparent 100%),
       linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px),
       linear-gradient(to top, rgb(0 0 0 / .2), transparent 180px);
   }
   .leaf[data-next="none"] .byte-field {
     mask-image:
-      radial-gradient(ellipse 600px 420px at 150px calc(100% - 360px), black 0%, black 25%, transparent 100%),
-      linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px);
+      radial-gradient(ellipse 600px 420px at calc(150px + var(--shift)) calc(100% - 360px), black 0%, black 25%, transparent 100%),
+      linear-gradient(to bottom, rgb(0 0 0 / .64), transparent 140px);
   }
   :global([data-lens="inside"]) .leaf[data-next="none"] .byte-field {
     mask-image:
-      radial-gradient(ellipse 700px 650px at 720px 0, black 0%, black 25%, transparent 100%),
+      radial-gradient(ellipse 700px 650px at calc(720px + var(--shift)) 0, black 0%, black 25%, transparent 100%),
       linear-gradient(to bottom, rgb(0 0 0 / .2), transparent 140px);
   }
   .bytes, .highlight { mask-size: 1440px 320px; }
   .bytes { background: var(--color-text-muted); opacity: .045; mask-image: var(--bytes-image); mask-repeat: repeat; mask-position: right top; }
   .highlight { background: light-dark(var(--color-text-muted), var(--color-signal)); opacity: .34; mask-image: var(--highlight-image); mask-repeat: no-repeat; mask-position: right 120px; }
+  .leaf .bytes { opacity: .07; }
   :global([data-lens="inside"]) .bytes { opacity: .07; }
   .leaf .highlight { mask-position: -1002px calc(100% - 70px); }
   :global([data-lens="inside"]) .highlight { opacity: .4; mask-position: right 0px; }
