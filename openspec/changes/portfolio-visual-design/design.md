@@ -597,3 +597,5 @@ Board **`2356:86`** on "Portfolio" (`2029:2`), x 13626, 390 × 940. It is the li
 - "ELSEWHERE": the profiles from `links.json` as 52 px circular logo buttons (`card` fill, ink border, 20 px monochrome ink logo, `aria-label` with the network name). Owner, 2026-11-18: "me gustaria que uses los logos en lugar del nombre, porque X queda raro". Logos are Simple Icons paths (CC0); LinkedIn comes from simple-icons 9.21.0, since later versions removed it at the brand's request.
 - **Tablet 768 `2358:101`:** the mobile column (440) centred on the rescaled landscape. **Desktop 1440 `2358:162`:** two columns centred on the desktop Home hero layers (sky `2191:88`, near hill `2191:90`, same positions): identity (avatar 96, name 56, description 20/28) and Elsewhere on the left (460), the four link cards on the right (520).
 - `jahattrinidad.com` in white mono on the hill closes the page.
+
+Owner approved the mobile menu, the chat view and `/links/` (all breakpoints) on 2026-11-18: "me encanta. aprobado". The profile photo also replaces the "JT" placeholder in the post author card and the chat header.
