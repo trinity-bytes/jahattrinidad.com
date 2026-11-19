@@ -6,7 +6,7 @@ import PageFooter from '../../components/sections/PageFooter.astro';
 import Icon from '../../components/ui/Icon.astro';
 import CaseStudy from '../../components/sections/CaseStudy.astro';
 import NextCaseStudy from '../../components/sections/NextCaseStudy.astro';
-import { collectionPath, entryPath, listLinks, listProjects, projectRoutes, getTranslationGroup, renderEntry, type Project } from '../../lib/content';
+import { collectionPath, entryPath, ogImagePath, listLinks, listProjects, projectRoutes, getTranslationGroup, renderEntry, type Project } from '../../lib/content';
 import { buildSeo } from '../../lib/seo';
 import { getDictionary } from '../../lib/i18n';
 
@@ -38,6 +38,7 @@ const seo = buildSeo({
   title: entry.data.title,
   description: entry.data.description,
   path: entryPath('projects', lang, entry.id),
+  image: { path: ogImagePath('projects', lang, entry.id), alt: entry.data.title },
   lang,
   site,
   group,

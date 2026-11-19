@@ -69,6 +69,8 @@ export interface Dictionary {
   meta: {
     /** Alt text of the site-wide social preview image (og:image:alt). */
     ogImageAlt: string;
+    /** Bottom line of the per-page social preview cards. */
+    ogSignature: string;
   };
   nav: {
     home: string;
@@ -249,6 +251,7 @@ export interface Dictionary {
 const en: Dictionary = {
   meta: {
     ogImageAlt: 'Jahat Trinidad on a hill at sunset, beside the line "I build products people actually use."',
+    ogSignature: 'Jahat Trinidad · jahattrinidad.com',
   },
   nav: {
     home: 'Home',

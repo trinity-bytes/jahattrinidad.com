@@ -10,6 +10,7 @@ import { BCP47 } from './consts.ts';
  * The site-wide social preview (visual-design 8.2, Figma `2374:231`). Pages
  * without their own image share it; its alt text lives in the Dictionary.
  */
+/** Per-page cards (`src/pages/og/`) share this size. */
 export const OG_DEFAULT_IMAGE = { path: '/og/default.jpg', width: 1200, height: 630 } as const;
 
 export interface Alternate {
@@ -31,6 +32,8 @@ export interface SeoInput {
   type?: 'website' | 'article';
   publishDate?: Date;
   updatedDate?: Date;
+  /** Per-page social preview: site-relative path and alt text. Omitted → OG_DEFAULT_IMAGE. */
+  image?: { path: string; alt: string };
 }
 
 export interface SeoResult {
@@ -39,6 +42,8 @@ export interface SeoResult {
   title: string;
   description: string;
   openGraph: Record<string, string>;
+  /** Alt text of a per-page image; undefined means the default image, whose alt is in the Dictionary. */
+  imageAlt?: string;
 }
 
 /**
@@ -95,9 +100,10 @@ export function buildSeo(input: SeoInput): SeoResult {
       'og:description': input.description,
       'og:url': canonical,
       'og:type': input.type ?? 'website',
-      'og:image': absoluteUrl(OG_DEFAULT_IMAGE.path, input.site).href,
+      'og:image': absoluteUrl(input.image?.path ?? OG_DEFAULT_IMAGE.path, input.site).href,
       'og:image:width': String(OG_DEFAULT_IMAGE.width),
       'og:image:height': String(OG_DEFAULT_IMAGE.height),
     },
+    imageAlt: input.image?.alt,
   };
 }

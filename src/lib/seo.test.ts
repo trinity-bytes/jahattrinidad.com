@@ -19,3 +19,9 @@ test('the existing Open Graph fields keep their values', () => {
   assert.equal(seo.openGraph['og:url'], 'https://jahattrinidad.com/work/');
   assert.equal(seo.openGraph['og:type'], 'website');
 });
+
+test('a page with its own image points og:image at it and carries its alt', () => {
+  const seo = buildSeo({ ...base, image: { path: '/og/notes/boundaries.jpg', alt: 'Boundaries' } });
+  assert.equal(seo.openGraph['og:image'], 'https://jahattrinidad.com/og/notes/boundaries.jpg');
+  assert.equal(seo.imageAlt, 'Boundaries');
+});

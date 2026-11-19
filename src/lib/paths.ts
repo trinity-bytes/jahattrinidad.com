@@ -12,3 +12,8 @@ export function collectionPath(collection: TranslatableCollection, lang: Locale)
 export function entryPath(collection: TranslatableCollection, lang: Locale, slug: string): string {
   return `${collectionPath(collection, lang)}${slug}/`;
 }
+
+/** Per-page social preview rendered at build time by `src/pages/og/[...route].jpg.ts`. */
+export function ogImagePath(collection: TranslatableCollection, lang: Locale, slug: string): string {
+  return `/og${entryPath(collection, lang, slug).replace(/\/$/, '')}.jpg`;
+}

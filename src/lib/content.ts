@@ -6,7 +6,7 @@
  */
 import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
 import { entryPath } from './paths';
-export { collectionPath, entryPath } from './paths';
+export { collectionPath, entryPath, ogImagePath } from './paths';
 
 export type Locale = 'en' | 'es';
 
