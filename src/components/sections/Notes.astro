@@ -1,0 +1,176 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import PostRow from '../content/PostRow.astro';
+import Backgrounds from './Backgrounds.astro';
+import Icon from '../ui/Icon.astro';
+import Annotation from '../ui/Annotation.astro';
+import AnnotationList from '../ui/annotation/AnnotationList.astro';
+import { formatDate } from '../../lib/format';
+import type { Dictionary } from '../../lib/i18n';
+import { entryPath } from '../../lib/paths';
+
+interface ElsewhereItem {
+  platform: string;
+  /** Already formatted. */
+  date?: string;
+  excerpt?: string;
+  href: string;
+}
+
+interface Props {
+  lang: 'en' | 'es';
+  marker: string;
+  headline: string;
+  strings: Dictionary['notes'];
+  /** The Inside lens's copy: its marker replaces `marker`, and it carries the annotations. */
+  inside: Dictionary['home']['inside']['notes'];
+  /** From listPosts, newest first: the first one is featured. */
+  posts: { entry: CollectionEntry<'posts'>; readingTime: number }[];
+  /** Where "All writing" goes. */
+  allWritingHref: string;
+  /** Posts published elsewhere. The column is left out when there are none. */
+  elsewhere?: ElsewhereItem[];
+  seed?: number;
+  index?: boolean;
+}
+
+const { lang, marker, headline, strings, inside, posts, allWritingHref, elsewhere = [], seed = 5, index = false } = Astro.props;
+const [featured, ...rest] = posts;
+const typeLabel = (type: 'essay' | 'tutorial') => strings[type];
+const note = inside.annotations;
+// Numbers shown on tablet and mobile: the chip needs a featured post, the rows a second one.
+const notes = [note.feed, ...(featured ? [note.collection] : []), ...(rest.length > 0 ? [note.callSite] : [])];
+const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', lang, entry.id);
+---
+<section id="notes" class:list={["notes", { index }]} aria-labelledby="notes-heading">
+  <Backgrounds variant="notes" next="none" seed={seed} />
+  <div class="layout">
+    <header>
+      <div class="title">
+        <p class="marker" data-background-text data-show="outside">{marker}</p>
+        <p class="marker" data-background-text data-show="inside">{inside.marker}</p>
+        <h2 id="notes-heading" data-background-text>{headline}</h2>
+      </div>
+      <a class="all" href={allWritingHref} data-background-text>{index ? strings.rssFeed : strings.allWriting}<span aria-hidden="true">→</span></a>
+    </header>
+    <div class="columns">
+      <div class="writing">
+        <div class="label-wrap">
+          <h3 class="label" data-background-text>{index ? strings.latest : strings.writingLatest}</h3>
+          {!index && <Annotation
+            n={1}
+            x="calc(100% + 6px)"
+            y="50%"
+            pinX="-6px"
+            pinY="-6px"
+            bound={{ x: '-6px', y: '-6px', width: 'calc(100% + 12px)', height: 'calc(100% + 12px)' }}
+            {...note.feed}
+          />}
+        </div>
+        {featured && (
+          <div class="featured-card">
+          <PostRow
+            featured
+            detailed={index}
+            href={postHref(featured.entry)}
+            title={featured.entry.data.title}
+            description={featured.entry.data.description}
+            type={featured.entry.data.type}
+            typeLabel={typeLabel(featured.entry.data.type)}
+            meta={`${strings.minutes(featured.readingTime)} read · ${formatDate(featured.entry.data.publishDate, lang)}`}
+          />
+          {/* Inside: the type chip sits inside the card's link, so its annotation anchors to an invisible copy of the chip. */}
+          {!index && <div class="chip-anchor" data-show="inside">
+            <span class="chip-size" aria-hidden="true">{typeLabel(featured.entry.data.type)}</span>
+            <Annotation
+              n={2}
+              x="calc(100% + 4px)"
+              y="50%"
+              pinX="-4px"
+              pinY="-4px"
+              bound={{ x: '-4px', y: '-4px', width: 'calc(100% + 8px)', height: 'calc(100% + 8px)' }}
+              {...note.collection}
+            />
+          </div>}
+          </div>
+        )}
+        {rest.length > 0 && (
+          <div class="rows-wrap">
+            <ul class="rows">
+              {rest.map(({ entry, readingTime }) => (
+                <li>
+                  <PostRow href={postHref(entry)} title={entry.data.title} type={entry.data.type} typeLabel={typeLabel(entry.data.type)} detailed={index} description={entry.data.description} meta={index ? `${formatDate(entry.data.publishDate, lang)} · ${strings.minutes(readingTime)}` : strings.minutes(readingTime)} />
+                </li>
+              ))}
+            </ul>
+            {!index && <Annotation
+              n={3}
+              x="36px"
+              y="calc(100% + 4px)"
+              side="below"
+              leader={24}
+              pinX="-4px"
+              pinY="-4px"
+              bound={{ x: '-4px', y: '-4px', width: 'calc(100% + 8px)', height: 'calc(100% + 8px)' }}
+              {...note.callSite}
+            />}
+          </div>
+        )}
+      </div>
+      {elsewhere.length > 0 && (
+        <div class="elsewhere">
+          <h3 class="label" data-background-text>{strings.elsewhereLatest}</h3>
+          <ul>
+            {elsewhere.map((item) => (
+              <li>
+                <a href={item.href}>
+                  <span class="source"><span data-background-text>{item.platform}</span><span data-background-text>{item.date}<Icon name="arrow-up-right" size={12} /></span></span>
+                  {item.excerpt && <span class="excerpt" data-background-text>{item.excerpt}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+    {!index && <AnnotationList class="notes" items={notes} label={inside.notesLabel} />}
+  </div>
+</section>
+<style>
+  .notes { position: relative; background: var(--color-surface); }
+  .notes.index { background: var(--color-bg); }
+  .layout { position: relative; max-width: calc(var(--content-max) + 2 * var(--gutter)); margin-inline: auto; padding: 4.5rem var(--gutter); display: flex; flex-direction: column; gap: 3.5rem; }
+  header { display: flex; flex-direction: column; align-items: flex-start; }
+  .title { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .marker { margin: 0; font: 500 0.8125rem/1.3 var(--font-mono); color: var(--color-text-muted); }
+  h2 { margin: 0; font: 600 var(--font-size-heading-lg)/1.05 var(--font-display); letter-spacing: -0.02em; color: var(--color-heading); }
+  .all { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; font: 500 1.125rem/1.3 var(--font-sans); color: var(--color-heading); text-decoration: underline; text-underline-offset: 0.2em; }
+  .columns { display: flex; flex-direction: column; gap: 3.5rem; }
+  .writing { min-width: 0; }
+  .label-wrap { position: relative; width: fit-content; margin-bottom: var(--space-md); }
+  .label { margin: 0; font: 500 var(--font-size-label)/1.33 var(--font-mono); text-transform: uppercase; color: var(--color-text-muted); }
+  .elsewhere .label { padding-bottom: var(--space-md); }
+  .featured-card, .rows-wrap { position: relative; }
+  .rows-wrap { margin-top: var(--space-xl); }
+  .rows, .elsewhere ul { margin: 0; padding: 0; list-style: none; }
+  .layout > :global(.notes) { padding: 0; }
+  .chip-anchor { position: absolute; left: var(--post-card-pad-x); top: var(--post-card-pad-y); }
+  /* Same box as the chip in PostRow. */
+  .chip-size { display: block; padding: 0.1875rem var(--space-xs); font: 500 var(--font-size-label)/1.33 var(--font-mono); visibility: hidden; }
+  .elsewhere a { display: flex; flex-direction: column; gap: 0.375rem; padding-block: var(--space-lg); border-top: 1px solid var(--color-rule); color: var(--color-heading); text-decoration: none; }
+  .elsewhere a:hover .excerpt, .elsewhere a:focus-visible .excerpt { text-decoration: underline; }
+  .source { display: flex; justify-content: space-between; gap: var(--space-md); font: 400 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text-muted); }
+  .source > :first-child { font-weight: 500; }
+  .source :global(svg) { margin-left: var(--space-xs); vertical-align: -1px; }
+  .excerpt { font: 400 1.125rem/1.45 var(--font-sans); }
+  @media (min-width: 48rem) {
+    .layout { padding-block: 6rem; }
+  }
+  @media (min-width: 64.0625rem) {
+    .layout { padding-block: 7.5rem; }
+    header { flex-direction: row; align-items: flex-end; justify-content: space-between; }
+    .columns { flex-direction: row; gap: 4rem; align-items: flex-start; }
+    .writing { flex: 1; }
+    .elsewhere { flex: none; width: 27.5rem; }
+  }
+</style>

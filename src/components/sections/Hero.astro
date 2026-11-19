@@ -1,0 +1,301 @@
+---
+/*
+ * Home hero, both states. Paint order (visual-design design.md §5), back to front:
+ * sky + far hills, display name, near hill, portrait. The layers are separate
+ * elements so a depth effect can move them independently later.
+ *
+ * The page's h1 is the display name: it is the identity the board gives the most
+ * weight, and the descriptor, headline and sub read right after it as its context.
+ * On tablet and mobile the name overlaps the portrait, so an outline copy of it is
+ * drawn above the portrait, masked to the portrait's alpha (board layer 05).
+ *
+ * Inside (design.md §5 "Inside differences") adds a dusk overlay right above the sky, a
+ * dimmed sun, an outlined name, a darker near hill, the Inside copy, and the annotations:
+ * side labels on desktop, numbered pins plus a notes band below the hero on tablet and
+ * mobile. Everything that differs only in colour is a token (tokens.css) that flips with
+ * the lens; copy that differs is rendered twice with data-show (design.md §2).
+ *
+ * The sky layer's position is kept in custom properties (--sky-*), so the sun pin and the
+ * dimmed-sun mask follow it at every width.
+ */
+import { Picture, getImage } from 'astro:assets';
+import sky from '../../assets/hero/sky.png';
+import hill from '../../assets/hero/near-hill.png';
+import portrait from '../../assets/hero/portrait.png';
+import Icon from '../ui/Icon.astro';
+import Annotation from '../ui/Annotation.astro';
+import AnnotationList from '../ui/annotation/AnnotationList.astro';
+import type { Dictionary } from '../../lib/i18n';
+
+interface Props {
+  strings: Dictionary['home']['outside']['hero'];
+  insideStrings: Dictionary['home']['inside']['hero'];
+  workHref: string;
+}
+const { strings, insideStrings, workHref } = Astro.props;
+
+// Annotation order is the number shown on tablet and mobile.
+const note = insideStrings.annotations;
+const notes = [note.sky, note.hill, note.name, note.portrait];
+
+const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040 });
+---
+
+<section
+  class="hero"
+  id="hero"
+  data-hero
+  aria-labelledby="hero-name"
+  style={`--portrait-mask: url(${portraitMask.src})`}
+>
+  <Picture
+    src={sky}
+    formats={['avif', 'webp']}
+    widths={[768, 1440, 2400, 3400]}
+    sizes="(min-width: 64.0625rem) 115vw, 260vw"
+    alt=""
+    class="layer sky"
+    loading="eager"
+    fetchpriority="high"
+  />
+  <div class="dusk" data-show="inside" aria-hidden="true"></div>
+  <div class="sun-mask" data-show="inside" aria-hidden="true"></div>
+  <h1 id="hero-name" class="name">{strings.name}</h1>
+  <Picture
+    src={hill}
+    formats={['avif', 'webp']}
+    widths={[768, 1440, 2400, 2952]}
+    sizes="(min-width: 64.0625rem) 115vw, 310vw"
+    alt=""
+    class="layer hill"
+    loading="eager"
+  />
+  <Picture
+    src={portrait}
+    formats={['avif', 'webp']}
+    widths={[300, 360, 520, 1040, 1400]}
+    sizes="(min-width: 64.0625rem) 520px, (min-width: 48rem) 360px, 300px"
+    alt=""
+    class="layer portrait"
+    loading="eager"
+  />
+  <div class="portrait-outline" aria-hidden="true">
+    <span class="name">{strings.name}</span>
+  </div>
+  <div class="intro">
+    <p class="eyebrow">{strings.eyebrow}</p>
+    <p class="headline" data-show="outside">{strings.headline}</p>
+    <p class="headline" data-show="inside">{insideStrings.headline}</p>
+    <p class="sub" data-show="outside">{strings.sub}</p>
+    <p class="sub" data-show="inside">{insideStrings.sub}</p>
+    <a class="cta" href={workHref}>{strings.cta}<Icon name="arrow-right" size={18} /></a>
+  </div>
+  <p class="footnote">
+    <span class="marker" data-show="outside">{strings.marker}</span>
+    <span class="hint" data-show="outside">{strings.hint}<span class="hint-arrow" aria-hidden="true"> ↘</span></span>
+    <span class="marker" data-show="inside">{insideStrings.marker}</span>
+    <span class="hint" data-show="inside">{insideStrings.hint}<span aria-hidden="true"> ↑</span></span>
+  </p>
+
+  <Annotation
+    n={1}
+    x="var(--sun-x)"
+    y="var(--sun-y)"
+    side="above"
+    leader="max(0px, calc(var(--sun-y) - var(--name-top) + 49px))"
+    {...note.sky}
+  />
+  <Annotation n={2} x="483px" y="calc(100% - 40px)" side="right" pinX="var(--hill-pin-x)" pinY="var(--hill-pin-y)" {...note.hill} />
+  <Annotation
+    n={3}
+    x="calc(var(--edge) + 36px)"
+    y="var(--name-top)"
+    side="above"
+    leader={49}
+    pinX="var(--edge)"
+    pinY="calc(var(--name-top) + var(--font-size-display) * 0.276)"
+    bound={{
+      x: 'var(--edge)',
+      y: 'var(--name-top)',
+      width: 'calc(var(--font-size-display) * 2.69)',
+      height: 'calc(var(--font-size-display) * 0.92)',
+    }}
+    {...note.name}
+  />
+  <Annotation
+    n={4}
+    x="var(--portrait-left)"
+    y="calc(var(--portrait-top) + 230px)"
+    side="left"
+    pinX="calc(var(--portrait-left) + var(--portrait-w))"
+    pinY="calc(var(--portrait-top) + (100% - var(--portrait-top)) * 0.35)"
+    bound={{ x: 'var(--portrait-left)', y: 'var(--portrait-top)', width: 'var(--portrait-w)', height: 'calc(100% - var(--portrait-top))' }}
+    {...note.portrait}
+  />
+</section>
+<AnnotationList items={notes} label={insideStrings.notesLabel} />
+
+<style>
+  .hero {
+    /* Left and right edge of the content: the page gutter, or the centred content column past 1440 (as the sections below). */
+    --edge: max(var(--gutter), (100cqw - var(--content-max)) / 2);
+    --name-top: 628px;
+    --portrait-w: 300px;
+    --portrait-left: calc(50cqw - 138px);
+    --portrait-top: 412px;
+    --sky-w: 1981.415px;
+    --sky-left: calc(50cqw - 735.812px);
+    --sky-top: -402.209px;
+    /* Where the sun sits inside the sky image (30.1% across, 43.94% of the width down). */
+    --sun-x: calc(var(--sky-left) + var(--sky-w) * 0.301);
+    --sun-y: calc(var(--sky-top) + var(--sky-w) * 0.4394);
+    /* Inside pin of the near hill on small screens: just below the name bound, at its right edge (mobile). */
+    --hill-pin-x: calc(100cqw - var(--edge) - 3px);
+    --hill-pin-y: calc(var(--name-top) + var(--font-size-display) * 0.92 - 1px);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    container-type: inline-size;
+    height: 862px;
+    background: var(--color-light-sun);
+  }
+  .layer { position: absolute; display: block; max-width: none; height: auto; pointer-events: none; }
+  .sky { width: var(--sky-w); left: var(--sky-left); top: var(--sky-top); }
+  .hill { width: 2371.52px; left: calc(50% - 929.202px); top: -412.142px; filter: var(--hero-hill-filter); }
+
+  /* Inside: the dusk overlay sits directly above the sky; the mask dims the sun under it. */
+  .dusk { position: absolute; inset: 0; background: var(--color-dusk); pointer-events: none; }
+  .sun-mask {
+    --size: calc(var(--sky-w) * 0.0224);
+    position: absolute;
+    left: calc(var(--sun-x) - var(--size) / 2);
+    top: calc(var(--sun-y) - var(--size) / 2);
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: var(--dusk-sun);
+    filter: blur(calc(var(--size) / 12));
+    pointer-events: none;
+  }
+  .portrait { width: var(--portrait-w); left: var(--portrait-left); top: var(--portrait-top); }
+
+  .name {
+    position: absolute;
+    left: var(--edge);
+    top: var(--name-top);
+    margin: 0;
+    color: var(--color-hero-name-fill);
+    -webkit-text-stroke: var(--hero-stroke-width) var(--color-hero-name-stroke);
+    font: 500 var(--font-size-display) / 0.92 var(--font-display), sans-serif;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+
+  /* Same box as the portrait; the outline copy of the name is placed back in hero coordinates. */
+  .portrait-outline {
+    position: absolute;
+    left: var(--portrait-left);
+    top: var(--portrait-top);
+    width: var(--portrait-w);
+    aspect-ratio: 2 / 3;
+    pointer-events: none;
+    mask: var(--portrait-mask) center / 100% 100% no-repeat;
+  }
+  .portrait-outline .name {
+    left: calc(var(--edge) - var(--portrait-left));
+    top: calc(var(--name-top) - var(--portrait-top));
+    color: transparent;
+    -webkit-text-stroke: var(--hero-stroke-width) var(--color-hero-outline);
+  }
+
+  .intro {
+    position: absolute;
+    top: 100px;
+    left: var(--edge);
+    right: var(--edge);
+    max-width: 660px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .intro p { margin: 0; }
+  .eyebrow { font: 500 13px / 1.3 var(--font-mono), monospace; letter-spacing: 0.065em; color: var(--color-hero-text); }
+  .headline {
+    font: 600 var(--font-size-heading-sm) / 1.15 var(--font-display), sans-serif;
+    letter-spacing: -0.02em;
+    color: var(--color-heading);
+  }
+  .sub { max-width: 520px; font: 400 var(--font-size-body) / 1.5 var(--font-sans), sans-serif; color: var(--color-hero-text); }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 49px;
+    padding: 14px 24px;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    font: 500 16px / 1.3 var(--font-sans), sans-serif;
+    text-decoration: none;
+  }
+  .cta:hover { text-decoration: underline; }
+
+  .footnote {
+    position: absolute;
+    left: var(--edge);
+    bottom: 19px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 166px;
+    color: var(--color-hero-footnote);
+    font: 400 12px / 1.33 var(--font-mono), monospace;
+  }
+  .marker { font-weight: 500; letter-spacing: 0.08em; }
+  .hint-arrow { display: none; }
+
+  @media (min-width: 48rem) {
+    .hero {
+      --name-top: 530px;
+      --portrait-w: 360px;
+      --portrait-left: calc(50cqw + 12px);
+      --portrait-top: 327px;
+      height: 867px;
+    }
+    .hero {
+      --sky-w: 2554.781px;
+      --sky-left: calc(50cqw - 829.723px);
+      --sky-top: -704.569px;
+      --hill-pin-x: calc(var(--edge) + 14px);
+      --hill-pin-y: calc(var(--name-top) + var(--font-size-display) * 0.92 + 8px);
+    }
+    .hill { width: 2831.111px; left: calc(50% - 872.667px); top: -704.71px; }
+    .intro { top: 136px; max-width: 600px; }
+    .footnote { bottom: 18px; max-width: none; flex-direction: row; gap: 32px; }
+  }
+
+  @media (min-width: 64.0625rem) {
+    .hero {
+      --name-top: 552px;
+      --portrait-w: 520px;
+      --portrait-left: calc(100cqw - var(--edge) - 476px);
+      --portrait-top: 130px;
+      /* The sun keeps its place over the name at every width: 434.3px right of the content edge, y 480.6
+         (as on the 1440 board: sky 1888 wide at x -70, y -349). The sky grows past 131.111cqw only as much as it needs to still cover
+         the left edge with the sun there (the sun is 30.1% across, 43.94% of the width down). */
+      --sky-w: max(131.111cqw, (var(--edge) + 434.3px) / 0.301);
+      --sky-left: calc(var(--edge) + 434.3px - var(--sky-w) * 0.301);
+      --sky-top: min(0px, calc(480.6px - var(--sky-w) * 0.4394));
+      height: 910px;
+    }
+    /* Keeps the ridge (69% down the image, ratio 0.7127) at the same height at every width; -12px at 1440. */
+    .hill { width: 112.292%; left: -5.972%; top: calc(783.2px - 55.22cqw); }
+    .intro { top: 180px; max-width: 660px; }
+    .footnote { bottom: 42px; }
+    .hint-arrow { display: inline; }
+  }
+
+  @media (forced-colors: active) { .cta { border: 1px solid ButtonText; } }
+</style>

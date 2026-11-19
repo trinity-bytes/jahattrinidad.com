@@ -1,0 +1,222 @@
+---
+/*
+ * Hero of the four non-Home pages (Work index 2239:18, case study 2298:3, Notes index 2304:2,
+ * post 2303:3). Same layers as the Home hero (sky + far hills, display word, near hill) without
+ * the portrait, and without the Inside state: these pages render Outside only (D21).
+ *
+ * The page's h1 is the display word on Work and Notes (the Home hero does the same with the name);
+ * on the case study and the post the title is in the default slot and carries the h1 itself.
+ * Paint order, back to front: sky, display word, near hill, intro.
+ *
+ * Layer geometry is taken per board: `work` and `post` share one landscape, `case` and `notes`
+ * another (mirrored on desktop). Tablet and mobile use the Home hero's landscape for `case`.
+ */
+import { Picture } from 'astro:assets';
+import sky from '../../assets/hero/sky.png';
+import hill from '../../assets/hero/near-hill.png';
+
+interface Props {
+  variant: 'work' | 'case' | 'notes' | 'post';
+  /** Display word drawn between the sky and the near hill (Work and Notes). It is the page's h1. */
+  word?: string;
+}
+const { variant, word } = Astro.props;
+---
+
+<section class:list={['hero', variant]} data-hero aria-labelledby={word ? 'hero-word' : undefined}>
+  <Picture
+    src={sky}
+    formats={['avif', 'webp']}
+    widths={[768, 1440, 2400, 3400]}
+    sizes="(min-width: 64.0625rem) 115vw, 260vw"
+    alt=""
+    class="layer sky"
+    loading="eager"
+    fetchpriority="high"
+  />
+  {word && <h1 id="hero-word" class="word">{word}</h1>}
+  <Picture
+    src={hill}
+    formats={['avif', 'webp']}
+    widths={[768, 1440, 2400, 2952]}
+    sizes="(min-width: 64.0625rem) 115vw, 310vw"
+    alt=""
+    class="layer hill"
+    loading="eager"
+  />
+  <div class="intro"><slot /></div>
+</section>
+
+<style>
+  /* Mobile first (390 boards); each layer is placed from the hero's centre so widths in between stay composed. */
+  .hero {
+    --word-size: 150px;
+    --word-top: 508px;
+    --word-right: 26px;
+    --sky-w: 1381px;
+    --sky-left: calc(50cqw - 434px);
+    --sky-top: -214px;
+    --hill-w: 735.947px;
+    --hill-left: calc(50cqw - 271.581px);
+    --hill-top: 249.223px;
+    --intro-top: 100px;
+    /* Left and right edge of the content: the page gutter, or the centred content column past 1440. */
+    --edge: max(var(--gutter), (100cqw - var(--content-max)) / 2);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    container-type: inline-size;
+    height: 701px;
+    background: var(--color-light-sun);
+  }
+  .layer { position: absolute; display: block; max-width: none; height: auto; pointer-events: none; }
+  .sky { width: var(--sky-w); left: var(--sky-left); top: var(--sky-top); }
+  .hill { width: var(--hill-w); left: var(--hill-left); top: var(--hill-top); }
+
+  .word {
+    position: absolute;
+    right: var(--word-right);
+    top: var(--word-top);
+    margin: 0;
+    color: var(--color-hero-name-fill);
+    font: 500 var(--word-size) / 0.92 var(--font-display), sans-serif;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+
+  .intro {
+    position: absolute;
+    top: var(--intro-top);
+    left: var(--edge);
+    right: var(--edge);
+    max-width: 660px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    color: var(--color-hero-text);
+  }
+  .intro :global(p), .intro :global(h1) { margin: 0; }
+
+
+  /* Intro parts shared by the four pages; the pages supply the markup. */
+  .intro :global(.eyebrow) { font: 500 13px / 1.3 var(--font-mono), monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+  .intro :global(.headline) { max-width: 660px; font: 600 var(--font-size-heading-sm) / 1.15 var(--font-display), sans-serif; letter-spacing: -0.02em; color: var(--color-heading); }
+  .intro :global(.sub) { max-width: 520px; font: 400 var(--font-size-body) / 1.5 var(--font-sans), sans-serif; }
+  .intro :global(.title) { font: 600 2.125rem / 1.05 var(--font-display), sans-serif; letter-spacing: -0.02em; color: var(--color-heading); }
+  .intro :global(.back) { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font: 500 14px / 1.5 var(--font-sans), sans-serif; color: inherit; text-decoration: none; }
+  .intro :global(.back:hover) { text-decoration: underline; }
+  .intro :global(.actions) { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .intro :global(.button) { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 14px 22px; border: 1px solid var(--color-accent); border-radius: 999px; font: 500 16px / 1 var(--font-sans), sans-serif; text-decoration: none; }
+  .intro :global(.button.primary) { background: var(--color-accent); color: var(--color-accent-text); }
+  .intro :global(.button.secondary) { color: var(--color-heading); }
+  .intro :global(.button:hover) { text-decoration: underline; }
+  /* Post: "← ALL NOTES · ESSAY · NOV 20, 2024 · 2 MIN READ". */
+  .intro :global(.meta) { display: flex; flex-wrap: wrap; align-items: center; column-gap: 18px; font: 500 13px / 1.3 var(--font-mono), monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+  .intro :global(.meta a) { display: inline-flex; align-items: center; min-height: 44px; color: inherit; text-decoration: none; }
+  .intro :global(.meta a:hover) { text-decoration: underline; }
+  /* Mobile: the link takes its own line, the metadata follows with tighter gaps and no leading dot. */
+  .intro :global(.meta-line) { flex-basis: 100%; display: flex; flex-wrap: wrap; column-gap: 8px; }
+  .intro :global(.meta-line .lead) { display: none; }
+
+  /* Mobile landscape of the case study and the post. */
+  .case {
+    --sky-w: 1981.415px;
+    --sky-left: calc(50cqw - 735.812px);
+    --sky-top: -372.209px;
+    --hill-w: 2371.52px;
+    --hill-left: calc(50cqw - 929.202px);
+    --hill-top: -412.142px;
+    --intro-top: 112px;
+    height: 700px;
+  }
+  .notes { --word-size: 116px; --word-top: 539px; --word-right: 32px; }
+  .post .intro :global(.title) { font-size: 2.125rem; line-height: 1.08; }
+  .post .intro :global(.sub) { max-width: 720px; }
+  .post {
+    --sky-top: -114px;
+    --hill-top: 349.223px;
+    --intro-top: 104px;
+    height: 620px;
+  }
+
+  @media (min-width: 48rem) {
+    .hero {
+      --word-size: 250px;
+      --word-top: 448px;
+      --sky-w: 1356px;
+      --sky-left: calc(50cqw - 554px);
+      --sky-top: -203px;
+      --hill-w: 864px;
+      --hill-left: calc(50cqw - 417px);
+      --hill-top: 202px;
+      --intro-top: 136px;
+      height: 702px;
+    }
+    .intro { max-width: 640px; }
+    .intro :global(.sub) { font-size: 1.125rem; line-height: 1.4444; }
+    .case .intro :global(.sub), .post .intro :global(.sub) { max-width: none; }
+    .intro :global(.meta-line) { column-gap: 18px; }
+    .intro :global(.meta-line .lead) { display: inline; }
+    .intro :global(.title) { font-size: 2.75rem; }
+    .intro :global(.actions) { flex-direction: row; }
+    .intro :global(.back), .intro :global(.meta a) { min-height: 0; }
+    .intro :global(.meta-line) { flex-basis: auto; }
+    .case {
+      --sky-w: 2554.781px;
+      --sky-left: calc(50cqw - 829.723px);
+      --sky-top: -674.569px;
+      --hill-w: 2831.111px;
+      --hill-left: calc(50cqw - 872.667px);
+      --hill-top: -704.71px;
+      --intro-top: 150px;
+      height: 745px;
+    }
+    .case .intro, .post .intro { max-width: none; }
+    .notes { --word-size: 210px; --word-top: 485px; --word-right: 40px; }
+    .post .intro :global(.title) { font-size: 2.75rem; }
+    .post { --intro-top: 136px; height: 560px; }
+  }
+
+  @media (min-width: 64.0625rem) {
+    .hero {
+      --word-size: 300px;
+      --word-top: 396px;
+      --word-right: calc(var(--edge) - 31px);
+      /* Sky and hill tops keep the sun (65.9% down the sky, ratio 0.6668) and the ridge (69% down the
+         hill, ratio 0.7127) at the same height at every width; the px values are the 1440 board. */
+      --sky-w: max(114.236cqw, (var(--edge) + 431px) / 0.301);
+      --sky-left: calc(var(--edge) + 431px - var(--sky-w) * 0.301);
+      --sky-top: min(0px, calc(438.9px - var(--sky-w) * 0.4394));
+      --hill-w: 106.458cqw;
+      --hill-left: -20px;
+      --hill-top: calc(627.9px - 52.35cqw);
+      --intro-top: 180px;
+      height: 704px;
+    }
+    .intro { max-width: 660px; }
+    .intro :global(.title) { font-size: 3.75rem; letter-spacing: -0.02em; }
+    .intro :global(.sub) { line-height: 1.5; }
+    .case .intro :global(.sub) { max-width: 520px; }
+    .post .intro :global(.sub) { max-width: 720px; }
+    /* Case study and Notes: the landscape is mirrored, so the sun sits on the right. */
+    .case, .notes {
+      --sky-w: 100cqw;
+      --sky-left: 0px;
+      --sky-top: min(0px, calc(417.8px - 43.94cqw));
+      --hill-w: 112.292cqw;
+      /* The hill PNG ends in a transparent strip (3.4% of its width); mirrored, it sits on the left. */
+      --hill-left: min(-89px, -6cqw);
+      --hill-top: calc(628.2px - 55.22cqw);
+      height: 745px;
+    }
+    .case .sky, .case .hill, .notes .sky, .notes .hill { transform: scaleX(-1); }
+    .notes .intro :global(.headline) { line-height: 1.06; }
+    .notes { --word-top: 437px; --word-right: var(--edge); }
+    .case .intro { max-width: 660px; }
+    .post .intro { max-width: 980px; }
+    .post .intro :global(.title) { font-size: 3.5rem; }
+    .post .intro :global(.sub) { font-size: 1.25rem; }
+    .post { --intro-top: 180px; height: 560px; }
+  }
+</style>

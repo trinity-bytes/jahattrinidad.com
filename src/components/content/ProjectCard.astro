@@ -1,0 +1,230 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import type { Dictionary } from '../../lib/i18n';
+
+interface Props {
+  project: CollectionEntry<'projects'>['data'];
+  /** Link to the project page, built by the page with `entryPath`. */
+  href: string;
+  labels: Pick<Dictionary['common'], 'problem' | 'whatItDoes' | 'myPart'> & Pick<Dictionary['work'], 'seeProject'>;
+  /** Row labels of the Inside card: how it was made instead of what it is for. */
+  insideLabels: Dictionary['home']['inside']['work']['rowLabels'];
+  /** The mono line above the title, e.g. "UNIVERSITY SAAS · TEAM OF 5 · 2026". */
+  meta?: string;
+  problem?: string;
+  whatItDoes?: string;
+  /** The wide card: image beside the text on desktop, inset image above it below. */
+  featured?: boolean;
+  mirrored?: boolean;
+  optimized?: boolean;
+}
+
+const { project, href, labels, insideLabels, meta, problem, whatItDoes, featured = false, mirrored = false, optimized = false } = Astro.props;
+
+const facts = [
+  { label: labels.problem, value: problem },
+  { label: labels.myPart, value: project.myPart },
+  { label: labels.whatItDoes, value: whatItDoes },
+].filter((fact) => fact.value);
+
+// Inside rows: the stack falls back to the project's own list; the other lines are project prose.
+const insideFacts = [
+  { label: insideLabels.stack, value: project.insideStack ?? project.stack.join(', ') },
+  { label: insideLabels.owned, value: project.myPart },
+  { label: insideLabels.decision, value: project.insideDecision },
+].filter((fact) => fact.value);
+
+// The card is rendered with one fact list per lens; the app shell shows the active one.
+const factLists = [
+  { show: 'outside', facts },
+  { show: 'inside', facts: insideFacts },
+] as const;
+---
+
+<article class:list={['card', { featured, mirrored }]}>
+  {
+    project.coverImage && (
+      optimized ? <Image class="cover" src={project.coverImage} alt={project.coverImageAlt ?? ''} loading="lazy" /> : <img class="cover" src={project.coverImage.src} width={project.coverImage.width} height={project.coverImage.height} alt={project.coverImageAlt ?? ''} loading="lazy" />
+    )
+  }
+  <div class="body">
+    {meta && <p class="meta" data-background-text>{meta}</p>}
+    <h3 data-background-text>{project.title}</h3>
+    <p class="description" data-background-text>{project.description}</p>
+    {
+      factLists.map(
+        ({ show, facts }) =>
+          facts.length > 0 && (
+            <dl data-show={show}>
+              {facts.map((fact) => (
+                <div class="fact">
+                  <dt data-background-text>{fact.label}</dt>
+                  <dd data-background-text>{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+      )
+    }
+    <a class="link" href={href} data-background-text>
+      <span class="underlined">{labels.seeProject}</span> <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    background: var(--color-card-alt);
+    border-radius: 1rem;
+  }
+
+  .cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+  }
+
+  .body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: var(--space-lg) var(--space-lg) 1.75rem;
+  }
+
+  p,
+  h3,
+  dl,
+  dd {
+    margin: 0;
+  }
+
+  .meta,
+  dt {
+    font: 500 var(--font-size-label) / 1.5 var(--font-mono);
+    color: var(--color-text-muted);
+  }
+
+  .meta {
+    text-transform: uppercase;
+  }
+
+  h3 {
+    margin-top: var(--space-xs);
+    font: 600 var(--font-size-heading-sm) / 1.1 var(--font-display);
+    letter-spacing: -0.01em;
+    color: var(--color-heading);
+  }
+
+  .description {
+    margin-top: var(--space-md);
+    font-size: var(--font-size-body);
+    line-height: 1.5;
+  }
+
+  dl {
+    margin-top: var(--space-xl);
+  }
+
+  .fact {
+    display: grid;
+    gap: var(--space-2xs);
+    padding: var(--space-md) 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  dd {
+    font-size: var(--font-size-body);
+    line-height: 1.5;
+  }
+
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    align-self: flex-start;
+    min-height: 2.75rem;
+    margin-top: auto;
+    padding-top: var(--space-md);
+    color: var(--color-heading);
+  }
+
+  .underlined {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+  }
+
+  /* Featured: inset image above the text. */
+  .featured {
+    padding: var(--space-lg);
+  }
+
+  .featured .cover {
+    aspect-ratio: 2.2 / 1;
+    border-radius: 0.5rem;
+  }
+
+  .featured .body {
+    padding: var(--space-md) 0 0;
+  }
+
+  .featured h3 {
+    font-size: var(--font-size-heading-section);
+  }
+
+  @media (min-width: 48rem) {
+    .body {
+      padding: var(--space-xl) var(--space-xl) 1.75rem;
+    }
+
+    .featured {
+      padding: 2rem;
+    }
+
+    .featured .cover {
+      aspect-ratio: 720 / 440;
+    }
+
+    .featured .body {
+      padding: var(--space-xl) 0 0;
+    }
+
+    /* The wide card keeps label and text on one row from tablet up. */
+    .featured .fact {
+      grid-template-columns: 7.25rem minmax(0, 1fr);
+      gap: var(--space-md);
+    }
+  }
+
+  @media (min-width: 64.0625rem) {
+    .body {
+      padding: 2rem 2rem 1.75rem;
+    }
+
+    .fact {
+      grid-template-columns: 6.5rem minmax(0, 1fr);
+      gap: var(--space-md);
+    }
+
+    .featured {
+      display: grid;
+      grid-template-columns: minmax(0, 720fr) minmax(0, 456fr);
+      gap: 3rem;
+      padding: 2.5rem;
+    }
+
+    .featured.mirrored { grid-template-columns: minmax(0, 456fr) minmax(0, 720fr); }
+    .featured.mirrored .cover { order: 2; }
+
+    .featured .body {
+      padding: 0;
+    }
+  }
+</style>

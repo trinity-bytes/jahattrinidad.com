@@ -5,20 +5,15 @@
  * `scripts/check-boundaries.mjs` enforces this mechanically.
  */
 import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
-import { ROUTE_BASE } from './consts';
+import { entryPath } from './paths';
+export { collectionPath, entryPath, ogImagePath } from './paths';
 
 export type Locale = 'en' | 'es';
-
-/**
- * Used only for URL path construction (unprefixed default-locale routes),
- * never as a default parameter value — see D5: `lang` is required
- * everywhere below except `listLinks()`.
- */
-const DEFAULT_LOCALE: Locale = 'en';
 
 export type Project = CollectionEntry<'projects'>;
 export type Post = CollectionEntry<'posts'>;
 export type Link = CollectionEntry<'links'>;
+export type Experience = CollectionEntry<'experience'>;
 
 /** Collections that are translatable. `links` is not. */
 export type TranslatableCollection = 'projects' | 'posts';
@@ -46,7 +41,7 @@ export interface PostListItem {
 export interface TranslationLink {
   lang: Locale;
   slug: string;
-  /** Site-relative, locale-aware, trailing slash. e.g. '/es/blog/hola-mundo/' */
+  /** Site-relative, locale-aware, trailing slash. e.g. '/es/notes/hola-mundo/' */
   path: string;
 }
 
@@ -55,15 +50,17 @@ export interface EntryRoute<E> {
   props: { entry: E };
 }
 
+// ── Coverage fixture — validated by the schemas, never listed or routed ──
+// Entries whose id starts with this prefix exist only so every optional
+// schema field is set at least once (content-model spec, "Real Entries and a
+// Coverage Fixture"). Every function below drops them, in dev too.
+const FIXTURE_PREFIX = 'coverage-fixture';
+const isFixture = (entry: { id: string }) => entry.id.startsWith(FIXTURE_PREFIX);
+
 // ── Draft gate (D4) — applied by every function below ──
 const INCLUDE_DRAFTS = import.meta.env.DEV;
-const isVisible = (data: { draft: boolean }) => INCLUDE_DRAFTS || !data.draft;
-
-function entryPath(collection: TranslatableCollection, lang: Locale, slug: string): string {
-  const base = ROUTE_BASE[collection];
-  const prefix = lang === DEFAULT_LOCALE ? '' : `${lang}/`;
-  return `/${prefix}${base}/${slug}/`;
-}
+const isVisible = (entry: { id: string; data: { draft: boolean } }) =>
+  !isFixture(entry) && (INCLUDE_DRAFTS || !entry.data.draft);
 
 function sortByPublishDate<E extends { data: { publishDate: Date } }>(
   entries: E[],
@@ -78,7 +75,7 @@ function sortByPublishDate<E extends { data: { publishDate: Date } }>(
 export async function listProjects(o: ProjectListOptions): Promise<Project[]> {
   const entries = await getCollection(
     'projects',
-    (e) => isVisible(e.data) && e.data.lang === o.lang && (!o.featuredOnly || e.data.featured)
+    (e) => isVisible(e) && e.data.lang === o.lang && (!o.featuredOnly || e.data.featured)
   );
   const sorted = sortByPublishDate(entries, o.order);
   return typeof o.limit === 'number' ? sorted.slice(0, o.limit) : sorted;
@@ -87,7 +84,7 @@ export async function listProjects(o: ProjectListOptions): Promise<Project[]> {
 export async function listPosts(o: ListOptions): Promise<PostListItem[]> {
   const entries = await getCollection(
     'posts',
-    (e) => isVisible(e.data) && e.data.lang === o.lang
+    (e) => isVisible(e) && e.data.lang === o.lang
   );
   const sorted = sortByPublishDate(entries, o.order);
   const limited = typeof o.limit === 'number' ? sorted.slice(0, o.limit) : sorted;
@@ -96,24 +93,34 @@ export async function listPosts(o: ListOptions): Promise<PostListItem[]> {
 
 /** No `lang` parameter — the `links` collection is language-agnostic (D5 exception). */
 export async function listLinks(): Promise<Link[]> {
-  const entries = await getCollection('links', (e) => e.data.enabled);
+  const entries = await getCollection('links', (e) => !isFixture(e) && e.data.enabled);
+  return [...entries].sort((a, b) => a.data.order - b.data.order);
+}
+
+export async function listExperience(lang: Locale): Promise<Experience[]> {
+  const entries = await getCollection('experience', (entry) => !isFixture(entry) && entry.data.lang === lang);
   return [...entries].sort((a, b) => a.data.order - b.data.order);
 }
 
 export async function getProject(slug: string, lang: Locale): Promise<Project | undefined> {
   const entry = await getEntry('projects', slug);
-  if (!entry || entry.data.lang !== lang || !isVisible(entry.data)) return undefined;
+  if (!entry || entry.data.lang !== lang || !isVisible(entry)) return undefined;
   return entry;
 }
 
 export async function getPost(slug: string, lang: Locale): Promise<Post | undefined> {
   const entry = await getEntry('posts', slug);
-  if (!entry || entry.data.lang !== lang || !isVisible(entry.data)) return undefined;
+  if (!entry || entry.data.lang !== lang || !isVisible(entry)) return undefined;
   return entry;
 }
 
+/**
+ * Only `case-study` projects get a page. `project` and `experiment` entries
+ * are cards on the Work index that link straight to Live and Code, so a page
+ * for them would be an orphan in the sitemap.
+ */
 export async function projectRoutes(lang: Locale): Promise<EntryRoute<Project>[]> {
-  const entries = await listProjects({ lang });
+  const entries = (await listProjects({ lang })).filter((entry) => entry.data.tier === 'case-study');
   return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 
@@ -149,11 +156,11 @@ export async function getTranslationGroup(
     collection === 'projects'
       ? await getCollection(
           'projects',
-          (e) => isVisible(e.data) && e.data.translationKey === key
+          (e) => isVisible(e) && e.data.translationKey === key
         )
       : await getCollection(
           'posts',
-          (e) => isVisible(e.data) && e.data.translationKey === key
+          (e) => isVisible(e) && e.data.translationKey === key
         );
 
   const seenLang = new Map<Locale, string>();

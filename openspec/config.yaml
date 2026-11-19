@@ -9,6 +9,9 @@ context: |
   Syntax highlighting: Shiki (bundled); Prism forbidden
   Fonts: Astro native Fonts API; no @fontsource or Google Fonts CDN
   Styling: native CSS with design tokens; Tailwind evaluated and rejected
+  Visual design: in progress in Figma (file key gq6glEp9QrPOnEyYG9dldh), recorded in
+    openspec/changes/portfolio-visual-design/. src/styles/tokens.css holds scaffold placeholders,
+    not the brand. No UI code until the owner approves the hi-fi.
   Allowed runtime deps: astro, @astrojs/mdx@8.0.1, @astrojs/sitemap@3.7.4, @astrojs/rss@4.0.19 only
   Allowed devDeps: typescript, @astrojs/check (user-approved 2026-09-18 — `npx astro check`
     refuses to run without both, and TypeScript strict is a hard project requirement, so the

@@ -1,0 +1,31 @@
+---
+/*
+ * The small numbered pin: a 14px outline circle with the note's number. Shared by
+ * Annotation (pin on the element, below 64.0625rem) and AnnotationList (row marker).
+ * Decorative: the number is already conveyed by the list's own ordering.
+ *
+ *   <NumberPin n={2} />
+ */
+interface Props {
+  n: number;
+  class?: string;
+}
+const { n, class: className } = Astro.props;
+---
+
+<span class:list={['number-pin', className]} aria-hidden="true">{n}</span>
+
+<style>
+  .number-pin {
+    box-sizing: border-box;
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--annotation-pin-ring);
+    border-radius: 50%;
+    color: var(--annotation-pin-number);
+    font: 500 9px / 1 var(--font-mono), monospace;
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+/*
+ * Post bottom (board 2303:128): the Contact sky without its content, 420px tall, with the page's
+ * cream fading into it from the article above. The footer follows directly and its hill rises over
+ * this band's bottom edge, so the footer always sits under a sky.
+ */
+import { Image } from 'astro:assets';
+import sky from '../../assets/hero/sky.png';
+---
+<div class="band" aria-hidden="true">
+  <Image class="sky" src={sky} alt="" widths={[768, 1440, 2000]} sizes="100vw" loading="lazy" />
+  <div class="fade"></div>
+</div>
+<style>
+  .band { position: relative; isolation: isolate; overflow: hidden; height: 420px; background: var(--color-light-sun); }
+  /* Mirrored like the Contact sky, so the sun sits on the right. */
+  .sky { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+  .fade { position: absolute; inset: 0 0 auto; height: 220px; background: linear-gradient(to bottom, var(--color-bg), transparent); }
+</style>

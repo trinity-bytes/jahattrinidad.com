@@ -28,8 +28,9 @@ explicit new decision recorded in `openspec/`:
   every schema need in `src/content.config.ts`).
 - Tailwind CSS.
 - `@fontsource/*` or any Google Fonts CDN link.
-- Prism (or any other syntax highlighter) — MDX code fences render as plain
-  `<pre><code>`, unhighlighted, by design.
+- Prism, or any syntax highlighter other than Astro's built-in Shiki. Code
+  fences are highlighted by Shiki with the custom brand theme passed to
+  `markdown.shikiConfig.theme` (visual-design "Code theme").
 - `@astrojs/markdown-remark` as a direct dependency.
 - Any `@astrojs/*-adapter` (Node, Vercel, Cloudflare, etc.) — this project
   is `output: 'static'`, no server runtime.
@@ -79,12 +80,16 @@ or anything from `src/lib/`.
 ## `light-dark()` requires `color-scheme` on `:root`
 
 `src/styles/tokens.css` uses `light-dark()` for every semantic color alias.
-This function only resolves against the light/dark values the browser
-actually offers, which requires `color-scheme: light dark;` to be set on
-`:root`. Deleting that one declaration silently breaks every color token —
-no build error, no lint warning, just colors that stop switching with the
-user's OS/browser preference. If you ever touch `:root` in `tokens.css`,
-confirm that line survives.
+This function only resolves against the `color-scheme` set on the element,
+so deleting that declaration silently breaks every color token — no build
+error, no lint warning, just colors that stop switching.
+
+The lens is the only source of truth for the scheme, not the OS: `:root`
+sets `color-scheme: light` (Outside) and `:root[data-lens="inside"]` sets
+`color-scheme: dark` (Inside). Do not reintroduce `light dark` or a
+`[data-theme]` hook. If you ever touch `:root` in `tokens.css`, confirm both
+declarations survive. (Until task 1.1 of `portfolio-implementation` lands,
+the scaffold `tokens.css` still has `color-scheme: light dark`.)
 
 ## `lang` is a required parameter in `src/lib/content.ts`
 
@@ -129,3 +134,34 @@ Prose inside MDX content entries is exempt: that is content, and the
 
 The historical record is `openspec/changes/archive/2026-09-18-portfolio-scaffold/proposal.md`
 section D1. Read it for the reasoning, not for the status.
+
+## Visual design lives in Figma — `tokens.css` is a placeholder
+
+The visual design is in progress and is recorded in
+`openspec/changes/portfolio-visual-design/`. Read it before any design,
+brand, copy, image or UI task:
+
+- `proposal.md` — decisions with the rejected alternatives, and the open
+  questions. Start here.
+- `design.md` — palette, type, the Outside/Inside model, the hero layer
+  composition, and the Figma node map.
+- `assets.md` — hero image files and the prompts that generated them.
+- `tasks.md` — what is done and what is next.
+
+Three rules follow from it, and they are the ones a session without
+context gets wrong:
+
+**`src/styles/tokens.css` is not the brand.** Its neutral and blue values
+are scaffold placeholders. The brand is a green ramp plus sun yellow, set
+in Epilogue, Hanken Grotesk and IBM Plex Mono. Never derive a color, a
+font or an image prompt from `tokens.css`.
+
+**No UI code until the owner approves the hi-fi.** Design proposals are
+built in the Figma file (`gq6glEp9QrPOnEyYG9dldh`), beside the current
+board, never over it. Do not offer CSS or component code as an
+alternative during the design phase.
+
+**`design/` is ignored by git on purpose.** The hero images live in the
+Figma file; the local copies are the owner's working files and a fresh
+clone does not have them. Do not assume they exist and do not commit
+them; `assets.md` says what they are and how to regenerate them.
