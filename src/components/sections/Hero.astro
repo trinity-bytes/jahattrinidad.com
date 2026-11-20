@@ -105,7 +105,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     leader="max(0px, calc(var(--sun-y) - var(--name-top) + 49px))"
     {...note.sky}
   />
-  <Annotation n={2} x="483px" y="calc(100% - 40px)" side="right" pinX="var(--hill-pin-x)" pinY="var(--hill-pin-y)" {...note.hill} />
+  <Annotation n={2} x="calc(var(--edge) + 419px)" y="calc(100% - 40px)" side="right" pinX="var(--hill-pin-x)" pinY="var(--hill-pin-y)" {...note.hill} />
   <Annotation
     n={3}
     x="var(--name-label-x, calc(var(--edge) + 36px))"
@@ -279,31 +279,35 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
   @media (min-width: 64.0625rem) {
     .hero {
       --font-size-display: 270px;
-      --name-top: 553px;
+      --hero-h: clamp(840px, 100vh, 1250px);
+      --hero-h: clamp(840px, 100svh, 1250px);
+      --name-top: calc(var(--hero-h) - 347px);
       --name-left: calc(var(--edge) - 11px);
       --name-label-x: calc(var(--name-left) + 32px);
       --name-pin-x: calc(var(--name-left) + 32px);
       --name-pin-y: var(--name-top);
       --portrait-w: 543px;
       --portrait-left: calc(100cqw - var(--edge) - 499px);
-      --portrait-top: 85px;
+      /* Bottom-anchored (cropped by the hero bottom), but never above y 85 (the board), so the head
+         stays clear of the nav links on short screens; there the crop just goes deeper. */
+      --portrait-top: max(85px, calc(var(--hero-h) - 815px));
       --portrait-pin-x: var(--portrait-left);
       --portrait-pin-y: calc(var(--portrait-top) + 335px);
-      /* Inside portrait annotation: desktop pin centre at y 420 (as on the board), so its label sits below the intro copy. */
+      /* Pin 335px below the portrait top: y 420 on the 900px board, never higher, so the label stays below the intro copy. */
       --portrait-label-y: calc(var(--portrait-top) + 335px);
-      /* At 1440 the sky is 1993 wide at (-120, -350), with its sun at (479, 529).
-         Keep the sun 415px from the content edge and retain the 79px bottom bleed on narrower screens. */
+      /* Board: sky (-120, -350), 1993 × 1329; sun (479, 529), 371px above the bottom.
+         Grow only to cover the horizontal edges or the top; the board width retains the bottom bleed. */
       --sun-image-x: 0.3005519318;
       --sun-image-y: 0.4410436528;
-      --sky-w: max(1993px, 138.4027778cqw, (var(--edge) + 415px) / var(--sun-image-x));
+      --sky-w: max(1993px, (var(--edge) + 415px) / var(--sun-image-x), (100cqw - var(--edge) - 415px) / (1 - var(--sun-image-x)), (var(--hero-h) - 371px) / var(--sun-image-y));
       --sky-left: calc(var(--edge) + 415px - var(--sky-w) * var(--sun-image-x));
-      --sky-top: min(0px, calc(529px - var(--sky-w) * var(--sun-image-y)));
+      --sky-top: calc(var(--hero-h) - 371px - var(--sky-w) * var(--sun-image-y));
       --hill-w: 123.1944444cqw;
       --hill-left: -2.6388889cqw;
-      --hill-top: calc(752.4330081px - 60.5856256cqw);
+      --hill-top: calc(var(--hero-h) - 147.5669919px - 60.5856256cqw);
       --hill-pin-x: calc(var(--hill-left) + var(--hill-w) * 0.3145434047);
       --hill-pin-y: calc(var(--hill-top) + var(--hill-w) * 0.5400225479);
-      height: 900px;
+      height: var(--hero-h);
     }
     /* The 1774 × 1264 hill starts at (-38, -120); keep its 69% ridge at the same height. */
     .hill { width: var(--hill-w); left: var(--hill-left); top: var(--hill-top); }
