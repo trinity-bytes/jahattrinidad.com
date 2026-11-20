@@ -97,31 +97,35 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     <span class="hint" data-show="inside">{insideStrings.hint}<span aria-hidden="true"> ↑</span></span>
   </p>
 
-  <Annotation
-    n={1}
-    x="var(--sun-x)"
-    y="var(--sun-y)"
-    side="above"
-    leader="max(0px, calc(var(--sun-y) - var(--name-top) + 49px))"
-    {...note.sky}
-  />
+  <div class="follow" data-follow="sky">
+    <Annotation
+      n={1}
+      x="var(--sun-x)"
+      y="var(--sun-y)"
+      side="above"
+      leader="max(0px, calc(var(--sun-y) - var(--name-top) + 49px))"
+      {...note.sky}
+    />
+  </div>
   <Annotation n={2} x="calc(var(--edge) + 419px)" y="calc(100% - 40px)" side="right" pinX="var(--hill-pin-x)" pinY="var(--hill-pin-y)" {...note.hill} />
-  <Annotation
-    n={3}
-    x="var(--name-label-x, calc(var(--edge) + 36px))"
-    y="var(--name-top)"
-    side="above"
-    leader={49}
-    pinX="var(--name-pin-x, var(--edge))"
-    pinY="var(--name-pin-y, calc(var(--name-top) + var(--font-size-display) * 0.276))"
-    bound={{
-      x: 'var(--name-left, var(--edge))',
-      y: 'var(--name-top)',
-      width: 'calc(var(--font-size-display) * 2.69)',
-      height: 'calc(var(--font-size-display) * 0.92)',
-    }}
-    {...note.name}
-  />
+  <div class="follow" data-follow="name">
+    <Annotation
+      n={3}
+      x="var(--name-label-x, calc(var(--edge) + 36px))"
+      y="var(--name-top)"
+      side="above"
+      leader={49}
+      pinX="var(--name-pin-x, var(--edge))"
+      pinY="var(--name-pin-y, calc(var(--name-top) + var(--font-size-display) * 0.276))"
+      bound={{
+        x: 'var(--name-left, var(--edge))',
+        y: 'var(--name-top)',
+        width: 'calc(var(--font-size-display) * 2.69)',
+        height: 'calc(var(--font-size-display) * 0.92)',
+      }}
+      {...note.name}
+    />
+  </div>
   <Annotation
     n={4}
     x="var(--portrait-left)"
@@ -319,6 +323,10 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
 
   @media (forced-colors: active) { .cta { border: 1px solid ButtonText; } }
 
+  /* Inside annotations that ride with a parallax layer: a transparent box the size of the hero, so the
+     annotation inside keeps its hero coordinates (and the hero stays its container for cqw). */
+  .follow { position: absolute; inset: 0; pointer-events: none; }
+
   /* Load choreography: starting states while html[data-hero-intro] is set (see the inline script).
      The hero is clipped to nothing (the page surface shows, never the hero's own fill) until the sun circle opens it. */
   :global(html[data-hero-intro]) .hero { clip-path: circle(0px at 50% 60%); }
@@ -360,6 +368,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     const q = (selector: string) => Array.from(hero.querySelectorAll<HTMLElement>(selector));
     const sky = q('.sky');
     const sunMask = q('.sun-mask');
+    const followSky = q('[data-follow="sky"]');
+    const followName = q('[data-follow="name"]');
     const names = q('.name');
     const portrait = q('.portrait');
     const intro = q('.intro > *');
@@ -466,8 +476,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
         scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.4, invalidateOnRefresh: true },
       });
       parallax
-        .to([...sky, ...sunMask], { y: () => hero.offsetHeight * 0.35 }, 0)
-        .to(names, { y: () => hero.offsetHeight * 0.18 }, 0);
+        .to([...sky, ...sunMask, ...followSky], { y: () => hero.offsetHeight * 0.35 }, 0)
+        .to([...names, ...followName], { y: () => hero.offsetHeight * 0.18 }, 0);
 
       return () => delete root.dataset.heroIntro;
     });
