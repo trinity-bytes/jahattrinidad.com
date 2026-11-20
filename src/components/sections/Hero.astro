@@ -318,4 +318,88 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
   }
 
   @media (forced-colors: active) { .cta { border: 1px solid ButtonText; } }
+
+  /* Load choreography: starting states while html[data-hero-intro] is set (see the inline script). */
+  :global(html[data-hero-intro]) .sky { transform: scale(1.06); }
+  :global(html[data-hero-intro]) .name { transform: translateY(55%); }
+  :global(html[data-hero-intro]) .portrait,
+  :global(html[data-hero-intro]) .intro > *,
+  :global(html[data-hero-intro]) .footnote { opacity: 0; }
+  :global(html[data-hero-intro] [data-nav]) { opacity: 0; }
 </style>
+
+<script is:inline>
+  // Mark the page before first paint so the load choreography starts from its first frame, not after a flash.
+  // Only at the top of a fresh load, with motion allowed; a safety timeout releases everything if the script below never runs.
+  if (window.scrollY === 0 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.dataset.heroIntro = '';
+    setTimeout(() => delete document.documentElement.dataset.heroIntro, 2500);
+  }
+</script>
+
+<script>
+  /*
+   * Hero motion (GSAP):
+   *   Load: the sky settles, "Jahat" rises from behind the hill (it is painted under the near hill),
+   *         then the portrait, the intro lines (staggered), the footnote and the nav.
+   *   Scroll: depth by lag. Far layers fall behind the page as the hero leaves (sky most, name less);
+   *         the hill and the portrait move with the page, since the portrait is cropped by the hero's
+   *         bottom and must never rise past it. The sun sinks as you scroll down.
+   * Reduced motion: neither runs. Only transform and opacity are animated.
+   */
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const root = document.documentElement;
+  const hero = document.querySelector<HTMLElement>('#hero:not([data-lens-preview] *)');
+
+  if (hero) {
+    const q = (selector: string) => Array.from(hero.querySelectorAll<HTMLElement>(selector));
+    const sky = q('.sky');
+    const sunMask = q('.sun-mask');
+    const names = q('.name');
+    const portrait = q('.portrait');
+    const intro = q('.intro > *');
+    const footnote = q('.footnote');
+    const nav = document.querySelector<HTMLElement>('[data-nav]');
+    const media = gsap.matchMedia();
+
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      if ('heroIntro' in root.dataset) {
+        const ease = 'expo.out';
+        const intro_ = gsap.timeline({
+          defaults: { ease },
+          onComplete: () => {
+            delete root.dataset.heroIntro;
+            // Opacity only: the transforms are at rest now and the parallax keeps writing y on the same layers.
+            gsap.set([...portrait, ...intro, ...footnote, nav], { clearProps: 'opacity' });
+          },
+        });
+        intro_
+          .fromTo(sky, { scale: 1.06 }, { scale: 1, duration: 1.8, ease: 'power2.out' }, 0)
+          // y: 0 explicitly: GSAP would otherwise read the CSS starting translateY(55%) as a px y and keep it.
+          .fromTo(names, { y: 0, yPercent: 55 }, { y: 0, yPercent: 0, duration: 1.2 }, 0.15)
+          .fromTo(portrait, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.9 }, 0.35)
+          .fromTo(intro, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.07 }, 0.45)
+          .fromTo(footnote, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.9);
+        if (nav) intro_.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.8);
+      }
+
+      // Scroll parallax, scrubbed over the hero's exit. Values are fractions of the hero's height.
+      const parallax = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.4, invalidateOnRefresh: true },
+      });
+      parallax
+        .to([...sky, ...sunMask], { y: () => hero.offsetHeight * 0.35 }, 0)
+        .to(names, { y: () => hero.offsetHeight * 0.18 }, 0);
+
+      return () => delete root.dataset.heroIntro;
+    });
+
+    // The lens and the hero's viewport-based height move the trigger; keep it current.
+    new MutationObserver(() => ScrollTrigger.refresh()).observe(root, { attributes: true, attributeFilter: ['data-lens'] });
+  }
+</script>
