@@ -27,23 +27,24 @@ const profileIcons = {
 ---
 <div class="nav-sentinel" data-nav-sentinel aria-hidden="true"></div>
 {isHome && <script is:inline>if ('IntersectionObserver' in window && window.scrollY === 0) document.documentElement.dataset.navLogoInitial = 'hidden';</script>}
-<header class="site-nav" data-nav data-state="scrolled">
+<header class="site-nav" data-nav data-state="scrolled" data-scroll-spy={isHome ? '' : undefined}>
   <nav aria-label={strings.navigation} class="nav-inner">
     <a class="brand" href={home}><span class="brand-outside">{strings.brand}</span><span class="brand-inside">{strings.brandInside}</span></a>
     <div class="desktop-links">
+      <span class="pill" data-nav-pill aria-hidden="true"></span>
       {links.map((link) => <a href={link.href} data-section-link={link.id} aria-current={link.route && pathname.startsWith(link.route) ? 'page' : undefined}>{link.label}</a>)}
       {languages.length > 1 && <div class="lang-switch" role="group" aria-label={strings.language}>
         {languages.map((language, index) => <>{index > 0 && <span class="lang-sep" aria-hidden="true">/</span>}<a href={language.href} hreflang={language.hrefLang} lang={language.lang} aria-label={language.name} aria-current={language.current ? 'true' : undefined}>{language.code}</a></>)}
       </div>}
     </div>
-    <a class="contact" href={contact} data-section-link="contact">{strings.contact}</a>
+    <a class="contact" data-magnetic href={contact} data-section-link="contact">{strings.contact}</a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-navigation" aria-label={strings.openMenu} data-open-label={strings.openMenu} data-close-label={strings.closeMenu}>
       <span class="menu-icon"><Icon name="menu" size={20} /></span><span class="close-icon"><Icon name="x" size={20} /></span>
     </button>
   </nav>
   <div id="mobile-navigation" class="mobile-menu" hidden>
     <div class="scrim" data-menu-scrim></div>
-    <div class="sheet">
+    <div class="sheet" data-lenis-prevent>
       <ul class="sheet-links">
         {links.map((link, index) => (
           <li><a href={link.href} data-section-link={link.id} aria-current={link.route && pathname.startsWith(link.route) ? 'page' : undefined}><span class="index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><span class="label">{link.label}</span></a></li>
@@ -65,6 +66,8 @@ const profileIcons = {
   </div>
 </header>
 <script>
+  import { glowCoverTop, GLOW_COVER_CHANGE } from './glow/cover';
+
   const nav = document.querySelector<HTMLElement>('[data-nav]');
   if (nav) {
     const sentinel = document.querySelector<HTMLElement>('[data-nav-sentinel]');
@@ -73,12 +76,26 @@ const profileIcons = {
       if (sentinel) new IntersectionObserver(([entry]) => {
         nav.dataset.state = entry.intersectionRatio === 1 ? 'top' : 'scrolled';
       }, { threshold: 1 }).observe(sentinel);
-      if (heroName) {
-        if (document.documentElement.dataset.navLogoInitial === 'hidden') nav.dataset.logo = 'hidden';
-        new IntersectionObserver(([entry]) => {
-          nav.dataset.logo = entry.isIntersecting ? 'hidden' : 'visible';
-        }).observe(heroName);
-      }
+    }
+    if (heroName) {
+      // The brand shows once the hero's name has left sight: less than a quarter of it is still seen between
+      // the bottom of the bar and whatever covers it from below (the viewport's bottom, or the rising glow,
+      // which covers the name while it is still on screen).
+      if (document.documentElement.dataset.navLogoInitial === 'hidden') nav.dataset.logo = 'hidden';
+      let frame = 0;
+      const update = () => {
+        frame = 0;
+        const box = heroName.getBoundingClientRect();
+        const nearest = Math.min(Math.max(innerWidth / 2, box.left), box.right);
+        const top = Math.max(box.top, nav.offsetHeight);
+        const bottom = Math.min(box.bottom, innerHeight, glowCoverTop(nearest) ?? Infinity);
+        nav.dataset.logo = bottom - top > box.height * 0.25 ? 'hidden' : 'visible';
+      };
+      const schedule = () => { frame ||= requestAnimationFrame(update); };
+      window.addEventListener('scroll', schedule, { passive: true });
+      window.addEventListener('resize', schedule);
+      window.addEventListener(GLOW_COVER_CHANGE, schedule);
+      update();
     }
     delete document.documentElement.dataset.navLogoInitial;
     const button = nav.querySelector<HTMLButtonElement>('.menu-toggle');
@@ -121,18 +138,59 @@ const profileIcons = {
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     });
-    const sections = Array.from(document.querySelectorAll<HTMLElement>('#work, #experience, #notes, #contact'));
-    if (sections.length && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          nav.querySelectorAll<HTMLAnchorElement>('[data-section-link]').forEach((link) => {
-            if (link.dataset.sectionLink === entry.target.id) link.setAttribute('aria-current', 'true');
-            else link.removeAttribute('aria-current');
-          });
-        }
-      }, { rootMargin: '-20% 0px -70% 0px' });
-      sections.forEach((section) => observer.observe(section));
+    // The pill behind the current desktop link: it slides between links and fades out when none is current
+    // (the hero, an unlisted section, Contact, which is its own button).
+    const pill = nav.querySelector<HTMLElement>('[data-nav-pill]');
+    const placePill = () => {
+      if (!pill) return;
+      const link = nav.querySelector<HTMLElement>('.desktop-links > a[aria-current]');
+      if (!link) {
+        pill.dataset.visible = 'false';
+        return;
+      }
+      // From hidden it appears in place (no slide in from the last link), then fades in.
+      if (pill.dataset.visible !== 'true') pill.dataset.jump = '';
+      pill.style.setProperty('--x', `${link.offsetLeft}px`);
+      pill.style.setProperty('--w', `${link.offsetWidth}px`);
+      void pill.offsetWidth;
+      delete pill.dataset.jump;
+      pill.dataset.visible = 'true';
+    };
+    placePill();
+    document.fonts?.ready.then(placePill);
+    window.addEventListener('resize', placePill);
+
+    // Only Home's links point at sections on the page; elsewhere a link is current by its route (aria-current="page"),
+    // even when that page reuses a section id (the Notes index has #notes and #contact).
+    const sections = 'scrollSpy' in nav.dataset
+      ? Array.from(document.querySelectorAll<HTMLElement>('#work, #experience, #notes, #contact'))
+      : [];
+    if (sections.length) {
+      // The current section is the one crossing a line 30% down the viewport; in the hero or in a section
+      // the nav does not list, none is. Recomputed on every scroll frame, so it clears as well as sets.
+      const sectionLinks = Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-section-link]'));
+      let current: string | null | undefined;
+      let frame = 0;
+      const update = () => {
+        frame = 0;
+        const line = innerHeight * 0.3;
+        const crossing = sections.find((section) => {
+          const box = section.getBoundingClientRect();
+          return box.top <= line && box.bottom > line;
+        });
+        const id = crossing?.id ?? null;
+        if (id === current) return;
+        current = id;
+        sectionLinks.forEach((link) => {
+          if (link.dataset.sectionLink === id) link.setAttribute('aria-current', 'true');
+          else link.removeAttribute('aria-current');
+        });
+        placePill();
+      };
+      const schedule = () => { frame ||= requestAnimationFrame(update); };
+      window.addEventListener('scroll', schedule, { passive: true });
+      window.addEventListener('resize', schedule);
+      update();
     }
   }
 </script>
@@ -141,13 +199,15 @@ const profileIcons = {
   .site-nav { position: sticky; top: 0; z-index: 50; color: var(--color-heading); }
   :global(body:has([data-hero], #hero)) .site-nav { margin-bottom: -69px; }
   .site-nav::before { content: ''; position: absolute; inset: 0; background: var(--color-bg); border-bottom: 1px solid var(--color-border); opacity: 1; transition: opacity 240ms cubic-bezier(0.23, 1, 0.32, 1); pointer-events: none; }
-  .site-nav[data-state='top']::before { opacity: 0; }
+  /* Back to floating (the top of the page) is slower and softer than docking: the bar fades and the row
+     settles down over ~0.5s, where docking stays quick so the bar is there as soon as content scrolls under it. */
+  .site-nav[data-state='top']::before { opacity: 0; transition: opacity 480ms cubic-bezier(0.25, 1, 0.5, 1); }
   @supports (backdrop-filter: blur(20px)) {
     .site-nav::before { background: light-dark(color-mix(in srgb, var(--color-bg) 82%, transparent), color-mix(in srgb, var(--color-bg) 78%, transparent)); backdrop-filter: blur(20px); }
   }
   @media (prefers-reduced-transparency: reduce) { .site-nav::before { background: var(--color-bg); backdrop-filter: none; } }
   .nav-inner { box-sizing: border-box; max-width: calc(var(--content-max) + 2 * var(--gutter-desktop)); margin-inline: auto; min-height: 69px; padding: var(--space-sm) var(--gutter-desktop); display: flex; align-items: center; gap: 2rem; transition: transform 240ms cubic-bezier(0.23, 1, 0.32, 1); }
-  .site-nav[data-state='top'] .nav-inner { transform: translateY(25.5px); }
+  .site-nav[data-state='top'] .nav-inner { transform: translateY(25.5px); transition: transform 560ms cubic-bezier(0.25, 1, 0.5, 1); }
   a { color: inherit; text-decoration: none; }
   .brand { font-family: var(--font-display), sans-serif; font-size: 1.375rem; font-weight: 600; letter-spacing: -0.02em; margin-right: auto; white-space: nowrap; }
   .brand { opacity: 1; transform: translateY(0); visibility: visible; transition: opacity 240ms cubic-bezier(0.23, 1, 0.32, 1), transform 240ms cubic-bezier(0.23, 1, 0.32, 1), visibility 0s; }
@@ -162,9 +222,26 @@ const profileIcons = {
   .lang-switch a { padding-block: 4px; }
   .lang-switch a:hover { color: var(--color-heading); }
   .lang-switch [aria-current] { color: var(--color-heading); font-weight: 500; text-decoration: underline; text-underline-position: from-font; }
-  .lang-switch [aria-current]::before { content: none; }
   .desktop-links a, .mobile-links a { position: relative; font-size: 1rem; font-weight: 500; }
-  [aria-current]::before { content: ''; position: absolute; left: -14px; top: 50%; width: 7px; height: 7px; border-radius: 50%; background: var(--color-signal); border: 1px solid var(--color-heading); transform: translateY(-50%); }
+  /* Current section: a soft pill (the tint of the mobile menu's current language) slides behind the link. */
+  .desktop-links { position: relative; }
+  .desktop-links > a { z-index: 1; }
+  .pill {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 2.25rem;
+    width: calc(var(--w, 0px) + 1.75rem);
+    border-radius: 999px;
+    background: light-dark(color-mix(in srgb, var(--color-heading) 8%, transparent), color-mix(in srgb, var(--color-heading) 12%, transparent));
+    transform: translate(calc(var(--x, 0px) - 0.875rem), -50%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 420ms cubic-bezier(0.23, 1, 0.32, 1), width 420ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms ease;
+  }
+  .pill[data-visible='true'] { opacity: 1; }
+  .pill[data-jump] { transition: opacity 200ms ease; }
+  @media (prefers-reduced-motion: reduce) { .pill { transition: opacity 120ms ease; } }
   .contact { border-radius: 999px; background: var(--color-accent); color: var(--color-accent-text); padding: var(--space-sm) var(--space-lg); font-size: 1rem; font-weight: 500; }
   .menu-toggle { display: none; width: 44px; height: 44px; padding: 0; align-items: center; justify-content: center; border: 1px solid color-mix(in srgb, var(--color-heading) 35%, transparent); border-radius: 50%; color: inherit; background: transparent; cursor: pointer; }
   .close-icon, [aria-expanded='true'] .menu-icon { display: none; }
@@ -182,7 +259,6 @@ const profileIcons = {
   .sheet-links { border-top: 1px solid var(--color-border); }
   .sheet-links li { border-bottom: 1px solid var(--color-border); }
   .sheet-links a { display: flex; align-items: center; gap: var(--space-md); padding-block: 14px; }
-  .sheet-links a::before { content: none; }
   .index { font-family: var(--font-mono), monospace; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.04em; color: var(--color-text-muted); }
   .label { font-family: var(--font-display), sans-serif; font-size: 2.5rem; line-height: 2.75rem; font-weight: 600; letter-spacing: -0.02em; }
   .sheet-links a[aria-current] .index { color: var(--color-heading); }
@@ -191,7 +267,6 @@ const profileIcons = {
   .sheet-languages { display: flex; height: 44px; margin-top: 40px; border: 1px solid color-mix(in srgb, var(--color-heading) 35%, transparent); border-radius: 999px; }
   .sheet-languages a { position: relative; display: flex; flex: 1; align-items: center; justify-content: center; min-width: 0; min-height: 44px; margin-block: -1px; border-radius: 999px; font-family: var(--font-sans), sans-serif; font-size: 0.9375rem; font-weight: 500; color: color-mix(in srgb, var(--color-heading) 70%, transparent); }
   .sheet-languages a[aria-current] { color: var(--color-heading); background: light-dark(color-mix(in srgb, var(--color-heading) 8%, transparent), color-mix(in srgb, var(--color-heading) 12%, transparent)); }
-  .sheet-languages a[aria-current]::before { content: none; }
   .sheet-footer { display: flex; flex-direction: column; gap: 20px; margin-top: 56px; }
   .profiles { display: flex; flex-wrap: wrap; gap: 12px; }
   .profiles a { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid color-mix(in srgb, var(--color-heading) 35%, transparent); border-radius: 50%; }
@@ -199,7 +274,8 @@ const profileIcons = {
   @keyframes menu-sheet { from { opacity: 0; transform: translateY(-16px); } }
   @media (prefers-reduced-motion: reduce) {
     .sheet { animation-name: menu-fade; }
-    .site-nav::before { transition: opacity 80ms; }
+    .site-nav::before, .site-nav[data-state='top']::before { transition: opacity 80ms; }
+    .site-nav[data-state='top'] .nav-inner { transition: none; }
     .brand { transition: opacity 80ms, visibility 0s; }
     .site-nav[data-logo='hidden']:not([data-menu='open']) .brand { transform: none; transition: opacity 80ms, visibility 0s 80ms; }
     .nav-inner { transition: none; }

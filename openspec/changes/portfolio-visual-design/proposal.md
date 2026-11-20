@@ -226,7 +226,7 @@ Nothing in `src/` changes, so there is nothing to roll back in code. In Figma, e
 4. ~~**Opacity.** Palette v1 says "no opacity fades". The Inside hero uses a `#0A200B` overlay at 0.8 and an exposure filter on the hill. Keep the rule and bake dark image variants, or relax the rule for image dimming? (The footer now uses a fade, D17, and the backgrounds use translucent light layers, D20.)~~ Resolved 2026-11-17: relaxed for image dimming (task 3.13).
 5. ~~Toggle placement.~~ Resolved 2026-11-16: the lens, D11.
 6. ~~**Sun yellow.** The owner showed slight doubt about yellow on 2026-11-09 ("maybe no es tan mi estilo"). Re-check now that it is on real pages.~~ Resolved 2026-11-17: accepted (task 1.5).
-7. **Parallax amounts.** Inside labels say "moves slowest / moves fastest". No values are specified.
+7. ~~**Parallax amounts.** Inside labels say "moves slowest / moves fastest". No values are specified.~~ Resolved 2026-11-20 on the running site: sky and sun lag 35 % of the hero height, the name 18 %, the near hill and the portrait move with the page (the portrait is cropped by the hero bottom, so depth comes from lagging the far layers, not from speeding up the near ones). Values in portfolio-implementation design.md §7.
 8. ~~Where do the image assets live?~~ Resolved 2026-11-16: untracked, Figma holds them. See D8.
 9. **Placeholders still in the design:** `[N]` project count, the email address, post titles, Elsewhere rows, Viora "My part", Mink'a problem and code part. (Value 02 proof resolved by D12; city resolved by D16.)
 10. ~~Hero "Look inside" button.~~ Resolved 2026-11-16: it does not come back (task 3.25).

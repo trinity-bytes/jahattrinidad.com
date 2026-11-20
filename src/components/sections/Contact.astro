@@ -129,6 +129,21 @@ const facts = [
     top: calc(var(--sun-y) - var(--sky-w) * 0.4394);
     transform: none;
   }
+  /* Outside: the copy's lower rows (hint, "Or", links) sit over the mid-tone hills. A haze of the pale sun
+     lifts the sky behind the content column only, fading out to the right so the landscape stays. */
+  .contact::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(ellipse 48% 34% at 18% 64%, color-mix(in srgb, var(--sun-soft) 82%, transparent) 0 45%, transparent 100%);
+  }
+  /* Phones: the content column is the whole width, so the haze is too. */
+  @media (max-width: 47.99rem) {
+    .contact::after { background: radial-gradient(ellipse 95% 34% at 35% 64%, color-mix(in srgb, var(--sun-soft) 82%, transparent) 0 45%, transparent 100%); }
+  }
+  :global([data-lens='inside']) .contact::after { content: none; }
   .dusk { position: absolute; inset: 0; z-index: -2; background: var(--color-dusk); pointer-events: none; }
   .sun-mask { position: absolute; z-index: -1; left: calc(var(--sun-x) - var(--sun-size) / 2); top: calc(var(--sun-y) - var(--sun-size) / 2); width: var(--sun-size); height: var(--sun-size); border-radius: 50%; background: var(--dusk-sun); filter: blur(calc(var(--sun-size) / 4)); pointer-events: none; }
   .content > :global(.notes) { padding-inline: 0; }

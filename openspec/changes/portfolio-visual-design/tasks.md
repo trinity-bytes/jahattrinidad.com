@@ -96,10 +96,10 @@ Unblocked: Home v3.5 approved at desktop, tablet and mobile (2026-11-16). The ow
 
 ## Phase 6 — Hi-fi
 
-- [ ] 6.1 (moved to implementation, 2026-11-17: motion is tuned in the browser, not in Figma) Motion and depth: parallax amounts per hero layer (Open Question 7)
-- [ ] 6.2 (moved to implementation with 6.1) The "Look inside" interaction: trigger, scope (element or page), transition. Designed as the lens (D11); motion values still open.
+- [x] 6.1 (moved to implementation, 2026-11-17: motion is tuned in the browser, not in Figma) Motion and depth: parallax amounts per hero layer (Open Question 7)
+- [x] 6.2 (moved to implementation with 6.1) The "Look inside" interaction: trigger, scope (element or page), transition. Designed as the lens (D11). Closed 2026-11-20 by implementation 9.4: values in portfolio-implementation design.md §7.
 - [x] 6.3 Prototype: dropped 2026-11-17, a Figma prototype cannot simulate dragging the lens; the dev site is the prototype
-- [ ] 6.4 Owner approves the hi-fi. 2026-11-17: the owner moved to implementation; remaining Figma work is only 4.5 (mobile menu open) and 7.10 (`/links/`), and motion is approved on the running site
+- [x] 6.4 Owner approves the hi-fi. 2026-11-17: the owner moved to implementation; remaining Figma work is only 4.5 (mobile menu open) and 7.10 (`/links/`), and motion is approved on the running site. Closed 2026-11-20: the mobile menu v2 was approved on the board and the motion on the running site (implementation 9.4)
 
 ## Phase 7 — Hand-off to implementation
 
