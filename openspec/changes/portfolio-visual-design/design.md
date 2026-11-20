@@ -155,6 +155,7 @@ Paint order, back to front. Positions are the owner's composition and are the re
 | 5 | Nav, intro, marker, hint | — | Intro block at 64, 180, 660 wide. |
 
 Rules:
+- On the site the hero is `clamp(840px, 100svh, 1250px)` tall: the ground layers (sky, name, near hill, portrait) are anchored to its bottom and the intro to its top, so extra height opens between the CTA and the name; the portrait never rises above y 85 (its head would cover the nav links on short screens). Outside has no marker / hint line any more (owner removed it on the board, 2026-11-20); Inside keeps "01 — INSIDE · press Esc or I to go back outside".
 - Sun on the left of the subject. Do not mirror any layer (proposal D4).
 - The sky layer must have content behind the near hill, so moving the hill never reveals a hole.
 - The hill image is wider than the frame so it can travel horizontally.

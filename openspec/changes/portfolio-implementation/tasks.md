@@ -75,10 +75,10 @@
 
 ## Phase 9 — Motion
 
-- [ ] 9.1 Hero parallax per layer, tuned in the browser: sky slowest, near hill fastest (owner confirmed 2026-11-18; the Inside annotations "moves slowest" / "moves fastest" describe it)
-- [ ] 9.2 Lens switch transition and nav state transitions
-- [ ] 9.3 Reduced-motion pass over everything in this phase
-- [ ] 9.4 Owner approves the motion on the running site (closes visual-design 6.1, 6.2, 6.4)
+- [x] 9.1 Hero parallax per layer, tuned in the browser: sky slowest, near hill fastest (owner confirmed 2026-11-18; the Inside annotations "moves slowest" / "moves fastest" describe it). Done 2026-11-20 (`4cec7ee`, `80c03c4`): sky 35 %, name 18 %, hill and portrait with the page; Inside annotations follow. Plus the hero load "sun reveal" (`bbeda8e`, `76fe180`, `60b44d2`). Values in design.md §7
+- [x] 9.2 Lens switch transition and nav state transitions. Done: nav glass from first scroll, Home logo after the name, smooth state transitions (`e2561ff`); circular lens reveal from the gesture's origin and the idle shake (`a1893d8`, `821d4aa`, `6d6669b`). Section glow transitions hero → What you get and Notes → Contact (`74333fb` … `7bddefb`). Values in design.md §7
+- [ ] 9.3 Reduced-motion pass over everything in this phase. Every piece is gated in code (`gsap.matchMedia`, CSS media queries, an early check in the hero's inline script); a browser walk-through with reduced motion emulated is still pending
+- [x] 9.4 Owner approves the motion on the running site (closes visual-design 6.1, 6.2, 6.4). Approved piece by piece 2026-11-19/20 ("va. queda", "me encanta", "genial", "ya está funcionando con normalidad"); shipped in v1.2.0 (`479e169`)
 
 ## Phase 10 — Launch
 
