@@ -74,12 +74,12 @@ const { direction } = Astro.props;
         gsap.fromTo(shape,
           rise ? { yPercent: 0, scaleX: 1 } : { yPercent: -90, scaleX: 2.4 },
           {
-            ...(rise ? { yPercent: -60, scaleX: 2.2 } : { yPercent: -150, scaleX: 1.1 }),
+            ...(rise ? { yPercent: -55, scaleX: 2.2 } : { yPercent: -150, scaleX: 1.1 }),
             ease: 'none',
             scrollTrigger: {
               trigger: section,
-              start: rise ? 'top 85%' : 'top 100%',
-              end: rise ? 'top 35%' : 'top 50%',
+              start: 'top 100%',
+              end: rise ? 'top 30%' : 'top 50%',
               scrub: 0.3,
             },
           });
@@ -131,6 +131,8 @@ const { direction } = Astro.props;
     bottom: calc(100% - 200px);
     mask-image: linear-gradient(to bottom, #000 calc(100% - 200px), transparent);
   }
+  /* Rise starts with the rim on the seam itself, so the first pixel of scroll already moves light over the hero's edge. */
+  .glow-transition[data-glow-transition='rise'] .glow-shape { top: calc(100% - 200px); }
   .glow-transition[data-glow-transition='descend'] { top: 0; --body: var(--color-surface); }
   .glow-shape {
     position: absolute;
