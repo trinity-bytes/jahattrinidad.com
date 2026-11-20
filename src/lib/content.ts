@@ -8,7 +8,7 @@ import { getCollection, getEntry, render, type CollectionEntry } from 'astro:con
 import { entryPath } from './paths';
 export { collectionPath, entryPath, ogImagePath } from './paths';
 
-export type Locale = 'en' | 'es';
+export type Locale = 'en' | 'es' | 'pt';
 
 export type Project = CollectionEntry<'projects'>;
 export type Post = CollectionEntry<'posts'>;
@@ -102,14 +102,27 @@ export async function listExperience(lang: Locale): Promise<Experience[]> {
   return [...entries].sort((a, b) => a.data.order - b.data.order);
 }
 
+// ── Locale folders ──
+// English entries sit at the collection root; every other locale lives in a
+// folder named after it (`projects/es/viora.mdx`), so its id is `es/viora`.
+// Routes and translation links use the slug without that folder.
+const DEFAULT_LOCALE: Locale = 'en';
+const entryId = (lang: Locale, slug: string) => (lang === DEFAULT_LOCALE ? slug : `${lang}/${slug}`);
+
+/** URL slug of an entry: its id without the locale folder. */
+export function entrySlug(entry: { id: string; data: { lang: Locale } }): string {
+  const folder = `${entry.data.lang}/`;
+  return entry.data.lang !== DEFAULT_LOCALE && entry.id.startsWith(folder) ? entry.id.slice(folder.length) : entry.id;
+}
+
 export async function getProject(slug: string, lang: Locale): Promise<Project | undefined> {
-  const entry = await getEntry('projects', slug);
+  const entry = await getEntry('projects', entryId(lang, slug));
   if (!entry || entry.data.lang !== lang || !isVisible(entry)) return undefined;
   return entry;
 }
 
 export async function getPost(slug: string, lang: Locale): Promise<Post | undefined> {
-  const entry = await getEntry('posts', slug);
+  const entry = await getEntry('posts', entryId(lang, slug));
   if (!entry || entry.data.lang !== lang || !isVisible(entry)) return undefined;
   return entry;
 }
@@ -121,12 +134,12 @@ export async function getPost(slug: string, lang: Locale): Promise<Post | undefi
  */
 export async function projectRoutes(lang: Locale): Promise<EntryRoute<Project>[]> {
   const entries = (await listProjects({ lang })).filter((entry) => entry.data.tier === 'case-study');
-  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  return entries.map((entry) => ({ params: { slug: entrySlug(entry) }, props: { entry } }));
 }
 
 export async function postRoutes(lang: Locale): Promise<EntryRoute<Post>[]> {
   const items = await listPosts({ lang });
-  return items.map(({ entry }) => ({ params: { slug: entry.id }, props: { entry } }));
+  return items.map(({ entry }) => ({ params: { slug: entrySlug(entry) }, props: { entry } }));
 }
 
 /**
@@ -150,7 +163,7 @@ export async function getTranslationGroup(
     path: entryPath(collection, lang, slug),
   });
 
-  if (!key) return [toLink(entry.data.lang, entry.id)];
+  if (!key) return [toLink(entry.data.lang, entrySlug(entry))];
 
   const members =
     collection === 'projects'
@@ -175,7 +188,7 @@ export async function getTranslationGroup(
     seenLang.set(member.data.lang, member.id);
   }
 
-  return members.map((m) => toLink(m.data.lang, m.id));
+  return members.map((m) => toLink(m.data.lang, entrySlug(m)));
 }
 
 const WORDS_PER_MINUTE = 200;

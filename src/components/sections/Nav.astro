@@ -8,8 +8,10 @@ interface Props {
   notesPath: string;
   strings: Dictionary['nav'];
   profileLinks?: { label: string; href: string }[];
+  /** EN / ES / PT switch (Nav set `2185:122`), in switch order. */
+  languages?: { lang: string; hrefLang: string; code: string; name: string; href: string; current: boolean }[];
 }
-const { home, workPath, notesPath, strings, profileLinks = [] } = Astro.props;
+const { home, workPath, notesPath, strings, profileLinks = [], languages = [] } = Astro.props;
 const links = [
   { label: strings.work, href: `${home}#work`, id: 'work', route: workPath },
   { label: strings.experience, href: `${home}#experience`, id: 'experience' },
@@ -23,6 +25,9 @@ const pathname = Astro.url.pathname;
     <a class="brand" href={home}><span class="brand-outside">{strings.brand}</span><span class="brand-inside">{strings.brandInside}</span></a>
     <div class="desktop-links">
       {links.map((link) => <a href={link.href} data-section-link={link.id} aria-current={link.route && pathname.startsWith(link.route) ? 'page' : undefined}>{link.label}</a>)}
+      {languages.length > 1 && <div class="lang-switch" role="group" aria-label={strings.language}>
+        {languages.map((language, index) => <>{index > 0 && <span class="lang-sep" aria-hidden="true">/</span>}<a href={language.href} hreflang={language.hrefLang} lang={language.lang} aria-label={language.name} aria-current={language.current ? 'true' : undefined}>{language.code}</a></>)}
+      </div>}
     </div>
     <a class="contact" href={contact} data-section-link="contact">{strings.contact}</a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-navigation" aria-label={strings.openMenu} data-open-label={strings.openMenu} data-close-label={strings.closeMenu}>
@@ -46,6 +51,10 @@ const pathname = Astro.url.pathname;
           </ul>
         </div>
       )}
+      {/* Under Elsewhere, per visual-design design.md (mobile menu, "returns when Spanish ships"). */}
+      {languages.length > 1 && <div class="lang-switch" role="group" aria-label={strings.language}>
+          {languages.map((language, index) => <>{index > 0 && <span class="lang-sep" aria-hidden="true">/</span>}<a href={language.href} hreflang={language.hrefLang} lang={language.lang} aria-label={language.name} aria-current={language.current ? 'true' : undefined}>{language.code}</a></>)}
+        </div>}
     </div>
   </div>
 </header>
@@ -128,6 +137,13 @@ const pathname = Astro.url.pathname;
   :global([data-lens='inside']) .brand-outside { display: none; }
   :global([data-lens='inside']) .brand-inside { display: inline; }
   .desktop-links { display: flex; align-items: center; gap: 2rem; }
+  /* Lang switch: Nav set 2185:122 — IBM Plex Mono 14, gap 6, current underlined. */
+  .lang-switch { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono), monospace; font-size: 0.875rem; color: var(--color-text-muted); white-space: nowrap; }
+  .lang-switch a { padding-block: 4px; }
+  .lang-switch a:hover { color: var(--color-heading); }
+  .lang-switch [aria-current] { color: var(--color-heading); font-weight: 500; text-decoration: underline; text-underline-position: from-font; }
+  .lang-switch [aria-current]::before { content: none; }
+  .sheet .lang-switch { font-size: 1rem; gap: 10px; }
   .desktop-links a, .mobile-links a { position: relative; font-size: 1rem; font-weight: 500; }
   [aria-current]::before { content: ''; position: absolute; left: -14px; top: 50%; width: 7px; height: 7px; border-radius: 50%; background: var(--color-signal); border: 1px solid var(--color-heading); transform: translateY(-50%); }
   .contact { border-radius: 999px; background: var(--color-accent); color: var(--color-accent-text); padding: var(--space-sm) var(--space-lg); font-size: 1rem; font-weight: 500; }

@@ -1,0 +1,79 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import PageContact from '../../components/sections/PageContact.astro';
+import PageFooter from '../../components/sections/PageFooter.astro';
+import Icon from '../../components/ui/Icon.astro';
+import CaseStudy from '../../components/sections/CaseStudy.astro';
+import NextCaseStudy from '../../components/sections/NextCaseStudy.astro';
+import { collectionPath, entryPath, ogImagePath, listLinks, listProjects, entrySlug, getTranslationGroup, renderEntry, type Locale, type Project } from '../../lib/content';
+import { buildSeo } from '../../lib/seo';
+import { getDictionary } from '../../lib/i18n';
+
+export interface Props {
+  entry: Project;
+  lang: Locale;
+}
+
+const { entry, lang } = Astro.props;
+const t = getDictionary(lang);
+const links = (await listLinks()).map((link) => link.data);
+
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    'astro.config.mjs must define `site` before this page can compute canonical URLs.'
+  );
+}
+
+// projects do not carry a reading time — that is a posts-only derived
+// field (design.md §4); do not import getReadingTime here.
+const group = await getTranslationGroup('projects', entry);
+
+const seo = buildSeo({
+  title: entry.data.title,
+  description: entry.data.description,
+  path: entryPath('projects', lang, entrySlug(entry)),
+  image: { path: ogImagePath('projects', lang, entrySlug(entry)), alt: entry.data.title },
+  lang,
+  site,
+  group,
+  type: 'article',
+  publishDate: entry.data.publishDate,
+  updatedDate: entry.data.updatedDate,
+});
+
+const { Content } = await renderEntry(entry);
+const nextCase = (await listProjects({ lang })).find(project => project.id !== entry.id && project.data.tier === 'case-study');
+
+const { data } = entry;
+const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
+---
+
+<Base lang={lang} seo={seo} profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
+  <PageHero variant="case">
+    <a class="back" href={collectionPath('projects', lang)}><span aria-hidden="true">←</span>{t.caseStudy.allWork}</a>
+    <p class="eyebrow">{eyebrow}</p>
+    <h1 class="title">{data.title}</h1>
+    <p class="sub">{data.heroDescription ?? data.description}</p>
+    {(data.demoUrl || data.repoUrl) && (
+      <div class="actions">
+        {data.demoUrl && <a class="button primary" href={data.demoUrl} target="_blank" rel="noopener noreferrer">{data.demoLabel ?? t.caseStudy.openProject}<Icon name="arrow-right" size={18} /></a>}
+        {data.repoUrl && <a class="button secondary" href={data.repoUrl} target="_blank" rel="noopener noreferrer">{t.caseStudy.source}<Icon name="arrow-right" size={18} /></a>}
+      </div>
+    )}
+  </PageHero>
+  {data.caseStudy ? <CaseStudy data={data.caseStudy} decisions={data.decisions} cover={data.coverImage} coverAlt={data.coverImageAlt} website={data.demoUrl} strings={t.caseStudy}><Content /></CaseStudy> : <div class="container">
+  <article>
+    {entry.data.role && <p><strong>{t.project.role}:</strong> {entry.data.role}</p>}
+    {entry.data.timeframe && <p><strong>{t.project.timeframe}:</strong> {entry.data.timeframe}</p>}
+    <p>
+      <strong>{t.project.stack}:</strong> {entry.data.stack.join(', ')}
+    </p>
+    <Content />
+  </article>
+  </div>}
+  {data.caseStudy && nextCase && <NextCaseStudy project={nextCase} href={entryPath('projects', lang, entrySlug(nextCase))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
+  <PageContact lang={lang} links={links} marker={t.caseStudy.contactMarker} />
+  <PageFooter slot="footer" lang={lang} links={links} compact />
+</Base>

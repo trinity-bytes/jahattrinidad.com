@@ -1,11 +1,12 @@
 ---
+import type { Locale } from '../../lib/i18n';
 /* Contact for the non-Home pages: Outside only, so the Inside copy is passed but never shown. */
 import Contact from './Contact.astro';
 import { CONTACT_EMAIL } from '../../lib/consts';
 import { getDictionary } from '../../lib/i18n';
 
 interface Props {
-  lang: 'en' | 'es';
+  lang: Locale;
   marker: string;
   /** The links collection's data, read by the page (sections never import content.ts). */
   links: { id: string; url: string }[];

@@ -1,0 +1,159 @@
+---
+title: Inspiration Garden
+description: Una biblioteca donde personas y agentes de IA reúnen inspiración.
+heroDescription: Una biblioteca donde personas y agentes de IA reúnen inspiración. Diseñé y construí todo, desde el primer commit hasta la versión 1.0 en 46 días.
+lang: es
+translationKey: inspiration-garden
+tier: case-study
+publishDate: 2026-11-16
+featured: true
+homeFeatured: false
+kind: Producto personal
+team: { size: 1, solo: true }
+coverImage: '../inspiration-garden/cover.png'
+coverImageAlt: 'Biblioteca de Inspiration Garden con una colección de referencias visuales'
+problem: 'Las referencias quedan dispersas entre marcadores, capturas y chats, y los agentes de IA no tienen un lugar compartido donde buscarlas.'
+myPart: 'Todo por mi cuenta: producto, diseño y código.'
+whatItDoes: 'Una biblioteca donde personas y agentes de IA guardan, etiquetan y encuentran referencias mediante la misma API.'
+stack: ['Cloudflare Workers', Hono, D1, R2, React, three.js, Zod]
+demoUrl: 'https://inspo.jahattrinidad.com'
+demoLabel: Abrir el jardín
+repoUrl: 'https://github.com/trinity-bytes/my-inspiration-garden'
+caseStudy:
+  headlines:
+    problem: Mis referencias estaban por todas partes y nunca podía encontrarlas.
+    features: Un lugar para guardar, encontrar y reutilizar lo que me inspira.
+    decisions: Cuatro decisiones y el costo de cada una.
+    mistakes: Dos cosas en las que me equivoqué.
+    growth: Entregas pequeñas, una base, sin reconstruir.
+  glance:
+    - { label: Mi rol, value: 'Producto, diseño y código, por mi cuenta' }
+    - { label: Construido con, value: 'Cloudflare Workers, Hono, D1, R2, React, three.js y Zod' }
+    - { label: Estado, value: 'Disponible en inspo.jahattrinidad.com, unos 190 elementos, en uso diario' }
+    - { label: Quién agrega contenido, value: 'Yo, además de Claude Code, Codex y OpenCode mediante la misma API' }
+  problem:
+    - 'Las ideas que guardaba vivían en marcadores, capturas, chats y cien pestañas abiertas. Cuando un proyecto las necesitaba, habían desaparecido.'
+    - 'Quería un lugar rápido de llenar y fácil de consultar, que un asistente de IA también pudiera ayudar a ordenar.'
+  requirements: 'Seis tipos de elementos con campos compartidos y específicos. Lectura pública; escritura solo del propietario y de agentes con tokens emitidos por él.'
+  constraint: 'Sin servidores que vigilar ni bases de datos que se duerman: Cloudflare Workers, D1, R2, Images y Access.'
+  features:
+    - title: Encuentra cualquier cosa en segundos
+      description: 'Busca con filtros de tipo, etiqueta y color, todo en una barra al pie de la pantalla.'
+      detail: 'Búsqueda por prefijos con FTS5 sobre D1, con tipo, árbol de categorías, etiquetas y color dominante como filtros en la misma solicitud.'
+      image: '../inspiration-garden/search.png'
+      imageAlt: 'Búsqueda y filtros en Inspiration Garden'
+    - title: Seis tipos de elementos, un lugar
+      description: 'Imágenes, enlaces, notas, videos, paletas de colores y fuentes, cada uno con sus etiquetas y su origen.'
+      detail: 'Al guardar enlaces se obtienen su título y vista previa, cuya imagen se copia a R2 para conservarla aunque desaparezca la página original. Los colores de las imágenes se indexan para la búsqueda.'
+      image: '../inspiration-garden/kinds.png'
+      imageAlt: 'Distintos tipos de elementos en Inspiration Garden'
+    - title: También funciona en el teléfono
+      description: 'Instálalo como una app. Cada ventana se convierte en un panel al alcance del pulgar.'
+      detail: 'Se puede instalar como PWA. Por debajo de 480 px cada diálogo aparece como un panel inferior ajustado a su contenido; el lienzo, la búsqueda y la API permanecen iguales.'
+      image: '../inspiration-garden/mobile.png'
+      imagePresentation: phone
+      imageAlt: 'Inspiration Garden en un teléfono'
+    - title: Los agentes de IA lo mantienen ordenado
+      description: 'Claude Code, Codex y OpenCode guardan, etiquetan y ordenan elementos por mí mediante la misma API que usa la app.'
+      detail: 'Una Agent Skill les enseña a acotar las búsquedas para que una página de 100 elementos (unos 70 KB) no sature su contexto. La especificación OpenAPI 3.1 proviene de los mismos esquemas Zod.'
+      terminal: |-
+        ~/projects · claude
+
+        > organiza el jardín: limpia las etiquetas, pon todo en inglés y ordénalo en categorías
+
+        ● Cargando skill inspiration-garden
+          GET /api/tags          75 etiquetas
+          PATCH /api/tags/:id    combinar ia → ai, ui → ux/ui …
+          PATCH /api/items/:id   ~35 traducidos, 26 titulados
+          POST /api/categories   4 raíces, 9 hojas
+
+        Listo: 75 → 64 etiquetas, 190 elementos ordenados en Web Design, AI, Learning y Dev Resources.
+      note: 'Reconstruido a partir de la sesión de limpieza del 15 de noviembre [Propietario: confirmar redacción]'
+  proof:
+    title: 33 entregas
+    text: 'Cada una ejecuta lint, verificación de tipos, pruebas, migraciones de D1, despliegue y comprobación de estado automáticamente. Entregar cambios pequeños cuesta poco cuando las comprobaciones son automáticas.'
+  closing:
+    - title: Dónde está ahora
+      text: 'Disponible y en uso diario: unos 190 elementos bajo 64 etiquetas, ordenados en cuatro categorías. Un agente hizo esa última limpieza mediante la API y el lienzo sigue el ritmo.'
+    - title: Qué haría diferente
+      text: 'Usaría el producto con contenido real antes de pulir su apariencia. El cielo tomó días de trabajo y solo descubrí que pasaba desapercibido al usar la primera versión.'
+  milestones:
+    - { day: DÍA 0, title: Primero los cimientos, description: 'Monorepo, esquema de datos y búsqueda FTS5 en el primer commit.' }
+    - { day: DÍA 7, title: En uso diario en una semana, description: 'v0.1.0 disponible en Cloudflare Workers.' }
+    - { day: DÍA 36, title: Entregado en pasos pequeños, description: '10 entregas en un día: v0.5.0 → v0.8.1, interfaz y velocidad.' }
+    - { day: DÍA 46, title: v1.0 sin reescribir, description: 'Teléfonos, instalación PWA y búsqueda en la misma API.' }
+decisions:
+  - choice: El sitio y sus datos viven en una sola dirección
+    rejected: 'Dirección separada para la API en su propio origen, con CORS'
+    subtitle: 'un origen · API + app en un Worker'
+    because: 'Mi inicio de sesión usa una cookie que el navegador envía automáticamente. Con la API en otra dirección eso se rompe: CORS pasa a ser obligatorio y la protección CSRF pierde su comprobación de mismo origen.'
+    cost: 'Una unidad de despliegue: la interfaz y la API siempre se publican juntas.'
+  - choice: 'Los asistentes de IA son colaboradores de confianza, no invitados'
+    rejected: 'Una bandeja de revisión o cola de moderación para escrituras de agentes'
+    subtitle: 'los agentes escriben directamente · sin bandeja de revisión'
+    because: 'Los agentes usan la misma API que la app, con tokens de lectura o lectura y escritura que puedo revocar uno por uno.'
+    cost: 'Confianza en lugar de moderación. El historial de revisiones, el borrado lógico y el registro del origen mitigan el riesgo, pero en el día 53 un patch incorrecto borró las etiquetas de 58 elementos.'
+  - choice: Una estructura para cada tipo de elemento
+    rejected: 'Una tabla por tipo de elemento'
+    subtitle: modelo de datos híbrido
+    because: 'Columnas principales para lo que comparten todos los elementos y un campo JSON para lo que necesita cada tipo, de modo que un tipo nuevo no requiere una tabla nueva.'
+    cost: 'D1 no puede imponer la estructura del JSON, así que esquemas Zod compartidos lo validan en el cliente y en la API.'
+  - choice: 'Miniaturas, nunca originales'
+    rejected: 'Servir archivos originales a las tarjetas'
+    subtitle: miniaturas en el edge
+    because: 'Las tarjetas descargaban los originales completos: 265 MB por sesión en un teléfono. Cloudflare Images crea miniaturas WebP una vez por ancho y el contenido multimedia bajó a unos 1.2 MB.'
+    cost: 'Una dependencia de Cloudflare Images. Si no se puede crear una miniatura, la tarjeta usa el original y vuelve a intentarlo después.'
+---
+
+import { Image } from 'astro:assets';
+import eraCover from '../inspiration-garden/cover.png';
+
+### El cielo que me encantaba pasó desapercibido
+
+La primera versión tenía un cielo detrás del lienzo y paneles claros de vidrio esmerilado. Tras unos días de uso real, nadie notaba el cielo y el vidrio ya no encajaba. En el día 11 (PR #1) dejé el lienzo de un color oscuro sólido, cambié el vidrio por paneles sólidos de estilo caricatura y aceleré la navegación. El vidrio volvió en el día 35: oscuro, con 75% de opacidad y ajustado para que el texto cumpla WCAG AA incluso sobre una tarjeta blanca.
+
+<div className="eras">
+  <figure><div className="era era-sky"><Image class="era-image era-image-one" src={eraCover} alt="" /><Image class="era-image era-image-two" src={eraCover} alt="" /><div className="filter"><b>Filtros</b><p>TIPO</p><span>Imagen　 Enlace　 Video　 Fuente</span><p>ETIQUETAS</p><span>design 137 · portfolio 61 · ai 39</span></div></div><figcaption>v0.1.0 · DÍA 7 — cielo y vidrio claro<br />Cielo lavanda, vidrio al 65%, texto oscuro</figcaption></figure>
+  <figure><div className="era era-solid"><div className="filter"><b>Filtros</b><p>TIPO</p><span>Imagen　 Enlace　 Video　 Fuente</span><p>ETIQUETAS</p><span>design 137 · portfolio 61 · ai 39</span></div></div><figcaption>DÍA 11 · PR #1 — fondo sólido, paneles de caricatura<br />Texto oscuro sobre lavanda sólido: aproximadamente 14:1</figcaption></figure>
+  <figure><div className="era era-dark"><Image class="era-image era-image-bg" src={eraCover} alt="" /><div className="filter"><b>Filtros</b><p>TIPO</p><span>Imagen　 Enlace　 Video　 Fuente</span><p>ETIQUETAS</p><span>design 137 · portfolio 61 · ai 39</span></div></div><figcaption>DÍA 35 → HOY — vidrio oscuro, 75% de opacidad<br />Texto con contraste 5.3:1 incluso sobre una tarjeta blanca</figcaption></figure>
+</div>
+
+Paneles reconstruidos con los tokens de diseño de cada versión, no capturas de pantalla.
+
+### Un agente borró las etiquetas de 58 elementos
+
+En el día 53 un agente ordenó el jardín por mí y 58 elementos perdieron todas sus etiquetas. La API interpretaba un campo tags ausente como una lista vacía: un valor predeterminado de Zod sobrevive a .partial(), así que un patch que solo corregía un título también borraba las etiquetas. Las restauré desde una copia local y el hotfix v1.2.1 se publicó ese mismo día: ahora una lista omitida conserva la guardada.
+
+<div className="code-pair">
+<figure>
+
+```ts
+// packages/shared/src/primitives.ts
+export const tagsSchema = z
+  …
+  .default([]);
+
+PATCH /api/items/:id
+{ "kind": "link", "title": "…" }
+→ tags: []
+```
+
+<span className="code-annotation">58 elementos</span>
+<figcaption>ANTES · v1.2.0 — una lista ausente equivalía a una vacía</figcaption>
+</figure>
+<figure>
+
+```ts
+// patch schema: no defaults
+// omitted ≠ cleared
+tags: tagListSchema.optional(),
+
+
+PATCH /api/items/:id
+{ "kind": "link", "title": "…" }
+→ tags: unchanged
+```
+
+<figcaption>DESPUÉS · v1.2.1, el mismo día — omitir conserva la lista guardada</figcaption>
+</figure>
+</div>

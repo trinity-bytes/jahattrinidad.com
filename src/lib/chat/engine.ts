@@ -60,9 +60,12 @@ export interface ChatView {
 }
 
 const EMAIL = /[A-Z0-9._%+-]+@[A-Z0-9-]+(?:\.[A-Z0-9-]+)*\.[A-Z]{2,}/i;
+// English, Spanish and Portuguese keywords. Letter lookarounds (with the `u` flag)
+// stand in for `\b`, which treats accented letters as word breaks.
+const word = (alternatives: string) => new RegExp(`(?<!\\p{L})(?:${alternatives})(?!\\p{L})`, 'iu');
 const KEYWORDS: [Branch, RegExp][] = [
-  ['hiring', /\b(?:intern(?:ship)?|hiring|hire|role|job)\b/i],
-  ['project', /\b(?:project|build|freelance)\b/i],
+  ['hiring', word('intern(?:ship)?|hiring|hire|role|job|practicante|pr[aá]cticas?|pasant[ií]a|vacante|puesto|empleo|contrat(?:ar|ando|amos)|est[aá]gio|estagi[aá]rio|vaga|emprego')],
+  ['project', word('project|build|freelance|proyecto|projeto|construir|crear|criar')],
 ];
 const BRANCHES: readonly Branch[] = ['hiring', 'project', 'other'];
 const ORDER: Field[] = ['name', 'company', 'detail', 'email'];

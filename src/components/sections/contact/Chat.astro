@@ -1,4 +1,5 @@
 ---
+import type { Locale } from '../../../lib/i18n';
 /*
  * The Contact composer and the conversation it grows into (task 7.3, boards 2353:103 to 2354:320,
  * tablet 2358:302, desktop 2358:226). One element: idle it is the composer with its suggestions;
@@ -16,7 +17,7 @@ import { collectionPath, entryPath } from '../../../lib/paths';
 import type { Dictionary } from '../../../lib/i18n';
 
 interface Props {
-  lang: 'en' | 'es';
+  lang: Locale;
   strings: Dictionary['contact'];
   chat: Dictionary['chat'];
 }
