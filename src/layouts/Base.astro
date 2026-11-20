@@ -1,14 +1,16 @@
 ---
+import type { Locale } from '../lib/i18n';
 import { Font } from 'astro:assets';
 import '../styles/tokens.css';
 import Nav from '../components/sections/Nav.astro';
 import Lens from '../components/sections/Lens.astro';
-import { getDictionary, localizedPath } from '../lib/i18n';
+import { getDictionary, localizedPath, LOCALES, LOCALE_NAMES } from '../lib/i18n';
+import { BCP47 } from '../lib/consts';
 import { collectionPath } from '../lib/paths';
 import type { SeoResult } from '../lib/seo';
 
 export interface Props {
-  lang: 'en' | 'es';
+  lang: Locale;
   seo: SeoResult;
   /** Pages with an Inside state (the Home) opt in to the lens control. */
   lens?: boolean;
@@ -20,6 +22,19 @@ export interface Props {
 
 const { lang, seo, lens = false, nav = true, profileLinks = [] } = Astro.props;
 const t = getDictionary(lang);
+
+// EN / ES / PT switch: each locale goes to this page's counterpart (its hreflang
+// alternate) or, when the page has none, to that locale's Home.
+const counterpart = (locale: Locale) =>
+  seo.alternates.find((alternate) => alternate.hrefLang === BCP47[locale])?.href;
+const languages = LOCALES.map((locale) => ({
+  lang: locale,
+  hrefLang: BCP47[locale],
+  code: locale.toUpperCase(),
+  name: LOCALE_NAMES[locale],
+  href: locale === lang ? Astro.url.pathname : (counterpart(locale) ? new URL(counterpart(locale)!).pathname : localizedPath(locale, '/')),
+  current: locale === lang,
+}));
 ---
 
 <!doctype html>
@@ -59,6 +74,7 @@ const t = getDictionary(lang);
       notesPath={collectionPath('posts', lang)}
       strings={t.nav}
       profileLinks={profileLinks}
+      languages={languages}
     />}
     <slot name="backgrounds" />
     <main id="main-content" tabindex="-1"><slot /></main>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jahattrinidad.com/sitemap-index.xml

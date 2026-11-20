@@ -1,0 +1,52 @@
+---
+import Base from '../../layouts/Base.astro';
+import Work from '../../components/sections/Work.astro';
+import WorkMore from '../../components/sections/WorkMore.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import PageContact from '../../components/sections/PageContact.astro';
+import PageFooter from '../../components/sections/PageFooter.astro';
+import { collectionPath, entryPath, entrySlug, listLinks, listProjects, type Locale } from '../../lib/content';
+import { buildSeo } from '../../lib/seo';
+import { getDictionary, localeGroup } from '../../lib/i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDictionary(lang);
+const links = (await listLinks()).map((link) => link.data);
+
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    'astro.config.mjs must define `site` before this page can compute canonical URLs.'
+  );
+}
+
+const projects = await listProjects({ lang });
+const featured = projects.filter(p => p.data.tier === 'case-study' && p.data.featured).map(p => ({ data: p.data, href: entryPath('projects', lang, entrySlug(p)), meta: [p.data.kind, p.data.team && (p.data.team.solo ? t.work.solo : t.common.teamOf(p.data.team.size))].filter(Boolean).join(' · '), problem: p.data.problem, whatItDoes: p.data.whatItDoes, mirrored: entrySlug(p) === 'inspiration-garden' }));
+const more = projects.filter(p => p.data.tier === 'project');
+const experiments = projects.filter(p => p.data.tier === 'experiment');
+
+const seo = buildSeo({
+  title: t.nav.work,
+  description: t.meta.workDescription,
+  path: collectionPath('projects', lang),
+  lang,
+  site,
+  group: localeGroup(collectionPath('projects', 'en')),
+});
+---
+
+<Base lang={lang} seo={seo} profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
+  <PageHero variant="work" word={t.nav.work}>
+    <p class="eyebrow">{t.work.eyebrow}</p>
+    <p class="headline">{t.work.headline}</p>
+    <p class="sub">{t.work.sub}</p>
+  </PageHero>
+  {featured.length > 0 && <Work index copy={{ ...t.home.outside.work, marker: t.work.featuredMarker }} insideCopy={t.home.inside.work} headline={t.work.featuredHeading} labels={{ ...t.common, seeProject: t.work.seeProject }} projects={featured} count={featured.length} allProjectsHref={collectionPath('projects', lang)} />}
+  {(more.length > 0 || experiments.length > 0) && <WorkMore projects={more} experiments={experiments} lang={lang} strings={t.work} />}
+  <PageContact lang={lang} links={links} marker={t.work.contactMarker} />
+  <PageFooter slot="footer" lang={lang} links={links} />
+</Base>

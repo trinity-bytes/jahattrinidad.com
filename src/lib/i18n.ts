@@ -1,8 +1,11 @@
 /** UI strings and locale-aware link helpers, not a content access seam. */
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import type { Locale } from './content';
+import type { Locale, TranslationLink } from './content';
+export type { Locale } from './content';
 import { chatEn } from './chat/script.en';
 import type { ChatCopy } from './chat/script';
+import { es } from './dictionaries/es';
+import { pt } from './dictionaries/pt';
 
 interface HeroCopy {
   name: string;
@@ -71,6 +74,10 @@ export interface Dictionary {
     ogImageAlt: string;
     /** Bottom line of the per-page social preview cards. */
     ogSignature: string;
+    /** Meta descriptions of the index pages. */
+    workDescription: string;
+    notesDescription: string;
+    linksDescription: string;
   };
   nav: {
     home: string;
@@ -89,6 +96,8 @@ export interface Dictionary {
     elsewhere: string;
     availability: string;
     menuLinks: string;
+    /** Accessible name of the EN / ES / PT switch. */
+    language: string;
   };
   home: {
     workHeadline: string;
@@ -247,11 +256,13 @@ export interface Dictionary {
   };
 }
 
-/** Populated for `en` only — D1 creates no Spanish UI strings in this change. */
-const en: Dictionary = {
+export const en: Dictionary = {
   meta: {
     ogImageAlt: 'Jahat Trinidad on a hill at sunset, beside the line "I build products people actually use."',
     ogSignature: 'Jahat Trinidad · jahattrinidad.com',
+    workDescription: 'Selected projects and case studies.',
+    notesDescription: 'Posts about building and shipping this site.',
+    linksDescription: 'Where to find me elsewhere.',
   },
   nav: {
     home: 'Home',
@@ -270,6 +281,7 @@ const en: Dictionary = {
     elsewhere: 'Elsewhere',
     availability: 'Open to an internship, now.',
     menuLinks: 'Profiles',
+    language: 'Language',
   },
   home: {
     // Shared across both views; board 2191:86 and approved R9.
@@ -555,16 +567,29 @@ const en: Dictionary = {
   },
 };
 
-const dictionaries: Partial<Record<Locale, Dictionary>> = {
-  en,
-};
+const dictionaries: Record<Locale, Dictionary> = { en, es, pt };
 
-/** Falls back to `en` until Spanish strings exist — matches D1's current scope. */
+/** Every locale, in switch order (EN / ES / PT). */
+export const LOCALES: readonly Locale[] = ['en', 'es', 'pt'];
+
+/** Each language's own name, for the switch's accessible labels; never translated. */
+export const LOCALE_NAMES: Record<Locale, string> = { en: 'English', es: 'Español', pt: 'Português' };
+
+/** No fallback: every locale has a complete Dictionary, so a missing one is a type error. */
 export function getDictionary(locale: Locale): Dictionary {
-  return dictionaries[locale] ?? en;
+  return dictionaries[locale];
 }
 
 /** Locale-aware, prefix-correct link builder over `astro:i18n`. */
 export function localizedPath(locale: Locale, path: string): string {
   return getRelativeLocaleUrl(locale, path);
+}
+
+/**
+ * Translation group of a page that exists in every locale (Home, Work, Notes,
+ * Links), for hreflang alternates and the language switch. `path` is the
+ * English (unprefixed) path.
+ */
+export function localeGroup(path: string): TranslationLink[] {
+  return LOCALES.map((lang) => ({ lang, slug: '', path: localizedPath(lang, path) }));
 }

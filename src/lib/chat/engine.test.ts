@@ -16,6 +16,15 @@ test('detect: finds an email address in free text', () => {
   assert.equal(detect('no address here').email, undefined);
 });
 
+test('detect: picks the branch from Spanish and Portuguese keywords', () => {
+  assert.equal(detect('Estamos buscando un practicante de frontend').branch, 'hiring');
+  assert.equal(detect('Tenemos una vacante de prácticas').branch, 'hiring');
+  assert.equal(detect('Temos uma vaga de estágio').branch, 'hiring');
+  assert.equal(detect('Quiero crear un proyecto nuevo').branch, 'project');
+  assert.equal(detect('Tenho um projeto para você').branch, 'project');
+  assert.equal(detect('Hola, solo saludo').branch, undefined);
+});
+
 test('detect: picks the branch from keywords', () => {
   assert.equal(detect("We're hiring a frontend intern").branch, 'hiring');
   assert.equal(detect('I want to build a small app').branch, 'project');
