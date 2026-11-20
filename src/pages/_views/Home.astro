@@ -2,6 +2,7 @@
 import { getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Hero from '../../components/sections/Hero.astro';
+import GlowTransition from '../../components/sections/GlowTransition.astro';
 import Values from '../../components/sections/Values.astro';
 import Work from '../../components/sections/Work.astro';
 import Experience from '../../components/sections/Experience.astro';
@@ -91,6 +92,7 @@ const seo = buildSeo({
 
 <Base lang={lang} seo={seo} lens profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
   <Hero strings={copy.hero} insideStrings={t.home.inside.hero} workHref={workPath} />
+  <GlowTransition direction="rise" />
   <Values
     copy={copy.values}
     insideCopy={t.home.inside.values}
@@ -125,6 +127,7 @@ const seo = buildSeo({
     posts={posts}
     allWritingHref={notesPath}
   />
+  <GlowTransition direction="descend" />
   <Contact
     lang={lang}
     marker={copy.contact.marker}
