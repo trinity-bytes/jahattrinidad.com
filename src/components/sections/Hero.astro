@@ -323,6 +323,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
      The hero is clipped to nothing (the page surface shows, never the hero's own fill) until the sun circle opens it. */
   :global(html[data-hero-intro]) .hero { clip-path: circle(0px at 50% 60%); }
   :global(html[data-hero-intro]) .name { transform: translateY(55%); }
+  :global(html[data-hero-intro]) .portrait,
   :global(html[data-hero-intro]) .intro > *,
   :global(html[data-hero-intro]) .footnote { opacity: 0; }
   :global(html[data-hero-intro] [data-nav]) { opacity: 0; }
@@ -422,7 +423,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
         onComplete: () => {
           delete root.dataset.heroIntro;
           hero!.style.clipPath = '';
-          gsap.set([...intro, ...footnote, nav], { clearProps: 'opacity' });
+          gsap.set([...portrait, ...intro, ...footnote, nav], { clearProps: 'opacity' });
         },
       });
       timeline.to(circle, {
@@ -439,6 +440,16 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
       const nameAt = Math.min(...names.map((name) => { const d = enclosed(name); return d === null ? Infinity : reach(d * 0.7); }));
       // y: 0 explicitly: GSAP would otherwise read the CSS starting translateY(55%) as a px y and keep it.
       timeline.fromTo(names, { y: 0, yPercent: 55 }, { y: 0, yPercent: 0, duration: 1.1, ease: 'expo.out' }, Number.isFinite(nameAt) ? nameAt : 0.4);
+      // The portrait steps up into place (it is cropped by the hero's bottom, so it reads as entering the frame).
+      // It starts as soon as the circle touches its near edge and travels long and evenly enough to be seen;
+      // its opacity completes early so what reads is the movement, not a fade.
+      const portraitBox = portrait[0]?.getBoundingClientRect();
+      const portraitAt = portraitBox
+        ? reach(far(portraitBox.left - box.left + portraitBox.width * 0.25, portraitBox.top - box.top + portraitBox.height * 0.4))
+        : 0.5;
+      timeline
+        .fromTo(portrait, { y: 160 }, { y: 0, duration: 1.6, ease: 'power3.out' }, portraitAt)
+        .fromTo(portrait, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power1.out' }, portraitAt);
       for (const element of [...intro, ...footnote]) {
         const distance = enclosed(element);
         timeline.fromTo(element, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, distance === null ? duration : reach(distance));
