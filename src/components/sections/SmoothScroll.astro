@@ -1,0 +1,54 @@
+---
+/**
+ * SmoothScroll: eased wheel scrolling for the whole page (Lenis), with the settings of the reference
+ * the owner chose (pryzm.design): lerp 0.1, smooth wheel, smooth in-page anchors. Touch keeps the
+ * native scroll. Include once per page (the layout does).
+ *
+ *   - GSAP: Lenis is driven by gsap.ticker and reports every scroll to ScrollTrigger, so the scrubbed
+ *     hero parallax and the section transitions follow the eased position frame by frame.
+ *   - The mobile menu locks the page (html[data-menu-open]): Lenis stops while it is open.
+ *   - Elements with their own vertical scroll (the menu sheet, the chat log) carry data-lenis-prevent.
+ *   - Reduced motion: no Lenis at all, the browser's own scroll.
+ */
+import 'lenis/dist/lenis.css';
+---
+
+<script>
+  import Lenis from 'lenis';
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const root = document.documentElement;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let lenis: Lenis | null = null;
+  let menuObserver: MutationObserver | null = null;
+  const tick = (time: number) => lenis?.raf(time * 1000);
+
+  function start() {
+    if (lenis) return;
+    lenis = new Lenis({ lerp: 0.1, smoothWheel: true, anchors: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+    const syncMenu = () => ('menuOpen' in root.dataset ? lenis?.stop() : lenis?.start());
+    menuObserver = new MutationObserver(syncMenu);
+    menuObserver.observe(root, { attributes: true, attributeFilter: ['data-menu-open'] });
+    syncMenu();
+  }
+
+  function stop() {
+    if (!lenis) return;
+    menuObserver?.disconnect();
+    menuObserver = null;
+    gsap.ticker.remove(tick);
+    gsap.ticker.lagSmoothing(500, 33);
+    lenis.destroy();
+    lenis = null;
+  }
+
+  const apply = () => (reduced.matches ? stop() : start());
+  reduced.addEventListener('change', apply);
+  apply();
+</script>
