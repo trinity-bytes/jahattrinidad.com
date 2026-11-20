@@ -53,7 +53,7 @@ const { strings } = Astro.props;
   const SHORTCUT_KEY = 'lens-shortcut-disabled';
   const DISCOVERED_KEY = 'lens-discovered';
   const NUDGE_EVERY = 7000;
-  const FIRST_NUDGE = 3800;
+  const FIRST_NUDGE = 1200;
   const EDITABLE = 'input, textarea, select, [contenteditable]:not([contenteditable="false"])';
 
   const root = document.documentElement;
@@ -243,11 +243,25 @@ const { strings } = Astro.props;
     if (!discovered && !reducedMotion.matches) {
       const nudge = () => {
         if (discovered || root.dataset.lens === 'inside' || drag || lens.matches(':hover, :focus-visible') || document.hidden) return;
+        // Restart from scratch every time: if a previous shake never reported its end, setting the
+        // attribute again would not replay the animation.
+        delete lens.dataset.nudge;
+        void lens.offsetWidth;
         lens.dataset.nudge = '';
       };
-      // The first shake comes right after the hero's load (it reveals the lens), then every NUDGE_EVERY.
-      setTimeout(nudge, FIRST_NUDGE);
-      nudges = window.setInterval(nudge, NUDGE_EVERY);
+      // The first shake waits for the hero's load to finish (the lens is invisible until then), then
+      // repeats every NUDGE_EVERY. Pages without that load (or a load that never reports) start on a timer.
+      let started = false;
+      const start = () => {
+        if (started) return;
+        started = true;
+        setTimeout(nudge, FIRST_NUDGE);
+        nudges = window.setInterval(nudge, NUDGE_EVERY);
+      };
+      if ('heroIntro' in root.dataset) {
+        window.addEventListener('hero-intro-done', start, { once: true });
+        setTimeout(start, 6000);
+      } else start();
     }
 
     // Touch has no hover: show the "Tap the lens" hint for a few seconds once the page has loaded.

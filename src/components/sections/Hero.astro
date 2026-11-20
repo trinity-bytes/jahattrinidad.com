@@ -431,6 +431,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
       const timeline = gsap.timeline({
         onComplete: () => {
           delete root.dataset.heroIntro;
+          window.dispatchEvent(new CustomEvent('hero-intro-done'));
           hero!.style.clipPath = '';
           // Inline opacity stays until here: the starting CSS still applies while html[data-hero-intro] is set.
           gsap.set([...portrait, ...intro, ...footnote, nav, document.querySelector('[data-lens-dock]')], { clearProps: 'opacity' });
