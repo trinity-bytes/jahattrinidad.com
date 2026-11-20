@@ -71,18 +71,21 @@ const { direction } = Astro.props;
 
         // Positions are yPercent of the shape (twice the layer's height); see the styles.
         const rise = transition.dataset.glowTransition === 'rise';
-        gsap.fromTo(shape,
+        const timeline = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 100%',
+            end: rise ? 'top 30%' : 'top 50%',
+            scrub: 0.3,
+          },
+        });
+        timeline.fromTo(shape,
           rise ? { yPercent: 0, scaleX: 1.8 } : { yPercent: -90, scaleX: 2.4 },
-          {
-            ...(rise ? { yPercent: -55, scaleX: 3 } : { yPercent: -150, scaleX: 1.1 }),
-            ease: 'none',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 100%',
-              end: rise ? 'top 30%' : 'top 50%',
-              scrub: 0.3,
-            },
-          });
+          { ...(rise ? { yPercent: -55, scaleX: 3 } : { yPercent: -150, scaleX: 1.1 }), duration: 1 });
+        // Rise: invisible at rest (the hero stays untouched), fully in within the first ~6% (one wheel step),
+        // by which time its rim already covers the hero's straight bottom edge.
+        if (rise) timeline.fromTo(shape, { opacity: 0 }, { opacity: 1, duration: 0.06 }, 0);
       });
 
       // The hero's height and the lens change the layout; keep the trigger positions current.
