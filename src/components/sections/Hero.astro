@@ -319,10 +319,10 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
 
   @media (forced-colors: active) { .cta { border: 1px solid ButtonText; } }
 
-  /* Load choreography: starting states while html[data-hero-intro] is set (see the inline script). */
-  :global(html[data-hero-intro]) .sky { transform: scale(1.06); }
+  /* Load choreography: starting states while html[data-hero-intro] is set (see the inline script).
+     The hero is clipped to nothing (the page surface shows, never the hero's own fill) until the sun circle opens it. */
+  :global(html[data-hero-intro]) .hero { clip-path: circle(0px at 50% 60%); }
   :global(html[data-hero-intro]) .name { transform: translateY(55%); }
-  :global(html[data-hero-intro]) .portrait,
   :global(html[data-hero-intro]) .intro > *,
   :global(html[data-hero-intro]) .footnote { opacity: 0; }
   :global(html[data-hero-intro] [data-nav]) { opacity: 0; }
@@ -333,7 +333,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
   // Only at the top of a fresh load, with motion allowed; a safety timeout releases everything if the script below never runs.
   if (window.scrollY === 0 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.dataset.heroIntro = '';
-    setTimeout(() => delete document.documentElement.dataset.heroIntro, 2500);
+    setTimeout(() => delete document.documentElement.dataset.heroIntro, 3500);
   }
 </script>
 
@@ -366,26 +366,88 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     const nav = document.querySelector<HTMLElement>('[data-nav]');
     const media = gsap.matchMedia();
 
-    media.add('(prefers-reduced-motion: no-preference)', () => {
-      if ('heroIntro' in root.dataset) {
-        const ease = 'expo.out';
-        const intro_ = gsap.timeline({
-          defaults: { ease },
-          onComplete: () => {
-            delete root.dataset.heroIntro;
-            // Opacity only: the transforms are at rest now and the parallax keeps writing y on the same layers.
-            gsap.set([...portrait, ...intro, ...footnote, nav], { clearProps: 'opacity' });
-          },
-        });
-        intro_
-          .fromTo(sky, { scale: 1.06 }, { scale: 1, duration: 1.8, ease: 'power2.out' }, 0)
-          // y: 0 explicitly: GSAP would otherwise read the CSS starting translateY(55%) as a px y and keep it.
-          .fromTo(names, { y: 0, yPercent: 55 }, { y: 0, yPercent: 0, duration: 1.2 }, 0.15)
-          .fromTo(portrait, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.9 }, 0.35)
-          .fromTo(intro, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.07 }, 0.45)
-          .fromTo(footnote, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.9);
-        if (nav) intro_.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.8);
+    /** The sun's centre in hero coordinates, from the same --sun-x / --sun-y the Inside annotations use. */
+    function sunCentre(): { x: number; y: number } {
+      const probe = document.createElement('div');
+      probe.style.cssText = 'position:absolute;left:var(--sun-x);top:var(--sun-y);width:0;height:0';
+      hero!.append(probe);
+      const box = hero!.getBoundingClientRect();
+      const point = probe.getBoundingClientRect();
+      probe.remove();
+      return { x: point.left - box.left, y: point.top - box.top };
+    }
+
+    /**
+     * Load: a circle the size of the sun opens from the sun until it covers the hero (expo.inOut, an
+     * After Effects-style easy ease). Each text block appears only once the circle encloses all of it,
+     * so nothing is seen sliced by the edge; the name rises from behind the hill as the circle reaches it.
+     */
+    async function playIntro() {
+      const image = sky[0] instanceof HTMLImageElement ? sky[0] : null;
+      // Start only once the sky can paint (or after a short wait), so the circle never opens on an empty fill.
+      await Promise.race([image?.decode?.().catch(() => {}), new Promise((done) => setTimeout(done, 700))]);
+
+      const box = hero!.getBoundingClientRect();
+      const sun = sunCentre();
+      const far = (x: number, y: number) => Math.hypot(x - sun.x, y - sun.y);
+      const startRadius = 22;
+      const endRadius = Math.max(far(0, 0), far(box.width, 0), far(0, box.height), far(box.width, box.height));
+      const duration = 1.6;
+      const ease = gsap.parseEase('expo.inOut');
+      /** Seconds until the circle's radius reaches `distance` (inverts the ease by bisection). */
+      const reach = (distance: number) => {
+        const target = (distance - startRadius) / (endRadius - startRadius);
+        if (target <= 0) return 0;
+        if (target >= 1) return duration;
+        let low = 0;
+        let high = 1;
+        for (let i = 0; i < 24; i++) {
+          const mid = (low + high) / 2;
+          if (ease(mid) < target) low = mid;
+          else high = mid;
+        }
+        return high * duration;
+      };
+      /** Distance from the sun to the farthest corner of an element (it is fully inside the circle past this). */
+      const enclosed = (element: HTMLElement) => {
+        const r = element.getBoundingClientRect();
+        if (!r.width) return null;
+        const left = r.left - box.left;
+        const top = r.top - box.top;
+        return Math.max(far(left, top), far(left + r.width, top), far(left, top + r.height), far(left + r.width, top + r.height));
+      };
+
+      const circle = { r: startRadius };
+      const timeline = gsap.timeline({
+        onComplete: () => {
+          delete root.dataset.heroIntro;
+          hero!.style.clipPath = '';
+          gsap.set([...intro, ...footnote, nav], { clearProps: 'opacity' });
+        },
+      });
+      timeline.to(circle, {
+        r: endRadius,
+        duration,
+        ease: 'expo.inOut',
+        onUpdate: () => { hero!.style.clipPath = `circle(${circle.r}px at ${sun.x}px ${sun.y}px)`; },
+      }, 0);
+      // Scale the sky around the sun itself, so the sun stays centred in the opening circle.
+      const skyBox = image?.getBoundingClientRect();
+      const origin = skyBox ? `${sun.x - (skyBox.left - box.left)}px ${sun.y - (skyBox.top - box.top)}px` : '50% 50%';
+      timeline.fromTo(sky, { scale: 1.04, transformOrigin: origin }, { scale: 1, duration: duration + 0.6, ease: 'power2.out' }, 0);
+
+      const nameAt = Math.min(...names.map((name) => { const d = enclosed(name); return d === null ? Infinity : reach(d * 0.7); }));
+      // y: 0 explicitly: GSAP would otherwise read the CSS starting translateY(55%) as a px y and keep it.
+      timeline.fromTo(names, { y: 0, yPercent: 55 }, { y: 0, yPercent: 0, duration: 1.1, ease: 'expo.out' }, Number.isFinite(nameAt) ? nameAt : 0.4);
+      for (const element of [...intro, ...footnote]) {
+        const distance = enclosed(element);
+        timeline.fromTo(element, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, distance === null ? duration : reach(distance));
       }
+      if (nav) timeline.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' }, duration - 0.3);
+    }
+
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      if ('heroIntro' in root.dataset) void playIntro();
 
       // Scroll parallax, scrubbed over the hero's exit. Values are fractions of the hero's height.
       const parallax = gsap.timeline({
