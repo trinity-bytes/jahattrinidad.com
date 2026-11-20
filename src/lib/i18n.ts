@@ -352,7 +352,7 @@ export const en: Dictionary = {
         annotations: {
           sky: { title: '[layer 01 · sky + far hills]', note: 'sky.png · moves slowest' },
           hill: { title: '[layer 02 · near hill]', note: 'near-hill.png · moves fastest' },
-          name: { title: '[layer 03 · display name]', note: 'Epilogue Medium · 300 px · sits behind the hill' },
+          name: { title: '[layer 03 · display name]', note: 'Epilogue Medium · 270 px · sits behind the hill' },
           portrait: { title: '[layer 04 · portrait]', note: 'generated from my own reference photos' },
         },
       },
