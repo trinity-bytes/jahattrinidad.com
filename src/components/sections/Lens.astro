@@ -48,8 +48,8 @@ const { strings } = Astro.props;
   /** Circle radius: 190 px, measured on the Lens states board (2109:103, drawn at half scale). */
   const RADIUS = 190;
   const DRAG_THRESHOLD = 6;
-  /** On touch the circle sits above the thumb: lens radius + gap + circle radius. */
-  const TOUCH_LIFT = 40 + 8 + RADIUS;
+  /** The x-ray circle grows from the lens's own size to RADIUS over this long when a drag starts (ease-out). */
+  const GROW_MS = 280;
   const SHORTCUT_KEY = 'lens-shortcut-disabled';
   const DISCOVERED_KEY = 'lens-discovered';
   const NUDGE_EVERY = 7000;
@@ -130,6 +130,10 @@ const { strings } = Astro.props;
     let last = { x: 0, y: 0 };
     let frame = 0;
     let suppressClick = false;
+    /** The circle's current radius, its starting radius (the lens's) and when it started growing. */
+    let radius = RADIUS;
+    let growFrom = RADIUS;
+    let growStart = 0;
 
     function render() {
       frame = 0;
@@ -138,16 +142,23 @@ const { strings } = Astro.props;
       const dy = last.y - drag.startY;
       lens!.style.setProperty('--dx', `${dx}px`);
       lens!.style.setProperty('--dy', `${dy}px`);
+      // Centred on the lens (under the finger on touch, too), growing out of it.
       const x = drag.center.x + dx;
-      const y = drag.center.y + dy - (coarsePointer.matches ? TOUCH_LIFT : 0);
-      ring!.style.transform = `translate(${x - RADIUS}px, ${y - RADIUS}px)`;
-      drag.preview.layer.style.clipPath = `circle(${RADIUS}px at ${x + scrollX}px ${y + scrollY - drag.preview.top}px)`;
+      const y = drag.center.y + dy;
+      const t = Math.min(1, (performance.now() - growStart) / GROW_MS);
+      radius = growFrom + (RADIUS - growFrom) * (1 - (1 - t) ** 3);
+      ring!.style.transform = `translate(${x - RADIUS}px, ${y - RADIUS}px) scale(${radius / RADIUS})`;
+      drag.preview.layer.style.clipPath = `circle(${radius}px at ${x + scrollX}px ${y + scrollY - drag.preview.top}px)`;
+      if (t < 1) schedule();
     }
     const schedule = () => { frame ||= requestAnimationFrame(render); };
 
     function startDrag(current: Drag) {
       const box = lens!.getBoundingClientRect();
       current.center = { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+      growFrom = Math.min(box.width, box.height) / 2;
+      growStart = performance.now();
+      radius = growFrom;
       current.preview = createPreview(main!);
       current.preview.layer.style.clipPath = 'circle(0)';
       document.body.append(current.preview.layer);
@@ -200,8 +211,8 @@ const { strings } = Astro.props;
       suppressClick = true;
       // Reveal from the x-ray circle itself, so the circle the visitor was holding simply opens up.
       const x = dropped.center.x + (last.x - dropped.startX);
-      const y = dropped.center.y + (last.y - dropped.startY) - (coarsePointer.matches ? TOUCH_LIFT : 0);
-      switchTo('inside', () => endDrag(dropped), { x, y, r: RADIUS });
+      const y = dropped.center.y + (last.y - dropped.startY);
+      switchTo('inside', () => endDrag(dropped), { x, y, r: radius });
     });
     lens.addEventListener('pointercancel', () => {
       const cancelled = drag;
@@ -222,6 +233,7 @@ const { strings } = Astro.props;
       const isShortcut = event.key.toLowerCase() === 'i' && !event.ctrlKey && !event.metaKey && !event.altKey;
       if (!isShortcut || event.repeat || event.isComposing || shortcutDisabled || drag) return;
       if (event.target instanceof Element && event.target.closest(EDITABLE)) return;
+      discover();
       toggle();
     });
 
@@ -238,7 +250,8 @@ const { strings } = Astro.props;
     };
     lens.addEventListener('pointerdown', discover);
     lens.addEventListener('click', discover);
-    window.addEventListener('keydown', (event) => { if (event.key.toLowerCase() === 'i' && !event.repeat) discover(); });
+    // The "i" shortcut counts only when it actually switches (see the keydown handler above), never
+    // when typing an "i" into a field or with the shortcut turned off.
     lens.addEventListener('animationend', () => delete lens.dataset.nudge);
     if (!discovered && !reducedMotion.matches) {
       const nudge = () => {

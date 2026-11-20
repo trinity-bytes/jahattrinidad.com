@@ -88,7 +88,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     <p class="headline" data-show="inside">{insideStrings.headline}</p>
     <p class="sub" data-show="outside">{strings.sub}</p>
     <p class="sub" data-show="inside">{insideStrings.sub}</p>
-    <a class="cta" href={workHref}>{strings.cta}<Icon name="arrow-right" size={18} /></a>
+    <a class="cta" data-magnetic href={workHref}>{strings.cta}<Icon name="arrow-right" size={18} /></a>
   </div>
   <p class="footnote">
     <span class="marker" data-show="inside">{insideStrings.marker}</span>
@@ -325,6 +325,30 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
      annotation inside keeps its hero coordinates (and the hero stays its container for cqw). */
   .follow { position: absolute; inset: 0; pointer-events: none; }
 
+  /* Pointer parallax: --mx / --my (-1..1, the pointer's place in the viewport, eased by script).
+     The big name tilts toward the pointer in perspective (2.5D) and shifts slightly; nothing else
+     moves with the pointer. Only individual properties (`translate`, `rotate`), so they add to the GSAP
+     transforms of the load and the scroll parallax; !important because GSAP writes `translate: none;
+     rotate: none` inline on every element it transforms. The outline copy of the name (inside the
+     portrait's box) gets the same tilt from the same perspective point, so the two stay registered. */
+  .hero {
+    --mx: 0;
+    --my: 0;
+    --name-cx: calc(var(--name-left, var(--edge)) + var(--font-size-display) * 1.345);
+    --name-cy: calc(var(--name-top) + var(--font-size-display) * 0.46);
+    perspective: 1100px;
+    perspective-origin: var(--name-cx) var(--name-cy);
+  }
+  .portrait-outline {
+    perspective: 1100px;
+    perspective-origin: calc(var(--name-cx) - var(--portrait-left)) calc(var(--name-cy) - var(--portrait-top));
+  }
+  [data-follow='name'] { translate: calc(var(--mx) * 14px) calc(var(--my) * 8px) !important; }
+  .name {
+    translate: calc(var(--mx) * 14px) calc(var(--my) * 8px) !important;
+    rotate: calc(var(--my) * -1) calc(var(--mx) + 0.0001) 0 calc(hypot(var(--mx), var(--my)) * 14deg) !important;
+  }
+
   /* Load choreography: starting states while html[data-hero-intro] is set (see the inline script).
      The hero is clipped to nothing (the page surface shows, never the hero's own fill) until the sun circle opens it. */
   :global(html[data-hero-intro]) .hero { clip-path: circle(0px at 50% 60%); }
@@ -492,6 +516,32 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
         .to([...names, ...followName], { y: () => hero.offsetHeight * 0.18 }, 0);
 
       return () => delete root.dataset.heroIntro;
+    });
+
+    // Pointer parallax (mouse and pen only, see the --mx / --my styles): eased toward the pointer, back to rest when it leaves the window.
+    media.add('(prefers-reduced-motion: no-preference) and (pointer: fine)', () => {
+      const pointer = { x: 0, y: 0 };
+      const paint = () => {
+        hero.style.setProperty('--mx', pointer.x.toFixed(4));
+        hero.style.setProperty('--my', pointer.y.toFixed(4));
+      };
+      const toX = gsap.quickTo(pointer, 'x', { duration: 1.2, ease: 'power3.out', onUpdate: paint });
+      const toY = gsap.quickTo(pointer, 'y', { duration: 1.2, ease: 'power3.out', onUpdate: paint });
+      const follow = (event: PointerEvent) => {
+        if (event.pointerType === 'touch' || scrollY > hero.offsetHeight) return;
+        toX((event.clientX / innerWidth) * 2 - 1);
+        toY((event.clientY / innerHeight) * 2 - 1);
+      };
+      const rest = () => { toX(0); toY(0); };
+      window.addEventListener('pointermove', follow, { passive: true });
+      root.addEventListener('pointerleave', rest);
+      return () => {
+        window.removeEventListener('pointermove', follow);
+        root.removeEventListener('pointerleave', rest);
+        gsap.killTweensOf(pointer);
+        hero.style.removeProperty('--mx');
+        hero.style.removeProperty('--my');
+      };
     });
 
     // The lens and the hero's viewport-based height move the trigger; keep it current.

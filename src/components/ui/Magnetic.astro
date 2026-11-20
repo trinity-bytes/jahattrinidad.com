@@ -1,0 +1,106 @@
+---
+/**
+ * Magnetic: elements marked `data-magnetic` lean toward the pointer once it comes within RANGE px of
+ * them, and spring back with a slight overshoot when it moves away. Include once per page (the layout
+ * does); it looks the elements up on every frame, so elements added later work too.
+ *
+ * The pull grows smoothly from nothing at the edge of that zone to its full strength over the element,
+ * where it is proportional to how far the pointer is from the centre (up to MAX px at the edge).
+ * Each element rides a damped spring toward that target, stepped in one requestAnimationFrame loop,
+ * so the motion stays continuous however often the pointer reports. It writes only the `translate`
+ * property, so the element's own transforms and CSS transitions are untouched.
+ * Mouse and pen only; nothing with reduced motion.
+ */
+---
+
+<script>
+  const MAX = 14;
+  const RANGE = 70;
+  /** Spring: natural period (s) and damping ratio while following, and when letting go (springier). */
+  const PERIOD = 0.42;
+  const FOLLOW_DAMPING = 0.8;
+  const RELEASE_DAMPING = 0.42;
+  const REST = 0.05;
+
+  const fine = matchMedia('(pointer: fine)');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  type Spring = { x: number; y: number; vx: number; vy: number; tx: number; ty: number; held: boolean };
+  /** Elements in motion or pulled; x/y is the offset currently written on the element. */
+  const springs = new Map<HTMLElement, Spring>();
+
+  let pointer: { x: number; y: number } | null = null;
+  let frame = 0;
+  let last = 0;
+
+  /** Sets each element's target from the pointer: where it would sit if it were at rest is its box minus the offset it has now. */
+  function aim() {
+    const clamp = (value: number) => Math.max(-1, Math.min(1, value));
+    for (const element of document.querySelectorAll<HTMLElement>('[data-magnetic]')) {
+      const spring = springs.get(element);
+      const box = element.getBoundingClientRect();
+      if (!box.width) continue;
+      const left = box.left - (spring?.x ?? 0);
+      const top = box.top - (spring?.y ?? 0);
+      const distance = pointer
+        ? Math.hypot(
+          Math.max(left - pointer.x, 0, pointer.x - (left + box.width)),
+          Math.max(top - pointer.y, 0, pointer.y - (top + box.height)),
+        )
+        : Infinity;
+      if (!pointer || distance >= RANGE) {
+        if (spring) { spring.tx = 0; spring.ty = 0; spring.held = false; }
+        continue;
+      }
+      // 1 over the element, easing down to 0 at the edge of the zone.
+      const near = 1 - distance / RANGE;
+      const strength = near * near * (3 - 2 * near);
+      const halfW = box.width / 2;
+      const halfH = box.height / 2;
+      const target = spring ?? { x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0, held: true };
+      target.tx = clamp((pointer.x - (left + halfW)) / halfW) * MAX * strength;
+      target.ty = clamp((pointer.y - (top + halfH)) / halfH) * MAX * strength;
+      target.held = true;
+      springs.set(element, target);
+    }
+  }
+
+  function step(now: number) {
+    frame = 0;
+    const dt = Math.min((now - (last || now)) / 1000, 1 / 30);
+    last = now;
+    aim();
+    const omega = (2 * Math.PI) / PERIOD;
+    let moving = false;
+    for (const [element, s] of springs) {
+      const damping = 2 * (s.held ? FOLLOW_DAMPING : RELEASE_DAMPING) * omega;
+      s.vx += (-omega * omega * (s.x - s.tx) - damping * s.vx) * dt;
+      s.vy += (-omega * omega * (s.y - s.ty) - damping * s.vy) * dt;
+      s.x += s.vx * dt;
+      s.y += s.vy * dt;
+      const settled = !s.held && Math.abs(s.x) < REST && Math.abs(s.y) < REST && Math.abs(s.vx) < REST && Math.abs(s.vy) < REST;
+      if (settled) {
+        springs.delete(element);
+        element.style.removeProperty('translate');
+      } else {
+        element.style.translate = `${s.x.toFixed(2)}px ${s.y.toFixed(2)}px`;
+        const still = Math.abs(s.x - s.tx) < REST && Math.abs(s.y - s.ty) < REST && Math.abs(s.vx) < REST && Math.abs(s.vy) < REST;
+        if (!still) moving = true;
+      }
+    }
+    // Idle once everything has arrived (a held element waits on its target); the next pointer move restarts.
+    if (moving) frame = requestAnimationFrame(step);
+    else last = 0;
+  }
+
+  const run = () => { frame ||= requestAnimationFrame(step); };
+
+  document.addEventListener('pointermove', (event) => {
+    if (event.pointerType === 'touch' || !fine.matches || reduced.matches) return;
+    pointer = { x: event.clientX, y: event.clientY };
+    run();
+  }, { passive: true });
+
+  // The pointer left the window: let everything go. Scrolling moves the elements under a still pointer, so re-aim.
+  document.documentElement.addEventListener('pointerleave', () => { pointer = null; run(); });
+  window.addEventListener('scroll', () => { if (pointer) run(); }, { passive: true });
+</script>

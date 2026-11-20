@@ -4,6 +4,8 @@ import { Font } from 'astro:assets';
 import '../styles/tokens.css';
 import Nav from '../components/sections/Nav.astro';
 import Lens from '../components/sections/Lens.astro';
+import Magnetic from '../components/ui/Magnetic.astro';
+import SmoothScroll from '../components/sections/SmoothScroll.astro';
 import { getDictionary, localizedPath, LOCALES, LOCALE_NAMES } from '../lib/i18n';
 import { BCP47 } from '../lib/consts';
 import { collectionPath } from '../lib/paths';
@@ -81,6 +83,8 @@ const languages = LOCALES.map((locale) => ({
     <slot name="footer" />
     <div class="visually-hidden" aria-live="polite" aria-atomic="true" id="announcements"></div>
     {lens && <Lens strings={t.lens} />}
+    <Magnetic />
+    <SmoothScroll />
   </body>
 </html>
 
