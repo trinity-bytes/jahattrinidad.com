@@ -72,9 +72,9 @@ const { direction } = Astro.props;
         // Positions are yPercent of the shape (twice the layer's height); see the styles.
         const rise = transition.dataset.glowTransition === 'rise';
         gsap.fromTo(shape,
-          rise ? { yPercent: 0, scaleX: 1 } : { yPercent: -90, scaleX: 2.4 },
+          rise ? { yPercent: 0, scaleX: 1.8 } : { yPercent: -90, scaleX: 2.4 },
           {
-            ...(rise ? { yPercent: -55, scaleX: 2.2 } : { yPercent: -150, scaleX: 1.1 }),
+            ...(rise ? { yPercent: -55, scaleX: 3 } : { yPercent: -150, scaleX: 1.1 }),
             ease: 'none',
             scrollTrigger: {
               trigger: section,
@@ -131,8 +131,10 @@ const { direction } = Astro.props;
     bottom: calc(100% - 200px);
     mask-image: linear-gradient(to bottom, #000 calc(100% - 200px), transparent);
   }
-  /* Rise starts with the rim on the seam itself, so the first pixel of scroll already moves light over the hero's edge. */
-  .glow-transition[data-glow-transition='rise'] .glow-shape { top: calc(100% - 200px); }
+  /* Rise starts with the rim on the seam itself (40px above it, and flat enough at scaleX 1.8 that
+     the curve still covers the hero's bottom corners), so the first pixel of scroll already moves
+     light over the hero's edge and its straight edge never shows. */
+  .glow-transition[data-glow-transition='rise'] .glow-shape { top: calc(100% - 300px); }
   .glow-transition[data-glow-transition='descend'] { top: 0; --body: var(--color-surface); }
   .glow-shape {
     position: absolute;
