@@ -9,11 +9,12 @@
  *
  *   rise     placed before a section: its surface climbs over the bottom of the previous one
  *            with a sunlit curved edge that flattens as it rises (hero → "What you get").
- *   descend  placed before a section: the previous section's surface leaves upward, its curved
- *            lower edge lit like a sunrise over the next one (Notes → Contact).
+ *   descend  placed before a section: the previous section's surface hangs over this one (content
+ *            included) and pulls back up, its curved lower edge lit like a sunrise, sweeping the
+ *            viewport from bottom to top (Notes → Contact).
  *
  * The shape is one elliptical radial gradient (body, then rim, then transparent) moved with
- * transform only: it rises on Y and flattens by scaling on X. No pin, about 50vh of scroll.
+ * transform only: it moves on Y and changes its curve by scaling on X. No pin.
  * Reduced motion and no JS render nothing: the sections meet with their normal cut.
  */
 interface Props {
@@ -30,6 +31,7 @@ const { direction } = Astro.props;
 <script>
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { GLOW_COVER_CHANGE } from './glow/cover';
 
   gsap.registerPlugin(ScrollTrigger);
 
@@ -43,12 +45,56 @@ const { direction } = Astro.props;
     media = undefined;
   }
 
-  /** The section this transition belongs to: its parent once moved, else the next <section> sibling (Astro may render a <script> in between). */
+  /**
+   * The section this transition belongs to: the next <section> sibling as rendered (Astro may render a
+   * <script> in between). Once moved, a rise lives inside that section and a descend at the end of the
+   * previous one, so the section after it.
+   */
   function targetSection(transition: HTMLElement): HTMLElement | null {
-    if (transition.parentElement?.tagName === 'SECTION') return transition.parentElement;
-    let next = transition.nextElementSibling;
+    const parent = transition.parentElement;
+    let next: Element | null = transition.nextElementSibling;
+    if (parent?.tagName === 'SECTION') {
+      if (transition.dataset.glowTransition === 'rise') return parent;
+      next = parent.nextElementSibling;
+    }
     while (next && next.tagName !== 'SECTION') next = next.nextElementSibling;
     return next instanceof HTMLElement ? next : null;
+  }
+
+  /** An element's top in page (scroll) coordinates. */
+  function pageTop(element: HTMLElement): number {
+    return element.getBoundingClientRect().top + scrollY;
+  }
+
+  /**
+   * Descend: the previous section's surface hangs over the top of this one (content included) with a
+   * lit, curved lower edge, then pulls back up. The layer lives in the previous section, which paints
+   * above this one. The edge enters at the bottom of the viewport and sweeps up to the top, faster
+   * than the page, uncovering this section as it passes; it ends on the seam, its glow at the top.
+   *   HANG: how far (in viewports) the surface hangs below the seam when the edge enters.
+   * "Edge" is the bottom of the shape's body: 87.5% down the shape (the body fills 75% of the ellipse).
+   */
+  const HANG = 0.4;
+  function descend(transition: HTMLElement, section: HTMLElement, shape: HTMLElement) {
+    const EDGE = 0.875;
+    /** yPercent that puts the edge `offset` px below the seam (the layer's top; the shape starts at its bottom). */
+    const yFor = (offset: number) =>
+      ((offset - transition.offsetHeight - shape.offsetHeight * EDGE) / shape.offsetHeight) * 100;
+    gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: section,
+        // The edge sits HANG viewports below the seam, so it reaches the viewport's bottom when the seam is
+        // (1 - HANG) viewports down, and the top when the seam does.
+        start: () => pageTop(section) - innerHeight * (1 - HANG),
+        end: () => pageTop(section),
+        scrub: 0.3,
+        invalidateOnRefresh: true,
+      },
+    }).fromTo(shape,
+      // A round bowl as it enters, flattening into a band by the time it reaches the top.
+      { yPercent: () => yFor(innerHeight * HANG), scaleX: 0.8 },
+      { yPercent: () => yFor(0), scaleX: 1.6, duration: 1 });
   }
 
   function init() {
@@ -62,30 +108,44 @@ const { direction } = Astro.props;
         const section = targetSection(transition);
         const shape = transition.querySelector<HTMLElement>('.glow-shape');
         if (!section || !shape) return;
+        const rise = transition.dataset.glowTransition === 'rise';
+        if (!rise) {
+          // Descend: the layer hangs from the bottom of the previous section, which is marked so it paints
+          // above this one and its own backgrounds fade out at its bottom (see styles).
+          let previous = section.previousElementSibling;
+          while (previous && previous.tagName !== 'SECTION') previous = previous.previousElementSibling;
+          if (!(previous instanceof HTMLElement)) return;
+          previous.append(transition);
+          previous.dataset.glowLeaving = '';
+          section.dataset.glowArriving = '';
+          transition.dataset.ready = '';
+          descend(transition, section, shape);
+          return;
+        }
         section.prepend(transition);
         transition.dataset.ready = '';
-        // Descend: the shape is the previous section's surface leaving; mark that section so its own backgrounds fade out at its bottom (see styles).
-        let previous = section.previousElementSibling;
-        while (previous && previous.tagName !== 'SECTION') previous = previous.previousElementSibling;
-        if (transition.dataset.glowTransition === 'descend' && previous instanceof HTMLElement) previous.dataset.glowLeaving = '';
-
-        // Positions are yPercent of the shape (twice the layer's height); see the styles.
-        const rise = transition.dataset.glowTransition === 'rise';
+        // Positions are yPercent of the shape (twice the layer's height); see the styles. The curve starts
+        // round (low scaleX) and flattens out, so the flattening reads.
         const timeline = gsap.timeline({
           defaults: { ease: 'none' },
+          onUpdate: () => window.dispatchEvent(new Event(GLOW_COVER_CHANGE)),
           scrollTrigger: {
             trigger: section,
-            start: 'top 100%',
-            end: rise ? 'top 30%' : 'top 50%',
+            // In scroll px: from the section's top entering the viewport, to it reaching 30% (rise) or
+            // 50% (descend) of it. On a tall viewport (phones) the section already shows at the top of
+            // the page; the range then starts at 0 and keeps its length, so the page never loads mid-transition.
+            start: () => Math.max(0, pageTop(section) - innerHeight),
+            end: () => {
+              const start = Math.max(0, pageTop(section) - innerHeight);
+              return Math.max(start + innerHeight * 0.7, pageTop(section) - innerHeight * 0.3);
+            },
             scrub: 0.3,
           },
         });
-        timeline.fromTo(shape,
-          rise ? { yPercent: 0, scaleX: 1.8 } : { yPercent: -90, scaleX: 2.4 },
-          { ...(rise ? { yPercent: -55, scaleX: 3 } : { yPercent: -150, scaleX: 1.1 }), duration: 1 });
-        // Rise: invisible at rest (the hero stays untouched), fully in within the first ~6% (one wheel step),
+        timeline.fromTo(shape, { yPercent: 0, scaleX: 0.75 }, { yPercent: -55, scaleX: 3.2, duration: 1 });
+        // Invisible at rest (the hero stays untouched), fully in within the first ~6% (one wheel step),
         // by which time its rim already covers the hero's straight bottom edge.
-        if (rise) timeline.fromTo(shape, { opacity: 0 }, { opacity: 1, duration: 0.06 }, 0);
+        timeline.fromTo(shape, { opacity: 0 }, { opacity: 1, duration: 0.06 }, 0);
       });
 
       // The hero's height and the lens change the layout; keep the trigger positions current.
@@ -94,6 +154,7 @@ const { direction } = Astro.props;
       return () => {
         transitions.forEach((transition) => delete transition.dataset.ready);
         document.querySelectorAll<HTMLElement>('[data-glow-leaving]').forEach((section) => delete section.dataset.glowLeaving);
+        document.querySelectorAll<HTMLElement>('[data-glow-arriving]').forEach((section) => delete section.dataset.glowArriving);
       };
     });
   }
@@ -107,17 +168,27 @@ const { direction } = Astro.props;
 <style>
   /*
    * The layer is out of flow inside its section. Rise: it sits right above the section's top
-   * edge (over the previous section). Descend: it covers the section's first 80vh.
+   * edge (over the previous section). Descend: it hangs 80vh below the previous section's bottom,
+   * above this section (the previous section paints over it).
    * The shape is twice the layer's height and starts just below it (hidden by the clip).
-   * Its gradient: body (the incoming surface) to 80% of the ellipse, then the lit rim, then
+   * Its gradient: body (the incoming surface) to 75% of the ellipse, then the lit rim, then
    * transparent, so no box edge ever shows.
    */
   .glow-transition {
     --layer-h: 80vh;
     --body: var(--color-bg);
+    /* Outside: a sunset rim. Along the whole arc it is light (pale sun, then the brand sun); at the
+       top of the arc a warmer core (the apricot and orange of the hero sky, both sampled from
+       src/assets/hero/sky.png, its lower half) fades out toward the sides. */
+    --apricot: #fac869;
+    --ember: #f4a95e;
     --rim-1: var(--sun-soft);
-    --rim-2: var(--sun);
+    --rim-2: color-mix(in srgb, var(--sun) 85%, transparent);
     --rim-3: color-mix(in srgb, var(--sun) 35%, transparent);
+    --hot-1: color-mix(in srgb, var(--ember) 90%, transparent);
+    --hot-2: color-mix(in srgb, var(--apricot) 55%, transparent);
+    /* Where the warm core sits in the shape: on the rim's crest (rise: top; descend: bottom). */
+    --hot-y: 7%;
     display: none;
     position: absolute;
     left: 0;
@@ -134,28 +205,47 @@ const { direction } = Astro.props;
     bottom: calc(100% - 200px);
     mask-image: linear-gradient(to bottom, #000 calc(100% - 200px), transparent);
   }
-  /* Rise starts with the rim on the seam itself (40px above it, and flat enough at scaleX 1.8 that
-     the curve still covers the hero's bottom corners), so the first pixel of scroll already moves
+  /* Rise starts with the rim on the seam itself (40px above it; even at the round starting scaleX 0.75
+     the rim still covers the hero's bottom corners), so the first pixel of scroll already moves
      light over the hero's edge and its straight edge never shows. */
   .glow-transition[data-glow-transition='rise'] .glow-shape { top: calc(100% - 300px); }
-  .glow-transition[data-glow-transition='descend'] { top: 0; --body: var(--color-surface); }
+  .glow-transition[data-glow-transition='descend'] { top: 100%; --body: var(--color-surface); --hot-y: 93%; }
+  /* The section the descend layer hangs from paints above the next one, content included. */
+  :global([data-glow-leaving]) { position: relative; z-index: 2; }
+  /* The section it uncovers gets room above its content, so the sweep ends (its top at the viewport's
+     top) with the content still well in view instead of already under the nav. A link to the section
+     (the nav's Contact) skips that room and lands just under the 69px nav. */
+  :global([data-glow-arriving]) {
+    padding-top: 30vh;
+    scroll-margin-top: calc(69px + 2.5rem - 30vh);
+  }
   .glow-shape {
     position: absolute;
     top: 100%;
     left: -70%;
     width: 240%;
     height: 200%;
-    background: radial-gradient(ellipse 50% 50% at 50% 50%,
-      var(--body) 0 80%,
-      var(--rim-1) 82%,
-      var(--rim-2) 86%,
-      var(--rim-3) 92%,
-      transparent 100%);
+    /* Two layers: the warm core on top (it ends transparent, inside the shape's box), the light
+       rim under it. Stops are spread wide so each colour melts into the next. */
+    background:
+      radial-gradient(ellipse 26% 6% at 50% var(--hot-y),
+        var(--hot-1) 0,
+        var(--hot-2) 45%,
+        transparent 100%),
+      radial-gradient(ellipse 50% 50% at 50% 50%,
+        var(--body) 0 75%,
+        color-mix(in srgb, var(--body), var(--rim-1)) 78.5%,
+        var(--rim-1) 82%,
+        var(--rim-2) 87%,
+        var(--rim-3) 93.5%,
+        transparent 100%);
   }
   :global(:root[data-lens='inside']) .glow-transition {
     --rim-1: color-mix(in srgb, var(--green-300) 45%, var(--body));
-    --rim-2: color-mix(in srgb, var(--green-300) 30%, transparent);
-    --rim-3: color-mix(in srgb, var(--green-300) 10%, transparent);
+    --rim-2: color-mix(in srgb, var(--green-300) 25%, transparent);
+    --rim-3: color-mix(in srgb, var(--green-300) 8%, transparent);
+    --hot-1: color-mix(in srgb, var(--green-300) 30%, transparent);
+    --hot-2: color-mix(in srgb, var(--green-300) 12%, transparent);
   }
   /* The section's own light, grain and bytes fade in over its first 240px while the transition
      is live, so its top edge is exactly the plain surface the shape is made of: no seam. */
