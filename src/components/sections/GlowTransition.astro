@@ -1,0 +1,164 @@
+---
+/**
+ * GlowTransition: the next section enters with a curved, lit edge (Home only).
+ *
+ * The mechanism comes from a reference where a dark planet limb rises over a light page and
+ * flattens: what moves is the incoming colour, and the glow is only the light on its edge.
+ * Here the incoming colour is the page itself and the light is golden hour (Inside: a cool
+ * green-300 rim), so the screen never darkens on the way to the light sections.
+ *
+ *   rise     placed before a section: its surface climbs over the bottom of the previous one
+ *            with a sunlit curved edge that flattens as it rises (hero → "What you get").
+ *   descend  placed before a section: the previous section's surface leaves upward, its curved
+ *            lower edge lit like a sunrise over the next one (Notes → Contact).
+ *
+ * The shape is one elliptical radial gradient (body, then rim, then transparent) moved with
+ * transform only: it rises on Y and flattens by scaling on X. No pin, about 50vh of scroll.
+ * Reduced motion and no JS render nothing: the sections meet with their normal cut.
+ */
+interface Props {
+  direction: 'rise' | 'descend';
+}
+
+const { direction } = Astro.props;
+---
+
+<div class="glow-transition" data-glow-transition={direction} aria-hidden="true">
+  <div class="glow-shape"></div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  let media: gsap.MatchMedia | undefined;
+  let observer: MutationObserver | undefined;
+
+  function cleanup() {
+    observer?.disconnect();
+    observer = undefined;
+    media?.revert();
+    media = undefined;
+  }
+
+  /** The section this transition belongs to: its parent once moved, else the next <section> sibling (Astro may render a <script> in between). */
+  function targetSection(transition: HTMLElement): HTMLElement | null {
+    if (transition.parentElement?.tagName === 'SECTION') return transition.parentElement;
+    let next = transition.nextElementSibling;
+    while (next && next.tagName !== 'SECTION') next = next.nextElementSibling;
+    return next instanceof HTMLElement ? next : null;
+  }
+
+  function init() {
+    cleanup();
+    const transitions = document.querySelectorAll<HTMLElement>('[data-glow-transition]:not([data-lens-preview] *)');
+    if (!transitions.length) return;
+
+    media = gsap.matchMedia();
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      transitions.forEach((transition) => {
+        const section = targetSection(transition);
+        const shape = transition.querySelector<HTMLElement>('.glow-shape');
+        if (!section || !shape) return;
+        section.prepend(transition);
+        transition.dataset.ready = '';
+        // Descend: the shape is the previous section's surface leaving; mark that section so its own backgrounds fade out at its bottom (see styles).
+        let previous = section.previousElementSibling;
+        while (previous && previous.tagName !== 'SECTION') previous = previous.previousElementSibling;
+        if (transition.dataset.glowTransition === 'descend' && previous instanceof HTMLElement) previous.dataset.glowLeaving = '';
+
+        // Positions are yPercent of the shape (twice the layer's height); see the styles.
+        const rise = transition.dataset.glowTransition === 'rise';
+        gsap.fromTo(shape,
+          rise ? { yPercent: 0, scaleX: 1 } : { yPercent: -90, scaleX: 2.4 },
+          {
+            ...(rise ? { yPercent: -60, scaleX: 2.2 } : { yPercent: -150, scaleX: 1.1 }),
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: rise ? 'top 85%' : 'top 100%',
+              end: rise ? 'top 35%' : 'top 50%',
+              scrub: 0.3,
+            },
+          });
+      });
+
+      // The hero's height and the lens change the layout; keep the trigger positions current.
+      observer = new MutationObserver(() => ScrollTrigger.refresh());
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-lens'] });
+      return () => {
+        transitions.forEach((transition) => delete transition.dataset.ready);
+        document.querySelectorAll<HTMLElement>('[data-glow-leaving]').forEach((section) => delete section.dataset.glowLeaving);
+      };
+    });
+  }
+
+  document.addEventListener('astro:before-swap', cleanup);
+  document.addEventListener('astro:page-load', init);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
+</script>
+
+<style>
+  /*
+   * The layer is out of flow inside its section. Rise: it sits right above the section's top
+   * edge (over the previous section). Descend: it covers the section's first 80vh.
+   * The shape is twice the layer's height and starts just below it (hidden by the clip).
+   * Its gradient: body (the incoming surface) to 80% of the ellipse, then the lit rim, then
+   * transparent, so no box edge ever shows.
+   */
+  .glow-transition {
+    --layer-h: 80vh;
+    --body: var(--color-bg);
+    --rim-1: var(--sun-soft);
+    --rim-2: var(--sun);
+    --rim-3: color-mix(in srgb, var(--sun) 35%, transparent);
+    display: none;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: var(--layer-h);
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .glow-transition[data-ready] { display: block; }
+  /* Rise reaches 200px into its section and dissolves there (a static mask), so the plain body
+     melts into the section's own lit, grained background instead of meeting it at a line. */
+  .glow-transition[data-glow-transition='rise'] {
+    bottom: calc(100% - 200px);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 200px), transparent);
+  }
+  .glow-transition[data-glow-transition='descend'] { top: 0; --body: var(--color-surface); }
+  .glow-shape {
+    position: absolute;
+    top: 100%;
+    left: -70%;
+    width: 240%;
+    height: 200%;
+    background: radial-gradient(ellipse 50% 50% at 50% 50%,
+      var(--body) 0 80%,
+      var(--rim-1) 82%,
+      var(--rim-2) 86%,
+      var(--rim-3) 92%,
+      transparent 100%);
+  }
+  :global(:root[data-lens='inside']) .glow-transition {
+    --rim-1: color-mix(in srgb, var(--green-300) 45%, var(--body));
+    --rim-2: color-mix(in srgb, var(--green-300) 30%, transparent);
+    --rim-3: color-mix(in srgb, var(--green-300) 10%, transparent);
+  }
+  /* The section's own light, grain and bytes fade in over its first 240px while the transition
+     is live, so its top edge is exactly the plain surface the shape is made of: no seam. */
+  :global(section:has(> .glow-transition[data-glow-transition='rise'][data-ready]) > [data-backgrounds]) {
+    mask-image: linear-gradient(to bottom, transparent, #000 240px);
+  }
+  :global([data-glow-leaving] > [data-backgrounds]) {
+    mask-image: linear-gradient(to top, transparent, #000 240px);
+  }
+  :global([data-lens-preview]) .glow-transition { display: none; }
+  /* Contact clips its sky; the layer stays inside it. The sections' copy paints above the layer. */
+  :global(.contact > .content), :global(.values > .content) { position: relative; z-index: 1; }
+</style>
