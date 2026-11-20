@@ -333,6 +333,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
   :global(html[data-hero-intro]) .intro > *,
   :global(html[data-hero-intro]) .footnote { opacity: 0; }
   :global(html[data-hero-intro] [data-nav]) { opacity: 0; }
+  :global(html[data-hero-intro] [data-lens-dock]) { opacity: 0; }
 </style>
 
 <script is:inline>
@@ -431,7 +432,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
         onComplete: () => {
           delete root.dataset.heroIntro;
           hero!.style.clipPath = '';
-          gsap.set([...portrait, ...intro, ...footnote, nav], { clearProps: 'opacity' });
+          // Inline opacity stays until here: the starting CSS still applies while html[data-hero-intro] is set.
+          gsap.set([...portrait, ...intro, ...footnote, nav, document.querySelector('[data-lens-dock]')], { clearProps: 'opacity' });
         },
       });
       timeline.to(circle, {
@@ -463,6 +465,17 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
         timeline.fromTo(element, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, distance === null ? duration : reach(distance));
       }
       if (nav) timeline.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' }, duration - 0.3);
+      // The lens dock is fixed to the viewport, outside the hero: it pops in when the circle reaches it.
+      const dock = document.querySelector<HTMLElement>('[data-lens-dock]');
+      const lensButton = dock?.querySelector<HTMLElement>('[data-lens-open]');
+      if (dock && lensButton) {
+        const d = lensButton.getBoundingClientRect();
+        const at = reach(far(d.left - box.left + d.width / 2, d.top - box.top + d.height / 2));
+        timeline
+          .fromTo(dock, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power1.out' }, at)
+          // The lens scales through its own --scale (its transform also carries the drag offset).
+          .fromTo(lensButton, { '--scale': 0.4 }, { '--scale': 1, duration: 0.7, ease: 'back.out(2.2)', clearProps: '--scale' }, at);
+      }
     }
 
     media.add('(prefers-reduced-motion: no-preference)', () => {
