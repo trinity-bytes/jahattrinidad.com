@@ -84,7 +84,7 @@ Unblocked 2026-11-16 (3.7 and 3.8 done). Start from the v3.5 boards; the v2 tabl
 - [x] 4.3 Mobile annotation pattern for Inside: numbered pins on the image plus a stacked numbered list below. Applied on both Inside boards, tablet included (2026-11-16).
 - [x] 4.4 Owner verdict on the four responsive boards: approved after one review round (owner, 2026-11-16: "queda. de momento no tengo observaciones").
 - [x] 4.6 Still undecided, carried forward (owner raised no objection, but did not decide): note opacity in the Inside lists (40%, fails AA; 60% would pass) and a touch variant of the hero hint ("press I" on phones). See design.md "Home v3.5 responsive". Decided 2026-11-17: note opacity 60% (passes AA); on touch screens the hint reads "Tap the lens".
-- [x] 4.5 Design the open state of the mobile menu (links + EN / ES / PT); only the closed button exists. Proposal 2026-11-18: boards `2349:86` (Outside) and `2349:159` (Inside), no language switch (D1); approved by the owner 2026-11-18 ("me encanta. aprobado").
+- [x] 4.5 Design the open state of the mobile menu (links + EN / ES / PT); only the closed button exists. Proposal 2026-11-18: boards `2349:86` (Outside) and `2349:159` (Inside), no language switch (D1); approved by the owner 2026-11-18 ("me encanta. aprobado"). v2 approved 2026-11-19: boards `2391:122` (Outside) and `2391:201` (Inside), segmented language control after Notes, profile icon buttons, hierarchy spacing; v1 boards deleted.
 
 ## Phase 5 — Other pages in the v3 direction
 

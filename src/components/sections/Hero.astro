@@ -52,7 +52,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     src={sky}
     formats={['avif', 'webp']}
     widths={[768, 1440, 2400, 3400]}
-    sizes="(min-width: 64.0625rem) 115vw, 260vw"
+    sizes="(min-width: 64.0625rem) max(1993px, 139vw), 260vw"
     alt=""
     class="layer sky"
     loading="eager"
@@ -65,7 +65,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     src={hill}
     formats={['avif', 'webp']}
     widths={[768, 1440, 2400, 2952]}
-    sizes="(min-width: 64.0625rem) 115vw, 310vw"
+    sizes="(min-width: 64.0625rem) 124vw, 310vw"
     alt=""
     class="layer hill"
     loading="eager"
@@ -74,7 +74,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     src={portrait}
     formats={['avif', 'webp']}
     widths={[300, 360, 520, 1040, 1400]}
-    sizes="(min-width: 64.0625rem) 520px, (min-width: 48rem) 360px, 300px"
+    sizes="(min-width: 64.0625rem) 543px, (min-width: 48rem) 360px, 300px"
     alt=""
     class="layer portrait"
     loading="eager"
@@ -91,44 +91,46 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     <a class="cta" href={workHref}>{strings.cta}<Icon name="arrow-right" size={18} /></a>
   </div>
   <p class="footnote">
-    <span class="marker" data-show="outside">{strings.marker}</span>
-    <span class="hint" data-show="outside">{strings.hint}<span class="hint-arrow" aria-hidden="true"> ↘</span></span>
     <span class="marker" data-show="inside">{insideStrings.marker}</span>
     <span class="hint" data-show="inside">{insideStrings.hint}<span aria-hidden="true"> ↑</span></span>
   </p>
 
-  <Annotation
-    n={1}
-    x="var(--sun-x)"
-    y="var(--sun-y)"
-    side="above"
-    leader="max(0px, calc(var(--sun-y) - var(--name-top) + 49px))"
-    {...note.sky}
-  />
-  <Annotation n={2} x="483px" y="calc(100% - 40px)" side="right" pinX="var(--hill-pin-x)" pinY="var(--hill-pin-y)" {...note.hill} />
-  <Annotation
-    n={3}
-    x="calc(var(--edge) + 36px)"
-    y="var(--name-top)"
-    side="above"
-    leader={49}
-    pinX="var(--edge)"
-    pinY="calc(var(--name-top) + var(--font-size-display) * 0.276)"
-    bound={{
-      x: 'var(--edge)',
-      y: 'var(--name-top)',
-      width: 'calc(var(--font-size-display) * 2.69)',
-      height: 'calc(var(--font-size-display) * 0.92)',
-    }}
-    {...note.name}
-  />
+  <div class="follow" data-follow="sky">
+    <Annotation
+      n={1}
+      x="var(--sun-x)"
+      y="var(--sun-y)"
+      side="above"
+      leader="max(0px, calc(var(--sun-y) - var(--name-top) + 49px))"
+      {...note.sky}
+    />
+  </div>
+  <Annotation n={2} x="calc(var(--edge) + 419px)" y="calc(100% - 40px)" side="right" pinX="var(--hill-pin-x)" pinY="var(--hill-pin-y)" {...note.hill} />
+  <div class="follow" data-follow="name">
+    <Annotation
+      n={3}
+      x="var(--name-label-x, calc(var(--edge) + 36px))"
+      y="var(--name-top)"
+      side="above"
+      leader={49}
+      pinX="var(--name-pin-x, var(--edge))"
+      pinY="var(--name-pin-y, calc(var(--name-top) + var(--font-size-display) * 0.276))"
+      bound={{
+        x: 'var(--name-left, var(--edge))',
+        y: 'var(--name-top)',
+        width: 'calc(var(--font-size-display) * 2.69)',
+        height: 'calc(var(--font-size-display) * 0.92)',
+      }}
+      {...note.name}
+    />
+  </div>
   <Annotation
     n={4}
     x="var(--portrait-left)"
-    y="calc(var(--portrait-top) + 230px)"
+    y="var(--portrait-label-y, calc(var(--portrait-top) + 230px))"
     side="left"
-    pinX="calc(var(--portrait-left) + var(--portrait-w))"
-    pinY="calc(var(--portrait-top) + (100% - var(--portrait-top)) * 0.35)"
+    pinX="var(--portrait-pin-x, calc(var(--portrait-left) + var(--portrait-w)))"
+    pinY="var(--portrait-pin-y, calc(var(--portrait-top) + (100% - var(--portrait-top)) * 0.35))"
     bound={{ x: 'var(--portrait-left)', y: 'var(--portrait-top)', width: 'var(--portrait-w)', height: 'calc(100% - var(--portrait-top))' }}
     {...note.portrait}
   />
@@ -147,8 +149,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     --sky-left: calc(50cqw - 735.812px);
     --sky-top: -402.209px;
     /* Where the sun sits inside the sky image (30.1% across, 43.94% of the width down). */
-    --sun-x: calc(var(--sky-left) + var(--sky-w) * 0.301);
-    --sun-y: calc(var(--sky-top) + var(--sky-w) * 0.4394);
+    --sun-x: calc(var(--sky-left) + var(--sky-w) * var(--sun-image-x, 0.301));
+    --sun-y: calc(var(--sky-top) + var(--sky-w) * var(--sun-image-y, 0.4394));
     /* Inside pin of the near hill on small screens: just below the name bound, at its right edge (mobile). */
     --hill-pin-x: calc(100cqw - var(--edge) - 3px);
     --hill-pin-y: calc(var(--name-top) + var(--font-size-display) * 0.92 - 1px);
@@ -181,7 +183,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
 
   .name {
     position: absolute;
-    left: var(--edge);
+    left: var(--name-left, var(--edge));
     top: var(--name-top);
     margin: 0;
     color: var(--color-hero-name-fill);
@@ -202,7 +204,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     mask: var(--portrait-mask) center / 100% 100% no-repeat;
   }
   .portrait-outline .name {
-    left: calc(var(--edge) - var(--portrait-left));
+    left: calc(var(--name-left, var(--edge)) - var(--portrait-left));
     top: calc(var(--name-top) - var(--portrait-top));
     color: transparent;
     -webkit-text-stroke: var(--hero-stroke-width) var(--color-hero-outline);
@@ -278,24 +280,221 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
 
   @media (min-width: 64.0625rem) {
     .hero {
-      --name-top: 552px;
-      --portrait-w: 520px;
-      --portrait-left: calc(100cqw - var(--edge) - 476px);
-      --portrait-top: 130px;
-      /* The sun keeps its place over the name at every width: 434.3px right of the content edge, y 480.6
-         (as on the 1440 board: sky 1888 wide at x -70, y -349). The sky grows past 131.111cqw only as much as it needs to still cover
-         the left edge with the sun there (the sun is 30.1% across, 43.94% of the width down). */
-      --sky-w: max(131.111cqw, (var(--edge) + 434.3px) / 0.301);
-      --sky-left: calc(var(--edge) + 434.3px - var(--sky-w) * 0.301);
-      --sky-top: min(0px, calc(480.6px - var(--sky-w) * 0.4394));
-      height: 910px;
+      --font-size-display: 270px;
+      --hero-h: clamp(840px, 100vh, 1250px);
+      --hero-h: clamp(840px, 100svh, 1250px);
+      --name-top: calc(var(--hero-h) - 347px);
+      --name-left: calc(var(--edge) - 11px);
+      --name-label-x: calc(var(--name-left) + 32px);
+      --name-pin-x: calc(var(--name-left) + 32px);
+      --name-pin-y: var(--name-top);
+      --portrait-w: 543px;
+      --portrait-left: calc(100cqw - var(--edge) - 499px);
+      /* Bottom-anchored (cropped by the hero bottom), but never above y 85 (the board), so the head
+         stays clear of the nav links on short screens; there the crop just goes deeper. */
+      --portrait-top: max(85px, calc(var(--hero-h) - 815px));
+      --portrait-pin-x: var(--portrait-left);
+      --portrait-pin-y: calc(var(--portrait-top) + 335px);
+      /* Pin 335px below the portrait top: y 420 on the 900px board, never higher, so the label stays below the intro copy. */
+      --portrait-label-y: calc(var(--portrait-top) + 335px);
+      /* Board: sky (-120, -350), 1993 × 1329; sun (479, 529), 371px above the bottom.
+         Grow only to cover the horizontal edges or the top; the board width retains the bottom bleed. */
+      --sun-image-x: 0.3005519318;
+      --sun-image-y: 0.4410436528;
+      --sky-w: max(1993px, (var(--edge) + 415px) / var(--sun-image-x), (100cqw - var(--edge) - 415px) / (1 - var(--sun-image-x)), (var(--hero-h) - 371px) / var(--sun-image-y));
+      --sky-left: calc(var(--edge) + 415px - var(--sky-w) * var(--sun-image-x));
+      --sky-top: calc(var(--hero-h) - 371px - var(--sky-w) * var(--sun-image-y));
+      --hill-w: 123.1944444cqw;
+      --hill-left: -2.6388889cqw;
+      --hill-top: calc(var(--hero-h) - 147.5669919px - 60.5856256cqw);
+      --hill-pin-x: calc(var(--hill-left) + var(--hill-w) * 0.3145434047);
+      --hill-pin-y: calc(var(--hill-top) + var(--hill-w) * 0.5400225479);
+      height: var(--hero-h);
     }
-    /* Keeps the ridge (69% down the image, ratio 0.7127) at the same height at every width; -12px at 1440. */
-    .hill { width: 112.292%; left: -5.972%; top: calc(783.2px - 55.22cqw); }
+    /* The 1774 × 1264 hill starts at (-38, -120); keep its 69% ridge at the same height. */
+    .hill { width: var(--hill-w); left: var(--hill-left); top: var(--hill-top); }
+    .portrait { height: 815px; }
     .intro { top: 180px; max-width: 660px; }
     .footnote { bottom: 42px; }
     .hint-arrow { display: inline; }
   }
 
   @media (forced-colors: active) { .cta { border: 1px solid ButtonText; } }
+
+  /* Inside annotations that ride with a parallax layer: a transparent box the size of the hero, so the
+     annotation inside keeps its hero coordinates (and the hero stays its container for cqw). */
+  .follow { position: absolute; inset: 0; pointer-events: none; }
+
+  /* Load choreography: starting states while html[data-hero-intro] is set (see the inline script).
+     The hero is clipped to nothing (the page surface shows, never the hero's own fill) until the sun circle opens it. */
+  :global(html[data-hero-intro]) .hero { clip-path: circle(0px at 50% 60%); }
+  :global(html[data-hero-intro]) .name { transform: translateY(55%); }
+  :global(html[data-hero-intro]) .portrait,
+  :global(html[data-hero-intro]) .intro > *,
+  :global(html[data-hero-intro]) .footnote { opacity: 0; }
+  :global(html[data-hero-intro] [data-nav]) { opacity: 0; }
+  :global(html[data-hero-intro] [data-lens-dock]) { opacity: 0; }
 </style>
+
+<script is:inline>
+  // Mark the page before first paint so the load choreography starts from its first frame, not after a flash.
+  // Only at the top of a fresh load, with motion allowed; a safety timeout releases everything if the script below never runs.
+  if (window.scrollY === 0 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.dataset.heroIntro = '';
+    setTimeout(() => delete document.documentElement.dataset.heroIntro, 3500);
+  }
+</script>
+
+<script>
+  /*
+   * Hero motion (GSAP):
+   *   Load: the sky settles, "Jahat" rises from behind the hill (it is painted under the near hill),
+   *         then the portrait, the intro lines (staggered), the footnote and the nav.
+   *   Scroll: depth by lag. Far layers fall behind the page as the hero leaves (sky most, name less);
+   *         the hill and the portrait move with the page, since the portrait is cropped by the hero's
+   *         bottom and must never rise past it. The sun sinks as you scroll down.
+   * Reduced motion: neither runs. Only transform and opacity are animated.
+   */
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const root = document.documentElement;
+  const hero = document.querySelector<HTMLElement>('#hero:not([data-lens-preview] *)');
+
+  if (hero) {
+    const q = (selector: string) => Array.from(hero.querySelectorAll<HTMLElement>(selector));
+    const sky = q('.sky');
+    const sunMask = q('.sun-mask');
+    const followSky = q('[data-follow="sky"]');
+    const followName = q('[data-follow="name"]');
+    const names = q('.name');
+    const portrait = q('.portrait');
+    const intro = q('.intro > *');
+    const footnote = q('.footnote');
+    const nav = document.querySelector<HTMLElement>('[data-nav]');
+    const media = gsap.matchMedia();
+
+    /** The sun's centre in hero coordinates, from the same --sun-x / --sun-y the Inside annotations use. */
+    function sunCentre(): { x: number; y: number } {
+      const probe = document.createElement('div');
+      probe.style.cssText = 'position:absolute;left:var(--sun-x);top:var(--sun-y);width:0;height:0';
+      hero!.append(probe);
+      const box = hero!.getBoundingClientRect();
+      const point = probe.getBoundingClientRect();
+      probe.remove();
+      return { x: point.left - box.left, y: point.top - box.top };
+    }
+
+    /**
+     * Load: a circle the size of the sun opens from the sun until it covers the hero (expo.inOut, an
+     * After Effects-style easy ease). Each text block appears only once the circle encloses all of it,
+     * so nothing is seen sliced by the edge; the name rises from behind the hill as the circle reaches it.
+     */
+    async function playIntro() {
+      const image = sky[0] instanceof HTMLImageElement ? sky[0] : null;
+      // Start only once the sky can paint (or after a short wait), so the circle never opens on an empty fill.
+      await Promise.race([image?.decode?.().catch(() => {}), new Promise((done) => setTimeout(done, 700))]);
+
+      const box = hero!.getBoundingClientRect();
+      const sun = sunCentre();
+      const far = (x: number, y: number) => Math.hypot(x - sun.x, y - sun.y);
+      const startRadius = 22;
+      const endRadius = Math.max(far(0, 0), far(box.width, 0), far(0, box.height), far(box.width, box.height));
+      const duration = 1.6;
+      const ease = gsap.parseEase('expo.inOut');
+      /** Seconds until the circle's radius reaches `distance` (inverts the ease by bisection). */
+      const reach = (distance: number) => {
+        const target = (distance - startRadius) / (endRadius - startRadius);
+        if (target <= 0) return 0;
+        if (target >= 1) return duration;
+        let low = 0;
+        let high = 1;
+        for (let i = 0; i < 24; i++) {
+          const mid = (low + high) / 2;
+          if (ease(mid) < target) low = mid;
+          else high = mid;
+        }
+        return high * duration;
+      };
+      /** Distance from the sun to the farthest corner of an element (it is fully inside the circle past this). */
+      const enclosed = (element: HTMLElement) => {
+        const r = element.getBoundingClientRect();
+        if (!r.width) return null;
+        const left = r.left - box.left;
+        const top = r.top - box.top;
+        return Math.max(far(left, top), far(left + r.width, top), far(left, top + r.height), far(left + r.width, top + r.height));
+      };
+
+      const circle = { r: startRadius };
+      const timeline = gsap.timeline({
+        onComplete: () => {
+          delete root.dataset.heroIntro;
+          window.dispatchEvent(new CustomEvent('hero-intro-done'));
+          hero!.style.clipPath = '';
+          // Inline opacity stays until here: the starting CSS still applies while html[data-hero-intro] is set.
+          gsap.set([...portrait, ...intro, ...footnote, nav, document.querySelector('[data-lens-dock]')], { clearProps: 'opacity' });
+        },
+      });
+      timeline.to(circle, {
+        r: endRadius,
+        duration,
+        ease: 'expo.inOut',
+        onUpdate: () => { hero!.style.clipPath = `circle(${circle.r}px at ${sun.x}px ${sun.y}px)`; },
+      }, 0);
+      // Scale the sky around the sun itself, so the sun stays centred in the opening circle.
+      const skyBox = image?.getBoundingClientRect();
+      const origin = skyBox ? `${sun.x - (skyBox.left - box.left)}px ${sun.y - (skyBox.top - box.top)}px` : '50% 50%';
+      timeline.fromTo(sky, { scale: 1.04, transformOrigin: origin }, { scale: 1, duration: duration + 0.6, ease: 'power2.out' }, 0);
+
+      const nameAt = Math.min(...names.map((name) => { const d = enclosed(name); return d === null ? Infinity : reach(d * 0.7); }));
+      // y: 0 explicitly: GSAP would otherwise read the CSS starting translateY(55%) as a px y and keep it.
+      timeline.fromTo(names, { y: 0, yPercent: 55 }, { y: 0, yPercent: 0, duration: 1.1, ease: 'expo.out' }, Number.isFinite(nameAt) ? nameAt : 0.4);
+      // The portrait steps up into place (it is cropped by the hero's bottom, so it reads as entering the frame).
+      // It starts as soon as the circle touches its near edge and travels long and evenly enough to be seen;
+      // its opacity completes early so what reads is the movement, not a fade.
+      const portraitBox = portrait[0]?.getBoundingClientRect();
+      const portraitAt = portraitBox
+        ? reach(far(portraitBox.left - box.left + portraitBox.width * 0.25, portraitBox.top - box.top + portraitBox.height * 0.4))
+        : 0.5;
+      timeline
+        .fromTo(portrait, { y: 160 }, { y: 0, duration: 1.6, ease: 'power3.out' }, portraitAt)
+        .fromTo(portrait, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power1.out' }, portraitAt);
+      for (const element of [...intro, ...footnote]) {
+        const distance = enclosed(element);
+        timeline.fromTo(element, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, distance === null ? duration : reach(distance));
+      }
+      if (nav) timeline.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' }, duration - 0.3);
+      // The lens dock is fixed to the viewport, outside the hero: it pops in when the circle reaches it.
+      const dock = document.querySelector<HTMLElement>('[data-lens-dock]');
+      const lensButton = dock?.querySelector<HTMLElement>('[data-lens-open]');
+      if (dock && lensButton) {
+        const d = lensButton.getBoundingClientRect();
+        const at = reach(far(d.left - box.left + d.width / 2, d.top - box.top + d.height / 2));
+        timeline
+          .fromTo(dock, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power1.out' }, at)
+          // The lens scales through its own --scale (its transform also carries the drag offset).
+          .fromTo(lensButton, { '--scale': 0.4 }, { '--scale': 1, duration: 0.7, ease: 'back.out(2.2)', clearProps: '--scale' }, at);
+      }
+    }
+
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      if ('heroIntro' in root.dataset) void playIntro();
+
+      // Scroll parallax, scrubbed over the hero's exit. Values are fractions of the hero's height.
+      const parallax = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.4, invalidateOnRefresh: true },
+      });
+      parallax
+        .to([...sky, ...sunMask, ...followSky], { y: () => hero.offsetHeight * 0.35 }, 0)
+        .to([...names, ...followName], { y: () => hero.offsetHeight * 0.18 }, 0);
+
+      return () => delete root.dataset.heroIntro;
+    });
+
+    // The lens and the hero's viewport-based height move the trigger; keep it current.
+    new MutationObserver(() => ScrollTrigger.refresh()).observe(root, { attributes: true, attributeFilter: ['data-lens'] });
+  }
+</script>

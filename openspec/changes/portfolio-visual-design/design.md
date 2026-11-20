@@ -144,15 +144,15 @@ Footer (D17): "Available for an internship, now. Lima, Peru · remote." / "Desig
 
 ## 5. Hero composition (desktop 1440 × 900)
 
-Paint order, back to front. Positions are the owner's composition and are the reference.
+Paint order, back to front. Positions are the owner's composition and are the reference. The hero is exactly one viewport (1440 × 900); owner enlarged the layers and the fit to 900 was approved on 2026-11-19 (Outside `2191:87` and Inside `2191:504` share this geometry).
 
 | Order | Layer | Box (x, y, w, h) | Notes |
 |---|---|---|---|
-| 1 | Sky + far hills | 0, −171, 1606 × 1071 | Not mirrored. Sun lands near (483, 538). |
-| 2 | Display name | 64, 552, 807 × 276 | "Jahat" only (proposal D9). White in Outside. **Behind the hill**: the grass edge overlaps the letter bases. Clear of the portrait and about 60 px below the buttons. |
-| 3 | Near hill | −86, −13, 1617 × 1152 | Transparent PNG, pre-rotated 5° (see `assets.md`). |
-| 4 | Portrait | 900, 190, 520 × 780 | Cropped by the frame bottom at about mid-thigh. |
-| 5 | Nav, intro, marker, hint | — | Intro block at 64, 180, 600 wide. |
+| 1 | Sky + far hills | −120, −350, 1993 × 1329 | Not mirrored. Sun lands near (479, 529), over the "a", clear of the "h". Extends 79 px below the frame, behind the hill. |
+| 2 | Display name | 53, 553, 727 × 248 (Epilogue Medium 270, −4%) | "Jahat" only (proposal D9). White in Outside. **Behind the hill**: the grass edge overlaps the letter bases. Clear of the portrait and about 60 px below the buttons. |
+| 3 | Near hill | −38, −120, 1774 × 1264 | Transparent PNG, pre-rotated 5° (see `assets.md`). Kept this wide so its rotated corner stays outside the frame. Placed by the owner (2026-11-19) so the lit rim of the grass sits under the sun. |
+| 4 | Portrait | 877, 85, 543 × 815 | Cropped by the frame bottom at about mid-thigh. |
+| 5 | Nav, intro, marker, hint | — | Intro block at 64, 180, 660 wide. |
 
 Rules:
 - Sun on the left of the subject. Do not mirror any layer (proposal D4).
@@ -165,10 +165,10 @@ Inside annotations (pin centre, label side):
 
 | Layer | Pin | Label |
 |---|---|---|
-| 01 sky | (686, 306) | right: "[layer 01 · sky + far hills]" / "bg-back.png · moves slowest" |
+| 01 sky | (479, 529) — on the sun; label above, in one lane with the name label at y 466 | right: "[layer 01 · sky + far hills]" / "bg-back.png · moves slowest" |
 | 02 hill | (520, 838) | right: "[layer 02 · near hill]" / "bg-front-hill.png · moves fastest" |
-| 03 name | (70, 468) | right: "[layer 03 · display name]" / "Epilogue Medium 300 · sits behind me" |
-| 04 portrait | (900, 420) | left: "[layer 04 · portrait]" / "generated from my own reference photos" |
+| 03 name | (85, 553) — on the name bound | right: "[layer 03 · display name]" / "Epilogue Medium · 270 px · sits behind the hill" |
+| 04 portrait | (877, 420) | left: "[layer 04 · portrait]" / "generated from my own reference photos" |
 
 ### Logo (proposal D9)
 
@@ -335,7 +335,8 @@ These are implications to carry into the implementation tasks, not instructions 
 - Outside and Inside copy are both UI strings: they go through `Dictionary` in `src/lib/i18n.ts`.
 - Project covers and screenshots are content images: `coverImage` in the projects schema already exists.
 - Probable schema additions are listed in the proposal under Affected Areas.
-- **Nav (D19):** `position: sticky; top: 0` on a full-width bar; the Scrolled state appears once the hero has left the viewport (IntersectionObserver on the hero). Glass is `backdrop-filter: blur(20px)` over the translucent surface; provide an opaque fallback under `@supports not (backdrop-filter: …)` and under `prefers-reduced-transparency: reduce`. Mark the current section with `aria-current="true"` on its link, not only with the dot.
+- **Nav (D19):** `position: sticky; top: 0` on a full-width bar; the Scrolled state appears as soon as the page starts scrolling (a 1 px sentinel at the top of the page, not the hero). Owner, 2026-11-19: "al bajar aún por el hero, el contraste es pésimo": a transparent bar over the moving portrait, name and hill cannot keep its text readable, and the glass (82% surface + blur) can. Glass is `backdrop-filter: blur(20px)` over the translucent surface; provide an opaque fallback under `@supports not (backdrop-filter: …)` and under `prefers-reduced-transparency: reduce`. Mark the current section with `aria-current="true"` on its link, not only with the dot.
+- **Logo on Home (decided 2026-11-19):** hidden while the display name "Jahat" is on screen, shown once it leaves (IntersectionObserver on the display name, not the hero, so the name is never absent from the screen). Owner: "siento que es muy redundante tener mi nombre 2 veces en la interfaz". Home only: every other page keeps the logo, since it is their only mark and their way home. Same rule in Outside and Inside. Hide it with `visibility: hidden` (out of the tab order), not only `opacity`. This is a second trigger, separate from the glass one above.
 - **Backgrounds (D20):** decorative only, `aria-hidden="true"`, never real text in the DOM (screen readers and find-in-page must not see the bytes). Render the bytes as a generated SVG or canvas background per section. Keep them off text with a CSS `mask-image` built from the text blocks' boxes, feathered from 40 px to 120 px (one real feathered mask replaces the five stacked copies used in Figma). The lights and the gradient into the next section are CSS radial and linear gradients; the grain is an SVG `feTurbulence` noise at low opacity. Hide the bytes under `prefers-reduced-transparency` and in forced-colors mode. Do not add progressive blur near text: the owner rejected it.
 - **Footer (D17):** the fade is a linear gradient over the bottom 240 px of the hill layer.
 - ~~`openspec/config.yaml` says syntax highlighting is Shiki while `CLAUDE.md` says code fences render unhighlighted.~~ Resolved 2026-11-17 by "Code theme" below: Shiki with a custom brand theme. `CLAUDE.md` was corrected on 2026-11-18.
@@ -526,13 +527,14 @@ Rejected: existing themes (Everforest Dark bg `#2D353B`, Vitesse Dark bg `#12121
 
 ## Mobile menu open state (task 4.5) — proposal, 2026-11-18
 
-Owner: "encargate tu de diseñar esa pantalla". Boards on "Portfolio" (`2029:2`), to the right of the Home v3.5 mobile and tablet boards: **Outside `2349:86`** (x 9906) and **Inside `2349:159`** (x 10396), 390 × 844 each.
+Owner: "encargate tu de diseñar esa pantalla". Boards on "Portfolio" (`2029:2`), to the right of the Home v3.5 mobile and tablet boards: **Outside `2391:122`** (x 9906) and **Inside `2391:201`** (x 10396), 390 × 844 each. These are v2, approved 2026-11-19 ("me encanta. queda."); the v1 boards (`2349:86`, `2349:159`) were deleted so they cannot be confused with it.
 
 - A sheet drops from the top over the hero: `card` surface (Inside `green-900`), bottom corners 28, soft green shadow. The hero stays visible under a `green-950` scrim (32% Outside, 50% Inside); tapping the scrim closes the menu.
 - The nav row stays where it is, on top of the sheet; the menu button shows Lucide `x` (1.5 stroke) in the same circular button.
+- **Three zones, top to bottom: navigate, set, contact.** Owner, 2026-11-19: "hay que ordenar todo este caos. necesitamos jerarquía clara y buen gusto" and "aumentar un poco la separación entre secciones… para que el usuario pueda escanear rápidamente con la mirada". The space grows as the importance falls: sheet padding 108 top (42 below the nav row) / 20 sides / 40 bottom; links → language 40; language → footer 56; availability → profiles 20. Sheet height 596.
 - Links: Work, Experience, Notes in Epilogue SemiBold 40 / 44, each with a mono index (`01`–`03`, IBM Plex Mono Medium 13, `green-700` / Inside `green-300`) echoing the section markers, rows between hairlines (`hairline-warm` / Inside `green-700`). Contact is not repeated: it is already the nav's button.
-- Below the links: availability with the sun dot ("Open to an internship, now.", Hanken Medium 16) and an "ELSEWHERE" row with the profile links from `links.json`.
-- **No EN / ES / PT switch.** D1 (English-first, 2026-09-18) creates no Spanish pages until there is Spanish content, so the switch would point nowhere. It returns to this sheet, under Elsewhere, when Spanish ships.
+- **Language: a segmented control right after Notes** (owner: "poner el selector luego de 'notes' y antes del 'open to internships'"). Full width, 44 tall, pill, 1 px border in ink at 35% (Inside white at 35%), the same border as the close button. Three equal segments named in their own language: "English", "Español", "Português" (Hanken Grotesk Medium 15). The current one has a faint fill (ink at 8%, Inside white at 12%) and full-strength text; the others are at 70%. Not a dark fill: that would be a second pill like Contact and compete with it. Every segment is a full 44 px target.
+- **Footer: availability, then the profiles as icon buttons** (owner: "cambiar los nombres de las redes sociales por botones con sus iconos"). Availability keeps the sun dot ("Open to an internship, now.", Hanken Medium 16). Below it, five 44 px circular buttons, 12 apart, with the close button's border, holding the brand icons from `Icon.astro` (GitHub, LinkedIn, Instagram, YouTube 19 px; X 17 px) in ink (Inside white). The "ELSEWHERE" label is gone: the icons say it. Each button needs an `aria-label` with the network name.
 - Behaviour for implementation: the lens dock hides while the menu is open; Esc and the scrim close it; focus moves to the first link and returns to the menu button on close; `body` scroll is locked; the sheet slides 16 px and fades (reduced motion: fade only).
 
 ## Chat conversation view (task 7.11) — proposal, 2026-11-18
