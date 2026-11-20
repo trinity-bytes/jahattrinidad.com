@@ -385,15 +385,17 @@ const { strings } = Astro.props;
   :global(:root[data-lens-reveal]::view-transition-old(root)),
   :global(:root[data-lens-reveal]::view-transition-new(root)) { animation: none; mix-blend-mode: normal; }
 
-  /* The idle shake. `rotate` is its own property, so it never fights the drag's transform. */
-  .lens[data-nudge] { animation: lens-nudge 0.9s ease-in-out; }
+  /* The idle shake: a short side-to-side knock with a slight tilt (a round button only reads as moving
+     when it travels, not when it spins). `translate` and `rotate` are their own properties, so they never
+     fight the drag's transform. */
+  .lens[data-nudge] { animation: lens-nudge 0.75s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
   @keyframes lens-nudge {
-    0%, 100% { rotate: 0deg; }
-    12% { rotate: -14deg; }
-    28% { rotate: 11deg; }
-    44% { rotate: -7deg; }
-    60% { rotate: 4deg; }
-    76% { rotate: -2deg; }
+    0%, 100% { translate: 0; rotate: 0deg; }
+    15% { translate: -7px 0; rotate: -10deg; }
+    30% { translate: 6px 0; rotate: 8deg; }
+    45% { translate: -5px 0; rotate: -6deg; }
+    60% { translate: 3px 0; rotate: 4deg; }
+    75% { translate: -1.5px 0; rotate: -2deg; }
   }
   @media (prefers-reduced-motion: reduce) { .lens[data-nudge] { animation: none; } }
 </style>
