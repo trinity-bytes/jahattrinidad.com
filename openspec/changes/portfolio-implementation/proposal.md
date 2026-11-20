@@ -64,6 +64,16 @@ The Experience list (role, organisation, dates, what carries over, Inside tools)
 
 The sample entries (`realtime-chat-app`, `task-tracker-cli`, `hello-world`) are removed and replaced with the real projects (Viora, Mink'a, Tranqui, Inspiration Garden, and the Work index "More projects" and "Small experiments") and the real posts. The content-model rule "two seed entries per collection covering every field" is replaced by a fixture rule (see the content-model delta).
 
+### I7 — Spanish and Portuguese ship; D1 is superseded (2026-11-19)
+
+The owner asked for Spanish and Portuguese ("quiero que imlementemos las traudcciones en español y portugues"). D1 (English-first, no `/es/` tree until there is Spanish content) is superseded: `pt` joins `en` and `es`, and both get full UI dictionaries, a chat script, and translated projects and experience. Posts stay English for now ("proyectos y experiencia si, pero post no todavia"), so `/es/notes/` and `/pt/notes/` list the English posts and link to their English pages. Figma stays in English; translations live only in the site.
+
+- **Structure:** English stays unprefixed. Non-default-locale entries live in a folder named after the locale (`src/content/projects/es/viora.mdx`, id `es/viora`); `entrySlug()` in `content.ts` strips the folder for routes and translation links. Page bodies live in `src/pages/_views/` (not routed, still the `pages` layer) and each locale's route is a thin wrapper.
+- **Locale tags:** `es` (neutral Latin American Spanish, "tú"; `@astrojs/sitemap` rejects `es-419` and silently skips the sitemap) and `pt-BR` ("você"), mirrored in `astro.config.mjs`.
+- **Switch:** the `EN / ES / PT` switch of Nav set `2185:122` goes to the page's counterpart, or to that locale's Home when there is none. In the mobile menu it sits under Elsewhere.
+- **No fallback:** `getDictionary()` no longer falls back to `en`; every locale has a complete `Dictionary`, so a missing string is a type error.
+- **Rejected:** a `[...locale]` rest parameter over one route tree (one file per page, but two rest parameters in the case-study path and less obvious routing); machine fallback to English for untranslated projects (would hide missing content).
+
 ## Scope
 
 **In scope**
