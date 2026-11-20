@@ -7,13 +7,15 @@ import { initialState, next, typingDelay, view } from '../../../lib/chat/engine'
 import type { ChatEvent, ChatState, ChatView, Field } from '../../../lib/chat/engine';
 import { buildEmail } from '../../../lib/chat/email';
 import { chatEn } from '../../../lib/chat/script.en';
+import { chatEs } from '../../../lib/chat/script.es';
+import { chatPt } from '../../../lib/chat/script.pt';
 import type { ChatCopy } from '../../../lib/chat/script';
 import { copyText } from './copy';
 
 /** Web3Forms JSON endpoint: https://docs.web3forms.com/getting-started/api-reference */
 const SUBMIT_URL = 'https://api.web3forms.com/submit';
 /** One entry per language that has a script; D1 keeps English the only one for now. */
-const copies: Record<string, ChatCopy> = { en: chatEn };
+const copies: Record<string, ChatCopy> = { en: chatEn, es: chatEs, pt: chatPt };
 
 export function initChat(): void {
   const root = document.querySelector<HTMLElement>('[data-chat]');

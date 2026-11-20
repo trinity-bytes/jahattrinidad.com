@@ -1,0 +1,13 @@
+---
+import CaseStudy from '../../_views/CaseStudy.astro';
+import { projectRoutes, type Project } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  return projectRoutes('es');
+}
+
+interface Props {
+  entry: Project;
+}
+---
+<CaseStudy lang="es" entry={Astro.props.entry} />

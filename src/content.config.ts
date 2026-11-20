@@ -2,7 +2,7 @@ import { defineCollection } from 'astro:content';
 import { glob, file } from 'astro/loaders';
 import { z } from 'astro/zod'; // Zod 4, bundled with astro. NEVER standalone zod.
 
-const LOCALES = ['en', 'es'] as const;
+const LOCALES = ['en', 'es', 'pt'] as const;
 
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/projects' }),
@@ -11,7 +11,7 @@ const projects = defineCollection({
       title: z.string(),
       description: z.string(), // meta description + card teaser
       lang: z.enum(LOCALES),
-      translationKey: z.string().optional(), // pairs an ES entry with its EN counterpart
+      translationKey: z.string().optional(), // pairs an ES/PT entry with its EN counterpart
       publishDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       draft: z.boolean().default(false),

@@ -1,4 +1,5 @@
 ---
+import type { Locale } from '../../lib/i18n';
 /*
  * Footer for the non-Home pages. Its navigation points at the Home sections, built with
  * localizedPath. There is no lens here, so the Inside shortcut is left out. The case study, Notes
@@ -9,7 +10,7 @@ import { SOURCE_URL } from '../../lib/consts';
 import { getDictionary, localizedPath } from '../../lib/i18n';
 
 interface Props {
-  lang: 'en' | 'es';
+  lang: Locale;
   compact?: boolean;
   /** The links collection's data, read by the page (sections never import content.ts). */
   links: { label: string; url: string }[];

@@ -94,7 +94,8 @@ the scaffold `tokens.css` still has `color-scheme: light dark`.)
 ## `lang` is a required parameter in `src/lib/content.ts`
 
 Every function in `src/lib/content.ts` takes `lang` as a required parameter,
-except `listLinks()` (the `links` collection is language-agnostic). There is
+except `listLinks()` (the `links` collection is language-agnostic) and
+`entrySlug()` (it reads the entry's own `lang`). There is
 no default locale value anywhere in that module, on purpose: a default
 would let `/es/blog/` silently render English content when the Spanish
 counterpart doesn't exist, with no build-time signal that anything is
@@ -102,38 +103,32 @@ wrong. Do not add a default value for `lang` to "make the call site
 shorter" — the missing argument is meant to be a compile error, not a
 silent fallback.
 
-## D1 is resolved — English-first, Spanish not ruled out
+## Languages: en, es, pt (D1 superseded by I7, 2026-11-19)
 
-The i18n decision (D1) carried a revisit trigger: reopen it *before* the
-first substantial batch of UI copy is written. That trigger fired on
-2026-09-18, ahead of the visual-design pass, and D1 was closed:
-
-**English-first. Spanish is expected eventually, so the structure stays.**
-No `src/pages/es/` tree and no Spanish dictionary are created until there
-is Spanish content to put in them. Do not re-open this decision — it is
-settled, not deferred.
-
-What that resolution costs you, from here on, is one standing rule:
+The site ships in English (unprefixed), Spanish (`/es/`, `es`) and
+Portuguese (`/pt/`, `pt-BR`). The record is decision I7 in
+`openspec/changes/portfolio-implementation/proposal.md`; the old D1
+(English-first) is history.
 
 **No UI string may be hardcoded into a component.** Every user-visible
 string — nav labels, section headings, button text, empty states, aria
-labels — goes through the `Dictionary` interface in `src/lib/i18n.ts` and
-is read via `getDictionary(lang)`. Every internal link is built with
-`localizedPath(lang, path)`, never as a bare string.
+labels, meta descriptions — goes through the `Dictionary` interface in
+`src/lib/i18n.ts` and is read via `getDictionary(lang)`. A new key must be
+added to `en` in `i18n.ts` AND to `src/lib/dictionaries/es.ts` and `pt.ts`;
+there is no fallback, so a missing one is a type error. Every internal link
+is built with `localizedPath(lang, path)` or the path helpers, never as a
+bare string.
 
-This is the entire reason D1 was safe to defer. The expensive,
-non-retrofittable parts are already built: `lang` and `translationKey` in
-the schemas, the locale-keyed `dictionaries` record, `getDictionary()`
-with its `en` fallback, and `prefixDefaultLocale: false` freezing the
-English URLs permanently. Adding Spanish later is then one dictionary
-object plus content — mechanical. Hardcoding strings during the design
-pass is what would turn it back into a refactor of every page.
+- Translated entries live in a folder named after their locale
+  (`src/content/projects/es/<slug>.mdx`), carry `translationKey: <slug>`,
+  and are routed by `entrySlug()`. Never route or link with `entry.id`.
+- Page bodies live in `src/pages/_views/`; each locale route is a thin
+  wrapper. Add a page once there and three wrappers.
+- Posts are English-only for now: every locale's Notes lists the English
+  posts (`postsLang`). Chat copy lives in `src/lib/chat/script.<lang>.ts`.
 
-Prose inside MDX content entries is exempt: that is content, and the
-`lang` field on the entry already carries it.
-
-The historical record is `openspec/changes/archive/2026-09-18-portfolio-scaffold/proposal.md`
-section D1. Read it for the reasoning, not for the status.
+Prose inside MDX content entries is exempt from the Dictionary rule: that
+is content, and the `lang` field on the entry already carries it.
 
 ## Visual design lives in Figma — `tokens.css` is a placeholder
 

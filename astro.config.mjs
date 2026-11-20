@@ -20,7 +20,7 @@ export default defineConfig({
   build: { format: 'directory' },
 
   i18n: {
-    locales: ['en', 'es'],
+    locales: ['en', 'es', 'pt'],
     defaultLocale: 'en',
     routing: { prefixDefaultLocale: false },
     // fallback: MUST NOT be configured — see design.md §10
@@ -28,7 +28,7 @@ export default defineConfig({
 
   integrations: [
     mdx(),
-    sitemap({ i18n: { defaultLocale: 'en', locales: { en: 'en-US', es: 'es-ES' } } }),
+    sitemap({ i18n: { defaultLocale: 'en', locales: { en: 'en-US', es: 'es', pt: 'pt-BR' } } }),
   ],
 
   markdown: { shikiConfig: { theme, transformers: [fenceTitle] } },

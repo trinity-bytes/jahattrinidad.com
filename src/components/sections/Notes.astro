@@ -1,4 +1,5 @@
 ---
+import type { Locale } from '../../lib/i18n';
 import type { CollectionEntry } from 'astro:content';
 import PostRow from '../content/PostRow.astro';
 import Backgrounds from './Backgrounds.astro';
@@ -18,7 +19,9 @@ interface ElsewhereItem {
 }
 
 interface Props {
-  lang: 'en' | 'es';
+  lang: Locale;
+  /** Locale of the listed posts; differs from `lang` while posts are English-only. */
+  postsLang: Locale;
   marker: string;
   headline: string;
   strings: Dictionary['notes'];
@@ -34,13 +37,13 @@ interface Props {
   index?: boolean;
 }
 
-const { lang, marker, headline, strings, inside, posts, allWritingHref, elsewhere = [], seed = 5, index = false } = Astro.props;
+const { lang, postsLang, marker, headline, strings, inside, posts, allWritingHref, elsewhere = [], seed = 5, index = false } = Astro.props;
 const [featured, ...rest] = posts;
 const typeLabel = (type: 'essay' | 'tutorial') => strings[type];
 const note = inside.annotations;
 // Numbers shown on tablet and mobile: the chip needs a featured post, the rows a second one.
 const notes = [note.feed, ...(featured ? [note.collection] : []), ...(rest.length > 0 ? [note.callSite] : [])];
-const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', lang, entry.id);
+const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', postsLang, entry.id);
 ---
 <section id="notes" class:list={["notes", { index }]} aria-labelledby="notes-heading">
   <Backgrounds variant="notes" next="none" seed={seed} />

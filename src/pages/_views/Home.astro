@@ -1,0 +1,156 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/sections/Hero.astro';
+import Values from '../../components/sections/Values.astro';
+import Work from '../../components/sections/Work.astro';
+import Experience from '../../components/sections/Experience.astro';
+import Notes from '../../components/sections/Notes.astro';
+import Contact from '../../components/sections/Contact.astro';
+import Footer from '../../components/sections/Footer.astro';
+import {
+  collectionPath,
+  entryPath,
+  entrySlug,
+  listExperience,
+  listLinks,
+  listPosts,
+  listProjects,
+  type Locale,
+  type Project,
+} from '../../lib/content';
+import { CONTACT_EMAIL, SOURCE_URL } from '../../lib/consts';
+import { buildSeo } from '../../lib/seo';
+import { getDictionary, localeGroup, localizedPath } from '../../lib/i18n';
+// Placeholder for the Garden screenshot until the real entry lands (task 8.1).
+import gardenPlaceholder from '../../content/projects/inspiration-garden/cover.png';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+// S7: posts are English-only for now; every locale lists the English entries.
+const postsLang: Locale = 'en';
+const t = getDictionary(lang);
+const copy = t.home.outside;
+
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    'astro.config.mjs must define `site` before this page can compute canonical URLs.'
+  );
+}
+
+const [allProjects, featuredProjects, posts, experience, links] = await Promise.all([
+  listProjects({ lang }),
+  listProjects({ lang, featuredOnly: true }),
+  listPosts({ lang: postsLang, order: 'newest', limit: 3 }),
+  listExperience(lang),
+  listLinks(),
+]);
+
+const workPath = collectionPath('projects', lang);
+const notesPath = collectionPath('posts', lang);
+const linkOf = (id: string) => links.find((link) => link.id === id)?.data.url;
+
+/** Card meta line, e.g. "University SaaS · Team of 5 · 2026". */
+function projectMeta({ data }: Project): string | undefined {
+  const parts = [data.kind, data.team && t.common.teamOf(data.team.size), data.timeframe];
+  const meta = parts.filter(Boolean).join(' · ');
+  return meta || undefined;
+}
+
+// Limit after dropping the Garden (homeFeatured: false, shown in Values), so
+// Home always gets three Work cards. Non-home entries stay in the list because
+// Work.astro subtracts them from the "see all" count.
+const homeProjects = [
+  ...featuredProjects.filter((project) => project.data.homeFeatured).slice(0, 3),
+  ...featuredProjects.filter((project) => !project.data.homeFeatured),
+];
+
+const workProjects = homeProjects.map((project) => ({
+  data: project.data,
+  href: entryPath('projects', lang, entrySlug(project)),
+  meta: projectMeta(project),
+  problem: project.data.problem,
+  whatItDoes: project.data.whatItDoes,
+}));
+
+const gardenImage = await getImage({ src: gardenPlaceholder, width: 752 });
+
+const seo = buildSeo({
+  title: 'Jahat Trinidad',
+  description: copy.hero.sub,
+  path: localizedPath(lang, '/'),
+  lang,
+  site,
+  group: localeGroup('/'),
+});
+---
+
+<Base lang={lang} seo={seo} lens profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
+  <Hero strings={copy.hero} insideStrings={t.home.inside.hero} workHref={workPath} />
+  <Values
+    copy={copy.values}
+    insideCopy={t.home.inside.values}
+    gardenHref={entryPath('projects', lang, 'inspiration-garden')}
+    gardenImage={{ src: gardenImage.src, alt: '' }}
+  />
+  <Work
+    copy={copy.work}
+    insideCopy={t.home.inside.work}
+    headline={t.home.workHeadline}
+    labels={{ ...t.common, seeProject: t.work.seeProject }}
+    projects={workProjects}
+    count={allProjects.length}
+    allProjectsHref={workPath}
+  />
+  <Experience
+    lang={lang}
+    marker={copy.experience.marker}
+    headline={copy.experience.headline}
+    sub={copy.experience.sub}
+    strings={t.experience}
+    inside={t.home.inside.experience}
+    entries={experience}
+  />
+  <Notes
+    lang={lang}
+    postsLang={postsLang}
+    marker={copy.notes.marker}
+    headline={t.home.notesHeadline}
+    strings={t.notes}
+    inside={t.home.inside.notes}
+    posts={posts}
+    allWritingHref={notesPath}
+  />
+  <Contact
+    lang={lang}
+    marker={copy.contact.marker}
+    headline={copy.contact.headline}
+    strings={t.contact}
+    inside={t.home.inside.contact}
+    chat={t.chat}
+    email={CONTACT_EMAIL}
+    linkedInHref={linkOf('linkedin')}
+  />
+  <Footer
+    slot="footer"
+    strings={t.footer}
+    navigation={[
+      { label: t.nav.work, href: '#work' },
+      { label: t.nav.experience, href: '#experience' },
+      { label: t.nav.notes, href: '#notes' },
+      { label: t.nav.contact, href: '#contact' },
+    ]}
+    elsewhere={[
+      ...links.map((link) => ({ label: link.data.label, href: link.data.url })),
+      { label: t.footer.rss, href: '/rss.xml' },
+    ]}
+    source={{ label: t.footer.builtWith, href: SOURCE_URL }}
+    copyright={t.footer.copyright(new Date().getFullYear())}
+    outsideName={copy.hero.name}
+    insideName={t.nav.brandInside}
+  />
+</Base>

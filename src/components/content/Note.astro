@@ -1,6 +1,7 @@
 ---
+import type { Locale } from '../../lib/i18n';
 import { getDictionary } from '../../lib/i18n';
-interface Props { lang: 'en' | 'es' }
+interface Props { lang: Locale }
 const { lang } = Astro.props;
 ---
 <aside class="note"><span>{getDictionary(lang).post.note}</span><slot /></aside>

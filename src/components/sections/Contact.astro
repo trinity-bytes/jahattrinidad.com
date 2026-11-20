@@ -1,4 +1,5 @@
 ---
+import type { Locale } from '../../lib/i18n';
 import { Image } from 'astro:assets';
 import sky from '../../assets/hero/sky.png';
 import Icon from '../ui/Icon.astro';
@@ -8,7 +9,7 @@ import AnnotationList from '../ui/annotation/AnnotationList.astro';
 import type { Dictionary } from '../../lib/i18n';
 
 interface Props {
-  lang: 'en' | 'es';
+  lang: Locale;
   marker: string;
   headline: string;
   strings: Dictionary['contact'];
