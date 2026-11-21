@@ -127,6 +127,13 @@ bare string.
 - Posts are English-only for now: every locale's Notes lists the English
   posts (`postsLang`). Chat copy lives in `src/lib/chat/script.<lang>.ts`.
 
+**Do not remove `translate="no"` from `<html>` or the `notranslate` meta in
+`Base.astro`.** They stop phones set to Spanish or Portuguese from
+machine-translating the English page; the inline locale redirect
+(`src/lib/locale-redirect.ts`) sends those visitors to the human
+translation instead. Every language link in the nav needs
+`data-locale-choice`, or a visitor who picks EN gets redirected back.
+
 Prose inside MDX content entries is exempt from the Dictionary rule: that
 is content, and the `lang` field on the entry already carries it.
 
