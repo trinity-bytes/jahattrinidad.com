@@ -126,6 +126,14 @@ function detect(text: string): { email?: string; branch?: Branch };
 - `src/lib/content.ts` exposes the path builder it already has privately (`entryPath`), so pages, RSS and SEO stop hardcoding `/projects/` and `/blog/`. Every internal link goes through it or `localizedPath`.
 - Collection names (`projects`, `posts`) stay; they are internal.
 
+### Visitor language (2026-11-20, v1.4.0)
+
+A phone set to Spanish that opened the English home got the browser's machine translation instead of the human `/es/` page. Two layers in `Base.astro`:
+
+- `<html translate="no">` and `<meta name="google" content="notranslate">` block machine translation on every page. Cost accepted: a visitor in a language the site does not ship (French, German) reads English, not a machine translation.
+- A first-visit redirect, an inline script that is the first child of `<head>` (before fonts, CSS and the body, so the English page never paints). Only English pages redirect, and only to a real hreflang counterpart (English-only posts stay put). The target is the language the visitor picked in the nav (`a[data-locale-choice]` stores `locale` in `localStorage`), else the first of `navigator.languages` the site ships. Choosing EN in the nav therefore sticks. Logic and tests: `src/lib/locale-redirect.ts`; `pickLocaleRedirect` is serialized with `toString()`, so it must not reference anything outside itself.
+- Rejected: a "this page is available in Spanish" banner (owner: friction for the visitor who only wanted to come in); a Cloudflare Worker reading `Accept-Language` (removes the brief blank before the redirect, but turns the static deploy into a Worker with code; revisit only if the blank is noticeable on a phone).
+
 ## 5. Images
 
 - Hero layers are exported from Figma (visual-design `assets.md`, D8: not in git as source files) into `src/assets/hero/` as web-sized files: sky and far hills (3400 w), near hill rotated 5° on transparency (2952 × 2104), portrait with alpha (1400 w). The exported web versions are committed; the full-size working files stay out of git.
