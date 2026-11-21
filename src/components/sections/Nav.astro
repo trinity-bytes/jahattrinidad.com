@@ -34,7 +34,7 @@ const profileIcons = {
       <span class="pill" data-nav-pill aria-hidden="true"></span>
       {links.map((link) => <a href={link.href} data-section-link={link.id} aria-current={link.route && pathname.startsWith(link.route) ? 'page' : undefined}>{link.label}</a>)}
       {languages.length > 1 && <div class="lang-switch" role="group" aria-label={strings.language}>
-        {languages.map((language, index) => <>{index > 0 && <span class="lang-sep" aria-hidden="true">/</span>}<a href={language.href} hreflang={language.hrefLang} lang={language.lang} aria-label={language.name} aria-current={language.current ? 'true' : undefined}>{language.code}</a></>)}
+        {languages.map((language, index) => <>{index > 0 && <span class="lang-sep" aria-hidden="true">/</span>}<a href={language.href} hreflang={language.hrefLang} lang={language.lang} data-locale-choice={language.lang} aria-label={language.name} aria-current={language.current ? 'true' : undefined}>{language.code}</a></>)}
       </div>}
     </div>
     <a class="contact" data-magnetic href={contact} data-section-link="contact">{strings.contact}</a>
@@ -51,7 +51,7 @@ const profileIcons = {
         ))}
       </ul>
       {languages.length > 1 && <div class="sheet-languages" role="group" aria-label={strings.language}>
-        {languages.map((language) => <a href={language.href} hreflang={language.hrefLang} lang={language.lang} aria-current={language.current ? 'true' : undefined}>{language.name}</a>)}
+        {languages.map((language) => <a href={language.href} hreflang={language.hrefLang} lang={language.lang} data-locale-choice={language.lang} aria-current={language.current ? 'true' : undefined}>{language.name}</a>)}
       </div>}
       <div class="sheet-footer">
         <p class="availability"><span class="dot" aria-hidden="true"></span>{strings.availability}</p>

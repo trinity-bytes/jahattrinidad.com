@@ -10,6 +10,7 @@ import { getDictionary, localizedPath, LOCALES, LOCALE_NAMES } from '../lib/i18n
 import { BCP47 } from '../lib/consts';
 import { collectionPath } from '../lib/paths';
 import type { SeoResult } from '../lib/seo';
+import { localeRedirectScript } from '../lib/locale-redirect';
 
 export interface Props {
   lang: Locale;
@@ -37,12 +38,20 @@ const languages = LOCALES.map((locale) => ({
   href: locale === lang ? Astro.url.pathname : (counterpart(locale) ? new URL(counterpart(locale)!).pathname : localizedPath(locale, '/')),
   current: locale === lang,
 }));
+
+// First-visit redirect to the visitor's language: only real counterparts, never a fallback Home.
+const counterparts = Object.fromEntries(
+  LOCALES.filter((locale) => locale !== lang && counterpart(locale)).map((locale) => [locale, new URL(counterpart(locale)!).pathname])
+);
+const localeScript = localeRedirectScript({ redirect: lang === 'en', counterparts });
 ---
 
 <!doctype html>
-<html lang={lang} data-lens="outside">
+<html lang={lang} translate="no" data-lens="outside">
   <head>
     <meta charset="utf-8" />
+    <script is:inline set:html={localeScript} />
+    <meta name="google" content="notranslate" />
     <Font cssVariable="--font-epilogue" />
     <Font cssVariable="--font-hanken" />
     <Font cssVariable="--font-plex-mono" />
