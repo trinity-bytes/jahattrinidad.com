@@ -102,6 +102,29 @@ Clean cut-out edges, including hair. No background, no ground, no shadow
 on the floor, no text. Vertical 2:3, transparent PNG.
 ```
 
+## Footer name fill (`src/assets/footer/blue-hour.png`)
+
+Added 2026-11-21. The closing name in the footer is filled with this image (`background-clip: text`), so the page walks through the day: sunset in the hero, golden hour in Contact, blue hour in the footer. It replaced a third reuse of `sky.png`.
+
+- Generated in Figma with `gpt-image-2.5-flare` (node `2417:12` in `gq6glEp9QrPOnEyYG9dldh`), 1536 × 1024. Unlike the hero, this file IS committed under `src/assets/footer/`; the owner's working copy is `design/footer/blue-hour.png`.
+- 1536 px wide is soft on 2x screens at desktop width. Upscale it (as was done for the sky) before release if it shows.
+
+```
+Photorealistic landscape at blue hour, just after sunset, wide 3:2. A vast,
+calm, empty sky fills the upper two thirds: deep indigo and dark teal-green
+at the top, fading to a soft muted sage-blue band, with a thin last warm
+amber-gold glow sitting right on the horizon, slightly left of center, where
+the sun has just set. A few small, faint stars are beginning to appear in
+the upper sky. Below the horizon, several layers of smooth, rolling green
+hills recede into cool evening mist, each layer lighter and hazier than the
+one in front: deep emerald and muted blue-green, the farthest catching a
+faint warm rim from the afterglow. The hills continue all the way to the
+bottom edge of the frame. No foreground at all: no close grass, no trees,
+no buildings, no fences, no people, no moon, no clouds, no text. Clean,
+minimal, serene, soft atmospheric perspective, natural colors, no heavy
+saturation, light film grain.
+```
+
 ## Rules for regenerating
 
 - Generate from scratch. Do not ask the model to edit an existing image and keep its details (proposal D5).
