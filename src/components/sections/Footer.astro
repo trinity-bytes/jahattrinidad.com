@@ -1,5 +1,7 @@
 ---
+import { getImage } from 'astro:assets';
 import hill from '../../assets/hero/near-hill.png';
+import blueHour from '../../assets/footer/blue-hour.png';
 import type { Dictionary } from '../../lib/i18n';
 
 type Link = { label: string; href: string };
@@ -16,6 +18,8 @@ interface Props {
   compact?: boolean;
 }
 const { strings, navigation, elsewhere, source, copyright, outsideName, insideName, showShortcut = true, compact = false } = Astro.props;
+// The page walks through the day: sunset in the hero, golden hour in Contact, blue hour in the closing name.
+const fill = await getImage({ src: blueHour, format: 'webp' });
 ---
 <footer class:list={['footer', { compact }]}>
   <div class="hill" aria-hidden="true">
@@ -42,11 +46,44 @@ const { strings, navigation, elsewhere, source, copyright, outsideName, insideNa
         </ul>
       </div>
     </div>
-    <div class="ghost" aria-hidden="true" data-outside={outsideName} data-inside={insideName}></div>
     <p class="copyright">{copyright}</p>
+    <div class="signature" aria-hidden="true">
+      <div class="ghost" data-outside={outsideName} data-inside={insideName} style={`--name-fill: url(${fill.src})`}></div>
+    </div>
   </div>
 </footer>
 <script>
+  /*
+   * Scroll parallax as the footer comes in: the hill climbs over the contact sky faster than the page, and
+   * the closing name rises out of its clipped band, landing as the page ends. Reduced motion: both rest.
+   */
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.querySelectorAll<HTMLElement>('.footer:not([data-lens-preview] *)').forEach((footer) => {
+    const hill = footer.querySelector<HTMLElement>('.hill');
+    const name = footer.querySelector<HTMLElement>('.ghost');
+    gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      const timeline = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: footer,
+          start: 'top bottom',
+          end: () => ScrollTrigger.maxScroll(window),
+          scrub: 0.4,
+          invalidateOnRefresh: true,
+        },
+      });
+      // The hill starts at rest (its ridge hides the footer's straight top edge) and climbs past it, so it
+      // must never move down. The climb stays inside the contact's bottom padding at every breakpoint.
+      if (hill) timeline.fromTo(hill, { y: 0 }, { y: () => -Math.min(72, innerHeight * 0.08), duration: 1 }, 0);
+      if (name) timeline.fromTo(name, { yPercent: 45 }, { yPercent: 0, duration: 1 }, 0);
+    });
+  });
+  new MutationObserver(() => ScrollTrigger.refresh()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-lens'] });
+
   const key = 'lens-shortcut-disabled';
   document.querySelectorAll<HTMLButtonElement>('[data-shortcut-toggle]').forEach((button) => {
     let disabled = false;
@@ -67,9 +104,9 @@ const { strings, navigation, elsewhere, source, copyright, outsideName, insideNa
      past 1746px the ridge (69% down, ratio 0.7124) stays at the same height. */
   .hill img { position: absolute; width: max(1746.36px, 108cqw); max-width: none; height: auto; aspect-ratio: 1746.36 / 1244.16; left: 50%; top: calc(188.5px - 0.4916 * max(1746.36px, 108cqw)); transform: translateX(-50%); filter: brightness(.38); }
   .fade { position: absolute; inset: auto 0 0; height: 240px; background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-footer) 55%, transparent) 45%, color-mix(in srgb, var(--color-footer) 92%, transparent) 80%, var(--color-footer)); }
-  .content { position: relative; box-sizing: border-box; max-width: calc(var(--content-max) + 2 * var(--gutter-desktop)); margin-inline: auto; padding: 200px var(--gutter-desktop) 25px; }
+  .content { position: relative; box-sizing: border-box; max-width: calc(var(--content-max) + 2 * var(--gutter-desktop)); margin-inline: auto; padding: 152px var(--gutter-desktop) 0; }
   .columns { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .availability { position: absolute; top: 200px; right: var(--gutter-desktop); width: calc((100% - 2 * var(--gutter-desktop)) / 4); margin: 0; white-space: pre-line; font: 600 22px/1.25 var(--font-display); letter-spacing: -.01em; color: var(--color-heading); }
+  .availability { position: absolute; top: 152px; right: var(--gutter-desktop); width: calc((100% - 2 * var(--gutter-desktop)) / 4); margin: 0; white-space: pre-line; font: 600 22px/1.25 var(--font-display); letter-spacing: -.01em; color: var(--color-heading); }
   h2 { margin: 0 0 14px; font: 500 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text-muted); }
   ul { list-style: none; padding: 0; margin: 0; }
   li { margin: 0 0 9px; }
@@ -77,32 +114,39 @@ const { strings, navigation, elsewhere, source, copyright, outsideName, insideNa
   button { padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
   a:hover, button:hover { text-decoration: underline; }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
-  .ghost { margin-top: 14px; color: var(--color-footer-name); font: 500 clamp(7rem, 20.84vw, 18.75rem)/1 var(--font-display); letter-spacing: -.04em; white-space: nowrap; overflow: hidden; }
+  /*
+   * The closing name: sized to span the content width exactly (37.7cqw = 100cqw / "Jahat"'s 2.65em
+   * advance), filled with the blue-hour hills, and cut off at the bottom of the page so it reads as running past it.
+   * The band's height is the visible part of the letters; the parallax raises them into it.
+   */
+  .signature { container-type: inline-size; overflow: hidden; margin-top: 56px; }
+  .ghost { height: .62em; font: 500 37.7cqw/.86 var(--font-display); letter-spacing: -.04em; white-space: nowrap; color: var(--color-footer-name); }
   .ghost::before { content: attr(data-outside); }
-  /* Inside: "@trinitybytes" in mono, 12 characters spanning the content width (boards: about 173 / 92 / 47px, fitting the content width at 1440 / 768 / 390). */
-  :global([data-lens='inside']) .ghost { font-family: var(--font-mono); font-size: min(12vw, 10.8rem); letter-spacing: -.06em; }
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .ghost { color: transparent; background: var(--name-fill) center 50% / cover no-repeat; -webkit-background-clip: text; background-clip: text; }
+  }
+  /* Inside: "@trinitybytes" in mono, its 13 characters (7.02em) spanning the content width the same way. */
+  :global([data-lens='inside']) .ghost { height: .74em; font-family: var(--font-mono); font-size: 14.2cqw; letter-spacing: -.06em; }
   :global([data-lens='inside']) .ghost::before { content: attr(data-inside); }
   .hint { font: 500 16px/21px var(--font-sans); color: var(--color-heading); }
-  .copyright { margin: 0; font: 400 14px/20px var(--font-sans); color: var(--color-text); }
+  .copyright { margin: 48px 0 0; font: 400 14px/20px var(--font-sans); color: var(--color-text); }
   @media (min-width: 64.0625rem) {
-    /* Compact desktop footer: the copyright line overlaps the ghost name's box, as on the board. */
-    .compact .content { padding: 67px var(--gutter-desktop) 19px; }
+    /* Compact desktop footer: the columns start higher (no hill to clear). */
+    .compact .content { padding-top: 67px; }
     .compact .availability { top: 67px; }
-    .compact .copyright { margin-top: -39px; position: relative; }
   }
   @media (max-width: 64rem) {
-    .content { padding: 96px var(--gutter-tablet) 25px; }
+    .content { padding: 96px var(--gutter-tablet) 0; }
     .availability { position: static; width: auto; margin-bottom: 40px; }
     .columns { grid-template-columns: 29% 29% minmax(0, 1fr); }
-    .ghost { margin-top: 40px; font-size: 34vw; }
   }
   @media (max-width: 47.99rem) {
     .hill { top: -250px; }
-    .content { padding: 88px var(--gutter-mobile) 25px; }
+    .content { padding: 88px var(--gutter-mobile) 0; }
     .availability { font-size: 20px; }
     .columns { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 30px; }
     .site { grid-column: 1 / -1; }
-    .ghost { font-size: 34vw; margin-top: 66px; }
+    .signature { margin-top: 40px; }
   }
-  @media (prefers-reduced-transparency: reduce), (forced-colors: active) { .ghost { display: none; } }
+  @media (forced-colors: active) { .signature { display: none; } .content { padding-bottom: 25px; } }
 </style>

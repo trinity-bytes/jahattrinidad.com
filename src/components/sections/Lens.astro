@@ -3,7 +3,7 @@
  * The lens: docked bottom-right of the viewport. Drag it over the page to look
  * through a circle at the Inside, drop it to switch; click, Enter or the I key switch
  * without dragging; Esc or "Back outside" return (design.md §2, board 2109:103).
- * The state lives on <html data-lens> and is not persisted; only "shortcut disabled" and "lens already used" (to stop the idle shake) are kept in localStorage.
+ * The state lives on <html data-lens> and is not persisted; only "shortcut disabled" is kept in localStorage.
  */
 import Icon from '../ui/Icon.astro';
 import type { Dictionary } from '../../lib/i18n';
@@ -51,7 +51,8 @@ const { strings } = Astro.props;
   /** The x-ray circle grows from the lens's own size to RADIUS over this long when a drag starts (ease-out). */
   const GROW_MS = 280;
   const SHORTCUT_KEY = 'lens-shortcut-disabled';
-  const DISCOVERED_KEY = 'lens-discovered';
+  /** No longer written: the idle shake now restarts on every page load. Cleared once so old visits leave nothing behind. */
+  const LEGACY_DISCOVERED_KEY = 'lens-discovered';
   const NUDGE_EVERY = 7000;
   const FIRST_NUDGE = 1200;
   const EDITABLE = 'input, textarea, select, [contenteditable]:not([contenteditable="false"])';
@@ -237,16 +238,16 @@ const { strings } = Astro.props;
       toggle();
     });
 
-    // Until the visitor first uses the lens, it gives a gentle shake every few seconds (only Outside, never
-    // while hovered, dragged or in a background tab), so the curious move the pointer to it and find its hint.
+    // On every page load, until the visitor uses the lens on that page, it gives a gentle shake every few
+    // seconds (only Outside, never while hovered, dragged or in a background tab), so the curious move the
+    // pointer to it and find its hint. Using it is remembered for this page load only, on purpose.
     let discovered = false;
-    try { discovered = localStorage.getItem(DISCOVERED_KEY) === 'true'; } catch { /* Storage can be unavailable. */ }
+    try { localStorage.removeItem(LEGACY_DISCOVERED_KEY); } catch { /* Storage can be unavailable. */ }
     let nudges = 0;
     const discover = () => {
       if (discovered) return;
       discovered = true;
       clearInterval(nudges);
-      try { localStorage.setItem(DISCOVERED_KEY, 'true'); } catch { /* Storage can be unavailable. */ }
     };
     lens.addEventListener('pointerdown', discover);
     lens.addEventListener('click', discover);

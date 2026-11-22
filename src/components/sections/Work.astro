@@ -41,18 +41,18 @@ const remaining = index ? [...rest.slice(2), ...projects.filter(project => proje
   <div class="container content">
     <header>
       <div>
-        <p class="marker" data-background-text>
+        <p class="marker" data-background-text data-reveal="text">
           <span data-show="outside">{copy.marker}</span><span data-show="inside">{insideCopy.marker}</span>
         </p>
-        <h2 id="work-heading" data-background-text>
+        <h2 id="work-heading" data-background-text data-reveal="text">
           <span data-show="outside">{headline}</span><span data-show="inside">{insideCopy.headline}</span>
         </h2>
       </div>
-      {!index && <a class="all" href={allProjectsHref} data-background-text>
+      {!index && <a class="all" href={allProjectsHref} data-background-text data-reveal>
         <span class="underlined">{copy.seeAll(displayedCount)}</span> <span aria-hidden="true">→</span>
       </a>}
     </header>
-    <div class="projects">
+    <div class="projects" data-reveal-children>
       {featured && <ProjectCard
         project={featured.data}
         href={featured.href}
