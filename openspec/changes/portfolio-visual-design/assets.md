@@ -125,6 +125,54 @@ minimal, serene, soft atmospheric perspective, natural colors, no heavy
 saturation, light film grain.
 ```
 
+## Page covers v1 (proposal, 2026-11-21)
+
+Owner: "tenemos que dejar de sobreutilizar la imagen del atardecer ... en los casos de estudio me gustaria una imagen mas de estudio u know, algo ams academico, y en las demas secciones algo que vaya con ellas pero tampoco que corten el rollo ni la paleta de colores pero qu e tapoc imite la paleta del home exactamente porque sino no se cre jerarquia".
+
+Rule proposed: the Home keeps the sunset; each inner page takes another hour or place of the same world, paler and calmer, so it reads one step below. Work and Notes keep the near hill and the display word, with a new sky layer and the hill cooled with image filters; case studies move indoors (single layer, near hill hidden, cream scrims on the text side and under the nav). A post inherits the Notes cover. All generated in Figma with `gpt-image-2.5-flare`, 1536 × 1024; not upscaled, not in the repo yet.
+
+| Page | Option | Figma node (image layer) | Board |
+|---|---|---|---|
+| Work index | A · Andean terraces, morning (sky y −130) | `2426:42` | `2426:12` on "Work — all projects" |
+| Work index | B · farmland crop rows, late morning (sky y −20) | `2426:66` | `2426:12` |
+| Case study | A · university reading room, green banker's lamps | `2426:122` | `2426:87` on "Case study — Inspiration Garden" |
+| Case study | B · drafting desk by the window, wireframe sketchbook | `2426:151` | `2426:87` |
+| Notes index + post | A · early morning mist (sky unmirrored; post copies the hash) | `2426:213`, `2426:267` | `2426:177` on "Writing — blog" |
+| Notes index | B · morning mist, one lone tree on a near ridge (added on request) | `2430:15` | `2426:177` |
+| Notes index | C · mist along a valley from a height, faint path (mirrored, y −120, so the dark slope sits behind the word) | `2430:45` | `2426:177` |
+
+Hill filters: Work exposure 0.05, saturation −0.15, temperature −0.25, highlights 0.05, shadows 0.1; Notes exposure 0.08, contrast −0.05, saturation −0.3, temperature −0.3, highlights 0.1, shadows 0.1. Every prompt keeps the upper left plain and light for the dark intro text, and asks for no blue and no sunset tones.
+
+```
+Work A — Photorealistic landscape, wide 3:2, early morning in the Peruvian Andes. Ancient green agricultural terraces step down the far hillsides in soft curved lines, layer after layer, receding into light morning haze; each farther layer paler and hazier. The upper half of the frame is a calm, empty, bright sky in pale cream and very soft warm ivory, fading to a faint pale sage near the horizon — not blue at all, no blue sky. Clean, fresh daylight, the sun is out of frame high on the right, no visible sun disc, no sunset colours, no orange. The left upper third stays very light and plain so dark text can sit on it. Greens are natural and muted: sage, moss, soft emerald. No people, no animals, no buildings, no roads, no trees in the foreground, no text. Soft atmospheric perspective, minimal, serene, light film grain.
+```
+
+```
+Work B — Photorealistic landscape, wide 3:2, late morning over gently rolling farmland. Long, orderly rows of young green crops curve over the far hills in parallel lines, like a precise drawing laid on the land, receding into soft haze. The upper half of the frame is a calm, empty, bright sky in pale ivory and soft cream, a faint pale sage near the horizon — not blue, no blue sky, no clouds. Even, clear daylight, the sun out of frame, no sun disc, no sunset or orange tones. The left upper third stays very light and plain so dark text can sit on it. Greens are natural and fresh but not saturated: sage, leaf green, soft emerald, with a touch of warm straw in the distance. No people, no machines, no buildings, no fences, no roads, no foreground trees, no text. Minimal, structured, serene, soft atmospheric perspective, light film grain.
+```
+
+```
+Case study A — Photorealistic interior, wide 3:2, a quiet university reading room in soft morning daylight. Long dark wooden reading tables with classic green-glass banker's lamps, a few open books and notebooks with handwritten notes and small sketches, wooden bookshelves along the walls. Tall arched windows on the right side let in soft daylight and show green rolling hills outside, slightly overexposed and hazy. The left half of the frame, especially the upper left, is a calm, bright, softly out-of-focus cream wall and light so dark text can sit on it. Palette: warm cream, ivory, aged paper, dark walnut wood, deep forest green and emerald from the lamps and book covers, a small warm touch of sun-yellow light. No blue, no cold tones. Shallow depth of field, focus on the nearest table at the lower right. No people, no readable text, no logos. Academic, calm, timeless, editorial photography, light film grain.
+```
+
+```
+Case study B — Photorealistic still life, wide 3:2, a designer-engineer's drafting desk by a large window in soft morning daylight. On a light oak desk at the lower right: an open sketchbook with hand-drawn interface wireframes and arrows, printed diagrams and flow charts, graphite pencils, a metal ruler, a few index cards, a small potted plant, a cup of coffee. Through the window on the right, green rolling hills, bright and hazy. The left half of the frame, especially the upper left, is a calm, bright, softly out-of-focus cream wall so dark text can sit on it. Palette: cream, ivory, warm paper, light oak, deep forest green and soft emerald accents (plant, a green notebook cover), a small warm sun-yellow highlight. No blue, no cold tones, no screens turned on. Shallow depth of field, focus on the sketchbook. No people, no readable text, no logos. Studious, precise, calm, editorial photography, light film grain.
+```
+
+```
+Notes A — Photorealistic landscape, wide 3:2, very early morning just after dawn. Smooth rolling green hills recede in many soft layers, half dissolved in low white morning mist that fills the valleys; each layer paler than the one in front. The upper half of the frame is a calm, empty, pale sky in soft cream and warm ivory with a gentle peach-cream glow low near the horizon on the right, where the sun has not yet risen — no sun disc visible, not blue, no blue sky, no clouds. Low contrast, quiet, almost paper-like. The left upper third stays very light and plain so dark text can sit on it. Greens are muted and soft: sage, grey-green, pale moss, deeper muted emerald only on the nearest hills at the bottom. No people, no buildings, no trees, no roads, no text. Minimal, serene, contemplative, soft atmospheric perspective, light film grain.
+```
+
+```
+Notes B — Notes A prompt with: "On a gentle ridge in the middle distance, right of center, stands one single lone tree with a rounded crown, softened by the mist — the only focal point."
+```
+
+```
+Notes C — Photorealistic landscape, wide 3:2, early morning seen from a gentle height. A soft river of white mist flows along a wide green valley between rolling hills; a faint narrow footpath winds through the grass and disappears into the mist toward the right. Calm, empty, pale cream and ivory sky, faint pale sage near the horizon; no sun disc, not blue, no clouds, no sunset tones. Upper left very light and plain for dark text. Greens a little deeper than a pastel: sage, moss, muted emerald. No people, buildings, fences, foreground trees or text. Minimal, serene, soft atmospheric perspective, light film grain.
+```
+
+Open: desktop only (no tablet or mobile crops yet); 1536 px is soft at 2x, upscale whichever is picked; the near hill is still the sunset-lit file under a filter, a cooler hill could be generated if the filter is not enough.
+
 ## Rules for regenerating
 
 - Generate from scratch. Do not ask the model to edit an existing image and keep its details (proposal D5).
