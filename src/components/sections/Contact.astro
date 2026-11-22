@@ -40,10 +40,10 @@ const facts = [
   <div class="dusk" data-show="inside" aria-hidden="true"></div>
   <div class="sun-mask" data-show="inside" aria-hidden="true"></div>
   <div class="content">
-    <p class="marker" data-show="outside">{marker}</p>
-    <p class="marker" data-show="inside">{inside.marker}</p>
-    <h2 id="contact-heading"><span data-show="outside">{headline}</span><span data-show="inside">{inside.headline}</span></h2>
-    <dl class="facts">
+    <p class="marker" data-show="outside" data-reveal="text">{marker}</p>
+    <p class="marker" data-show="inside" data-reveal="text">{inside.marker}</p>
+    <h2 id="contact-heading" data-reveal="text"><span data-show="outside">{headline}</span><span data-show="inside">{inside.headline}</span></h2>
+    <dl class="facts" data-reveal-children>
       {facts.map(({ label, value }) => (
         <div class="fact">
           <dt>{label}</dt>
@@ -63,7 +63,7 @@ const facts = [
         {...notes[0]}
       />
     </Chat>
-    <div class="fallback">
+    <div class="fallback" data-reveal>
       <span class="or">{strings.or}</span>
       <button type="button" class="link" data-copy-email={email} data-copied={strings.copied}>
         <Icon name="copy" size={20} />

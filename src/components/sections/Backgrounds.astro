@@ -32,6 +32,7 @@ const warm = variant === 'values' || variant === 'experience';
 </div>
 
 <script>
+  import { REVEAL_SETTLED } from './reveal/events';
   // Place this component directly inside a positioned section and mark each
   // text block with data-background-text. The mask follows its actual boxes.
   for (const background of document.querySelectorAll<HTMLElement>('[data-backgrounds]')) {
@@ -66,6 +67,8 @@ const warm = variant === 'values' || variant === 'experience';
     observer.observe(background);
     section.querySelectorAll<HTMLElement>('[data-background-text]').forEach((element) => observer.observe(element));
     window.addEventListener('resize', update);
+    // The boxes are measured with transforms included: measure again once a reveal has moved text into place.
+    window.addEventListener(REVEAL_SETTLED, update);
     document.fonts.ready.then(update);
     update();
   }

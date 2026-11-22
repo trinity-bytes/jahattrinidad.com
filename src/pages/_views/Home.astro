@@ -9,6 +9,7 @@ import Experience from '../../components/sections/Experience.astro';
 import Notes from '../../components/sections/Notes.astro';
 import Contact from '../../components/sections/Contact.astro';
 import Footer from '../../components/sections/Footer.astro';
+import Reveal from '../../components/sections/Reveal.astro';
 import {
   collectionPath,
   entryPath,
@@ -138,6 +139,7 @@ const seo = buildSeo({
     email={CONTACT_EMAIL}
     linkedInHref={linkOf('linkedin')}
   />
+  <Reveal />
   <Footer
     slot="footer"
     strings={t.footer}

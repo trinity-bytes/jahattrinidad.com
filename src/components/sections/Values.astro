@@ -27,14 +27,14 @@ const notes = [insideCopy.annotations.source];
   <Backgrounds variant="values" next="surface" seed={2} />
   <div class="container content">
     <header>
-      <p class="marker" data-background-text>
+      <p class="marker" data-background-text data-reveal="text">
         <span data-show="outside">{copy.marker}</span><span data-show="inside">{insideCopy.marker}</span>
       </p>
-      <h2 id="values-heading" data-background-text>
+      <h2 id="values-heading" data-background-text data-reveal="text">
         <span data-show="outside">{copy.headline}</span><span data-show="inside">{insideCopy.headline}</span>
       </h2>
-      <p class="sub" data-show="outside" data-background-text>{copy.sub}</p>
-      <div class="sub sub-frame" data-show="inside">
+      <p class="sub" data-show="outside" data-background-text data-reveal="text">{copy.sub}</p>
+      <div class="sub sub-frame" data-show="inside" data-reveal>
         <p data-background-text>{insideCopy.sub}</p>
         <Annotation
           n={1}
@@ -52,11 +52,11 @@ const notes = [insideCopy.annotations.source];
       lenses.map(({ show, copy }) => (
         <div class="layout" data-show={show}>
           <div class="table">
-            <p class="column-labels label" aria-hidden="true">
+            <p class="column-labels label" aria-hidden="true" data-reveal>
               <span>{copy.valueLabel}</span>
               <span>{copy.teamLabel}</span>
             </p>
-            <ul class="rows">
+            <ul class="rows" data-reveal-children>
               {
                 copy.rows.map((row) => (
                   <li>
@@ -68,7 +68,7 @@ const notes = [insideCopy.annotations.source];
             </ul>
           </div>
 
-          <aside class="proof" aria-labelledby={`proof-label-${show}`}>
+          <aside class="proof" data-reveal aria-labelledby={`proof-label-${show}`}>
             <p id={`proof-label-${show}`} class="label" data-background-text>{copy.proofLabel}</p>
             <div class="card">
               <img src={gardenImage.src} alt={gardenImage.alt} width="376" height="196" loading="lazy" />

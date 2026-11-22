@@ -42,13 +42,13 @@ const noteOf = (entry: CollectionEntry<'experience'>) => {
   <Backgrounds variant="experience" next="surface" seed={seed} />
   <div class="layout">
     <div class="intro">
-      <p class="marker" data-background-text data-show="outside">{marker}</p>
-      <p class="marker" data-background-text data-show="inside">{inside.marker}</p>
-      <h2 id="experience-heading" data-background-text><span data-show="outside">{headline}</span><span data-show="inside">{inside.headline}</span></h2>
-      <p class="sub" data-background-text data-show="outside">{sub}</p>
-      <p class="sub" data-background-text data-show="inside">{inside.sub}</p>
+      <p class="marker" data-background-text data-show="outside" data-reveal="text">{marker}</p>
+      <p class="marker" data-background-text data-show="inside" data-reveal="text">{inside.marker}</p>
+      <h2 id="experience-heading" data-background-text data-reveal="text"><span data-show="outside">{headline}</span><span data-show="inside">{inside.headline}</span></h2>
+      <p class="sub" data-background-text data-show="outside" data-reveal="text">{sub}</p>
+      <p class="sub" data-background-text data-show="inside" data-reveal="text">{inside.sub}</p>
       {carriesOver.length > 0 && (
-        <div class="carries">
+        <div class="carries" data-reveal>
           <h3 class="carries-label" data-background-text><span data-show="outside">{strings.carriesOver}</span><span data-show="inside">{inside.carriesOver}</span></h3>
           <ul>
             {carriesOver.map((item) => (
@@ -64,7 +64,7 @@ const noteOf = (entry: CollectionEntry<'experience'>) => {
     </div>
     <div class="groups">
       {groups.map(({ group, label, items }) => (
-        <div class="group">
+        <div class="group" data-reveal>
           <h3 class="group-label" data-background-text>{label}</h3>
           <ul>
             {items.map((entry) => (
