@@ -26,9 +26,11 @@ export interface Props {
   contactOnPage?: boolean;
   /** Serialized schema.org data (from lib/seo.ts), rendered as JSON-LD in <head>. */
   jsonLd?: string;
+  /** The page plays the Home hero's load choreography (Hero.astro): mark it from the head, before first paint. */
+  heroIntro?: boolean;
 }
 
-const { lang, seo, lens = false, nav = true, profileLinks = [], contactOnPage = false, jsonLd } = Astro.props;
+const { lang, seo, lens = false, nav = true, profileLinks = [], contactOnPage = false, jsonLd, heroIntro = false } = Astro.props;
 const t = getDictionary(lang);
 
 // EN / ES / PT switch: each locale goes to this page's counterpart (its hreflang
@@ -55,8 +57,25 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
 <html lang={lang} translate="no" data-lens="outside">
   <head>
     <meta charset="utf-8" />
+    <!-- Cross-document View Transitions opt-in (lib/page-transition.ts). Inline, before anything else:
+         in an external stylesheet it arrives after the head scripts on a real network, and Chromium then
+         treats the new page as not opted in and aborts the transition ("opt-in disabled"). -->
+    <style is:inline>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
     <script is:inline set:html={localeScript} />
     <script is:inline set:html={pageTransitionScript()} />
+    {heroIntro && (
+      <script is:inline>
+        // Hero load choreography marker (Hero.astro). Here in the head, before the hero exists: set from inside
+        // the hero component it came after the hero's markup, so phones painted the whole hero for a moment and
+        // then hid it. Only at the top of a fresh load, with motion allowed, and not when the page arrives through
+        // the page transition (html[data-page-reveal], set by the script above): two circles at once would fight.
+        // A safety timeout releases everything if the hero script never runs.
+        if (window.scrollY === 0 && !('pageReveal' in document.documentElement.dataset) && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.dataset.heroIntro = '';
+          setTimeout(() => delete document.documentElement.dataset.heroIntro, 3500);
+        }
+      </script>
+    )}
     <meta name="google" content="notranslate" />
     <Font cssVariable="--font-epilogue" />
     <Font cssVariable="--font-hanken" />
@@ -123,12 +142,10 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     [data-lens-preview] [data-show='outside'] { display: none !important; }
     .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
   }
-  /* Page-to-page transition (lib/page-transition.ts): every page opts into cross-document View
-     Transitions; while html[data-page-reveal] is set, the new page grows in a circle from the clicked
-     link over the old one, so the default crossfade is turned off. */
-  @media (prefers-reduced-motion: no-preference) {
-    @view-transition { navigation: auto; }
-  }
+  /* Page-to-page transition (lib/page-transition.ts; the @view-transition opt-in is inline at the top of
+     the head): while html[data-page-reveal] is set, the reveal is a circle, so the default crossfade is off. */
   :root[data-page-reveal]::view-transition-old(root),
   :root[data-page-reveal]::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+  /* Going back, the page being left closes into the link over the page it returns to. */
+  :root[data-page-reveal='shrink']::view-transition-old(root) { z-index: 1; }
 </style>
