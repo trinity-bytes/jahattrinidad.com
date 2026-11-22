@@ -1,4 +1,5 @@
 ---
+import { navTargets } from '../../lib/nav';
 import { getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Hero from '../../components/sections/Hero.astro';
@@ -53,6 +54,8 @@ const [allProjects, featuredProjects, posts, experience, links] = await Promise.
 ]);
 
 const workPath = collectionPath('projects', lang);
+// The hero CTA follows the nav's convention: on the Home it scrolls to the Work section (lib/nav.ts).
+const workSection = navTargets({ home: localizedPath(lang, ''), workPath, notesPath: collectionPath('posts', lang), isHome: true, contactOnPage: true }).work;
 const notesPath = collectionPath('posts', lang);
 const linkOf = (id: string) => links.find((link) => link.id === id)?.data.url;
 
@@ -99,7 +102,7 @@ const personSchema = personJsonLd({
 ---
 
 <Base lang={lang} seo={seo} jsonLd={personSchema} lens profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
-  <Hero strings={copy.hero} insideStrings={t.home.inside.hero} workHref={workPath} />
+  <Hero strings={copy.hero} insideStrings={t.home.inside.hero} workHref={workSection} />
   <GlowTransition direction="rise" />
   <Values
     copy={copy.values}
