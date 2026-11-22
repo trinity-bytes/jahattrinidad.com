@@ -74,7 +74,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     src={portrait}
     formats={['avif', 'webp']}
     widths={[300, 360, 520, 1040, 1400]}
-    sizes="(min-width: 64.0625rem) 543px, (min-width: 48rem) 360px, 300px"
+    sizes="(min-width: 64.0625rem) 623px, (min-width: 48rem) 440px, 380px"
     alt=""
     class="layer portrait"
     loading="eager"
@@ -142,8 +142,10 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     /* Left and right edge of the content: the page gutter, or the centred content column past 1440 (as the sections below). */
     --edge: max(var(--gutter), (100cqw - var(--content-max)) / 2);
     --name-top: 628px;
-    --portrait-w: 300px;
-    --portrait-left: calc(50cqw - 138px);
+    /* The portrait is 120px taller than the board (80px wider at 2:3, same top, same centre), so its
+       legs run past the hero's bottom edge into the 120px ground bleed instead of ending over it. */
+    --portrait-w: 380px;
+    --portrait-left: calc(50cqw - 178px);
     --portrait-top: 412px;
     --sky-w: 1981.415px;
     --sky-left: calc(50cqw - 735.812px);
@@ -156,7 +158,13 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     --hill-pin-y: calc(var(--name-top) + var(--font-size-display) * 0.92 - 1px);
     position: relative;
     isolation: isolate;
-    overflow: hidden;
+    /* Ground bleed: the layers keep painting 120px below the hero's box, under the transparent top
+       band of Values (see Values.astro), so on the first pixels of scroll the strip under the fold is
+       more grass, not the hero's straight bottom edge. By the time that edge would show, the rise
+       glow already covers it. The layout height (and what fits in the viewport) is unchanged. */
+    overflow-x: clip;
+    overflow-y: visible;
+    clip-path: inset(0 0 -120px 0);
     container-type: inline-size;
     height: 862px;
     background: var(--color-light-sun);
@@ -166,7 +174,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
   .hill { width: 2371.52px; left: calc(50% - 929.202px); top: -412.142px; filter: var(--hero-hill-filter); }
 
   /* Inside: the dusk overlay sits directly above the sky; the mask dims the sun under it. */
-  .dusk { position: absolute; inset: 0; background: var(--color-dusk); pointer-events: none; }
+  .dusk { position: absolute; inset: 0 0 -120px; background: var(--color-dusk); pointer-events: none; }
   .sun-mask {
     --size: calc(var(--sky-w) * 0.0224);
     position: absolute;
@@ -265,8 +273,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
   @media (min-width: 48rem) {
     .hero {
       --name-top: 530px;
-      --portrait-w: 360px;
-      --portrait-left: calc(50cqw + 12px);
+      --portrait-w: 440px;
+      --portrait-left: calc(50cqw - 28px);
       --portrait-top: 327px;
       height: 867px;
     }
@@ -292,8 +300,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
       --name-label-x: calc(var(--name-left) + 32px);
       --name-pin-x: calc(var(--name-left) + 32px);
       --name-pin-y: var(--name-top);
-      --portrait-w: 543px;
-      --portrait-left: calc(100cqw - var(--edge) - 499px);
+      --portrait-w: 623px;
+      --portrait-left: calc(100cqw - var(--edge) - 539px);
       /* Bottom-anchored (cropped by the hero bottom), but never above y 85 (the board), so the head
          stays clear of the nav links on short screens; there the crop just goes deeper. */
       --portrait-top: max(85px, calc(var(--hero-h) - 815px));
@@ -317,7 +325,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     }
     /* The 1774 × 1264 hill starts at (-38, -120); keep its 69% ridge at the same height. */
     .hill { width: var(--hill-w); left: var(--hill-left); top: var(--hill-top); }
-    .portrait { height: 815px; }
+    .portrait { height: 935px; }
     .intro { top: 180px; max-width: 660px; }
     .intro .cta { margin-top: 16px; }
     .footnote { bottom: 42px; }

@@ -10,9 +10,22 @@
  *
  * Layer geometry is taken per board: `work` and `post` share one landscape, `case` and `notes`
  * another (mirrored on desktop). Tablet and mobile use the Home hero's landscape for `case`.
+ *
+ * Covers (visual-design "Page covers v1", 2026-11-21): the Home keeps the sunset; these pages take
+ * another hour of the same world so they read one step below it. Work: Andean terraces in the
+ * morning. Notes and posts: early morning mist. Case study: a drafting desk by a window, one
+ * full-bleed layer with cream scrims for the text and the nav, and no near hill. The near hill,
+ * lit by the Home's sunset, is cooled with a filter to match the morning light.
+ *
+ * Parallax: on scroll the sky drifts slowest, the display word a little faster and the hill
+ * fastest, all slower than the page. `--parallax` (the scroll offset in px, capped at the hero's
+ * height) is read through `translate`, so the mirroring `transform` stays untouched. Reduced
+ * motion: none.
  */
 import { Picture } from 'astro:assets';
-import sky from '../../assets/hero/sky.png';
+import workSky from '../../assets/covers/work-terraces.png';
+import notesSky from '../../assets/covers/notes-mist.png';
+import studyDesk from '../../assets/covers/study-desk.png';
 import hill from '../../assets/hero/near-hill.png';
 
 interface Props {
@@ -21,6 +34,8 @@ interface Props {
   word?: string;
 }
 const { variant, word } = Astro.props;
+const sky = { work: workSky, notes: notesSky, post: notesSky, case: studyDesk }[variant];
+const isCase = variant === 'case';
 ---
 
 <section class:list={['hero', variant]} data-hero aria-labelledby={word ? 'hero-word' : undefined}>
@@ -35,15 +50,19 @@ const { variant, word } = Astro.props;
     fetchpriority="high"
   />
   {word && <h1 id="hero-word" class="word">{word}</h1>}
-  <Picture
-    src={hill}
-    formats={['avif', 'webp']}
-    widths={[768, 1440, 2400, 2952]}
-    sizes="(min-width: 64.0625rem) 115vw, 310vw"
-    alt=""
-    class="layer hill"
-    loading="eager"
-  />
+  {isCase ? (
+    <div class="scrim" aria-hidden="true" />
+  ) : (
+    <Picture
+      src={hill}
+      formats={['avif', 'webp']}
+      widths={[768, 1440, 2400, 2952]}
+      sizes="(min-width: 64.0625rem) 115vw, 310vw"
+      alt=""
+      class="layer hill"
+      loading="eager"
+    />
+  )}
   <div class="intro"><slot /></div>
 </section>
 
@@ -70,8 +89,30 @@ const { variant, word } = Astro.props;
     background: var(--color-light-sun);
   }
   .layer { position: absolute; display: block; max-width: none; height: auto; pointer-events: none; }
-  .sky { width: var(--sky-w); left: var(--sky-left); top: var(--sky-top); }
-  .hill { width: var(--hill-w); left: var(--hill-left); top: var(--hill-top); }
+  .sky { width: var(--sky-w); left: var(--sky-left); top: var(--sky-top); translate: 0 calc(var(--parallax, 0) * 0.4px); }
+  .hill { width: var(--hill-w); left: var(--hill-left); top: var(--hill-top); translate: 0 calc(var(--parallax, 0) * 0.12px); }
+  .word { translate: 0 calc(var(--parallax, 0) * 0.24px); }
+
+  /* The near hill is lit by the Home's sunset: cooled toward the morning of each cover. */
+  .work .hill, .post .hill { filter: brightness(1.04) saturate(0.85) hue-rotate(6deg); }
+  .notes .hill { filter: brightness(1.06) contrast(0.95) saturate(0.7) hue-rotate(8deg); }
+  /* Work: the terraces sit lower than the sunset did, so the intro stays on the light sky. */
+  .work { --sky-shift: 60px; }
+  .work .sky { top: calc(var(--sky-top) + var(--sky-shift)); }
+
+  /* Case study: one full-bleed interior, under cream scrims for the intro and the nav. */
+  .case { background: var(--cream); }
+  .case .sky { inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .scrim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(to bottom,
+      color-mix(in srgb, var(--cream) 96%, transparent) 0%,
+      color-mix(in srgb, var(--cream) 88%, transparent) 55%,
+      color-mix(in srgb, var(--cream) 30%, transparent) 78%,
+      color-mix(in srgb, var(--cream) 5%, transparent) 100%);
+  }
 
   .word {
     position: absolute;
@@ -173,6 +214,19 @@ const { variant, word } = Astro.props;
       height: 745px;
     }
     .case .intro, .post .intro { max-width: none; }
+    .scrim {
+      background:
+        linear-gradient(to bottom,
+          color-mix(in srgb, var(--cream) 96%, transparent) 0%,
+          color-mix(in srgb, var(--cream) 90%, transparent) 12%,
+          color-mix(in srgb, var(--cream) 40%, transparent) 22%,
+          transparent 32%),
+        linear-gradient(to right,
+          color-mix(in srgb, var(--cream) 94%, transparent) 0%,
+          color-mix(in srgb, var(--cream) 85%, transparent) 55%,
+          color-mix(in srgb, var(--cream) 10%, transparent) 85%,
+          transparent 100%);
+    }
     .notes { --word-size: 210px; --word-top: 485px; --word-right: 40px; }
     .post .intro :global(.title) { font-size: 2.75rem; }
     .post { --intro-top: 136px; height: 560px; }
@@ -210,7 +264,22 @@ const { variant, word } = Astro.props;
       --hill-top: calc(628.2px - 55.22cqw);
       height: 745px;
     }
-    .case .sky, .case .hill, .notes .sky, .notes .hill { transform: scaleX(-1); }
+    /* The covers are not mirrored (the study desk and the mist face the intro on their own); the hill still is. */
+    .notes .hill { transform: scaleX(-1); }
+    .work { --sky-shift: 154px; }
+    .scrim {
+      background:
+        linear-gradient(to bottom,
+          color-mix(in srgb, var(--cream) 96%, transparent) 0%,
+          color-mix(in srgb, var(--cream) 90%, transparent) 13%,
+          color-mix(in srgb, var(--cream) 55%, transparent) 22%,
+          color-mix(in srgb, var(--cream) 15%, transparent) 32%,
+          transparent 42%),
+        linear-gradient(to right,
+          color-mix(in srgb, var(--cream) 94%, transparent) 0%,
+          color-mix(in srgb, var(--cream) 86%, transparent) 36%,
+          transparent 62%);
+    }
     .notes .intro :global(.headline) { line-height: 1.06; }
     .notes { --word-top: 437px; --word-right: var(--edge); }
     .case .intro { max-width: 660px; }
@@ -219,4 +288,29 @@ const { variant, word } = Astro.props;
     .post .intro :global(.sub) { font-size: 1.25rem; }
     .post { --intro-top: 180px; height: 560px; }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sky, .hill, .word { translate: none; }
+  }
 </style>
+
+<script>
+  // Parallax of the hero layers: writes the scroll offset, capped at the hero's height, to --parallax.
+  const hero = document.querySelector<HTMLElement>('section.hero[data-hero]');
+  const motion = window.matchMedia('(prefers-reduced-motion: no-preference)');
+  if (hero) {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const offset = Math.min(Math.max(window.scrollY, 0), hero.offsetHeight);
+      hero.style.setProperty('--parallax', String(Math.round(offset * 10) / 10));
+    };
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const toggle = () => {
+      if (motion.matches) { window.addEventListener('scroll', onScroll, { passive: true }); update(); }
+      else { window.removeEventListener('scroll', onScroll); hero.style.removeProperty('--parallax'); }
+    };
+    motion.addEventListener('change', toggle);
+    toggle();
+  }
+</script>

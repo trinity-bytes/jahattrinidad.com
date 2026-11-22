@@ -40,7 +40,7 @@ const seo = buildSeo({
 });
 ---
 
-<Base lang={lang} seo={seo} profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
+<Base lang={lang} seo={seo} contactOnPage profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
   <PageHero variant="notes" word={t.nav.notes}>
     <p class="eyebrow">{t.notes.eyebrow}</p>
     <p class="headline">{t.notes.headline}</p>
@@ -50,5 +50,5 @@ const seo = buildSeo({
   <Notes index lang={lang} postsLang={postsLang} marker={t.notes.writingMarker} headline={t.notes.writingHeading}
     strings={{ ...t.notes, elsewhereLatest: t.footer.elsewhere }} inside={t.home.inside.notes} posts={posts} elsewhere={elsewhere} allWritingHref="/rss.xml" />
   <PageContact lang={lang} links={links} marker={t.notes.contactMarker} />
-  <PageFooter slot="footer" lang={lang} links={links} compact />
+  <PageFooter slot="footer" lang={lang} links={links} contactOnPage compact />
 </Base>

@@ -139,13 +139,33 @@ const { direction } = Astro.props;
               const start = Math.max(0, pageTop(section) - innerHeight);
               return Math.max(start + innerHeight * 0.7, pageTop(section) - innerHeight * 0.3);
             },
-            scrub: 0.3,
+            // No scrub lag: Lenis already eases the scroll, and a lagging rim let the hero's straight
+            // bottom edge (and the section below it) show for a moment on a fast scroll.
+            scrub: true,
           },
         });
         timeline.fromTo(shape, { yPercent: 0, scaleX: 0.75 }, { yPercent: -55, scaleX: 3.2, duration: 1 });
-        // Invisible at rest (the hero stays untouched), fully in within the first ~6% (one wheel step),
-        // by which time its rim already covers the hero's straight bottom edge.
-        timeline.fromTo(shape, { opacity: 0 }, { opacity: 1, duration: 0.06 }, 0);
+        // Invisible at rest (the hero stays untouched), fully in within the first ~1.5% of the range
+        // (about 10px), before the strip below the hero's bottom edge is tall enough to read. A longer
+        // fade (it was 6%, ~40px) left the edge visible through a half-transparent rim.
+        timeline.fromTo(shape, { opacity: 0 }, { opacity: 1, duration: 0.015 }, 0);
+        // The section's top band is transparent so the hero's ground bleed shows under the fold
+        // (Hero.astro, Values.astro). Its own surface closes over that band from the bottom up during
+        // the first 140px, keeping pace with the rim, so the bleed never shows under the glow's body.
+        // When the seam is already in view at load (a viewport taller than the hero), the band starts
+        // closed: the bleed only exists to hide an edge that begins below the fold.
+        const seamBelowFold = () => pageTop(section) >= innerHeight;
+        gsap.fromTo(section, { '--seam-edge': () => (seamBelowFold() ? '120px' : '0px') }, {
+          '--seam-edge': '0px',
+          ease: 'none',
+          scrollTrigger: {
+            invalidateOnRefresh: true,
+            trigger: section,
+            start: () => Math.max(0, pageTop(section) - innerHeight),
+            end: () => Math.max(0, pageTop(section) - innerHeight) + 140,
+            scrub: true,
+          },
+        });
       });
 
       // The hero's height and the lens change the layout; keep the trigger positions current.
