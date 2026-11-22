@@ -11,6 +11,7 @@
  * Exit: the section a descend glow transition leaves (the one before Contact) sinks its content into
  * masks, top first, scrubbed while the next section's top climbs from 85% to 60% of the viewport, where
  * the glow's edge enters: the content is gone before the edge sweeps up (as in the reference video).
+ * Desktop only, like the glow; phones and tablets get the enter alone.
  * Reduced motion: neither runs and everything stays visible. Only transform, opacity and clip-path move.
  */
 ---
@@ -145,14 +146,19 @@
   }
 
   document.fonts.ready.then(() => {
-    gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    gsap.matchMedia().add({
+      motion: '(prefers-reduced-motion: no-preference)',
+      desktop: '(min-width: 64.0625rem)',
+    }, (context) => {
+      if (!context.conditions?.motion) return;
       const items = targets(document);
       items.forEach((element) => {
         gsap.set(element, element.dataset.reveal === 'text' ? { opacity: 0 } : { opacity: 0, y: TRAVEL });
       });
       const leaving = leavingSection();
       const arriving = leaving && sibling(leaving, 'next');
-      const exiting = leaving && arriving ? exit(leaving, arriving) : null;
+      // The exit only clears the way for the descend glow, which runs on desktop only (GlowTransition).
+      const exiting = context.conditions?.desktop && leaving && arriving ? exit(leaving, arriving) : null;
 
       ScrollTrigger.batch(items, {
         start: 'top 88%',
