@@ -101,7 +101,7 @@ const personSchema = personJsonLd({
 });
 ---
 
-<Base lang={lang} seo={seo} jsonLd={personSchema} lens profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
+<Base lang={lang} seo={seo} jsonLd={personSchema} heroIntro lens profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
   <Hero strings={copy.hero} insideStrings={t.home.inside.hero} workHref={workSection} />
   <GlowTransition direction="rise" />
   <Values

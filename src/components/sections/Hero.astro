@@ -364,9 +364,11 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     rotate: calc(var(--my) * -1) calc(var(--mx) + 0.0001) 0 calc(hypot(var(--mx), var(--my)) * 14deg) !important;
   }
 
-  /* Load choreography: starting states while html[data-hero-intro] is set (see the inline script).
+  /* Load choreography: starting states while html[data-hero-intro] is set (the marker is set in Base.astro's head).
      The hero is clipped to nothing (the page surface shows, never the hero's own fill) until the sun circle opens it. */
-  :global(html[data-hero-intro]) .hero { clip-path: circle(0px at 50% 60%); }
+  /* The sun-sized circle shows from the first frame (the script opens it from this same circle), so the
+     page never sits blank while the intro waits for its images. */
+  :global(html[data-hero-intro]) .hero { clip-path: circle(22px at var(--sun-x) var(--sun-y)); }
   :global(html[data-hero-intro]) .name { transform: translateY(55%); }
   :global(html[data-hero-intro]) .portrait,
   :global(html[data-hero-intro]) .intro > *,
@@ -375,16 +377,6 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
   :global(html[data-hero-intro] [data-lens-dock]) { opacity: 0; }
 </style>
 
-<script is:inline>
-  // Mark the page before first paint so the load choreography starts from its first frame, not after a flash.
-  // Only at the top of a fresh load, with motion allowed; a safety timeout releases everything if the script below never runs.
-  // Not when the page arrives through the page transition (html[data-page-reveal], lib/page-transition.ts): its own
-  // circle already reveals the page, and two circles at once would fight.
-  if (window.scrollY === 0 && !('pageReveal' in document.documentElement.dataset) && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.documentElement.dataset.heroIntro = '';
-    setTimeout(() => delete document.documentElement.dataset.heroIntro, 3500);
-  }
-</script>
 
 <script>
   /*
@@ -436,8 +428,14 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
       return { x: point.left - box.left, y: point.top - box.top };
     }
 
+    /** The circle's curve. It was expo.inOut, whose first half barely moves: on phones the sun sat still for
+     *  about half a second and the load read as a glitch. power3.inOut opens the same way but moves at once. */
+    const INTRO_EASE = 'power3.inOut';
+    /** Longest wait for the hero images to decode before the circle opens (it was 900ms). */
+    const IMAGE_WAIT = 500;
+
     /**
-     * Load: a circle the size of the sun opens from the sun until it covers the hero (expo.inOut, an
+     * Load: a circle the size of the sun opens from the sun until it covers the hero (INTRO_EASE, an
      * After Effects-style easy ease). Each text block appears only once the circle encloses all of it,
      * so nothing is seen sliced by the edge; the name rises from behind the hill as the circle reaches it.
      */
@@ -446,7 +444,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
       // never opens on an empty fill or a half-painted image (phones showed the portrait cut mid-load).
       const image = sky[0] instanceof HTMLImageElement ? sky[0] : null;
       const images = [...sky, ...hero!.querySelectorAll('.hill, .portrait')].filter((el): el is HTMLImageElement => el instanceof HTMLImageElement);
-      await Promise.race([Promise.all(images.map((img) => img.decode?.().catch(() => {}))), new Promise((done) => setTimeout(done, 900))]);
+      await Promise.race([Promise.all(images.map((img) => img.decode?.().catch(() => {}))), new Promise((done) => setTimeout(done, IMAGE_WAIT))]);
 
       const box = hero!.getBoundingClientRect();
       const sun = sunCentre();
@@ -454,7 +452,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
       const startRadius = 22;
       const endRadius = Math.max(far(0, 0), far(box.width, 0), far(0, box.height), far(box.width, box.height));
       const duration = 1.6;
-      const ease = gsap.parseEase('expo.inOut');
+      const ease = gsap.parseEase(INTRO_EASE);
       /** Seconds until the circle's radius reaches `distance` (inverts the ease by bisection). */
       const reach = (distance: number) => {
         const target = (distance - startRadius) / (endRadius - startRadius);
@@ -497,7 +495,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
       timeline.to(circle, {
         r: endRadius,
         duration,
-        ease: 'expo.inOut',
+        ease: INTRO_EASE,
         onUpdate: () => { hero!.style.clipPath = `circle(${circle.r}px at ${sun.x}px ${sun.y}px)`; },
       }, 0);
       // Scale the sky around the sun itself, so the sun stays centred in the opening circle.

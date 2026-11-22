@@ -26,9 +26,11 @@ export interface Props {
   contactOnPage?: boolean;
   /** Serialized schema.org data (from lib/seo.ts), rendered as JSON-LD in <head>. */
   jsonLd?: string;
+  /** The page plays the Home hero's load choreography (Hero.astro): mark it from the head, before first paint. */
+  heroIntro?: boolean;
 }
 
-const { lang, seo, lens = false, nav = true, profileLinks = [], contactOnPage = false, jsonLd } = Astro.props;
+const { lang, seo, lens = false, nav = true, profileLinks = [], contactOnPage = false, jsonLd, heroIntro = false } = Astro.props;
 const t = getDictionary(lang);
 
 // EN / ES / PT switch: each locale goes to this page's counterpart (its hreflang
@@ -61,6 +63,19 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     <style is:inline>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
     <script is:inline set:html={localeScript} />
     <script is:inline set:html={pageTransitionScript()} />
+    {heroIntro && (
+      <script is:inline>
+        // Hero load choreography marker (Hero.astro). Here in the head, before the hero exists: set from inside
+        // the hero component it came after the hero's markup, so phones painted the whole hero for a moment and
+        // then hid it. Only at the top of a fresh load, with motion allowed, and not when the page arrives through
+        // the page transition (html[data-page-reveal], set by the script above): two circles at once would fight.
+        // A safety timeout releases everything if the hero script never runs.
+        if (window.scrollY === 0 && !('pageReveal' in document.documentElement.dataset) && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.dataset.heroIntro = '';
+          setTimeout(() => delete document.documentElement.dataset.heroIntro, 3500);
+        }
+      </script>
+    )}
     <meta name="google" content="notranslate" />
     <Font cssVariable="--font-epilogue" />
     <Font cssVariable="--font-hanken" />
