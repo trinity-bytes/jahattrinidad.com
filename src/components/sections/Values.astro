@@ -104,6 +104,13 @@ const notes = [insideCopy.annotations.source];
     padding: 5rem 0;
     background: var(--color-bg);
   }
+  /* While the rise glow is live, the top 120px are transparent so the hero's ground bleed shows
+     through (Hero.astro). GlowTransition moves --seam-edge from 120px to 0 over the first 140px of
+     scroll, so the surface closes over the band from the bottom up, keeping pace with the glow.
+     Without the glow (no JS) the section keeps its solid background and the old edge. */
+  .values:has(> [data-glow-transition='rise'][data-ready]) {
+    background: linear-gradient(to bottom, transparent calc(var(--seam-edge, 120px) - 60px), var(--color-bg) var(--seam-edge, 120px));
+  }
 
   .content {
     position: relative;
