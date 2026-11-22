@@ -442,9 +442,11 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
      * so nothing is seen sliced by the edge; the name rises from behind the hill as the circle reaches it.
      */
     async function playIntro() {
+      // Start only once the sky, the hill and the portrait can paint (or after a short wait), so the circle
+      // never opens on an empty fill or a half-painted image (phones showed the portrait cut mid-load).
       const image = sky[0] instanceof HTMLImageElement ? sky[0] : null;
-      // Start only once the sky can paint (or after a short wait), so the circle never opens on an empty fill.
-      await Promise.race([image?.decode?.().catch(() => {}), new Promise((done) => setTimeout(done, 700))]);
+      const images = [...sky, ...hero!.querySelectorAll('.hill, .portrait')].filter((el): el is HTMLImageElement => el instanceof HTMLImageElement);
+      await Promise.race([Promise.all(images.map((img) => img.decode?.().catch(() => {}))), new Promise((done) => setTimeout(done, 900))]);
 
       const box = hero!.getBoundingClientRect();
       const sun = sunCentre();
@@ -486,6 +488,10 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
           gsap.set([...portrait, ...intro, ...footnote, nav, document.querySelector('[data-lens-dock]')], { clearProps: 'opacity' });
           // GSAP writes `translate: none` with a y tween; clear it so the magnetic Contact keeps its own.
           gsap.set(navItems, { clearProps: 'opacity,transform,translate' });
+          // The portrait's rise is over (y is back to 0): drop its transform so it stops being a GPU layer of
+          // its own. On phones that layer was rastered only for the first viewport, so the part revealed when
+          // the browser bars hid showed cut until a repaint. Nothing else moves the portrait after the intro.
+          gsap.set(portrait, { clearProps: 'transform,translate' });
         },
       });
       timeline.to(circle, {
