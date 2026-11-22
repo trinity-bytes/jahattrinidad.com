@@ -107,3 +107,34 @@ export function buildSeo(input: SeoInput): SeoResult {
     imageAlt: input.image?.alt,
   };
 }
+
+export interface PersonInput {
+  site: URL;
+  /** Site-relative path of the page that carries the schema (the Home of its locale). */
+  path: string;
+  description: string;
+  /** Profile URLs (GitHub, LinkedIn…) from the links collection. */
+  sameAs: string[];
+}
+
+/**
+ * schema.org Person for the Home, so search engines read who the site is
+ * about (name, role, school, place) instead of guessing from page text.
+ * Returned as a string ready for `<script type="application/ld+json">`;
+ * `<` is escaped so no value can close the script tag.
+ */
+export function personJsonLd(input: PersonInput): string {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Jahat Trinidad',
+    jobTitle: 'Design Engineer',
+    url: absoluteUrl(input.path, input.site).href,
+    image: absoluteUrl(OG_DEFAULT_IMAGE.path, input.site).href,
+    description: input.description,
+    address: { '@type': 'PostalAddress', addressLocality: 'Lima', addressCountry: 'PE' },
+    alumniOf: { '@type': 'CollegeOrUniversity', name: 'Universidad Peruana de Ciencias Aplicadas' },
+    sameAs: input.sameAs,
+  };
+  return JSON.stringify(data).replace(/</g, '\\u003c');
+}

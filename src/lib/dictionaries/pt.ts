@@ -2,7 +2,7 @@ import type { Dictionary } from '../i18n';
 import { chatPt } from '../chat/script.pt';
 
 export const pt: Dictionary = {
-  meta: { ogImageAlt: 'Jahat Trinidad em uma colina ao pôr do sol, ao lado da frase «Crio produtos que as pessoas realmente usam».', workDescription: 'Projetos selecionados e estudos de caso.', notesDescription: 'Publicações sobre a criação e o lançamento deste site.', linksDescription: 'Onde me encontrar por aí.', ogSignature: 'Jahat Trinidad · jahattrinidad.com' },
+  meta: { homeTitle: 'Jahat Trinidad · Design Engineer — Frontend e produto', homeDescription: 'Jahat Trinidad, design engineer em Lima, Peru. Projeto e desenvolvo produtos web de ponta a ponta, do primeiro esboço ao site publicado.', ogImageAlt: 'Jahat Trinidad em uma colina ao pôr do sol, ao lado da frase «Crio produtos que as pessoas realmente usam».', workDescription: 'Projetos selecionados e estudos de caso.', notesDescription: 'Publicações sobre a criação e o lançamento deste site.', linksDescription: 'Onde me encontrar por aí.', ogSignature: 'Jahat Trinidad · jahattrinidad.com' },
   nav: { home: 'Início', brand: 'Jahat Trinidad', brandInside: '@trinitybytes', navigation: 'Navegação principal', skipToContent: 'Ir para o conteúdo', links: 'Links', work: 'Projetos', experience: 'Experiência', notes: 'Notas', contact: 'Contato', openMenu: 'Abrir menu', closeMenu: 'Fechar menu', elsewhere: 'Por aí', availability: 'Disponível para estágio.', menuLinks: 'Perfis', language: 'Idioma' },
   home: {
     workHeadline: 'Projetos selecionados', notesHeadline: 'Notas sobre criar coisas',
