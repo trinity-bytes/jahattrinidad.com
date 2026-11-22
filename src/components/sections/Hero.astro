@@ -105,7 +105,9 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
       {...note.sky}
     />
   </div>
-  <Annotation n={2} x="calc(var(--edge) + 419px)" y="calc(100% - 40px)" side="right" pinX="var(--hill-pin-x)" pinY="var(--hill-pin-y)" {...note.hill} />
+  <div class="follow" data-follow="hill">
+    <Annotation n={2} x="calc(var(--edge) + 419px)" y="calc(100% - 40px)" side="right" pinX="var(--hill-pin-x)" pinY="var(--hill-pin-y)" {...note.hill} />
+  </div>
   <div class="follow" data-follow="name">
     <Annotation
       n={3}
@@ -407,6 +409,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     const followSky = q('[data-follow="sky"]');
     const followName = q('[data-follow="name"]');
     const names = q('.name');
+    const hill = q('.hill');
+    const followHill = q('[data-follow="hill"]');
     const portrait = q('.portrait');
     const intro = q('.intro > *');
     const footnote = q('.footnote');
@@ -519,14 +523,17 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     media.add('(prefers-reduced-motion: no-preference)', () => {
       if ('heroIntro' in root.dataset) void playIntro();
 
-      // Scroll parallax, scrubbed over the hero's exit. Values are fractions of the hero's height.
+      // Scroll parallax, scrubbed over the hero's exit. Values are fractions of the hero's height:
+      // the farther the layer, the more it lags. The portrait, nearest, moves with the page (it never
+      // rises, so its cut never shows); the hill lags a little behind it, so the two read as planes.
       const parallax = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.4, invalidateOnRefresh: true },
       });
       parallax
         .to([...sky, ...sunMask, ...followSky], { y: () => hero.offsetHeight * 0.35 }, 0)
-        .to([...names, ...followName], { y: () => hero.offsetHeight * 0.18 }, 0);
+        .to([...names, ...followName], { y: () => hero.offsetHeight * 0.18 }, 0)
+        .to([...hill, ...followHill], { y: () => hero.offsetHeight * 0.08 }, 0);
 
       return () => delete root.dataset.heroIntro;
     });
