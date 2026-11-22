@@ -103,7 +103,11 @@ const { direction } = Astro.props;
     if (!transitions.length) return;
 
     media = gsap.matchMedia();
-    media.add('(prefers-reduced-motion: no-preference)', () => {
+    // Desktop only (the 64.0625rem breakpoint of the styles). On phones and tablets the hero is shorter
+    // than many viewports, so the next section is already in view at load and the glow would climb
+    // over content that is already showing; there the sections meet at a plain edge. Leaving the
+    // range (a rotation, a resize) reverts everything through the cleanup below.
+    media.add('(prefers-reduced-motion: no-preference) and (min-width: 64.0625rem)', () => {
       transitions.forEach((transition) => {
         const section = targetSection(transition);
         const shape = transition.querySelector<HTMLElement>('.glow-shape');
