@@ -1,0 +1,170 @@
+---
+/*
+ * Content enter and exit motion for the sections after the hero. Renders nothing; place it once on a page.
+ *
+ * Markup contract (on any element outside the hero):
+ *   data-reveal="text"     each line rises out of its own mask (markers, headings, subs);
+ *   data-reveal            the block fades up 40px (cards, rows, lists);
+ *   data-reveal-children   each element child behaves like data-reveal (list items, cards from components).
+ *
+ * Enter: plays once, when the element reaches 88% of the viewport; elements entering together stagger.
+ * Exit: the section a descend glow transition leaves (the one before Contact) sinks its content into
+ * masks, top first, scrubbed while the next section's top climbs from 85% to 60% of the viewport, where
+ * the glow's edge enters: the content is gone before the edge sweeps up (as in the reference video).
+ * Reduced motion: neither runs and everything stays visible. Only transform, opacity and clip-path move.
+ */
+---
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { SplitText } from 'gsap/SplitText';
+  import { REVEAL_SETTLED } from './reveal/events';
+
+  gsap.registerPlugin(ScrollTrigger, SplitText);
+
+  const STAGGER = 0.08;
+  /** How far a block travels on enter and sinks on exit, in px. */
+  const TRAVEL = 40;
+
+  const settled = () => window.dispatchEvent(new Event(REVEAL_SETTLED));
+  const visible = (element: Element) => element.getClientRects().length > 0;
+
+  /** Every reveal target in `scope`, in document order, leaving out the hero and the lens preview copy. */
+  function targets(scope: ParentNode): HTMLElement[] {
+    return [...scope.querySelectorAll<HTMLElement>('[data-reveal], [data-reveal-children] > *')]
+      .filter((element) => !element.closest('#hero, [data-lens-preview]'));
+  }
+
+  /**
+   * The element whose lines are split: the element itself, or its visible lens variant when it holds
+   * both (`<span data-show="outside">` / `<span data-show="inside">`). Only one variant is split, so the
+   * hidden one keeps its DOM for the lens to show later.
+   */
+  function textTarget(element: HTMLElement): HTMLElement | null {
+    const variants = [...element.querySelectorAll<HTMLElement>(':scope > [data-show]')];
+    if (!variants.length) return visible(element) ? element : null;
+    return variants.find(visible) ?? null;
+  }
+
+  /** Enter animations still running, so the exit can finish them before it takes over the same elements. */
+  const appearing = new Map<HTMLElement, gsap.core.Animation>();
+
+  function enter(element: HTMLElement, delay: number) {
+    const done = () => { appearing.delete(element); settled(); };
+    if (element.dataset.reveal !== 'text') {
+      appearing.set(element, gsap.to(element, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay, clearProps: 'opacity,transform', onComplete: done }));
+      return;
+    }
+    gsap.set(element, { clearProps: 'opacity' });
+    const target = textTarget(element);
+    if (!target) return;
+    SplitText.create(target, {
+      type: 'lines',
+      mask: 'lines',
+      onSplit: (split) => {
+        const tween = gsap.from(split.lines, {
+          yPercent: 100,
+          duration: 1,
+          ease: 'expo.out',
+          stagger: STAGGER,
+          delay,
+          // Back to the authored DOM: the lens and the chat swap these elements' content later.
+          onComplete: () => { split.revert(); done(); },
+        });
+        appearing.set(element, tween);
+        return tween;
+      },
+    });
+  }
+
+  /** Jump any running enter animation on `elements` to its end (it reverts its split and clears its styles). */
+  function finishEnter(elements: Iterable<HTMLElement>) {
+    for (const element of elements) appearing.get(element)?.progress(1);
+  }
+
+  /** The previous or next <section> sibling, skipping scripts and other elements in between. */
+  function sibling(element: Element, direction: 'previous' | 'next'): HTMLElement | null {
+    let current = direction === 'next' ? element.nextElementSibling : element.previousElementSibling;
+    while (current && current.tagName !== 'SECTION') current = direction === 'next' ? current.nextElementSibling : current.previousElementSibling;
+    return current instanceof HTMLElement ? current : null;
+  }
+
+  /** The section a descend transition leaves. GlowTransition may already have moved the layer into it. */
+  function leavingSection(): HTMLElement | null {
+    const transition = document.querySelector<HTMLElement>('[data-glow-transition="descend"]:not([data-lens-preview] *)');
+    if (!transition) return null;
+    const parent = transition.parentElement;
+    return parent?.tagName === 'SECTION' ? parent : sibling(transition, 'previous');
+  }
+
+  const pageTop = (element: HTMLElement) => element.getBoundingClientRect().top + scrollY;
+
+  type Exit = { items: Set<HTMLElement>; sync: () => void; started: () => boolean };
+
+  function exit(leaving: HTMLElement, arriving: HTMLElement): Exit | null {
+    const items = targets(leaving);
+    if (!items.length) return null;
+    /**
+     * A fast scroll can still be playing an element's enter when the exit starts, and its end (clearing
+     * opacity and transform) would then undo the exit. Finish those enters, then paint the exit again
+     * at its current progress.
+     */
+    const sync = () => {
+      finishEnter(items);
+      const progress = timeline.progress();
+      timeline.progress(0, true).progress(progress, true);
+    };
+    const timeline = gsap.timeline({
+      defaults: { duration: 1, immediateRender: false },
+      scrollTrigger: {
+        trigger: arriving,
+        // The glow's edge enters the viewport's bottom when the next section's top is 60% down it
+        // (GlowTransition's HANG of 0.4); the content is gone by then.
+        start: () => pageTop(arriving) - innerHeight * 0.85,
+        end: () => pageTop(arriving) - innerHeight * 0.6,
+        scrub: 0.3,
+        invalidateOnRefresh: true,
+        onEnter: sync,
+      },
+    });
+    /*
+     * Each element moves down while its bottom edge is clipped by the same amount, so it sinks behind the
+     * line where it stood. Every tween spans the whole timeline and the stagger lives in its ease (flat,
+     * then linear over 60% of the range, the last one starting at 40%). Offsetting the tweens instead would
+     * break scrolling back: GSAP restores the styles a tween recorded on its first render when the
+     * playhead goes back before its start, and that render may have caught the hidden pre-enter state.
+     */
+    items.forEach((element, index) => {
+      const offset = (index / items.length) * 0.4;
+      timeline.fromTo(element,
+        { y: 0, opacity: 1, clipPath: 'inset(0px 0px 0px 0px)' },
+        { y: TRAVEL, opacity: 0, clipPath: `inset(0px 0px ${TRAVEL}px 0px)`, ease: (time: number) => gsap.utils.clamp(0, 1, (time - offset) / 0.6) },
+        0);
+    });
+    return { items: new Set(items), sync, started: () => timeline.progress() > 0 };
+  }
+
+  document.fonts.ready.then(() => {
+    gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      const items = targets(document);
+      items.forEach((element) => {
+        gsap.set(element, element.dataset.reveal === 'text' ? { opacity: 0 } : { opacity: 0, y: TRAVEL });
+      });
+      const leaving = leavingSection();
+      const arriving = leaving && sibling(leaving, 'next');
+      const exiting = leaving && arriving ? exit(leaving, arriving) : null;
+
+      ScrollTrigger.batch(items, {
+        start: 'top 88%',
+        once: true,
+        onEnter: (batch) => {
+          batch.forEach((element, index) => enter(element as HTMLElement, index * STAGGER));
+          // Entering an element whose exit is already under way (a reload or jump near the next section).
+          if (exiting?.started() && batch.some((element) => exiting.items.has(element as HTMLElement))) exiting.sync();
+        },
+      });
+
+      return () => gsap.set(items, { clearProps: 'opacity,transform,clipPath' });
+    });
+  });
+</script>

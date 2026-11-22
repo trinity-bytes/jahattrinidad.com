@@ -50,15 +50,15 @@ const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', postsLa
   <div class="layout">
     <header>
       <div class="title">
-        <p class="marker" data-background-text data-show="outside">{marker}</p>
-        <p class="marker" data-background-text data-show="inside">{inside.marker}</p>
-        <h2 id="notes-heading" data-background-text>{headline}</h2>
+        <p class="marker" data-background-text data-show="outside" data-reveal="text">{marker}</p>
+        <p class="marker" data-background-text data-show="inside" data-reveal="text">{inside.marker}</p>
+        <h2 id="notes-heading" data-background-text data-reveal="text">{headline}</h2>
       </div>
-      <a class="all" href={allWritingHref} data-background-text>{index ? strings.rssFeed : strings.allWriting}<span aria-hidden="true">→</span></a>
+      <a class="all" href={allWritingHref} data-background-text data-reveal>{index ? strings.rssFeed : strings.allWriting}<span aria-hidden="true">→</span></a>
     </header>
     <div class="columns">
       <div class="writing">
-        <div class="label-wrap">
+        <div class="label-wrap" data-reveal>
           <h3 class="label" data-background-text>{index ? strings.latest : strings.writingLatest}</h3>
           {!index && <Annotation
             n={1}
@@ -71,7 +71,7 @@ const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', postsLa
           />}
         </div>
         {featured && (
-          <div class="featured-card">
+          <div class="featured-card" data-reveal>
           <PostRow
             featured
             detailed={index}
@@ -99,7 +99,7 @@ const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', postsLa
         )}
         {rest.length > 0 && (
           <div class="rows-wrap">
-            <ul class="rows">
+            <ul class="rows" data-reveal-children>
               {rest.map(({ entry, readingTime }) => (
                 <li>
                   <PostRow href={postHref(entry)} title={entry.data.title} type={entry.data.type} typeLabel={typeLabel(entry.data.type)} detailed={index} description={entry.data.description} meta={index ? `${formatDate(entry.data.publishDate, lang)} · ${strings.minutes(readingTime)}` : strings.minutes(readingTime)} />
@@ -122,8 +122,8 @@ const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', postsLa
       </div>
       {elsewhere.length > 0 && (
         <div class="elsewhere">
-          <h3 class="label" data-background-text>{strings.elsewhereLatest}</h3>
-          <ul>
+          <h3 class="label" data-background-text data-reveal>{strings.elsewhereLatest}</h3>
+          <ul data-reveal-children>
             {elsewhere.map((item) => (
               <li>
                 <a href={item.href}>
