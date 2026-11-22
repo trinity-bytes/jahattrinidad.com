@@ -378,7 +378,9 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
 <script is:inline>
   // Mark the page before first paint so the load choreography starts from its first frame, not after a flash.
   // Only at the top of a fresh load, with motion allowed; a safety timeout releases everything if the script below never runs.
-  if (window.scrollY === 0 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  // Not when the page arrives through the page transition (html[data-page-reveal], lib/page-transition.ts): its own
+  // circle already reveals the page, and two circles at once would fight.
+  if (window.scrollY === 0 && !('pageReveal' in document.documentElement.dataset) && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.dataset.heroIntro = '';
     setTimeout(() => delete document.documentElement.dataset.heroIntro, 3500);
   }
@@ -415,6 +417,12 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     const intro = q('.intro > *');
     const footnote = q('.footnote');
     const nav = document.querySelector<HTMLElement>('[data-nav]');
+    // The nav's own items, left to right, for the intro's one-by-one entrance (only the visible ones:
+    // the brand is hidden at load on the Home, the desktop links and the menu button swap by width).
+    const navItems = nav
+      ? Array.from(nav.querySelectorAll<HTMLElement>('.brand, .desktop-links > a, .lang-switch, .contact, .menu-toggle'))
+          .filter((item) => item.offsetParent !== null && getComputedStyle(item).visibility !== 'hidden')
+      : [];
     const media = gsap.matchMedia();
 
     /** The sun's centre in hero coordinates, from the same --sun-x / --sun-y the Inside annotations use. */
@@ -476,6 +484,8 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
           hero!.style.clipPath = '';
           // Inline opacity stays until here: the starting CSS still applies while html[data-hero-intro] is set.
           gsap.set([...portrait, ...intro, ...footnote, nav, document.querySelector('[data-lens-dock]')], { clearProps: 'opacity' });
+          // GSAP writes `translate: none` with a y tween; clear it so the magnetic Contact keeps its own.
+          gsap.set(navItems, { clearProps: 'opacity,transform,translate' });
         },
       });
       timeline.to(circle, {
@@ -506,7 +516,11 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
         const distance = enclosed(element);
         timeline.fromTo(element, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, distance === null ? duration : reach(distance));
       }
-      if (nav) timeline.fromTo(nav, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' }, duration - 0.3);
+      // The nav comes in item by item, each dropping softly from above, left to right.
+      if (nav) {
+        timeline.set(nav, { opacity: 1 }, duration - 0.3);
+        timeline.fromTo(navItems, { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.08 }, duration - 0.3);
+      }
       // The lens dock is fixed to the viewport, outside the hero: it pops in when the circle reaches it.
       const dock = document.querySelector<HTMLElement>('[data-lens-dock]');
       const lensButton = dock?.querySelector<HTMLElement>('[data-lens-open]');

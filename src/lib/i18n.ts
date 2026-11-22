@@ -499,8 +499,8 @@ export const en: Dictionary = {
   // Pointer hint: lens component 2168:10. Remaining text: implementation design §2.
   lens: {
     lookInside: 'Look inside',
-    pointerHint: 'Drag and drop over the page to see how it was built',
-    touchHint: 'Tap the lens',
+    pointerHint: 'Drag to see my technical side',
+    touchHint: 'Tap to see my technical side',
     backOutside: 'Back outside',
     escapeKey: 'Esc',
     insideAnnouncement: 'Inside view: how each part is built',

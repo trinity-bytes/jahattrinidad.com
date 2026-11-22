@@ -278,7 +278,7 @@ const { strings } = Astro.props;
       } else start();
     }
 
-    // Touch has no hover: show the "Tap the lens" hint for a few seconds once the page has loaded.
+    // Touch has no hover: show the touch hint ("Tap to see my technical side") for a few seconds once the page has loaded.
     if (coarsePointer.matches) {
       const showHint = () => {
         dock.dataset.hint = '';
