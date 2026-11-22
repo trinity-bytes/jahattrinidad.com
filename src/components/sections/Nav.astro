@@ -114,16 +114,56 @@ const profileIcons = {
         (child as HTMLElement).inert = inert;
       }
     };
+    // The sheet opens in a circle that grows out of the menu button, its rows following one by one, and
+    // closes back into the button. Web Animations, not GSAP: the nav is on every page, GSAP only on the Home.
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const sheet = menu?.querySelector<HTMLElement>('.sheet');
+    const scrim = menu?.querySelector<HTMLElement>('[data-menu-scrim]');
+    let closing: Animation | null = null;
+    const circleFromButton = () => {
+      const b = button!.getBoundingClientRect();
+      const x = b.left + b.width / 2;
+      const y = b.top + b.height / 2;
+      const r = Math.hypot(Math.max(x, sheet!.offsetWidth - x), Math.max(y, sheet!.offsetHeight - y));
+      return [`circle(${b.width / 2}px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`];
+    };
     const setOpen = (open: boolean, returnFocus = true) => {
       if (!button || !menu || open === isOpen()) return;
       button.setAttribute('aria-expanded', String(open));
       button.setAttribute('aria-label', open ? button.dataset.closeLabel! : button.dataset.openLabel!);
-      menu.hidden = !open;
       nav.dataset.menu = open ? 'open' : 'closed';
       root.toggleAttribute('data-menu-open', open);
       setBackgroundInert(open);
-      if (open) menu.querySelector<HTMLElement>('.sheet a')?.focus();
-      else if (returnFocus) button.focus();
+      const animate = !reducedMotion.matches && sheet && scrim;
+      if (open) {
+        closing?.cancel();
+        closing = null;
+        menu.hidden = false;
+        if (animate) {
+          sheet.animate({ clipPath: circleFromButton() }, { duration: 560, easing: 'cubic-bezier(0.32, 0.72, 0, 1)' });
+          Array.from(sheet.querySelectorAll<HTMLElement>('.sheet-links li, .sheet-languages, .sheet-footer')).forEach((row, index) => {
+            row.animate([{ opacity: 0, transform: 'translateY(-12px)' }, { opacity: 1, transform: 'none' }],
+              { duration: 420, delay: 140 + index * 55, easing: 'cubic-bezier(0.23, 1, 0.32, 1)', fill: 'backwards' });
+          });
+        }
+        menu.querySelector<HTMLElement>('.sheet a')?.focus();
+        return;
+      }
+      if (animate) {
+        closing = sheet.animate({ clipPath: circleFromButton().reverse() }, { duration: 320, easing: 'cubic-bezier(0.55, 0, 1, 0.45)', fill: 'forwards' });
+        scrim.animate({ opacity: [1, 0] }, { duration: 320, easing: 'ease-in', fill: 'forwards' });
+        const done = closing;
+        done.finished.then(() => {
+          if (closing !== done) return;
+          menu.hidden = true;
+          sheet.getAnimations().forEach((animation) => animation.cancel());
+          scrim.getAnimations().forEach((animation) => animation.cancel());
+          closing = null;
+        }, () => {});
+      } else {
+        menu.hidden = true;
+      }
+      if (returnFocus) button.focus();
     };
     button?.addEventListener('click', () => setOpen(!isOpen()));
     menu?.addEventListener('click', (event) => {
@@ -250,6 +290,10 @@ const profileIcons = {
   .menu-toggle { display: none; width: 44px; height: 44px; padding: 0; align-items: center; justify-content: center; border: 1px solid color-mix(in srgb, var(--color-heading) 35%, transparent); border-radius: 50%; color: inherit; background: transparent; cursor: pointer; }
   .close-icon, [aria-expanded='true'] .menu-icon { display: none; }
   [aria-expanded='true'] .close-icon { display: block; }
+  /* The icons turn in as they swap; only after the first toggle (data-menu is set by it), not on load. */
+  .site-nav[data-menu] [aria-expanded='true'] .close-icon,
+  .site-nav[data-menu] [aria-expanded='false'] .menu-icon { animation: menu-icon-in 320ms cubic-bezier(0.23, 1, 0.32, 1); }
+  @keyframes menu-icon-in { from { opacity: 0; transform: rotate(-90deg) scale(0.6); } }
   /* Mobile menu open state (boards 2349:86 / 2349:159). The header's backdrop-filter would trap the fixed scrim, so it is off while open. */
   .site-nav[data-menu='open']::before { opacity: 0; backdrop-filter: none; }
   .site-nav[data-menu='open'][data-state='scrolled'] .nav-inner { transform: translateY(9.5px); }
@@ -258,7 +302,7 @@ const profileIcons = {
   .mobile-menu { display: none; }
   .mobile-menu:not([hidden]) { display: block; }
   .scrim { position: fixed; inset: 0; z-index: 0; background: light-dark(color-mix(in srgb, var(--green-950) 32%, transparent), color-mix(in srgb, var(--green-950) 50%, transparent)); animation: menu-fade 200ms cubic-bezier(0.23, 1, 0.32, 1); }
-  .sheet { position: fixed; top: 0; left: 0; right: 0; z-index: 1; max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; padding: 108px var(--gutter-mobile) 40px; background: var(--color-card); color: var(--color-heading); border-radius: 0 0 28px 28px; box-shadow: 0 16px 40px color-mix(in srgb, var(--green-950) 18%, transparent); animation: menu-sheet 200ms cubic-bezier(0.23, 1, 0.32, 1); }
+  .sheet { position: fixed; top: 0; left: 0; right: 0; z-index: 1; max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; padding: 108px var(--gutter-mobile) 40px; background: var(--color-card); color: var(--color-heading); border-radius: 0 0 28px 28px; box-shadow: 0 16px 40px color-mix(in srgb, var(--green-950) 18%, transparent); }
   .sheet ul { list-style: none; margin: 0; padding: 0; }
   .sheet-links { border-top: 1px solid var(--color-border); }
   .sheet-links li { border-bottom: 1px solid var(--color-border); }
@@ -275,9 +319,9 @@ const profileIcons = {
   .profiles { display: flex; flex-wrap: wrap; gap: 12px; }
   .profiles a { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid color-mix(in srgb, var(--color-heading) 35%, transparent); border-radius: 50%; }
   @keyframes menu-fade { from { opacity: 0; } }
-  @keyframes menu-sheet { from { opacity: 0; transform: translateY(-16px); } }
   @media (prefers-reduced-motion: reduce) {
-    .sheet { animation-name: menu-fade; }
+    .sheet { animation: menu-fade 200ms cubic-bezier(0.23, 1, 0.32, 1); }
+    .site-nav[data-menu] .menu-toggle span { animation: none; }
     .site-nav::before, .site-nav[data-state='top']::before { transition: opacity 80ms; }
     .site-nav[data-state='top'] .nav-inner { transition: none; }
     .brand { transition: opacity 80ms, visibility 0s; }
