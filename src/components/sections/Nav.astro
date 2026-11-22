@@ -1,6 +1,7 @@
 ---
 import Icon from '../ui/Icon.astro';
 import type { Dictionary } from '../../lib/i18n';
+import { navTargets } from '../../lib/nav';
 
 interface Props {
   home: string;
@@ -10,16 +11,19 @@ interface Props {
   profileLinks?: { label: string; href: string }[];
   /** EN / ES / PT switch (Nav set `2185:122`), in switch order. */
   languages?: { lang: string; hrefLang: string; code: string; name: string; href: string; current: boolean }[];
+  /** The page renders its own Contact section, so the Contact link stays on the page. */
+  contactOnPage?: boolean;
 }
-const { home, workPath, notesPath, strings, profileLinks = [], languages = [] } = Astro.props;
-const links = [
-  { label: strings.work, href: `${home}#work`, id: 'work', route: workPath },
-  { label: strings.experience, href: `${home}#experience`, id: 'experience' },
-  { label: strings.notes, href: `${home}#notes`, id: 'notes', route: notesPath },
-];
-const contact = `${home}#contact`;
+const { home, workPath, notesPath, strings, profileLinks = [], languages = [], contactOnPage = false } = Astro.props;
 const pathname = Astro.url.pathname;
 const isHome = pathname.replace(/\/$/, '') === home.replace(/\/$/, '');
+const targets = navTargets({ home, workPath, notesPath, isHome, contactOnPage });
+const links = [
+  { label: strings.work, href: targets.work, id: 'work', route: workPath },
+  { label: strings.experience, href: targets.experience, id: 'experience' },
+  { label: strings.notes, href: targets.notes, id: 'notes', route: notesPath },
+];
+const contact = targets.contact;
 const profileIcons = {
   GitHub: 'brand-github', LinkedIn: 'brand-linkedin', Instagram: 'brand-instagram',
   YouTube: 'brand-youtube', X: 'brand-x',

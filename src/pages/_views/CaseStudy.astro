@@ -50,7 +50,7 @@ const { data } = entry;
 const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
 ---
 
-<Base lang={lang} seo={seo} profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
+<Base lang={lang} seo={seo} contactOnPage profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
   <PageHero variant="case">
     <a class="back" href={collectionPath('projects', lang)}><span aria-hidden="true">←</span>{t.caseStudy.allWork}</a>
     <p class="eyebrow">{eyebrow}</p>
@@ -75,5 +75,5 @@ const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
   </div>}
   {data.caseStudy && nextCase && <NextCaseStudy project={nextCase} href={entryPath('projects', lang, entrySlug(nextCase))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
   <PageContact lang={lang} links={links} marker={t.caseStudy.contactMarker} />
-  <PageFooter slot="footer" lang={lang} links={links} compact />
+  <PageFooter slot="footer" lang={lang} links={links} contactOnPage compact />
 </Base>

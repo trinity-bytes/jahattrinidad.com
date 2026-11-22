@@ -1,31 +1,41 @@
 ---
 import type { Locale } from '../../lib/i18n';
 /*
- * Footer for the non-Home pages. Its navigation points at the Home sections, built with
- * localizedPath. There is no lens here, so the Inside shortcut is left out. The case study, Notes
+ * Footer for the non-Home pages. Its navigation follows the nav (`navTargets` in lib/nav.ts): Work and
+ * Notes open their pages, Experience goes to the Home section, Contact stays on the page when it has one. There is no lens here, so the Inside shortcut is left out. The case study, Notes
  * and post boards use the compact desktop footer; Work keeps the Home footer (board 2239:401).
  */
 import Footer from './Footer.astro';
 import { SOURCE_URL } from '../../lib/consts';
 import { getDictionary, localizedPath } from '../../lib/i18n';
+import { collectionPath } from '../../lib/paths';
+import { navTargets } from '../../lib/nav';
 
 interface Props {
   lang: Locale;
+  /** The page renders its own Contact section, so the Contact link stays on the page. */
+  contactOnPage?: boolean;
   compact?: boolean;
   /** The links collection's data, read by the page (sections never import content.ts). */
   links: { label: string; url: string }[];
 }
-const { lang, compact = false, links } = Astro.props;
+const { lang, compact = false, contactOnPage = false, links } = Astro.props;
 const t = getDictionary(lang);
-const home = (section: string) => `${localizedPath(lang, '')}#${section}`;
+const targets = navTargets({
+  home: localizedPath(lang, ''),
+  workPath: collectionPath('projects', lang),
+  notesPath: collectionPath('posts', lang),
+  isHome: false,
+  contactOnPage,
+});
 ---
 <Footer
   strings={t.footer}
   navigation={[
-    { label: t.nav.work, href: home('work') },
-    { label: t.nav.experience, href: home('experience') },
-    { label: t.nav.notes, href: home('notes') },
-    { label: t.nav.contact, href: home('contact') },
+    { label: t.nav.work, href: targets.work },
+    { label: t.nav.experience, href: targets.experience },
+    { label: t.nav.notes, href: targets.notes },
+    { label: t.nav.contact, href: targets.contact },
   ]}
   elsewhere={[
     ...links.map((link) => ({ label: link.label, href: link.url })),

@@ -21,11 +21,13 @@ export interface Props {
   nav?: boolean;
   /** Profile links for the mobile menu; pages read them from content.ts (layouts may not). */
   profileLinks?: { label: string; href: string }[];
+  /** The page renders its own Contact section (PageContact); the nav's Contact link then stays on the page. */
+  contactOnPage?: boolean;
   /** Serialized schema.org data (from lib/seo.ts), rendered as JSON-LD in <head>. */
   jsonLd?: string;
 }
 
-const { lang, seo, lens = false, nav = true, profileLinks = [], jsonLd } = Astro.props;
+const { lang, seo, lens = false, nav = true, profileLinks = [], contactOnPage = false, jsonLd } = Astro.props;
 const t = getDictionary(lang);
 
 // EN / ES / PT switch: each locale goes to this page's counterpart (its hreflang
@@ -89,6 +91,7 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
       strings={t.nav}
       profileLinks={profileLinks}
       languages={languages}
+      contactOnPage={contactOnPage}
     />}
     <slot name="backgrounds" />
     <main id="main-content" tabindex="-1"><slot /></main>
