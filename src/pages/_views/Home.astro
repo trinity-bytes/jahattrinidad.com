@@ -22,7 +22,7 @@ import {
   type Project,
 } from '../../lib/content';
 import { CONTACT_EMAIL, SOURCE_URL } from '../../lib/consts';
-import { buildSeo } from '../../lib/seo';
+import { buildSeo, personJsonLd } from '../../lib/seo';
 import { getDictionary, localeGroup, localizedPath } from '../../lib/i18n';
 // Placeholder for the Garden screenshot until the real entry lands (task 8.1).
 import gardenPlaceholder from '../../content/projects/inspiration-garden/cover.png';
@@ -82,16 +82,23 @@ const workProjects = homeProjects.map((project) => ({
 const gardenImage = await getImage({ src: gardenPlaceholder, width: 752 });
 
 const seo = buildSeo({
-  title: 'Jahat Trinidad',
-  description: copy.hero.sub,
+  title: t.meta.homeTitle,
+  description: t.meta.homeDescription,
   path: localizedPath(lang, '/'),
   lang,
   site,
   group: localeGroup('/'),
 });
+
+const personSchema = personJsonLd({
+  site,
+  path: localizedPath(lang, '/'),
+  description: t.meta.homeDescription,
+  sameAs: [linkOf('github'), linkOf('linkedin')].filter((url): url is string => Boolean(url)),
+});
 ---
 
-<Base lang={lang} seo={seo} lens profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
+<Base lang={lang} seo={seo} jsonLd={personSchema} lens profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
   <Hero strings={copy.hero} insideStrings={t.home.inside.hero} workHref={workPath} />
   <GlowTransition direction="rise" />
   <Values
