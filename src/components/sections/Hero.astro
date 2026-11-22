@@ -378,7 +378,9 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
 <script is:inline>
   // Mark the page before first paint so the load choreography starts from its first frame, not after a flash.
   // Only at the top of a fresh load, with motion allowed; a safety timeout releases everything if the script below never runs.
-  if (window.scrollY === 0 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  // Not when the page arrives through the page transition (html[data-page-reveal], lib/page-transition.ts): its own
+  // circle already reveals the page, and two circles at once would fight.
+  if (window.scrollY === 0 && !('pageReveal' in document.documentElement.dataset) && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.documentElement.dataset.heroIntro = '';
     setTimeout(() => delete document.documentElement.dataset.heroIntro, 3500);
   }
