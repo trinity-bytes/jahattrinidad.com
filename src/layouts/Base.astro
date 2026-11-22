@@ -21,9 +21,11 @@ export interface Props {
   nav?: boolean;
   /** Profile links for the mobile menu; pages read them from content.ts (layouts may not). */
   profileLinks?: { label: string; href: string }[];
+  /** Serialized schema.org data (from lib/seo.ts), rendered as JSON-LD in <head>. */
+  jsonLd?: string;
 }
 
-const { lang, seo, lens = false, nav = true, profileLinks = [] } = Astro.props;
+const { lang, seo, lens = false, nav = true, profileLinks = [], jsonLd } = Astro.props;
 const t = getDictionary(lang);
 
 // EN / ES / PT switch: each locale goes to this page's counterpart (its hreflang
@@ -71,6 +73,7 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     <meta property="og:image:height" content={seo.openGraph['og:image:height']} />
     <meta property="og:image:alt" content={seo.imageAlt ?? t.meta.ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
+    {jsonLd && <script type="application/ld+json" is:inline set:html={jsonLd} />}
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

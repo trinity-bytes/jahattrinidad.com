@@ -74,6 +74,9 @@ export interface Dictionary {
     ogImageAlt: string;
     /** Bottom line of the per-page social preview cards. */
     ogSignature: string;
+    /** Home <title> and meta description: name and role first, so search results lead with them. */
+    homeTitle: string;
+    homeDescription: string;
     /** Meta descriptions of the index pages. */
     workDescription: string;
     notesDescription: string;
@@ -260,6 +263,8 @@ export const en: Dictionary = {
   meta: {
     ogImageAlt: 'Jahat Trinidad on a hill at sunset, beside the line "I build products people actually use."',
     ogSignature: 'Jahat Trinidad · jahattrinidad.com',
+    homeTitle: 'Jahat Trinidad · Design Engineer — Frontend and product',
+    homeDescription: 'Jahat Trinidad, design engineer in Lima, Peru. I design and build web products end to end, from the first sketch to the live site.',
     workDescription: 'Selected projects and case studies.',
     notesDescription: 'Posts about building and shipping this site.',
     linksDescription: 'Where to find me elsewhere.',
