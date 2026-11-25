@@ -16,3 +16,6 @@ Images are resized to the viewport width and compared over their shared vertical
 | 2447-1188 | 900 | 900 | 5 | 400px: 6.06<br>200px: 3.38<br>800px: 3.34 | None |
 | 2447-1250 | 1040 | 1040 | 6 | 400px: 9.20<br>600px: 8.71<br>800px: 4.80 | None |
 | 2447-1311 | 942 | 942 | 5 | 400px: 15.93<br>600px: 10.08<br>800px: 8.04 | [2447-1311-band-400.png](2447-1311-band-400.png) |
+
+The Home Outside rows (`2449-21`, `2449-608`, `2449-1897`) show the state before the 2026-11-25 fixes; current numbers are in [`home-outside.md`, "Band fixes (2026-11-25, second clone)"](home-outside.md#band-fixes-2026-11-25-second-clone).
+
