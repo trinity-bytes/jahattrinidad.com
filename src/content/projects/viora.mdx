@@ -25,23 +25,23 @@ caseStudy:
     problem: 'An olive season is hard to plan without a record of the last one.'
     features: 'Field work and cooperative planning, connected by data.'
     decisions: 'Four decisions, and what each one cost.'
-    mistakes: 'Integration needed another pass.'
+    mistakes: 'Field testing exposed the gaps.'
     growth: 'From the first web app to the mobile platform.'
   glance:
     - { label: Team, value: 'Five people, university project' }
     - { label: My role, value: 'Web, backend and mobile development' }
     - { label: Audience, value: 'Olive growers and cooperative managers in southern Peru' }
     - { label: Built with, value: 'Vue, Angular, Spring Boot, ASP.NET Core, PostgreSQL, Kotlin and Flutter' }
-    - { label: Status, value: 'Landing page, earlier web app and API available online; mobile apps distributed for testing' }
+    - { label: Status, value: 'Landing on Vercel and API on Render, both live; Android and Flutter builds shipped to testers through Firebase App Distribution.' }
   problem:
-    - 'The team interviewed three olive growers and three technical managers. Growers described alternating harvests and valued offline access; managers described unreliable harvest projections and limited field connectivity.'
-    - 'A cooperative manager needs a wider view than a grower working on one plot. The project therefore has separate mobile experiences for the two roles.'
-  requirements: 'Track plots and seasonal conditions, support harvest records in the field, and give managers access to member information and alerts.'
+    - 'The team interviewed three growers and three cooperative technical managers. Growers relied on field observation and faced unreliable connectivity; managers needed to plan collection across many plots.'
+    - 'One manager described the simple harvest projection as ‘one year yes, one year no’. The needfinding insight was that advice must arrive before the useful biological window closes—and field records must work without a signal.'
+  requirements: 'Make plot and harvest records usable offline, explain seasonal guidance, and give managers a view of member plots and collection risks.'
   constraint: 'Field work cannot assume a network connection. The Android harvest flow needs to keep a settlement until it can synchronize.'
   features:
     - title: 'Follow the season'
       description: 'The producer app brings together plot conditions, seasonal guidance and alerts.'
-      detail: 'The Android client uses Kotlin and Jetpack Compose; the Spring Boot API supplies the mobile apps.'
+      detail: 'The team built the Android producer experience and shared API. I contributed to the API and producer-side work, including the offline harvest flow.'
       image: './viora/season.webp'
       imagePresentation: phone
       imageAlt: 'Producer app showing the daily summary and seasonal guidance'
@@ -57,11 +57,29 @@ caseStudy:
       image: './viora/dossier.webp'
       imagePresentation: phone
       imageAlt: 'Manager app showing a provisional plot dossier and PDF download'
+    - title: 'One API, two apps, both offline'
+      description: 'Producers use a native Android app and managers a Flutter app. Both keep a local database, so field work survives without a signal, and both sync with one Spring Boot API.'
+      detail: 'C4 container diagram from the team report. Mapbox draws the plots, Open-Meteo feeds the weather, Mercado Pago handles subscriptions. The diagram is a teammate''s; I worked on the API, the Android offline queue and the Flutter manager views.'
+      image: './viora/architecture.webp'
+      imagePresentation: screenshot
+      imageAlt: 'C4 container diagram: landing page, Android and Flutter apps with local databases, Spring Boot API with PostgreSQL, and external services'
+    - title: 'Check the plot before saving'
+      description: 'After validation, the app compares the traced area with the declared area and asks for confirmation when they differ.'
+      detail: 'I implemented the area comparison; the team used producer interviews and heuristic evaluation to identify the problem.'
+      image: './viora/area-check.webp'
+      imagePresentation: phone
+      imageAlt: 'Producer app warning that the traced area differs from the declared area'
   milestones:
-    - { day: 'MAY 2026', title: 'The first web app', description: 'The Angular repository began in May; I worked on its surveillance and alerts module.' }
-    - { day: 'JUL 2026', title: 'Connecting the web app', description: 'The Vue version went through backend integration and fixes to authentication and billing contracts.' }
-    - { day: 'OCT 2026', title: 'Harvests offline', description: 'I added the Android settlement queue and synchronization on October 5, then worked on the Spring AI assistant.' }
-    - { day: 'NOV 2026', title: 'A view for cooperatives', description: 'Manager alerts and the provisional dossier landed in the Flutter app on November 10.' }
+    - { day: 'MAY–JUL 2026', title: 'The web platform', description: 'The first course built Viora on the web, in Angular and then Vue, with ASP.NET Core and Spring Boot backends. I worked on alerts, layout and the backend integration.' }
+    - { day: 'SEP 26, 2026', title: 'Landing page released', description: 'The team released the landing page during Sprint 1.' }
+    - { day: 'OCT 13, 2026', title: 'Sprint 1 review', description: 'The landing page and initial API were deployed; the first Android app supported offline field records.' }
+    - { day: 'NOV 13, 2026', title: 'Sprint 2 review', description: 'The team had deployed the API on Render and distributed Android and Flutter builds through Firebase App Distribution.' }
+    - { day: 'NOV 2026', title: 'Validation in the field', description: 'Two producers tested Android; their feedback and the heuristic review informed Sprint 3.' }
+    - { day: 'NOV 19, 2026', title: 'First improvements', description: 'I implemented GPS detection, area checks, contextual explanations and critical notifications; Android 1.23.0 was released.' }
+    - { day: 'NOV 23–24, 2026', title: 'Sprint 3 improvements', description: 'Android 2.0.0 and 2.0.1 followed; the team also distributed updated Flutter builds.' }
+  proof:
+    title: '9 contexts'
+    text: 'Nine bounded contexts found through EventStorming, 37 acceptance feature files written in Sprint 1, ten ADRs in the backend, and the improvements from field validation shipped as Android 1.23.0.'
 decisions:
   - choice: 'Use Spring Boot for the mobile API'
     rejected: 'ASP.NET Core for the mobile API'
@@ -85,8 +103,10 @@ decisions:
     cost: 'A new producer waits three seasons for a certificate, and the API answers 409 until then.'
 ---
 
-### The web and API did not agree on every field
+### The field test changed the interface
 
-During the Vue backend integration, sign-up role names and billing plan codes needed fixes. The July 6–7 commits record those corrections; the first interface contract was not the final one. The earlier Angular surveillance merge was also reverted on May 14 and the module continued the next day. The history does not explain why it was reverted.
+During Android validation, one producer struggled to locate a plot with GPS off. Another traced a plot much smaller than the area she had declared and asked for clearer explanations of agronomic terms and cold alerts outside the app.
 
-The team built the product together. My work included the web alerts and shared layout, parts of the Spring Boot API and assistant, Android harvest settlements, and Flutter manager alerts and plot dossiers.
+I added a GPS-off prompt with a manual drawing option, an area mismatch confirmation, contextual explanations, a consistent daily summary and critical system notifications. WhatsApp was requested, but these changes use Android notifications; they are not a WhatsApp integration. A teammate handled the adjustable calendar and discarded olives.
+
+The team built Viora together. My work also included web alerts and layout, parts of the API and assistant, offline harvest settlements, and manager alerts and plot dossiers in Flutter.

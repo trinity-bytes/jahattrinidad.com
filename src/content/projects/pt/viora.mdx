@@ -25,23 +25,23 @@ caseStudy:
     problem: 'Planejar uma safra de azeitonas é difícil sem o registro da anterior.'
     features: 'Trabalho em campo e planejamento cooperativo, conectados por dados.'
     decisions: 'Quatro decisões e o custo de cada uma.'
-    mistakes: 'A integração precisou de mais uma revisão.'
+    mistakes: 'Os testes em campo revelaram as lacunas.'
     growth: 'Do primeiro aplicativo web à plataforma móvel.'
   glance:
     - { label: Equipe, value: 'Cinco pessoas, projeto universitário' }
     - { label: Meu papel, value: 'Desenvolvimento web, backend e mobile' }
     - { label: Público, value: 'Olivicultores e gestores de cooperativas do sul do Peru' }
     - { label: Tecnologias, value: 'Vue, Angular, Spring Boot, ASP.NET Core, PostgreSQL, Kotlin e Flutter' }
-    - { label: Estado, value: 'Página, aplicação web anterior e API disponíveis online; aplicativos móveis distribuídos para testes' }
+    - { label: Status, value: 'Página na Vercel e API no Render, ambas no ar; versões Android e Flutter chegaram aos testadores pelo Firebase App Distribution.' }
   problem:
-    - 'A equipe entrevistou três olivicultores e três gestores técnicos. Os produtores descreveram safras alternadas e valorizaram o acesso offline; os gestores relataram projeções de colheita pouco confiáveis e conectividade limitada no campo.'
-    - 'Um gestor de cooperativa precisa de uma visão mais ampla do que um produtor trabalhando em uma parcela. Por isso o projeto tem experiências móveis separadas para os dois papéis.'
-  requirements: 'Acompanhar parcelas e condições da temporada, registrar colheitas em campo e dar aos gestores acesso a informações e alertas dos membros.'
+    - 'A equipe entrevistou três produtores e três gestores técnicos de cooperativas. Os produtores dependiam da observação em campo e enfrentavam conexão instável; os gestores precisavam planejar o recebimento entre vários talhões.'
+    - 'Um gestor descreveu a projeção simples como “um ano sim, outro não”. A pesquisa mostrou que a orientação precisa chegar antes do fim da janela biológica útil e que os registros devem funcionar sem sinal.'
+  requirements: 'Registrar talhões e colheitas offline, explicar as orientações da temporada e oferecer aos gestores uma visão dos talhões e riscos de recebimento.'
   constraint: 'No campo, não é possível contar com conexão. O fluxo de colheita no Android precisa guardar o registro até poder sincronizá-lo.'
   features:
     - title: 'Acompanhar a temporada'
       description: 'O aplicativo do produtor reúne condições das parcelas, orientações para a temporada e alertas.'
-      detail: 'O cliente Android usa Kotlin e Jetpack Compose; a API Spring Boot atende aos aplicativos móveis.'
+      detail: 'A equipe construiu a experiência Android do produtor e a API compartilhada. Contribuí para a API e o trabalho no aplicativo do produtor, incluindo o fluxo de colheita offline.'
       image: '../viora/season.webp'
       imagePresentation: phone
       imageAlt: 'Aplicativo do produtor com resumo diário e orientação para a temporada'
@@ -57,11 +57,29 @@ caseStudy:
       image: '../viora/dossier.webp'
       imagePresentation: phone
       imageAlt: 'Aplicativo do gestor com dossiê provisório da parcela e download em PDF'
+    - title: 'Uma API, dois apps, ambos offline'
+      description: 'Produtores usam um app Android nativo e gestores um app Flutter. Os dois mantêm um banco local, então o trabalho de campo sobrevive sem sinal, e ambos sincronizam com uma única API Spring Boot.'
+      detail: 'Diagrama de contêineres C4 do relatório da equipe. O Mapbox desenha os talhões, o Open-Meteo fornece o clima e o Mercado Pago cuida das assinaturas. O diagrama é de um colega; eu trabalhei na API, na fila offline do Android e nas telas do gestor em Flutter.'
+      image: '../viora/architecture.webp'
+      imagePresentation: screenshot
+      imageAlt: 'Diagrama de contêineres C4: página, apps Android e Flutter com bancos locais, API Spring Boot com PostgreSQL e serviços externos'
+    - title: 'Conferir o talhão antes de salvar'
+      description: 'Após a validação, o app compara a área traçada com a declarada e pede confirmação quando elas diferem.'
+      detail: 'Implementei a comparação de áreas; a equipe identificou o problema nas entrevistas e na avaliação heurística.'
+      image: '../viora/area-check.webp'
+      imagePresentation: phone
+      imageAlt: 'Aviso do aplicativo quando a área traçada difere da área declarada'
   milestones:
-    - { day: 'MAI 2026', title: 'A primeira aplicação web', description: 'O repositório Angular começou em maio; trabalhei no módulo de vigilância e alertas.' }
-    - { day: 'JUL 2026', title: 'Conectando a web', description: 'A versão Vue passou pela integração com o backend e por correções nos contratos de autenticação e cobrança.' }
-    - { day: 'OUT 2026', title: 'Colheitas offline', description: 'Em 5 de outubro adicionei a fila e a sincronização no Android; depois trabalhei no assistente com Spring AI.' }
-    - { day: 'NOV 2026', title: 'Uma visão para cooperativas', description: 'Alertas para gestores e o dossiê provisório chegaram ao Flutter em 10 de novembro.' }
+    - { day: 'MAI–JUL 2026', title: 'A plataforma web', description: 'O primeiro curso construiu o Viora na web, em Angular e depois em Vue, com backends em ASP.NET Core e Spring Boot. Trabalhei em alertas, layout e na integração com o backend.' }
+    - { day: '26 SET 2026', title: 'Página publicada', description: 'A equipe publicou a página durante o Sprint 1.' }
+    - { day: '13 OUT 2026', title: 'Revisão do Sprint 1', description: 'A página e a API inicial estavam implantadas; o primeiro app Android permitia registros em campo offline.' }
+    - { day: '13 NOV 2026', title: 'Revisão do Sprint 2', description: 'A equipe havia implantado a API no Render e distribuído versões Android e Flutter pelo Firebase App Distribution.' }
+    - { day: 'NOV 2026', title: 'Validação em campo', description: 'Dois produtores testaram o Android; seus comentários e a avaliação heurística orientaram o Sprint 3.' }
+    - { day: '19 NOV 2026', title: 'Primeiras melhorias', description: 'Implementei a detecção de GPS, a comparação de áreas, ajudas contextuais e notificações críticas; o Android 1.23.0 foi lançado.' }
+    - { day: '23–24 NOV 2026', title: 'Melhorias do Sprint 3', description: 'Chegaram o Android 2.0.0 e 2.0.1; a equipe também distribuiu versões atualizadas do Flutter.' }
+  proof:
+    title: '9 contextos'
+    text: 'Nove contextos delimitados identificados com EventStorming, 37 arquivos de aceitação escritos no Sprint 1, dez ADRs no backend e as melhorias da validação em campo publicadas como Android 1.23.0.'
 decisions:
   - choice: 'Spring Boot para a API móvel'
     rejected: 'ASP.NET Core para a API móvel'
@@ -85,8 +103,10 @@ decisions:
     cost: 'Um produtor novo espera três temporadas pelo certificado, e a API responde 409 até lá.'
 ---
 
-### A web e a API não concordavam em todos os campos
+### O teste em campo mudou a interface
 
-Durante a integração do Vue com o backend, foi preciso corrigir os nomes de papéis no cadastro e os códigos dos planos de cobrança. Os commits de 6 e 7 de julho registram essas correções; o primeiro contrato da interface não foi o definitivo. A integração do módulo de vigilância no Angular também foi revertida em 14 de maio, e o trabalho no módulo continuou no dia seguinte. O histórico não explica por que houve a reversão.
+Durante a validação do Android, um produtor teve dificuldade para localizar o talhão com o GPS desligado. Outra produtora traçou um talhão muito menor que a área declarada e pediu explicações mais claras dos termos agronômicos e avisos de frio fora do app.
 
-A equipe construiu o produto em conjunto. Meu trabalho incluiu alertas e layout compartilhado na web, partes da API e do assistente em Spring Boot, registros de colheita no Android e alertas e dossiês de parcelas em Flutter.
+Adicionei um aviso de GPS desligado com desenho manual, confirmação de diferença de áreas, ajudas contextuais, um resumo diário coerente e notificações críticas do sistema. Foi pedido WhatsApp, mas essas mudanças usam notificações Android; não são uma integração com WhatsApp. Uma colega cuidou do calendário ajustável e das azeitonas de descarte.
+
+A equipe construiu o Viora em conjunto. Meu trabalho também incluiu alertas e layout da web, partes da API e do assistente, registros de colheita offline e alertas e dossiês para gestores em Flutter.
