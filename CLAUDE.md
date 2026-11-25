@@ -150,6 +150,11 @@ brand, copy, image or UI task:
 - `assets.md` — hero image files and the prompts that generated them.
 - `tasks.md` — what is done and what is next.
 
+The approved boards no longer match the running site. The **design audit**
+in progress (`openspec/changes/design-audit/`, start with `proposal.md`)
+keeps an as-built copy of the site on the Figma pages `As built · …`; read
+it before any audit, UI review or Figma sync task.
+
 Three rules follow from it, and they are the ones a session without
 context gets wrong:
 
