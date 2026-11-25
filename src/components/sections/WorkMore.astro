@@ -48,7 +48,6 @@ const out = { target: '_blank', rel: 'noopener noreferrer' } as const;
         <div class="grid">
           {experiments.map(({ data }) => (
             <article class="experiment">
-              {data.previewImage && <div class="preview"><Image src={data.previewImage} alt={data.previewImageAlt ?? ''} /></div>}
               <p class="experiment-meta">$ {data.kind ?? data.stack.join(' · ')}</p>
               <h3>{data.title}</h3>
               <p>{data.description}</p>
@@ -148,22 +147,6 @@ const out = { target: '_blank', rel: 'noopener noreferrer' } as const;
     padding: 32px;
     border-radius: 16px;
   }
-  .experiment:focus-within { z-index: 2; }
-  .preview {
-    position: absolute; bottom: calc(100% - 1rem); left: 0; width: min(100%, 360px);
-    border-radius: 12px; overflow: hidden; box-shadow: 0 12px 32px rgb(0 0 0 / .3);
-    opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(8px);
-    transition: opacity .18s ease, transform .18s ease, visibility .18s;
-  }
-  .preview :global(img) { display: block; width: 100%; height: auto; }
-  @media (hover: hover) {
-    .experiment:hover { z-index: 2; }
-    .experiment:hover .preview, .experiment:focus-within .preview { opacity: 1; visibility: visible; transform: none; }
-  }
-  @media (hover: none) {
-    .experiment:has(:focus-visible) .preview { opacity: 1; visibility: visible; transform: none; }
-  }
-  @media (prefers-reduced-motion: reduce) { .preview { transition: none; transform: none; } }
   .experiment a {
     color: var(--green-300);
     margin-right: 1rem;
