@@ -36,7 +36,11 @@ page:
   decisionHeadline: "Keep one seam for content."
 decisions:
   - choice: "Centralize content access in one module"
-    rejected: "Call Astro content APIs directly from each page"
-    because: "A future source change has one access boundary to update, enforced by a script."
+    rejected: "Add a repository layer over the collections"
+    because: "There are no business rules or invariants to protect; one module, checked by a script, is already the seam a source change needs."
     cost: "New content operations need an explicit function in the shared module."
+  - choice: "Give each locale its own thin routes over shared views"
+    rejected: "One [...locale] route tree"
+    because: "The single tree meant fewer files, but two rest parameters in the case study path and less obvious routing."
+    cost: "Every new page needs a wrapper per locale."
 ---

@@ -36,7 +36,11 @@ page:
   decisionHeadline: "Make the story readable without JavaScript."
 decisions:
   - choice: "Keep content in HTML and enhance the journey"
-    rejected: "Require JavaScript to reveal the story"
-    because: "The complete page remains readable if scripts do not run."
+    rejected: "Leave content hidden until a script reveals it"
+    because: "An audit of an earlier version found 22 blocks hidden without JavaScript."
     cost: "The horizontal experience needs extra logic for scrolling, links and keyboard focus."
+  - choice: "Stay faithful to the concept render and mention no screen"
+    rejected: "Describe the OLED screen from the course report"
+    because: "The render of the concept shows no screen."
+    cost: "The page and the report describe the band differently."
 ---

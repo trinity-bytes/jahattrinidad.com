@@ -37,8 +37,12 @@ page:
         text: "The Worker checks submitted fields and the solve log, then recomputes the score rather than trusting the browser. Publishing is a player action."
   decisionHeadline: "Check scores at the boundary."
 decisions:
-  - choice: "Validate submissions and recompute scores in the Worker"
-    rejected: "Accept the browser’s submitted score as authoritative"
-    because: "The browser is untrusted, so the Worker checks the submission before it reaches the leaderboard."
+  - choice: "Close direct writes and recompute every score on the server"
+    rejected: "Let the browser write to the leaderboard table with its public key"
+    because: "With row-level security off, anyone holding that key could rewrite or erase every score."
     cost: "Validation adds server-side rules and cannot make an anonymous client completely trustworthy."
+  - choice: "Score puzzles by how hard they are"
+    rejected: "Keep the earlier scoring that rewarded speed"
+    because: "A flawless sprint through a trivial board scored about 16 times more than a considered solve of a brutal one, so rerolling for an easy board paid best."
+    cost: "Solve time no longer changes the score."
 ---

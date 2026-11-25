@@ -35,10 +35,10 @@ page:
       - title: "Expandir o intervalo"
         text: "A expansão min–max transforma linearmente o mínimo e o máximo observados para aproveitar o intervalo disponível."
         formula: "s = round(255 × (r − min) / (max − min))"
-  decisionHeadline: "Mostrar a transformação, não só a imagem."
+  decisionHeadline: "A explicação precisa corresponder aos pixels."
 decisions:
-  - choice: "Mostrar a CDF e a tabela de conversão junto ao resultado"
-    rejected: "Mostrar apenas a imagem processada"
-    because: "Os valores intermediários permitem inspecionar como uma intensidade foi transformada."
-    cost: "A interface e a lógica de domínio também precisam apresentar e manter os dados do cálculo."
+  - choice: "Manter as transformações do OpenCV e ajustar a matemática a elas"
+    rejected: "Processar os pixels com uma tabela de conversão compartilhada com a explicação"
+    because: "O build do OpenCV.js não exporta cv.LUT, e um loop de pixels em JavaScript sem benchmark não era um substituto seguro."
+    cost: "A explicação precisa reproduzir o arredondamento float32 e para o par do motor, verificado no motor real."
 ---

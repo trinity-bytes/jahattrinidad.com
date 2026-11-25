@@ -12,7 +12,7 @@ coverImageAlt: "Forest Hero 2 main menu with a raccoon"
 stack: [C++/CLI, Windows Forms]
 repoUrl: 'https://github.com/trinity-bytes/forest-hero-2'
 insideStack: "A 2D game built with C++/CLI and Windows Forms."
-insideDecision: "Enemies change direction at random; collisions mark seeds and enemies for removal after iteration, avoiding changes to their vectors during the checks."
+insideDecision: "Enemies change direction at random; collisions mark seeds and enemies for removal once the checks are done."
 page:
   headline: "Restore a forest while the clock is running."
   sub: "A team-built 2D game made for an Algorithms course, with resources, enemies and reforestation."
@@ -31,12 +31,16 @@ page:
       - title: "Update the world"
         text: "Enemies move and can change direction randomly. The game checks collisions between the guardian, resources and enemies as play continues."
       - title: "Remove after checking"
-        text: "Collision handling collects indices to remove seeds and enemies after the checks, instead of changing their vectors during iteration."
+        text: "Collision handling collects indices and removes seeds and enemies after the checks."
         formula: "check collisions → collect indices → remove"
   decisionHeadline: "Keep collision checks safe to iterate."
 decisions:
-  - choice: "Defer removal until after collision checks"
-    rejected: "Erase objects while iterating over them"
-    because: "Changing a vector during traversal can invalidate indices and skip objects."
-    cost: "The game must track removals and handle duplicate indices."
+  - choice: "Collect each index once, then remove after the checks"
+    rejected: "Record an index every time a collision reports it"
+    because: "A repeated index can send an erase outside the vector."
+    cost: "Each affected collision has to search the pending list before adding to it."
+  - choice: "Append each score to a binary file"
+    rejected: "The earlier text file, written only when it did not exist yet"
+    because: "That version saved a score only while creating the file; appending a fixed-size record keeps each new one."
+    cost: "The file is no longer readable as plain text, and writer and reader must share the record layout."
 ---

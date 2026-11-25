@@ -35,10 +35,10 @@ page:
       - title: "Expandir el rango"
         text: "La expansión min–max transforma linealmente el mínimo y el máximo observados para aprovechar el rango disponible."
         formula: "s = round(255 × (r − min) / (max − min))"
-  decisionHeadline: "Mostrar la transformación, no solo la imagen."
+  decisionHeadline: "Que la explicación coincida con los píxeles."
 decisions:
-  - choice: "Mostrar la CDF y la tabla de conversión junto al resultado"
-    rejected: "Mostrar solo la imagen procesada"
-    because: "Los valores intermedios permiten inspeccionar cómo se transformó una intensidad."
-    cost: "La interfaz y la lógica de dominio también deben presentar y mantener los datos del cálculo."
+  - choice: "Mantener las transformaciones de OpenCV y ajustar las fórmulas a ellas"
+    rejected: "Procesar los píxeles con una tabla de conversión compartida con la explicación"
+    because: "La compilación de OpenCV.js no exporta cv.LUT, y un bucle de píxeles en JavaScript sin medir no era un reemplazo seguro."
+    cost: "La explicación debe reproducir el redondeo float32 y al par del motor, comprobado contra el motor real."
 ---

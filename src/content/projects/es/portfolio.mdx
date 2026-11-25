@@ -36,7 +36,11 @@ page:
   decisionHeadline: "Un solo punto de acceso al contenido."
 decisions:
   - choice: "Centralizar el acceso al contenido en un módulo"
-    rejected: "Llamar a las API de contenido de Astro desde cada página"
-    because: "Un cambio futuro de fuente tiene un solo límite de acceso que actualizar, verificado por un script."
+    rejected: "Agregar una capa de repositorio sobre las colecciones"
+    because: "No hay reglas de negocio ni invariantes que proteger; un módulo, verificado por un script, ya es el punto que necesita un cambio de fuente."
     cost: "Las nuevas operaciones de contenido necesitan una función explícita en el módulo compartido."
+  - choice: "Dar a cada idioma sus propias rutas mínimas sobre vistas compartidas"
+    rejected: "Un solo árbol de rutas [...locale]"
+    because: "El árbol único implicaba menos archivos, pero dos parámetros rest en la ruta de los casos de estudio y un enrutado menos evidente."
+    cost: "Cada página nueva necesita un archivo de ruta por idioma."
 ---

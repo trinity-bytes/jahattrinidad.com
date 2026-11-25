@@ -36,7 +36,11 @@ page:
   decisionHeadline: "Hacer legible la historia sin JavaScript."
 decisions:
   - choice: "Mantener el contenido en HTML y mejorar el recorrido"
-    rejected: "Exigir JavaScript para mostrar la historia"
-    because: "La página completa sigue siendo legible si los scripts no se ejecutan."
+    rejected: "Dejar contenido oculto hasta que un script lo muestre"
+    because: "Una auditoría de una versión anterior encontró 22 bloques ocultos sin JavaScript."
     cost: "El recorrido horizontal necesita lógica adicional para scroll, enlaces y foco del teclado."
+  - choice: "Ser fiel al render del concepto y no mencionar ninguna pantalla"
+    rejected: "Describir la pantalla OLED del informe del curso"
+    because: "El render del concepto no muestra ninguna pantalla."
+    cost: "La página y el informe describen la pulsera de forma distinta."
 ---

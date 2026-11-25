@@ -12,7 +12,7 @@ coverImageAlt: "Menu principal de Forest Hero 2 com um guaxinim"
 stack: [C++/CLI, Windows Forms]
 repoUrl: 'https://github.com/trinity-bytes/forest-hero-2'
 insideStack: "Um jogo 2D feito com C++/CLI e Windows Forms."
-insideDecision: "Os inimigos mudam de direção aleatoriamente; as colisões marcam sementes e inimigos para remoção após a iteração, sem alterar seus vetores durante as verificações."
+insideDecision: "Os inimigos mudam de direção aleatoriamente; as colisões marcam sementes e inimigos para remoção quando as verificações terminam."
 page:
   headline: "Restaure uma floresta antes que o tempo acabe."
   sub: "Um jogo 2D feito em equipe para uma disciplina de Algoritmos, com recursos, inimigos e reflorestamento."
@@ -31,12 +31,16 @@ page:
       - title: "Atualizar o mundo"
         text: "Os inimigos se movem e podem mudar de direção aleatoriamente. Durante a partida, o jogo verifica colisões entre o guardião, os recursos e os inimigos."
       - title: "Remover após verificar"
-        text: "O tratamento de colisões reúne índices de sementes e inimigos para removê-los depois das verificações, em vez de alterar os vetores durante a iteração."
+        text: "O tratamento de colisões reúne índices e remove sementes e inimigos depois das verificações."
         formula: "check collisions → collect indices → remove"
   decisionHeadline: "Verificar colisões com segurança."
 decisions:
-  - choice: "Adiar a remoção até o fim das verificações"
-    rejected: "Remover objetos durante a iteração"
-    because: "Alterar um vetor durante a travessia pode invalidar índices e fazer objetos serem ignorados."
-    cost: "O jogo precisa registrar remoções e lidar com índices duplicados."
+  - choice: "Registrar cada índice uma vez e remover depois das verificações"
+    rejected: "Anotar um índice toda vez que uma colisão o informa"
+    because: "Um índice repetido pode fazer uma remoção cair fora do vetor."
+    cost: "Cada colisão afetada precisa consultar a lista pendente antes de adicionar."
+  - choice: "Acrescentar cada pontuação a um arquivo binário"
+    rejected: "O arquivo de texto anterior, gravado só quando ainda não existia"
+    because: "Aquela versão só salvava uma pontuação ao criar o arquivo; acrescentar um registro de tamanho fixo preserva cada nova."
+    cost: "O arquivo deixou de ser legível como texto simples, e a escrita e a leitura precisam compartilhar o formato do registro."
 ---

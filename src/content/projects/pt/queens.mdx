@@ -37,8 +37,12 @@ page:
         text: "O Worker verifica os campos e o registro da partida e recalcula a pontuação, em vez de confiar no navegador. Publicar é uma ação do jogador."
   decisionHeadline: "Verificar pontuações no servidor."
 decisions:
-  - choice: "Validar envios e recalcular pontuações no Worker"
-    rejected: "Aceitar como definitiva a pontuação enviada pelo navegador"
-    because: "O navegador não é confiável, então o Worker verifica o envio antes de chegar ao ranking."
+  - choice: "Fechar a escrita direta e recalcular cada pontuação no servidor"
+    rejected: "Deixar o navegador escrever na tabela do ranking com sua chave pública"
+    because: "Com a segurança em nível de linha desativada, qualquer pessoa com essa chave podia reescrever ou apagar todas as pontuações."
     cost: "A validação acrescenta regras no servidor e não torna um cliente anônimo totalmente confiável."
+  - choice: "Pontuar cada tabuleiro pela dificuldade"
+    rejected: "Manter a pontuação anterior, que premiava a velocidade"
+    because: "Resolver às pressas e sem erros um tabuleiro trivial valia cerca de 16 vezes mais que resolver com calma um brutal, então compensava gerar outro até sair um fácil."
+    cost: "O tempo de resolução já não altera a pontuação."
 ---

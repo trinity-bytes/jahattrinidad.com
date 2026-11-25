@@ -34,10 +34,10 @@ page:
       - title: "Explore related categories"
         text: "A graph connects categories. Breadth-first search expands recommendations through those connections, visiting neighboring categories before more distant ones."
         formula: "BFS: O(V + E)"
-  decisionHeadline: "Choose structures for the question."
+  decisionHeadline: "Build the hash table ourselves."
 decisions:
-  - choice: "Use specialized structures for each operation"
-    rejected: "Scan one unsorted list for everything"
-    because: "An index, balanced tree, heap and graph support different access patterns in the course platform."
-    cost: "Multiple structures require more code and must stay consistent with the underlying data."
+  - choice: "Write our own hash table with chained buckets"
+    rejected: "A wrapper around std::unordered_map"
+    because: "This Algorithms and Data Structures course project is built on structures implemented from scratch."
+    cost: "The team has to maintain the collision handling and a custom iterator."
 ---

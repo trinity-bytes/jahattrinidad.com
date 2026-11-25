@@ -34,8 +34,12 @@ page:
         formula: "wa.me/<number>?text=<encoded message>"
   decisionHeadline: "Take the order conversation to WhatsApp."
 decisions:
-  - choice: "Use prefilled WhatsApp links"
-    rejected: "Build a checkout into the catalog"
-    because: "The link carries product context into the shop’s existing conversation channel."
+  - choice: "Send each order to WhatsApp, with no cart"
+    rejected: "A cart with online payments"
+    because: "The shop's sales come from recommendations, and customers already share links over WhatsApp."
     cost: "The conversation and order still need to be handled by the shop; the link is not a completed purchase."
+  - choice: "Publish from a separate catalog spreadsheet"
+    rejected: "Keep the earlier single publishing tab"
+    because: "With three tabs in their own file, the build never touches the inventory master, which holds costs, margins and suppliers."
+    cost: "The tabs have to be joined by product code and validated on every build."
 ---

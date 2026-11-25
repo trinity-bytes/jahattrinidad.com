@@ -35,10 +35,10 @@ page:
       - title: "Stretch the range"
         text: "Min–max expansion maps the observed minimum and maximum across the available range with a linear transformation."
         formula: "s = round(255 × (r − min) / (max − min))"
-  decisionHeadline: "Expose the transformation, not just the image."
+  decisionHeadline: "Make the explanation match the pixels."
 decisions:
-  - choice: "Show the CDF and lookup table alongside the result"
-    rejected: "Show only the processed image"
-    because: "The intermediate values make it possible to inspect how an intensity was transformed."
-    cost: "The interface and domain logic must also present and maintain the calculation data."
+  - choice: "Keep OpenCV’s transforms and align the math to them"
+    rejected: "Run the pixels through a lookup table shared with the explanation"
+    because: "The OpenCV.js build doesn’t export cv.LUT, and an unbenchmarked JavaScript pixel loop wasn’t a safe substitute."
+    cost: "The explanation has to reproduce the engine’s float32 and ties-to-even rounding, checked against the real engine."
 ---

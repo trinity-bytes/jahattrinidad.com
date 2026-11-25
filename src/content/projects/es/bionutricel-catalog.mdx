@@ -34,8 +34,12 @@ page:
         formula: "wa.me/<number>?text=<encoded message>"
   decisionHeadline: "Llevar la conversación a WhatsApp."
 decisions:
-  - choice: "Usar enlaces de WhatsApp con mensajes preparados"
-    rejected: "Crear un proceso de compra dentro del catálogo"
-    because: "El enlace lleva el contexto del producto al canal de conversación de la tienda."
+  - choice: "Enviar cada pedido a WhatsApp, sin carrito"
+    rejected: "Un carrito con pagos en línea"
+    because: "Las ventas de la tienda vienen de recomendaciones y los clientes ya comparten enlaces por WhatsApp."
     cost: "La tienda aún debe atender la conversación y el pedido; el enlace no completa una compra."
+  - choice: "Publicar desde una hoja de cálculo de catálogo separada"
+    rejected: "Mantener la pestaña única de publicación anterior"
+    because: "Con tres pestañas en su propio archivo, la compilación nunca toca el inventario maestro, que contiene costos, márgenes y proveedores."
+    cost: "Las pestañas deben unirse por código de producto y validarse en cada compilación."
 ---

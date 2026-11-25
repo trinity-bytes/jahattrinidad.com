@@ -37,7 +37,11 @@ page:
   decisionHeadline: "Keep execution away from the editor."
 decisions:
   - choice: "Run the CPU in a Web Worker"
-    rejected: "Run the CPU on the UI thread"
-    because: "Execution can continue without blocking interaction with the editor."
+    rejected: "Keep the original’s run loop, a timer on the page’s own thread"
+    because: "The simulated machine can keep running without freezing the page."
     cost: "The worker and interface must exchange commands and state snapshots."
+  - choice: "Fix the original’s SUB reg, SP bug and document it"
+    rejected: "Stay bug-compatible with the original"
+    because: "The original subtracted an undefined value there instead of SP."
+    cost: "The new core no longer matches the original in every case, so each intentional difference has to be listed next to the parity tests."
 ---

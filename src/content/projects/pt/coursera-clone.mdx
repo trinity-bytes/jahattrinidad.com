@@ -34,10 +34,10 @@ page:
       - title: "Explorar categorias relacionadas"
         text: "Um grafo conecta categorias. A busca em largura amplia as recomendações percorrendo primeiro as categorias vizinhas e depois as mais distantes."
         formula: "BFS: O(V + E)"
-  decisionHeadline: "Escolher estruturas para cada pergunta."
+  decisionHeadline: "Construir nossa própria tabela hash."
 decisions:
-  - choice: "Usar estruturas especializadas para cada operação"
-    rejected: "Percorrer uma única lista não ordenada para tudo"
-    because: "Um índice, uma árvore balanceada, um heap e um grafo atendem a diferentes padrões de acesso."
-    cost: "Várias estruturas exigem mais código e precisam permanecer consistentes com os dados."
+  - choice: "Escrever nossa própria tabela hash com encadeamento"
+    rejected: "Um wrapper sobre std::unordered_map"
+    because: "Este projeto da disciplina de Algoritmos e Estrutura de Dados é construído sobre estruturas implementadas do zero."
+    cost: "A equipe precisa manter o tratamento de colisões e um iterador próprio."
 ---

@@ -37,7 +37,11 @@ page:
   decisionHeadline: "Separar la ejecución del editor."
 decisions:
   - choice: "Ejecutar la CPU en un Web Worker"
-    rejected: "Ejecutar la CPU en el hilo de interfaz"
-    because: "La ejecución puede continuar sin bloquear la interacción con el editor."
+    rejected: "Mantener el bucle del original, un temporizador en el hilo de la página"
+    because: "La máquina simulada puede seguir ejecutándose sin congelar la página."
     cost: "El worker y la interfaz deben intercambiar comandos e instantáneas del estado."
+  - choice: "Corregir el error de SUB reg, SP del original y documentarlo"
+    rejected: "Conservar el error por compatibilidad con el original"
+    because: "Allí el original restaba un valor indefinido en lugar de SP."
+    cost: "El nuevo núcleo ya no coincide con el original en todos los casos, así que cada diferencia intencional debe listarse junto a las pruebas de paridad."
 ---
