@@ -12,21 +12,76 @@ timeframe: '2026'
 coverImage: './viora/cover.png'
 coverImageAlt: 'Viora landing page: "Anticipa la próxima cosecha" over an illustration of an olive grove'
 problem: 'Olive harvests swing between good and bad years, and growers plan each season without data.'
-whatItDoes: 'A web platform for planning, a phone app for producers in the field and one for cooperatives, all on the same data.'
+whatItDoes: 'A web platform for planning, plus mobile apps for producers in the field and cooperatives.'
 myPart: 'Full stack on a team of five: the Vue web app, a Spring Boot backend with an in-app AI assistant, offline harvest settlements on Android, and alerts for cooperatives in Flutter.'
 stack: [Vue, Angular, Spring Boot, ASP.NET Core, Spring AI, PostgreSQL, Kotlin, Jetpack Compose, Flutter]
-insideStack: 'Spring Boot + Angular and ASP.NET Core + Vue on the web, a Kotlin app and a Flutter app, all on one API.'
+insideStack: 'An earlier Angular and Vue web platform, then Kotlin and Flutter apps backed by a Spring Boot API.'
 insideDecision: "For the mobile apps' API we picked Spring Boot over ASP.NET Core. The team already knew it, and Spring Data, Spring Security and Spring AI gave us storage, sign-in and the in-app assistant without building them from scratch."
 demoUrl: 'https://viora-landing-page-sable.vercel.app/'
 repoUrl: 'https://github.com/upc-pre-1acc0238-2620-4951-arcadiadevs/viora-platform'
+heroDescription: 'A university team built tools for olive growers and cooperatives. I worked across the web, API and mobile apps.'
+caseStudy:
+  headlines:
+    problem: 'An olive season is hard to plan without a record of the last one.'
+    features: 'Field work and cooperative planning, connected by data.'
+    decisions: 'Three choices and the work they brought with them.'
+    mistakes: 'Integration needed another pass.'
+    growth: 'From the first web app to the mobile platform.'
+  glance:
+    - { label: Team, value: 'Five people, university project' }
+    - { label: My role, value: 'Web, backend and mobile development' }
+    - { label: Audience, value: 'Olive growers and cooperative managers in southern Peru' }
+    - { label: Built with, value: 'Vue, Angular, Spring Boot, ASP.NET Core, PostgreSQL, Kotlin and Flutter' }
+    - { label: Status, value: 'Landing page, earlier web app and API available online; mobile apps distributed for testing' }
+  problem:
+    - 'The team interviewed three olive growers and three technical managers. Growers described alternating harvests and valued offline access; managers described unreliable harvest projections and limited field connectivity.'
+    - 'A cooperative manager needs a wider view than a grower working on one plot. The project therefore has separate mobile experiences for the two roles.'
+  requirements: 'Track plots and seasonal conditions, support harvest records in the field, and give managers access to member information and alerts.'
+  constraint: 'Field work cannot assume a network connection. The Android harvest flow needs to keep a settlement until it can synchronize.'
+  features:
+    - title: 'Follow the season'
+      description: 'The producer app brings together plot conditions, seasonal guidance and alerts.'
+      detail: 'The Android client uses Kotlin and Jetpack Compose; the Spring Boot API supplies the mobile apps.'
+      image: './viora/season.webp'
+      imagePresentation: phone
+      imageAlt: 'Producer app showing the daily summary and seasonal guidance'
+    - title: 'Close a harvest in the field'
+      description: 'A producer can record a harvest settlement without a connection and synchronize it later.'
+      detail: 'I implemented the pending settlement queue on Android with Room and WorkManager, including a way to correct a pending record before synchronization.'
+      image: './viora/harvest.webp'
+      imagePresentation: phone
+      imageAlt: 'Producer app harvest form with green, black and discarded olives'
+    - title: 'Give cooperatives their own view'
+      description: 'Managers can follow alerts and open a member plot dossier.'
+      detail: 'I built the manager alerts and provisional plot dossier in the Flutter app, with corresponding territory work in the API.'
+      image: './viora/dossier.webp'
+      imagePresentation: phone
+      imageAlt: 'Manager app showing a provisional plot dossier and PDF download'
+  milestones:
+    - { day: 'MAY 2026', title: 'The first web app', description: 'The Angular repository began in May; I worked on its surveillance and alerts module.' }
+    - { day: 'JUL 2026', title: 'Connecting the web app', description: 'The Vue version went through backend integration and fixes to authentication and billing contracts.' }
+    - { day: 'OCT 2026', title: 'Harvests offline', description: 'I added the Android settlement queue and synchronization on October 5, then worked on the Spring AI assistant.' }
+    - { day: 'NOV 2026', title: 'A view for cooperatives', description: 'Manager alerts and the provisional dossier landed in the Flutter app on November 10.' }
+decisions:
+  - choice: 'Use Spring Boot for the mobile API'
+    rejected: 'ASP.NET Core for the mobile API'
+    subtitle: 'shared backend · Kotlin + Flutter'
+    because: 'The team already knew Spring, and its data, security and AI libraries supported the mobile platform.'
+    cost: 'The earlier ASP.NET Core backend remains a separate codebase.'
+  - choice: 'Queue harvest settlements on the device'
+    rejected: 'Require a connection before submitting a settlement'
+    subtitle: 'Room · WorkManager'
+    because: 'The producer can finish the harvest flow when the network is unavailable and send it later.'
+    cost: 'Pending records need storage, retry handling and a way to correct them before synchronization.'
+  - choice: 'Separate producer and manager apps'
+    rejected: 'One app with role-based screens'
+    subtitle: 'Android producer · Flutter manager'
+    because: 'The two roles have different work: managing a plot versus following cooperative members and alerts.'
+    cost: 'Two mobile codebases consume and integrate with the API separately.'
 ---
 
-A platform that helps olive growers in southern Peru run their season: web planning, a phone app for producers in the field and one for cooperatives, all on the same data. Team of five.
+### The web and API did not agree on every field
 
-My part, across the whole product:
+During the Vue backend integration, sign-up role names and billing plan codes needed fixes. The July 6–7 commits record those corrections; the first interface contract was not the final one. The earlier Angular surveillance merge was also reverted on May 14 and the module continued the next day. The history does not explain why it was reverted.
 
-- Web (Vue): shared layout and navigation, English/Spanish, alerts, the sign-in redesign, onboarding, and the releases that connected it to the real backend.
-- Web (Angular, first version): the alerts module.
-- Backend (Spring Boot): an in-app assistant built with Spring AI, cooperative membership codes and harvest settlements.
-- Android (Kotlin): harvest settlements that work offline and sync later.
-- Cooperative app (Flutter): manager alerts and member plot dossiers.
+The team built the product together. My work included the web alerts and shared layout, parts of the Spring Boot API and assistant, Android harvest settlements, and Flutter manager alerts and plot dossiers.

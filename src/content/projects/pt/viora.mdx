@@ -12,21 +12,76 @@ timeframe: '2026'
 coverImage: '../viora/cover.png'
 coverImageAlt: 'Página do Viora: "Anticipa la próxima cosecha" sobre uma ilustração de um olival'
 problem: 'As safras de azeitona alternam entre anos bons e ruins, e os produtores planejam cada temporada sem dados.'
-whatItDoes: 'Uma plataforma web de planejamento, um aplicativo para produtores no campo e outro para cooperativas, todos com os mesmos dados.'
+whatItDoes: 'Uma plataforma web de planejamento e aplicativos móveis para produtores no campo e cooperativas.'
 myPart: 'Full stack em uma equipe de cinco: o aplicativo web em Vue, um backend Spring Boot com assistente de IA, liquidações de colheita offline no Android e alertas para cooperativas em Flutter.'
 stack: [Vue, Angular, Spring Boot, ASP.NET Core, Spring AI, PostgreSQL, Kotlin, Jetpack Compose, Flutter]
-insideStack: 'Spring Boot + Angular e ASP.NET Core + Vue na web, um aplicativo Kotlin e outro Flutter, tudo em uma API.'
+insideStack: 'Uma plataforma web anterior em Angular e Vue, seguida por aplicativos Kotlin e Flutter com uma API Spring Boot.'
 insideDecision: "Para a API dos aplicativos móveis escolhemos Spring Boot em vez de ASP.NET Core. A equipe já o conhecia, e Spring Data, Spring Security e Spring AI forneceram armazenamento, login e o assistente sem criá-los do zero."
 demoUrl: 'https://viora-landing-page-sable.vercel.app/'
 repoUrl: 'https://github.com/upc-pre-1acc0238-2620-4951-arcadiadevs/viora-platform'
+heroDescription: 'Uma equipe universitária criou ferramentas para olivicultores e cooperativas. Trabalhei na web, na API e nos aplicativos móveis.'
+caseStudy:
+  headlines:
+    problem: 'Planejar uma safra de azeitonas é difícil sem o registro da anterior.'
+    features: 'Trabalho em campo e planejamento cooperativo, conectados por dados.'
+    decisions: 'Três decisões e o trabalho que elas trouxeram.'
+    mistakes: 'A integração precisou de mais uma revisão.'
+    growth: 'Do primeiro aplicativo web à plataforma móvel.'
+  glance:
+    - { label: Equipe, value: 'Cinco pessoas, projeto universitário' }
+    - { label: Meu papel, value: 'Desenvolvimento web, backend e mobile' }
+    - { label: Público, value: 'Olivicultores e gestores de cooperativas do sul do Peru' }
+    - { label: Tecnologias, value: 'Vue, Angular, Spring Boot, ASP.NET Core, PostgreSQL, Kotlin e Flutter' }
+    - { label: Estado, value: 'Página, aplicação web anterior e API disponíveis online; aplicativos móveis distribuídos para testes' }
+  problem:
+    - 'A equipe entrevistou três olivicultores e três gestores técnicos. Os produtores descreveram safras alternadas e valorizaram o acesso offline; os gestores relataram projeções de colheita pouco confiáveis e conectividade limitada no campo.'
+    - 'Um gestor de cooperativa precisa de uma visão mais ampla do que um produtor trabalhando em uma parcela. Por isso o projeto tem experiências móveis separadas para os dois papéis.'
+  requirements: 'Acompanhar parcelas e condições da temporada, registrar colheitas em campo e dar aos gestores acesso a informações e alertas dos membros.'
+  constraint: 'No campo, não é possível contar com conexão. O fluxo de colheita no Android precisa guardar o registro até poder sincronizá-lo.'
+  features:
+    - title: 'Acompanhar a temporada'
+      description: 'O aplicativo do produtor reúne condições das parcelas, orientações para a temporada e alertas.'
+      detail: 'O cliente Android usa Kotlin e Jetpack Compose; a API Spring Boot atende aos aplicativos móveis.'
+      image: '../viora/season.webp'
+      imagePresentation: phone
+      imageAlt: 'Aplicativo do produtor com resumo diário e orientação para a temporada'
+    - title: 'Encerrar uma colheita em campo'
+      description: 'Um produtor pode registrar o fechamento da colheita offline e sincronizá-lo depois.'
+      detail: 'Implementei a fila de registros pendentes no Android com Room e WorkManager, incluindo a correção de um registro antes da sincronização.'
+      image: '../viora/harvest.webp'
+      imagePresentation: phone
+      imageAlt: 'Formulário de colheita com azeitonas verdes, pretas e de descarte'
+    - title: 'Uma visão para as cooperativas'
+      description: 'Gestores podem acompanhar alertas e abrir o dossiê da parcela de um membro.'
+      detail: 'Construí os alertas para gestores e o dossiê provisório de parcela em Flutter, com trabalho correspondente na área territorial da API.'
+      image: '../viora/dossier.webp'
+      imagePresentation: phone
+      imageAlt: 'Aplicativo do gestor com dossiê provisório da parcela e download em PDF'
+  milestones:
+    - { day: 'MAI 2026', title: 'A primeira aplicação web', description: 'O repositório Angular começou em maio; trabalhei no módulo de vigilância e alertas.' }
+    - { day: 'JUL 2026', title: 'Conectando a web', description: 'A versão Vue passou pela integração com o backend e por correções nos contratos de autenticação e cobrança.' }
+    - { day: 'OUT 2026', title: 'Colheitas offline', description: 'Em 5 de outubro adicionei a fila e a sincronização no Android; depois trabalhei no assistente com Spring AI.' }
+    - { day: 'NOV 2026', title: 'Uma visão para cooperativas', description: 'Alertas para gestores e o dossiê provisório chegaram ao Flutter em 10 de novembro.' }
+decisions:
+  - choice: 'Usar Spring Boot para a API mobile'
+    rejected: 'ASP.NET Core para a API mobile'
+    subtitle: 'backend compartilhado · Kotlin + Flutter'
+    because: 'A equipe já conhecia Spring, e suas bibliotecas de dados, segurança e IA ajudaram a construir a plataforma mobile.'
+    cost: 'O backend anterior em ASP.NET Core permanece em uma base de código separada.'
+  - choice: 'Guardar registros de colheita no dispositivo'
+    rejected: 'Exigir conexão para enviar o registro da colheita'
+    subtitle: 'Room · WorkManager'
+    because: 'O produtor pode encerrar a colheita sem rede e enviar o registro depois.'
+    cost: 'Registros pendentes precisam de armazenamento, novas tentativas e uma forma de corrigi-los antes da sincronização.'
+  - choice: 'Separar os aplicativos de produtor e gestor'
+    rejected: 'Um único aplicativo com telas por papel'
+    subtitle: 'produtor Android · gestor Flutter'
+    because: 'Os papéis têm trabalhos diferentes: cuidar de uma parcela ou acompanhar membros e alertas da cooperativa.'
+    cost: 'Duas bases de código mobile consomem a API e exigem integração separada.'
 ---
 
-Uma plataforma que ajuda olivicultores do sul do Peru a gerenciar sua temporada: planejamento web, um aplicativo para produtores no campo e outro para cooperativas, todos com os mesmos dados. Equipe de cinco.
+### A web e a API não concordavam em todos os campos
 
-Minha contribuição em todo o produto:
+Durante a integração do Vue com o backend, foi preciso corrigir os nomes de papéis no cadastro e os códigos dos planos de cobrança. Os commits de 6 e 7 de julho registram essas correções; o primeiro contrato da interface não foi o definitivo. A integração do módulo de vigilância no Angular também foi revertida em 14 de maio, e o trabalho no módulo continuou no dia seguinte. O histórico não explica por que houve a reversão.
 
-- Web (Vue): layout e navegação compartilhados, inglês/espanhol, alertas, redesign do login, onboarding e versões conectadas ao backend real.
-- Web (Angular, primeira versão): o módulo de alertas.
-- Backend (Spring Boot): um assistente com Spring AI, códigos de associação a cooperativas e liquidações de colheita.
-- Android (Kotlin): liquidações de colheita que funcionam offline e sincronizam depois.
-- Aplicativo para cooperativas (Flutter): alertas para gestores e dossiês das parcelas dos membros.
+A equipe construiu o produto em conjunto. Meu trabalho incluiu alertas e layout compartilhado na web, partes da API e do assistente em Spring Boot, registros de colheita no Android e alertas e dossiês de parcelas em Flutter.

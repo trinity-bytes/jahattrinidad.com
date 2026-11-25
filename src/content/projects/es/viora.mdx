@@ -12,21 +12,76 @@ timeframe: '2026'
 coverImage: '../viora/cover.png'
 coverImageAlt: 'Página de Viora: "Anticipa la próxima cosecha" sobre una ilustración de un olivar'
 problem: 'Las cosechas de aceitunas alternan entre años buenos y malos, y los productores planifican cada temporada sin datos.'
-whatItDoes: 'Una plataforma web de planificación, una app para productores en campo y otra para cooperativas, todas con los mismos datos.'
+whatItDoes: 'Una plataforma web de planificación y apps móviles para productores en campo y cooperativas.'
 myPart: 'Full stack en un equipo de cinco: la app web en Vue, un backend Spring Boot con asistente de IA, liquidaciones de cosecha sin conexión en Android y alertas para cooperativas en Flutter.'
 stack: [Vue, Angular, Spring Boot, ASP.NET Core, Spring AI, PostgreSQL, Kotlin, Jetpack Compose, Flutter]
-insideStack: 'Spring Boot + Angular y ASP.NET Core + Vue en la web, una app Kotlin y otra Flutter, todo con una API.'
+insideStack: 'Una plataforma web anterior en Angular y Vue, seguida por apps Kotlin y Flutter con una API Spring Boot.'
 insideDecision: "Para la API de las apps móviles elegimos Spring Boot en lugar de ASP.NET Core. El equipo ya lo conocía, y Spring Data, Spring Security y Spring AI nos dieron almacenamiento, inicio de sesión y el asistente sin construirlos desde cero."
 demoUrl: 'https://viora-landing-page-sable.vercel.app/'
 repoUrl: 'https://github.com/upc-pre-1acc0238-2620-4951-arcadiadevs/viora-platform'
+heroDescription: 'Un equipo universitario construyó herramientas para olivicultores y cooperativas. Trabajé en la web, la API y las apps móviles.'
+caseStudy:
+  headlines:
+    problem: 'Planificar una temporada de aceitunas es difícil sin el registro de la anterior.'
+    features: 'Trabajo en campo y planificación cooperativa, conectados por datos.'
+    decisions: 'Tres decisiones y el trabajo que trajeron consigo.'
+    mistakes: 'La integración necesitó otra pasada.'
+    growth: 'De la primera aplicación web a la plataforma móvil.'
+  glance:
+    - { label: Equipo, value: 'Cinco personas, proyecto universitario' }
+    - { label: Mi función, value: 'Desarrollo web, backend y móvil' }
+    - { label: Usuarios, value: 'Olivicultores y gestores de cooperativas del sur de Perú' }
+    - { label: Tecnologías, value: 'Vue, Angular, Spring Boot, ASP.NET Core, PostgreSQL, Kotlin y Flutter' }
+    - { label: Estado, value: 'Página, web anterior y API disponibles en línea; apps móviles distribuidas para pruebas' }
+  problem:
+    - 'El equipo entrevistó a tres olivicultores y tres gestores técnicos. Los productores describieron cosechas alternantes y valoraron el acceso sin conexión; los gestores señalaron proyecciones de cosecha poco fiables y conectividad limitada en campo.'
+    - 'Un gestor de cooperativa necesita una vista más amplia que un productor trabajando en una parcela. Por eso el proyecto tiene experiencias móviles separadas para ambos roles.'
+  requirements: 'Seguir parcelas y condiciones de temporada, registrar cosechas en campo y dar a los gestores acceso a información y alertas de los miembros.'
+  constraint: 'En campo no se puede asumir que habrá conexión. El flujo de cosecha en Android debe conservar la liquidación hasta poder sincronizarla.'
+  features:
+    - title: 'Seguir la temporada'
+      description: 'La app del productor reúne condiciones de las parcelas, orientación para la temporada y alertas.'
+      detail: 'El cliente Android usa Kotlin y Jetpack Compose; la API Spring Boot abastece a las aplicaciones móviles.'
+      image: '../viora/season.webp'
+      imagePresentation: phone
+      imageAlt: 'App del productor con el resumen diario y la orientación para la temporada'
+    - title: 'Cerrar una cosecha en campo'
+      description: 'Un productor puede registrar una liquidación sin conexión y sincronizarla después.'
+      detail: 'Implementé la cola de liquidaciones pendientes en Android con Room y WorkManager, incluida la corrección de un registro antes de sincronizarlo.'
+      image: '../viora/harvest.webp'
+      imagePresentation: phone
+      imageAlt: 'Formulario de cosecha con aceitunas verdes, negras y de descarte'
+    - title: 'Una vista para las cooperativas'
+      description: 'Los gestores pueden seguir alertas y abrir el expediente de la parcela de un miembro.'
+      detail: 'Construí las alertas para gestores y el expediente provisional de parcela en Flutter, con trabajo correspondiente en el área territorial de la API.'
+      image: '../viora/dossier.webp'
+      imagePresentation: phone
+      imageAlt: 'App del gestor con un expediente provisional de parcela y descarga en PDF'
+  milestones:
+    - { day: 'MAY 2026', title: 'La primera web', description: 'El repositorio Angular comenzó en mayo; trabajé en su módulo de vigilancia y alertas.' }
+    - { day: 'JUL 2026', title: 'Conectar la web', description: 'La versión Vue pasó por integración con el backend y correcciones en los contratos de autenticación y facturación.' }
+    - { day: 'OCT 2026', title: 'Cosechas sin conexión', description: 'El 5 de octubre agregué la cola y sincronización de liquidaciones en Android; luego trabajé en el asistente con Spring AI.' }
+    - { day: 'NOV 2026', title: 'Una vista para cooperativas', description: 'Las alertas para gestores y el expediente provisional llegaron a Flutter el 10 de noviembre.' }
+decisions:
+  - choice: 'Usar Spring Boot para la API móvil'
+    rejected: 'ASP.NET Core para la API móvil'
+    subtitle: 'backend compartido · Kotlin + Flutter'
+    because: 'El equipo ya conocía Spring y sus bibliotecas de datos, seguridad e IA ayudaron a construir la plataforma móvil.'
+    cost: 'El backend anterior en ASP.NET Core permanece como una base de código separada.'
+  - choice: 'Guardar liquidaciones pendientes en el dispositivo'
+    rejected: 'Exigir conexión para enviar una liquidación'
+    subtitle: 'Room · WorkManager'
+    because: 'El productor puede cerrar la cosecha sin red y enviar el registro después.'
+    cost: 'Los registros pendientes necesitan almacenamiento, reintentos y una forma de corregirlos antes de sincronizar.'
+  - choice: 'Separar las apps de productor y gestor'
+    rejected: 'Una sola app con pantallas según el rol'
+    subtitle: 'productor Android · gestor Flutter'
+    because: 'Los roles tienen tareas distintas: gestionar una parcela o seguir a los miembros y las alertas de la cooperativa.'
+    cost: 'Dos bases de código móviles consumen la API y requieren integración por separado.'
 ---
 
-Una plataforma que ayuda a los olivicultores del sur de Perú a gestionar su temporada: planificación web, una app para productores en campo y otra para cooperativas, todas con los mismos datos. Equipo de cinco.
+### La web y la API no coincidían en todos los campos
 
-Mi aporte en todo el producto:
+Durante la integración de Vue con el backend hubo que corregir los nombres de roles de registro y los códigos de planes de facturación. Los commits del 6 y 7 de julio registran esas correcciones; el primer contrato de la interfaz no fue el definitivo. También se revirtió la integración del módulo de vigilancia en Angular el 14 de mayo y se siguió trabajando en él al día siguiente. El historial no explica por qué se revirtió.
 
-- Web (Vue): diseño y navegación compartidos, inglés/español, alertas, rediseño del inicio de sesión, incorporación y versiones conectadas al backend real.
-- Web (Angular, primera versión): el módulo de alertas.
-- Backend (Spring Boot): un asistente con Spring AI, códigos de membresía de cooperativas y liquidaciones de cosecha.
-- Android (Kotlin): liquidaciones de cosecha que funcionan sin conexión y se sincronizan después.
-- App para cooperativas (Flutter): alertas para responsables y expedientes de parcelas de los miembros.
+El equipo construyó el producto en conjunto. Mi trabajo incluyó alertas y diseño compartido de la web, partes de la API y del asistente en Spring Boot, liquidaciones de cosecha en Android y alertas y expedientes de parcelas en Flutter.
