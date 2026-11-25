@@ -5,6 +5,7 @@ import sky from '../../assets/hero/sky.png';
 import Icon from '../ui/Icon.astro';
 import Chat from './contact/Chat.astro';
 import Annotation from '../ui/Annotation.astro';
+import { cvPath } from '../../lib/cv';
 import AnnotationList from '../ui/annotation/AnnotationList.astro';
 import type { Dictionary } from '../../lib/i18n';
 
@@ -76,6 +77,10 @@ const facts = [
           <Icon name="arrow-up-right" size={18} />
         </a>
       )}
+      <a class="link" href={cvPath(lang)} target="_blank" rel="noopener">
+        {strings.cv}
+        <Icon name="arrow-up-right" size={18} />
+      </a>
     </div>
     <AnnotationList class="notes" items={notes} label={inside.notesLabel} />
   </div>
@@ -197,7 +202,7 @@ const facts = [
    */
   .contact[data-chatting] .fallback { display: none; }
   .contact[data-chatting] h2, .contact[data-chatting] .facts { display: none; }
-  .fallback { display: flex; align-items: center; gap: 1.75rem; flex-wrap: wrap; }
+  .fallback { display: flex; align-items: center; gap: 0.25rem 1.75rem; flex-wrap: wrap; }
   .or { font: 500 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text); }
   .link { display: inline-flex; align-items: center; gap: 0.625rem; min-height: 2.75rem; padding: 0; border: 0; background: none; font: 500 1.125rem/1.3 var(--font-sans); color: var(--color-heading); text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; }
   a.link { gap: var(--space-xs); }

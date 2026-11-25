@@ -262,7 +262,7 @@ class Chat {
     const list = this.clone('next');
     for (const step of v.next) {
       const href = hrefs[step.id];
-      // A step without a destination (no CV file yet) is left out rather than rendered as a dead link.
+      // A step without a destination is left out rather than rendered as a dead link.
       if (!href) continue;
       const item = this.clone('step');
       item.querySelector('span')!.textContent = step.label;
