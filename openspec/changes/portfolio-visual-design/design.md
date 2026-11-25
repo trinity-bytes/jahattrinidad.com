@@ -238,6 +238,14 @@ Owner review round (2026-11-16): "el sujeto de la foto queda muy abajo… no imp
 - Bytes masks on the responsive boards use smaller margins: 12–36 px on mobile, 20–52 px on tablet (desktop keeps 40–120). Step and mask names state the real margin.
 - Inside notes are quieter: on-element pins are 14 px outline circles (cream 45% stroke, number 9 px at 75%); list rows use 11 px text, 8 px spacing; the hero notes band has 16 / 24 padding.
 
+Owner hero round (2026-11-16, later): the owner re-laid the Outside heroes (name lower, over the grass; portrait higher; marker and hint back at the hero bottom; heroes 862 / 867 px) and the same layout was ported to both Inside boards (sky, hill, name, portrait, sun mask, bounds and pins; the Inside mobile hint wraps at 166 px like Outside). The name sits at y 628 (mobile) / 530 (tablet).
+
+**Name behind the portrait (approved).** The portrait hid the middle letters of "Jahat". Rejected: a duplicate name above the portrait at 20% (reads as a double exposure, and it also lands on the grass that should cover the letter bases). Approved: an outline of the name drawn above the portrait and masked to the portrait's alpha, so the word reads whole and only the person carries the outline.
+- Layer `layer 05 / name over portrait`: the name, no fill, 1.5 px stroke. Outside: white at 85%, group at 40%. Inside: green-300 at 90%, group at 100%.
+- Arm gaps: the gaps between each arm and the torso are transparent holes inside the portrait's alpha, so the solid name showed through them (solid, outline, solid, outline: owner, "se ve un poco extraño en la parte de los brazos, como glitcheado"). On Outside the solid name is grouped with a mask "hero minus arm gaps", and a second outline copy is masked to the gaps, so between arms and body only the outline shows. Inside needs no gap mask: its name is outline only.
+- The gap vectors are traced from the portrait PNG (the enclosed transparent regions of its alpha). They depend on the pose: if the portrait image changes, regenerate them. All mask layers are locked; to move the name, move the text layers, never the `layer 05` group.
+- Implementation: the outline is an SVG/text stroke masked with the portrait PNG (`mask-image`), plus the two gap paths as SVG clip paths; the same paths cut the solid name.
+
 Open points for the owner (task 4.4): the annotation notes in the stacked lists measure 3.2–3.6:1 (12 px mono at 40%, inherited from the desktop spec; 60% would pass AA); the hint still says "press I" on phones; mobile hero is taller than the 844 viewport; white "Jahat" on the bright mobile sky (desktop is also white; v2 mobile used green-950 for contrast).
 
 ### Home v3.5 (latest, approved 2026-11-16)
