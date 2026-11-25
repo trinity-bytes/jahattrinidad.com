@@ -75,3 +75,13 @@ Method: five Claude Opus auditors in parallel, one per area, briefed by `prompts
 - [x] 2.4 (2026-11-25: 23 findings, 1 P1 / 6 P2 / 16 P3) Notes and links → `reports/audit-notes-links.md`
 - [x] 2.5 (2026-11-25: 14 findings, 1 P2 / 13 P3; detector on src/ returned [], live-URL scan 111 findings with verdicts) Cross-page system (icons, arrows, buttons, type ramp, spacing scale, colour, states, touch targets, motion) plus the Impeccable detector → `reports/audit-system.md`
 - [x] 2.6 (2026-11-25: 113 findings, 2 P1 / 27 P2 / 84 P3; 8 behaviour defects first, 8 system causes) Synthesis: one deduplicated, prioritized findings list for the owner → `reports/phase-2-audit.md`
+
+## Phase 3 — Corrections
+
+Owner, 2026-11-25: "vamos a pasar a la fase de correcion del diseño y comprotamiento. tenemos cosas que corregir en figma y otrs en el codigo. empezaremos por figma". First step: Figma foundations and components in their corrected form, tracked in `odd/tasks/figma-design-system.md` (page `Design system` `2501:136`, variable collections Primitives / Color / Breakpoint / Foundation).
+
+- [x] 3.1 Variables and text styles from `tokens.css` plus the audit's new tokens
+- [x] 3.2 Controls: Icon, Button, TextLink, BackLink (SY-01, SY-02, SY-03, §4 patterns)
+- [x] 3.3 Nav (Desktop / Mobile × Top / Scrolled)
+- [ ] 3.4 Footer, Contact, mobile menu sheet
+- [ ] 3.5 Corrected boards beside the As built boards, built from instances
