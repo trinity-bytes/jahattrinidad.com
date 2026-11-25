@@ -63,4 +63,15 @@ Nine boards: Notes index `2447:13` / `2447:206` / `2447:393`, post `2447:593` / 
 
 ## Phase 2 — Audit
 
-- [ ] 2.1 Waiting for the owner's instructions. Do not start.
+Owner, 2026-11-25:
+
+> "quiero auditar la ui/ux del figma, ahora debes usar las skills que tienes de diseño, euristicas y esas cosas, y las debes usar para auditar el diseñño, la ux e interacciones. la revision debe ser minuciosaya que la ui y ux en general ya ha sido auditada antes, el objetivo es encontrar detalles mas pequeos, como uso de iconos, alineacion, espacio, layout etc. para este caso encargate tu porque necesitamos el mejor criterio posible"
+
+Method: five Claude Opus auditors in parallel, one per area, briefed by `prompts/phase-2-audit.md`. Each audits the `As built` boards (Figma node ids are the reference for every finding) and the live site for what a board cannot show (hover, focus, keyboard, motion, chat). Read-only: no Figma edits, no code edits. The supervisor synthesizes `reports/phase-2-audit.md`.
+
+- [x] 2.1 (2026-11-25: 24 findings, 9 P2 / 15 P3) Home Outside, nav, mobile menu → `reports/audit-home-outside.md`
+- [x] 2.2 (2026-11-25: 20 findings, 1 P1 / 5 P2 / 14 P3) Home Inside and chat → `reports/audit-home-inside-chat.md`
+- [x] 2.3 (2026-11-25: 32 findings, 6 P2 / 26 P3) Work and projects → `reports/audit-work.md`
+- [x] 2.4 (2026-11-25: 23 findings, 1 P1 / 6 P2 / 16 P3) Notes and links → `reports/audit-notes-links.md`
+- [x] 2.5 (2026-11-25: 14 findings, 1 P2 / 13 P3; detector on src/ returned [], live-URL scan 111 findings with verdicts) Cross-page system (icons, arrows, buttons, type ramp, spacing scale, colour, states, touch targets, motion) plus the Impeccable detector → `reports/audit-system.md`
+- [x] 2.6 (2026-11-25: 113 findings, 2 P1 / 27 P2 / 84 P3; 8 behaviour defects first, 8 system causes) Synthesis: one deduplicated, prioritized findings list for the owner → `reports/phase-2-audit.md`

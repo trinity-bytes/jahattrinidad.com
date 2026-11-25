@@ -13,7 +13,7 @@ The previous session (2026-11-25, 11:58) announced the scope: an audit of "dise�
 ## What
 
 1. **Phase 1 — As-built baseline (done 2026-11-25, `reports/phase-1-summary.md`).** Figma pages named `As built · <group>` that show the site exactly as it runs on `develop` at commit `5a0977a`, at 1440, 768 and 390, plus a per-board list of differences against the approved boards. The audit starts from these, not from the approved boards.
-2. **Phase 2 — Audit.** Not started. The owner gives the instructions after phase 1 is reported ("una vez terminado, reportame para darte las siguientes instrucciones"). Do not start it on your own.
+2. **Phase 2 — Audit (started 2026-11-25).** A detailed UI/UX and interaction audit of the as-built boards, aimed at small details (icons, alignment, spacing, layout), since the broad UI/UX was audited before. Owner's words and the task list: `tasks.md`, "Phase 2"; method: `prompts/phase-2-audit.md`.
 
 ## Decisions
 
