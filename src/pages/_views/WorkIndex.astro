@@ -39,14 +39,14 @@ const seo = buildSeo({
 });
 ---
 
-<Base lang={lang} seo={seo} lens contactOnPage profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
+<Base lang={lang} seo={seo} contactOnPage profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
   <PageHero variant="work" word={t.nav.work}>
     <p class="eyebrow">{t.work.eyebrow}</p>
     <p class="headline">{t.work.headline}</p>
     <p class="sub">{t.work.sub}</p>
   </PageHero>
   {featured.length > 0 && <Work index copy={{ ...t.home.outside.work, marker: t.work.featuredMarker }} insideCopy={t.home.inside.work} headline={t.work.featuredHeading} labels={{ ...t.common, seeProject: t.work.seeProject }} projects={featured} count={featured.length} allProjectsHref={collectionPath('projects', lang)} />}
-  {(more.length > 0 || experiments.length > 0) && <WorkMore projects={more} experiments={experiments} lang={lang} strings={t.work} insideLabels={t.home.inside.work.rowLabels} />}
+  {(more.length > 0 || experiments.length > 0) && <WorkMore projects={more} experiments={experiments} lang={lang} strings={t.work} />}
   <PageContact lang={lang} links={links} marker={t.work.contactMarker} />
   <PageFooter slot="footer" lang={lang} links={links} contactOnPage />
 </Base>
