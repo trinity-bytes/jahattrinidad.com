@@ -22,7 +22,7 @@ These are bugs, not design choices. They do not wait on the hi-fi approval rule 
 | Order | ID | Sev | Defect | Fix (summary) |
 |---|---|---|---|---|
 | 1 | NL-01 | P1 | The post's "In this post" links scroll each heading under the 69 px sticky nav, and at 1440 and 768 the list highlights the next section | `scroll-margin-top: 6rem` on prose headings; compute the active item from the same offset |
-| 2 | HI-01 | P1 | Pressing `I` twice during the 900 ms lens reveal crashed the tab. **Reproduced only in headless Chromium 158: confirm in a real browser before treating it as P1** | Ignore or skip a second view transition while one is running |
+| 2 | HI-01 | P1 | Pressing `I` twice during the 900 ms lens reveal crashes the page. **Confirmed by the owner in their own browser, 2026-11-25** (first seen in headless Chromium 158) | Ignore or skip a second view transition while one is running |
 | 3 | HI-02 | P2 | `Esc` while typing in the chat switches the page back to Outside | Skip the Esc shortcut when focus is in an editable field |
 | 4 | NL-03 | P2 | "read" is hardcoded in `src/components/sections/Notes.astro:86`, so `/es/` and `/pt/` show "2 min read" (breaks the i18n rule; confirmed in code by the supervisor) | Use the dictionary's reading-time string |
 | 5 | WK-17 | P2 | "← All work" sits at the right edge on project pages (breaks the link-arrow rule: back goes left) | Move it to the left edge |
@@ -73,7 +73,7 @@ Everything else is P3 polish listed in the source reports with its fix.
 
 ## 5. Not checked, across all areas
 
-- A real touch device and browsers other than Chromium (HI-01 depends on this).
+- A real touch device and browsers other than Chromium (HI-01 has since been confirmed by the owner in a real browser).
 - Screen-reader output: accessible names were read from the DOM only.
 - Motion was read from CSS and source, not recorded frame by frame.
 - The chat's sending, sent and failed states (never triggered, by rule).
