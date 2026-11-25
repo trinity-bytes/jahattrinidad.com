@@ -14,4 +14,31 @@ demoUrl: 'https://trama.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/trama'
 insideStack: "JavaScript sin frameworks con Cytoscape.js y Dagre."
 insideDecision: "El algoritmo de Kahn ordena los cursos con sus prerrequisitos primero. La vista de Hasse elimina aristas que otras rutas ya implican, para facilitar la lectura de las relaciones restantes."
+page:
+  headline: "Mira una malla como un grafo, no como una lista."
+  sub: "Trama conecta cursos con sus requisitos y muestra los caminos entre ellos."
+  glance:
+    - { label: "Problema", value: "Entender dependencias en una malla curricular" }
+    - { label: "Método", value: "Grafo dirigido, orden topológico y reducción transitiva" }
+    - { label: "Vistas", value: "Malla por semestre, grafo y análisis" }
+    - { label: "Tecnología", value: "JavaScript, Cytoscape.js y Dagre" }
+    - { label: "Mi aporte", value: "Todo el proyecto, por mi cuenta" }
+  how:
+    headline: "De los requisitos a un plan legible."
+    steps:
+      - title: "Modelar las relaciones"
+        text: "Cada arista va de un requisito al curso que lo necesita. La malla agrupa los cursos en columnas por semestre."
+        formula: "prerequisite → course"
+      - title: "Encontrar un orden"
+        text: "El algoritmo de Kahn toma sucesivamente cursos sin requisitos pendientes. Si quedan cursos cuando se agota la cola, el grafo contiene un ciclo."
+        formula: "in-degree = 0 → queue"
+      - title: "Reducir el grafo"
+        text: "La vista de Hasse oculta una arista cuando otro camino ya implica la misma dependencia. El grafo completo sigue disponible para consultarlo."
+        formula: "A → B → C  ⇒  A → C is redundant"
+  decisionHeadline: "Mostrar las relaciones importantes."
+decisions:
+  - choice: "Ofrecer una vista reducida del grafo"
+    rejected: "Mostrar siempre todas las aristas"
+    because: "La reducción transitiva facilita seguir las relaciones directas sin cambiar la alcanzabilidad."
+    cost: "La vista reducida oculta aristas explícitas que pueden importar al revisar los datos originales."
 ---

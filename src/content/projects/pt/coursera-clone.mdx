@@ -13,4 +13,31 @@ stack: [C++, Data structures]
 repoUrl: 'https://github.com/trinity-bytes/coursera-clone'
 insideStack: "Um aplicativo de console em C++ com estruturas de dados próprias."
 insideDecision: "Árvores AVL guardam IDs de cursos e especializações inscritos; uma tabela hash indexa cursos por título. Um heap ordena atividades por inscrições e um grafo amplia recomendações de categorias com BFS."
+page:
+  headline: "Uma plataforma de cursos para colocar estruturas de dados em prática."
+  sub: "Um aplicativo de console em C++ feito em equipe para descobrir cursos, se inscrever e obter certificados."
+  glance:
+    - { label: "Problema", value: "Modelar uma plataforma educacional no terminal" }
+    - { label: "Método", value: "Estruturas de dados e algoritmos próprios" }
+    - { label: "Recursos", value: "Cursos, inscrições, pagamentos e certificados" }
+    - { label: "Tecnologia", value: "C++ e console do Windows" }
+    - { label: "Minha parte", value: "Arquitetura, interface de console, persistência, utilitários e QR" }
+  how:
+    headline: "Cada pergunta precisa de uma estrutura diferente."
+    steps:
+      - title: "Encontrar cursos e inscrições"
+        text: "Uma tabela hash indexa cursos pelo título; árvores AVL guardam IDs de cursos e especializações inscritos. Uma árvore balanceada permite busca logarítmica e o hash oferece acesso constante em média."
+        formula: "AVL: O(log n)\nhash: O(1) average"
+      - title: "Ordenar por atividade"
+        text: "Um heap ordena atividades pelo número de inscrições e mantém a maior prioridade no topo. Inserções e remoções restauram essa ordem."
+        formula: "insert / remove: O(log n)"
+      - title: "Explorar categorias relacionadas"
+        text: "Um grafo conecta categorias. A busca em largura amplia as recomendações percorrendo primeiro as categorias vizinhas e depois as mais distantes."
+        formula: "BFS: O(V + E)"
+  decisionHeadline: "Escolher estruturas para cada pergunta."
+decisions:
+  - choice: "Usar estruturas especializadas para cada operação"
+    rejected: "Percorrer uma única lista não ordenada para tudo"
+    because: "Um índice, uma árvore balanceada, um heap e um grafo atendem a diferentes padrões de acesso."
+    cost: "Várias estruturas exigem mais código e precisam permanecer consistentes com os dados."
 ---

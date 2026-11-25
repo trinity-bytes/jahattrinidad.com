@@ -14,4 +14,31 @@ demoUrl: 'https://trama.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/trama'
 insideStack: "JavaScript sem frameworks com Cytoscape.js e Dagre."
 insideDecision: "O algoritmo de Kahn ordena as disciplinas com seus pré-requisitos primeiro. A visão de Hasse remove arestas já implícitas em caminhos mais longos, facilitando a leitura das relações restantes."
+page:
+  headline: "Veja uma grade como um grafo, não como uma lista."
+  sub: "Trama conecta disciplinas aos seus pré-requisitos e mostra os caminhos entre elas."
+  glance:
+    - { label: "Problema", value: "Entender dependências em uma grade curricular" }
+    - { label: "Método", value: "Grafo dirigido, ordenação topológica e redução transitiva" }
+    - { label: "Visões", value: "Grade por semestre, grafo e análise" }
+    - { label: "Tecnologia", value: "JavaScript, Cytoscape.js e Dagre" }
+    - { label: "Minha parte", value: "Todo o projeto, por conta própria" }
+  how:
+    headline: "Dos pré-requisitos a um plano legível."
+    steps:
+      - title: "Modelar as relações"
+        text: "Cada aresta vai de um pré-requisito à disciplina que o exige. A grade agrupa as disciplinas em colunas por semestre."
+        formula: "prerequisite → course"
+      - title: "Encontrar uma ordem"
+        text: "O algoritmo de Kahn retira sucessivamente disciplinas sem pré-requisitos pendentes. Se restarem disciplinas quando a fila acabar, o grafo contém um ciclo."
+        formula: "in-degree = 0 → queue"
+      - title: "Reduzir o grafo"
+        text: "A visão de Hasse oculta uma aresta quando outro caminho já implica a mesma dependência. O grafo completo continua disponível para consulta."
+        formula: "A → B → C  ⇒  A → C is redundant"
+  decisionHeadline: "Mostrar as relações importantes."
+decisions:
+  - choice: "Oferecer uma visão reduzida do grafo"
+    rejected: "Mostrar todas as arestas o tempo todo"
+    because: "A redução transitiva facilita acompanhar relações diretas sem alterar a alcançabilidade."
+    cost: "A visão reduzida oculta arestas explícitas que podem importar na análise dos dados originais."
 ---

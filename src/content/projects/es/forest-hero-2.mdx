@@ -13,4 +13,30 @@ stack: [C++/CLI, Windows Forms]
 repoUrl: 'https://github.com/trinity-bytes/forest-hero-2'
 insideStack: "Un juego 2D hecho con C++/CLI y Windows Forms."
 insideDecision: "Los enemigos cambian de dirección al azar; las colisiones marcan semillas y enemigos para eliminarlos después de recorrerlos, sin modificar sus vectores durante las comprobaciones."
+page:
+  headline: "Restaura un bosque antes de que termine el tiempo."
+  sub: "Un juego 2D hecho en equipo para un curso de Algoritmos, con recursos, enemigos y reforestación."
+  glance:
+    - { label: "Problema", value: "Convertir la reforestación en un objetivo de juego" }
+    - { label: "Ciclo", value: "Recoger recursos, plantar árboles y evitar enemigos" }
+    - { label: "Plataforma", value: "Windows Forms y C++/CLI" }
+    - { label: "Contexto", value: "Proyecto de Algoritmos, equipo de tres" }
+    - { label: "Mi aporte", value: "Integrante del equipo; responsabilidades individuales por confirmar" }
+  how:
+    headline: "Un juego basado en recursos y tiempo."
+    steps:
+      - title: "Recolectar y plantar"
+        text: "El guardián recoge semillas y agua, y usa ambos para plantar árboles antes de que se agote el tiempo."
+        formula: "seeds + water → tree"
+      - title: "Actualizar el mundo"
+        text: "Los enemigos se mueven y pueden cambiar de dirección al azar. Durante la partida se revisan colisiones entre el guardián, los recursos y los enemigos."
+      - title: "Eliminar después de revisar"
+        text: "El manejo de colisiones reúne los índices de semillas y enemigos para eliminarlos después de las comprobaciones, en lugar de modificar sus vectores durante el recorrido."
+        formula: "check collisions → collect indices → remove"
+  decisionHeadline: "Recorrer las colisiones de forma segura."
+decisions:
+  - choice: "Posponer la eliminación hasta terminar las comprobaciones"
+    rejected: "Eliminar objetos mientras se recorren"
+    because: "Cambiar un vector durante el recorrido puede invalidar índices y hacer que se omitan objetos."
+    cost: "El juego debe registrar las eliminaciones y gestionar índices duplicados."
 ---

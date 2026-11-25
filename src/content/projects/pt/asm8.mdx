@@ -14,4 +14,30 @@ demoUrl: 'https://asm8.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/asm8-ide-simulator'
 insideStack: "Svelte e TypeScript com CodeMirror e Web Workers."
 insideDecision: "A CPU simulada roda em um worker para não bloquear o editor."
+page:
+  headline: "Uma máquina de 8 bits para programar, executar e inspecionar."
+  sub: "ASM8 recria um simulador de montador como um IDE instalável no navegador."
+  glance:
+    - { label: "Problema", value: "Aprender assembly observando a execução" }
+    - { label: "Máquina", value: "Registradores, flags e 256 bytes de memória" }
+    - { label: "Ferramentas", value: "Montador, depurador e PWA offline" }
+    - { label: "Tecnologia", value: "Svelte, TypeScript, CodeMirror e Web Workers" }
+    - { label: "Minha parte", value: "Recriação e redesign do simulador de Marco Schweighauser" }
+  how:
+    headline: "Do código assembly a uma máquina em execução."
+    steps:
+      - title: "Montar o programa"
+        text: "O montador emite bytes de instruções e registra os endereços dos rótulos; depois resolve as referências. Também informa erros como um rótulo não definido."
+        formula: "label → address → byte"
+      - title: "Executar e inspecionar"
+        text: "A CPU simulada altera registradores, flags e memória ao executar instruções. IN espera uma tecla; OUT imprime um caractere."
+        formula: "IN A  →  OUT A"
+      - title: "Depurar sem travar o editor"
+        text: "Um Web Worker executa a CPU enquanto a interface recebe instantâneos. Você pode avançar instrução por instrução ou parar em um breakpoint; a PWA também funciona offline."
+  decisionHeadline: "Separar a execução do editor."
+decisions:
+  - choice: "Executar a CPU em um Web Worker"
+    rejected: "Executar a CPU na thread da interface"
+    because: "A execução pode continuar sem bloquear a interação com o editor."
+    cost: "O worker e a interface precisam trocar comandos e instantâneos de estado."
 ---

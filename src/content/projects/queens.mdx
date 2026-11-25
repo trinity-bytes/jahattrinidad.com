@@ -15,4 +15,30 @@ demoLabel: Play
 repoUrl: 'https://github.com/trinity-bytes/queens-game'
 insideStack: "Next.js and React with a Cloudflare Worker and D1."
 insideDecision: "The game runs in the browser; the Worker validates leaderboard submissions and recomputes scores."
+page:
+  headline: "One queen in every row, column and colour."
+  sub: "A browser puzzle made as a gift, with generated boards and a leaderboard."
+  glance:
+    - { label: "Problem", value: "Place queens without conflicts" }
+    - { label: "Rules", value: "One per row, column and region; no touching" }
+    - { label: "Generation", value: "Random regions checked for a unique solution" }
+    - { label: "Built with", value: "Next.js, React, a Cloudflare Worker and D1" }
+    - { label: "My part", value: "Designed and developed on my own" }
+  how:
+    headline: "A puzzle is a set of constraints."
+    steps:
+      - title: "Place the queens"
+        text: "Every row, column and coloured region must contain one queen. Queens cannot touch, even diagonally; sharing a distant diagonal is allowed."
+        formula: "row = 1  ·  column = 1  ·  region = 1"
+      - title: "Generate and check"
+        text: "The generator starts with a valid placement, grows regions around its queens, then searches for solutions. A candidate is accepted only when the solver finds exactly one."
+        formula: "solutions = 1"
+      - title: "Validate a score"
+        text: "The Worker checks submitted fields and the solve log, then recomputes the score rather than trusting the browser. Publishing is a player action."
+  decisionHeadline: "Check scores at the boundary."
+decisions:
+  - choice: "Validate submissions and recompute scores in the Worker"
+    rejected: "Accept the browser’s submitted score as authoritative"
+    because: "The browser is untrusted, so the Worker checks the submission before it reaches the leaderboard."
+    cost: "Validation adds server-side rules and cannot make an anonymous client completely trustworthy."
 ---

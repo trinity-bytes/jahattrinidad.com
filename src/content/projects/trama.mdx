@@ -14,4 +14,31 @@ demoUrl: 'https://trama.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/trama'
 insideStack: "Vanilla JavaScript with Cytoscape.js and Dagre."
 insideDecision: "Kahn’s algorithm orders courses with prerequisites first. The Hasse view removes edges implied by longer paths, making the remaining relationships easier to follow."
+page:
+  headline: "See a curriculum as a graph, not a list."
+  sub: "Trama connects courses to their prerequisites and shows the paths between them."
+  glance:
+    - { label: "Problem", value: "Understand dependencies across a curriculum" }
+    - { label: "Method", value: "Directed graph, topological ordering and transitive reduction" }
+    - { label: "Views", value: "Semester grid, graph and analysis" }
+    - { label: "Built with", value: "JavaScript, Cytoscape.js and Dagre" }
+    - { label: "My part", value: "The whole project, on my own" }
+  how:
+    headline: "From prerequisites to a readable plan."
+    steps:
+      - title: "Model the links"
+        text: "Each edge points from a prerequisite to the course that requires it. The curriculum view groups courses into semester lanes."
+        formula: "prerequisite → course"
+      - title: "Find an order"
+        text: "Kahn’s algorithm repeatedly takes courses with no remaining prerequisites. If courses remain after the queue is exhausted, the graph contains a cycle."
+        formula: "in-degree = 0 → queue"
+      - title: "Reduce the graph"
+        text: "The Hasse view hides an edge when another path already implies the same dependency. The full graph remains available for inspection."
+        formula: "A → B → C  ⇒  A → C is redundant"
+  decisionHeadline: "Show the relationships that matter."
+decisions:
+  - choice: "Offer a reduced graph view"
+    rejected: "Show every edge all the time"
+    because: "A transitive reduction makes direct relationships easier to follow without changing reachability."
+    cost: "The reduced view hides explicit edges that may still matter to someone inspecting the source data."
 ---

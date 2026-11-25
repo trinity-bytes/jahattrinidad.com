@@ -13,4 +13,30 @@ stack: [C++/CLI, Windows Forms]
 repoUrl: 'https://github.com/trinity-bytes/forest-hero-2'
 insideStack: "A 2D game built with C++/CLI and Windows Forms."
 insideDecision: "Enemies change direction at random; collisions mark seeds and enemies for removal after iteration, avoiding changes to their vectors during the checks."
+page:
+  headline: "Restore a forest while the clock is running."
+  sub: "A team-built 2D game made for an Algorithms course, with resources, enemies and reforestation."
+  glance:
+    - { label: "Problem", value: "Turn a reforestation objective into a playable game" }
+    - { label: "Loop", value: "Collect resources, plant trees and avoid enemies" }
+    - { label: "Platform", value: "Windows Forms and C++/CLI" }
+    - { label: "Context", value: "Algorithms course project, team of three" }
+    - { label: "My part", value: "Team contributor; individual responsibilities need confirmation" }
+  how:
+    headline: "A game built around resources and time."
+    steps:
+      - title: "Gather and plant"
+        text: "The guardian collects seeds and water, then uses both to plant trees before time runs out."
+        formula: "seeds + water → tree"
+      - title: "Update the world"
+        text: "Enemies move and can change direction randomly. The game checks collisions between the guardian, resources and enemies as play continues."
+      - title: "Remove after checking"
+        text: "Collision handling collects indices to remove seeds and enemies after the checks, instead of changing their vectors during iteration."
+        formula: "check collisions → collect indices → remove"
+  decisionHeadline: "Keep collision checks safe to iterate."
+decisions:
+  - choice: "Defer removal until after collision checks"
+    rejected: "Erase objects while iterating over them"
+    because: "Changing a vector during traversal can invalidate indices and skip objects."
+    cost: "The game must track removals and handle duplicate indices."
 ---
