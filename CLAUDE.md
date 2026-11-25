@@ -167,3 +167,23 @@ alternative during the design phase.
 Figma file; the local copies are the owner's working files and a fresh
 clone does not have them. Do not assume they exist and do not commit
 them; `assets.md` says what they are and how to regenerate them.
+
+## Link arrows say where a link goes
+
+A visitor must know before clicking whether a link stays on the site. The
+owner set this on 2026-11-25 after `→` had been used for everything:
+
+- `→` — another page of this site, same tab.
+- `←` — back to a listing (All work, All notes). Back goes on the left,
+  forward on the right; never put a `←` and a `→` side by side facing each
+  other.
+- `↗` — leaves the site: a live demo, GitHub, LinkedIn, the CV PDF, RSS.
+  Always `target="_blank" rel="noopener noreferrer"` and the
+  `common.newTab` note in a `.visually-hidden` span (or in the
+  `aria-label` of a logo-only button, which carries no arrow).
+- No arrow on in-page actions (copy email, chat buttons, submit) and no
+  decorative arrows anywhere.
+
+Hanken Grotesk has no `↗` glyph: use `<Icon name="arrow-up-right" />`.
+`scripts/check-links.mjs` reads the built HTML at the end of
+`npm run check` and fails on a link that breaks this rule.

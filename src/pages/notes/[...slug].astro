@@ -38,6 +38,7 @@ export interface Props {
 const { entry } = Astro.props;
 const lang = 'en' as const;
 const t = getDictionary(lang);
+const newTab = t.common.newTab;
 const links = (await listLinks()).map((link) => link.data);
 
 const site = Astro.site;
@@ -90,7 +91,7 @@ const typeLabel = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial
     <div class="article-layout">
       <aside class="contents" aria-label={t.post.inThisPost}>
         {headings.length > 0 && <><h2>{t.post.inThisPost}</h2><ul>{headings.filter((heading) => heading.depth === 2).map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ul></>}
-        {entry.data.canonicalUrl && <a class="canonical" href={entry.data.canonicalUrl}>{t.post.published} <Icon name="arrow-up-right" size={15} /></a>}
+        {entry.data.canonicalUrl && <a class="canonical" href={entry.data.canonicalUrl} target="_blank" rel="noopener noreferrer">{t.post.published} <Icon name="arrow-up-right" size={15} /><span class="visually-hidden"> {newTab}</span></a>}
       </aside>
       <article class="article">
         <div class="prose" data-copy={t.post.copy} data-copied={t.post.copied} data-code={t.post.code}><Content components={{ PullQuote, Note, Figure }} /></div>

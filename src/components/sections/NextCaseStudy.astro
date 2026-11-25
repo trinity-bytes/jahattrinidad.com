@@ -6,7 +6,7 @@ import Backgrounds from './Backgrounds.astro';
 interface Props { project: CollectionEntry<'projects'>; href: string; allWorkHref: string; strings: Dictionary }
 const { project, href, allWorkHref, strings: t } = Astro.props;
 ---
-<section class="next"><Backgrounds variant="values" next="none" /><div class="container content"><header><div><p class="marker">{t.caseStudy.nextCaseStudy}</p><h2>{project.data.title}</h2></div><a href={allWorkHref}>{t.caseStudy.allWork} →</a></header><ProjectCard project={project.data} href={href} meta={project.data.kind} problem={project.data.problem} whatItDoes={project.data.whatItDoes} labels={{...t.common, seeProject:t.work.seeProject}} insideLabels={t.home.inside.work.rowLabels} featured optimized /></div></section>
+<section class="next"><Backgrounds variant="values" next="none" /><div class="container content"><header><div><p class="marker">{t.caseStudy.nextCaseStudy}</p><h2>{project.data.title}</h2></div><a href={allWorkHref}><span aria-hidden="true">← </span>{t.caseStudy.allWork}</a></header><ProjectCard project={project.data} href={href} meta={project.data.kind} problem={project.data.problem} whatItDoes={project.data.whatItDoes} labels={{...t.common, seeProject:t.work.seeProject}} insideLabels={t.home.inside.work.rowLabels} featured optimized /></div></section>
 <style>
   .next {
     position: relative;

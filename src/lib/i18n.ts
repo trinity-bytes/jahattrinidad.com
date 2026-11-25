@@ -259,6 +259,8 @@ export interface Dictionary {
     myPart: string;
     whatItDoes: string;
     teamOf: (size: number) => string;
+    /** Screen-reader note on links that leave the site and open a new tab (the ↗ icon says it visually). */
+    newTab: string;
   };
 }
 
@@ -575,6 +577,7 @@ export const en: Dictionary = {
     myPart: 'My part',
     whatItDoes: 'What it does',
     teamOf: (size) => (size === 1 ? 'Solo' : `Team of ${size}`),
+    newTab: '(opens in a new tab)',
   },
 };
 

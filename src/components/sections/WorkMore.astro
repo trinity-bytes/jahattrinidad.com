@@ -1,10 +1,14 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import type { Dictionary } from '../../lib/i18n';
+import { getDictionary, type Dictionary, type Locale } from '../../lib/i18n';
 import Backgrounds from './Backgrounds.astro';
+import Icon from '../ui/Icon.astro';
 interface Props { projects: CollectionEntry<'projects'>[]; experiments: CollectionEntry<'projects'>[]; lang: string; strings: Dictionary['work'] }
-const { projects, experiments, strings: t } = Astro.props;
+const { projects, experiments, lang, strings: t } = Astro.props;
+// Every link in this section leaves the site: ↗ and a new tab, with the screen-reader note.
+const newTab = getDictionary(lang as Locale).common.newTab;
+const out = { target: '_blank', rel: 'noopener noreferrer' } as const;
 ---
 <section class="more">
   <Backgrounds variant="experience" next="none" />
@@ -28,8 +32,8 @@ const { projects, experiments, strings: t } = Astro.props;
                 <h3>{data.title}</h3>
                 <p>{data.description}</p>
                 <div class="links">
-                  {data.demoUrl && <a href={data.demoUrl}>{data.demoLabel ?? t.live} →</a>}
-                  {data.repoUrl && <a href={data.repoUrl}>{t.code} →</a>}
+                  {data.demoUrl && <a href={data.demoUrl} {...out}>{data.demoLabel ?? t.live}<Icon name="arrow-up-right" size={15} /><span class="visually-hidden"> {newTab}</span></a>}
+                  {data.repoUrl && <a href={data.repoUrl} {...out}>{t.code}<Icon name="arrow-up-right" size={15} /><span class="visually-hidden"> {newTab}</span></a>}
                 </div>
               </div>
             </article>
@@ -49,12 +53,12 @@ const { projects, experiments, strings: t } = Astro.props;
               <h3>{data.title}</h3>
               <p>{data.description}</p>
               <p class="experiment-meta">{data.stack.join(' · ')}</p>
-              {data.demoUrl && <a href={data.demoUrl}>{t.live} →</a>}
-              {data.repoUrl && <a href={data.repoUrl}>{t.code} →</a>}
+              {data.demoUrl && <a href={data.demoUrl} {...out}>{t.live}<Icon name="arrow-up-right" size={15} /><span class="visually-hidden"> {newTab}</span></a>}
+              {data.repoUrl && <a href={data.repoUrl} {...out}>{t.code}<Icon name="arrow-up-right" size={15} /><span class="visually-hidden"> {newTab}</span></a>}
             </article>
           ))}
         </div>
-        <a href="https://github.com/trinity-bytes" data-background-text>{t.moreExperiments} →</a>
+        <a href="https://github.com/trinity-bytes" {...out} data-background-text>{t.moreExperiments}<Icon name="arrow-up-right" size={15} /><span class="visually-hidden"> {newTab}</span></a>
       </div>
     )}
   </div>
@@ -125,6 +129,14 @@ const { projects, experiments, strings: t } = Astro.props;
   .links {
     display: flex;
     gap: 24px;
+  }
+  /* External links: text, then the ↗ icon. */
+  .links a,
+  .experiment a,
+  .experiments > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
   }
   .experiments {
     margin-top: 7rem;

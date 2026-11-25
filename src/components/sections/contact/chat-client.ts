@@ -264,7 +264,8 @@ class Chat {
       const href = hrefs[step.id];
       // A step without a destination is left out rather than rendered as a dead link.
       if (!href) continue;
-      const item = this.clone('step');
+      // The CV is a PDF outside the site's pages, so it gets the external step.
+      const item = this.clone(step.id === 'cv' ? 'step-out' : 'step');
       item.querySelector('span')!.textContent = step.label;
       item.querySelector('a')!.href = href;
       list.append(item);

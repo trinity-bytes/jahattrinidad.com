@@ -8,13 +8,15 @@ interface Props {
   workPath: string;
   notesPath: string;
   strings: Dictionary['nav'];
+  /** Screen-reader note: the profile logos open another site in a new tab. */
+  newTab: string;
   profileLinks?: { label: string; href: string }[];
   /** EN / ES / PT switch (Nav set `2185:122`), in switch order. */
   languages?: { lang: string; hrefLang: string; code: string; name: string; href: string; current: boolean }[];
   /** The page renders its own Contact section, so the Contact link stays on the page. */
   contactOnPage?: boolean;
 }
-const { home, workPath, notesPath, strings, profileLinks = [], languages = [], contactOnPage = false } = Astro.props;
+const { home, workPath, notesPath, strings, newTab, profileLinks = [], languages = [], contactOnPage = false } = Astro.props;
 const pathname = Astro.url.pathname;
 const isHome = pathname.replace(/\/$/, '') === home.replace(/\/$/, '');
 const targets = navTargets({ home, workPath, notesPath, isHome, contactOnPage });
@@ -62,7 +64,7 @@ const profileIcons = {
         {profileLinks.length > 0 && <ul class="profiles" aria-label={strings.elsewhere}>
           {profileLinks.map((link) => {
             const icon = profileIcons[link.label as keyof typeof profileIcons];
-            return icon && <li><a href={link.href} rel="me noopener" aria-label={link.label}><Icon name={icon} size={icon === 'brand-x' ? 17 : 19} /></a></li>;
+            return icon && <li><a href={link.href} target="_blank" rel="me noopener noreferrer" aria-label={`${link.label} ${newTab}`}><Icon name={icon} size={icon === 'brand-x' ? 17 : 19} /></a></li>;
           })}
         </ul>}
       </div>

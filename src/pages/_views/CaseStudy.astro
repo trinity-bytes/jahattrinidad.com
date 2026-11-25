@@ -17,6 +17,7 @@ export interface Props {
 
 const { entry, lang } = Astro.props;
 const t = getDictionary(lang);
+const newTab = t.common.newTab;
 const links = (await listLinks()).map((link) => link.data);
 
 const site = Astro.site;
@@ -58,8 +59,8 @@ const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
     <p class="sub">{data.heroDescription ?? data.description}</p>
     {(data.demoUrl || data.repoUrl) && (
       <div class="actions">
-        {data.demoUrl && <a class="button primary" data-magnetic href={data.demoUrl} target="_blank" rel="noopener noreferrer">{data.demoLabel ?? t.caseStudy.openProject}<Icon name="arrow-right" size={18} /></a>}
-        {data.repoUrl && <a class="button secondary" data-magnetic href={data.repoUrl} target="_blank" rel="noopener noreferrer">{t.caseStudy.source}<Icon name="arrow-right" size={18} /></a>}
+        {data.demoUrl && <a class="button primary" data-magnetic href={data.demoUrl} target="_blank" rel="noopener noreferrer">{data.demoLabel ?? t.caseStudy.openProject}<Icon name="arrow-up-right" size={18} /><span class="visually-hidden"> {newTab}</span></a>}
+        {data.repoUrl && <a class="button secondary" data-magnetic href={data.repoUrl} target="_blank" rel="noopener noreferrer">{t.caseStudy.source}<Icon name="arrow-up-right" size={18} /><span class="visually-hidden"> {newTab}</span></a>}
       </div>
     )}
   </PageHero>

@@ -1,5 +1,5 @@
 ---
-import type { Locale } from '../../lib/i18n';
+import { getDictionary, type Locale } from '../../lib/i18n';
 import { Image } from 'astro:assets';
 import sky from '../../assets/hero/sky.png';
 import Icon from '../ui/Icon.astro';
@@ -24,6 +24,7 @@ interface Props {
 }
 
 const { lang, marker, headline, strings, inside, chat, email, linkedInHref } = Astro.props;
+const newTab = getDictionary(lang).common.newTab;
 const notes = [inside.annotations.composer];
 const facts = [
   { label: strings.lookingFor, value: strings.lookingForValue },
@@ -75,11 +76,13 @@ const facts = [
         <a class="link" href={linkedInHref} target="_blank" rel="noopener noreferrer">
           {strings.linkedIn}
           <Icon name="arrow-up-right" size={18} />
+          <span class="visually-hidden"> {newTab}</span>
         </a>
       )}
-      <a class="link" href={cvPath(lang)} target="_blank" rel="noopener">
+      <a class="link" href={cvPath(lang)} target="_blank" rel="noopener noreferrer">
         {strings.cv}
         <Icon name="arrow-up-right" size={18} />
+        <span class="visually-hidden"> {newTab}</span>
       </a>
     </div>
     <AnnotationList class="notes" items={notes} label={inside.notesLabel} />
