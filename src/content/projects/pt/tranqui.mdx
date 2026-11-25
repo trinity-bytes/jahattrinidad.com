@@ -53,9 +53,9 @@ caseStudy:
       image: ../tranqui/report-wireframe.png
       imagePresentation: phone
       imageAlt: Wireframe de confirmação de relato sobre um formulário de incidente
-    - title: A comunidade acrescenta contexto
-      description: As pessoas podem ver relatos em um mapa, consultar detalhes, adicionar um comentário ou marcar spam.
-      detail: Design de mapa de calor do relatório do curso, apresentado sobre um mapa ilustrativo. A participação comunitária faz parte da validação proposta; o relatório não estabelece um limite verificado.
+    - title: A comunidade confirma o que aconteceu
+      description: As pessoas veem os relatos em um mapa. Um relato ganha peso quando várias pessoas por perto o confirmam, não por meio de comentários.
+      detail: Design de mapa de calor do relatório do curso, apresentado sobre um mapa ilustrativo. A validação por várias pessoas é o fluxo proposto; o relatório não fixou o limite de confirmação.
       image: ../tranqui/heatmap-wireframe.webp
       imagePresentation: phone
       imageAlt: Design de mapa de calor sobre um mapa ilustrativo de ruas
@@ -94,21 +94,21 @@ caseStudy:
     - title: Estado atual
       text: A página está publicada. O relatório contém designs e requisitos do aplicativo; não pude verificar um app Flutter lançado nem dados de incidentes ao vivo. Desenhei e desenvolvi a página separadamente; sua estatística de criminalidade cita o INEI.
 decisions:
-  - choice: Relatos anônimos, com contas
-    rejected: Identificar publicamente cada autor (alternativa sem rejeição documentada)
-    subtitle: privacidade · relatos anônimos
-    because: O relatório especifica relatos anônimos e, separadamente, contas com e-mail.
-    cost: É preciso projetar tanto a privacidade quanto a gestão de contas; anonimato não elimina a necessidade de uma conta.
-  - choice: Contexto comunitário para os relatos
-    rejected: Um relato sem comentários ou contribuições da comunidade (alternativa sem rejeição documentada)
-    subtitle: comentários · avisos de spam
-    because: A equipe especificou comentários, detalhes do relato e avisos de spam como parte da interação comunitária.
-    cost: O design depende da participação; o relatório também considera revisão por especialistas, sem descartá-la.
-  - choice: Usar controles nativos do navegador
-    rejected: Menu e acordeão personalizados em JavaScript (alternativa sem rejeição documentada)
+  - choice: Relatos anônimos, identidade verificada em sigilo
+    rejected: Mostrar quem relatou cada incidente
+    subtitle: privacidade · verificação interna
+    because: O mapa precisa de relatos, e as pessoas só relatam se for seguro. Cada conta é verificada dentro do app, então um relato é confiável enquanto o autor fica oculto para todos os outros.
+    cost: A verificação de identidade precisa ser construída e protegida; anônimo não significa que qualquer um pode publicar.
+  - choice: Validação por várias pessoas, sem comentários
+    rejected: Conversas de comentários em cada relato
+    subtitle: escopo · validação comunitária
+    because: O Tranqui tem uma só função, dizer o que aconteceu no seu trajeto. Basta que várias pessoas confirmem um relato; comentários transformariam uma ferramenta de segurança em uma rede social que ela não precisa ser.
+    cost: Um relato não comporta uma conversa, então o contexto precisa caber no próprio relato.
+  - choice: Controles nativos do navegador
+    rejected: Um menu e um acordeão feitos em JavaScript
     subtitle: dialog + details
-    because: A página usa um diálogo nativo para navegação móvel e details nas perguntas frequentes.
-    cost: Estilos responsivos, testes e JavaScript para abrir o menu ainda são necessários.
+    because: Um dialog nativo para o menu móvel e details para as perguntas frequentes funcionam igual em todos os navegadores, com suporte a teclado e leitor de tela embutido.
+    cost: Ainda são necessários estilos responsivos, testes e um pouco de JavaScript para abrir o menu.
 ---
 
 ### Elementos visuais que precisavam de contexto.

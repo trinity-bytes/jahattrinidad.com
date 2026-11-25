@@ -53,9 +53,9 @@ caseStudy:
       image: ./tranqui/report-wireframe.png
       imagePresentation: phone
       imageAlt: Report confirmation wireframe showing an incident form
-    - title: Let the community add context
-      description: People can see reported incidents on a map, inspect details, add a comment or flag spam.
-      detail: Heat-map design from the course report, shown over an illustrative map. Community input is part of the proposed validation flow; the report does not establish a verified threshold.
+    - title: Let the community confirm what happened
+      description: People see reported incidents on a map. A report gains weight when several people nearby confirm it, not through comments.
+      detail: Heat-map design from the course report, shown over an illustrative map. Validation by several people is the proposed flow; the confirmation threshold was not fixed in the report.
       image: ./tranqui/heatmap-wireframe.webp
       imagePresentation: phone
       imageAlt: Report heat-map design over an illustrative street map
@@ -94,21 +94,21 @@ caseStudy:
     - title: Where it stands
       text: The landing is live. The report contains app designs and requirements; I could not verify a released Flutter app or live incident data. I designed and built the landing separately; its crime statistic cites INEI.
 decisions:
-  - choice: Anonymous reports, with accounts
-    rejected: Publicly identifying every reporter (alternative, not documented as rejected)
-    subtitle: privacy · anonymous reports
-    because: The report specifies anonymous incident reports while separately specifying email accounts.
-    cost: Privacy and account management both need to be designed; anonymity does not mean an account is unnecessary.
-  - choice: Community context around reports
-    rejected: A report with no comments or community feedback (alternative, not documented as rejected)
-    subtitle: comments · spam flags
-    because: The team specified comments, report details and ways to flag spam as part of community interaction.
-    cost: The design depends on people participating; the report also discusses specialist review rather than ruling it out.
+  - choice: Keep reporters anonymous, verify them in private
+    rejected: Show who reported each incident
+    subtitle: privacy · internal identity check
+    because: The map needs reports, and people only report if they are safe doing it. Every account is verified inside the app, so a report can be trusted while its author stays hidden from everyone else.
+    cost: Identity verification has to be built and kept private; anonymity does not mean anyone can post.
+  - choice: Validation by several people, no comments
+    rejected: Comment threads on every report
+    subtitle: scope · community validation
+    because: Tranqui has one job, telling you what happened on your route. Several people confirming a report is enough; comments would turn a safety tool into a social network it does not need to be.
+    cost: A report cannot carry a discussion, so its context has to fit in the report itself.
   - choice: Use browser-native controls
-    rejected: Custom JavaScript menu and accordion controls (alternative, not documented as rejected)
+    rejected: A custom JavaScript menu and accordion
     subtitle: dialog + details
-    because: The landing uses a native dialog for mobile navigation and details for the FAQ.
-    cost: Responsive styling, testing and JavaScript to open the menu are still needed.
+    because: A native dialog for the mobile menu and details for the FAQ behave the same across browsers, with keyboard and screen reader support built in.
+    cost: Responsive styling, testing and a little JavaScript to open the menu are still needed.
 ---
 
 ### A visual that needed more context.

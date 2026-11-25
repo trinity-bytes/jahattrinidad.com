@@ -53,9 +53,9 @@ caseStudy:
       image: ../tranqui/report-wireframe.png
       imagePresentation: phone
       imageAlt: Wireframe de confirmación de reporte sobre un formulario de incidente
-    - title: La comunidad aporta contexto
-      description: Las personas pueden ver reportes en un mapa, consultar los detalles, añadir un comentario o marcar spam.
-      detail: Diseño de mapa de calor del informe del curso, mostrado sobre un mapa ilustrativo. La participación comunitaria forma parte de la validación propuesta; el informe no establece un umbral verificado.
+    - title: La comunidad confirma lo que pasó
+      description: Las personas ven los reportes en un mapa. Un reporte gana peso cuando varias personas cercanas lo confirman, no a través de comentarios.
+      detail: Diseño de mapa de calor del informe del curso, mostrado sobre un mapa ilustrativo. La validación por varias personas es el flujo propuesto; el informe no fijó el umbral de confirmación.
       image: ../tranqui/heatmap-wireframe.webp
       imagePresentation: phone
       imageAlt: Diseño de mapa de calor sobre un mapa de calles ilustrativo
@@ -94,21 +94,21 @@ caseStudy:
     - title: Estado actual
       text: La página está publicada. El informe contiene diseños y requisitos de la app; no pude verificar una app Flutter publicada ni datos de incidentes en vivo. Diseñé y desarrollé la página por separado; su cifra de criminalidad cita al INEI.
 decisions:
-  - choice: Reportes anónimos, con cuentas
-    rejected: Identificar públicamente a cada autor (alternativa sin rechazo documentado)
-    subtitle: privacidad · reportes anónimos
-    because: El informe especifica reportes anónimos y, por separado, cuentas con correo electrónico.
-    cost: Hay que diseñar tanto la privacidad como la gestión de cuentas; el anonimato no elimina la necesidad de una cuenta.
-  - choice: Contexto comunitario para los reportes
-    rejected: Un reporte sin comentarios ni aportes de la comunidad (alternativa sin rechazo documentado)
-    subtitle: comentarios · avisos de spam
-    because: El equipo especificó comentarios, detalles del reporte y avisos de spam como parte de la interacción comunitaria.
-    cost: El diseño depende de la participación; el informe también contempla revisión por especialistas, no la descarta.
-  - choice: Usar controles nativos del navegador
-    rejected: Menú y acordeón personalizados con JavaScript (alternativa sin rechazo documentado)
+  - choice: Reportes anónimos, identidad verificada en privado
+    rejected: Mostrar quién reportó cada incidente
+    subtitle: privacidad · verificación interna
+    because: El mapa necesita reportes, y la gente solo reporta si hacerlo es seguro. Cada cuenta se verifica dentro de la app, así un reporte es confiable mientras su autor queda oculto para todos los demás.
+    cost: La verificación de identidad hay que construirla y protegerla; anónimo no significa que cualquiera pueda publicar.
+  - choice: Validación de varias personas, sin comentarios
+    rejected: Hilos de comentarios en cada reporte
+    subtitle: alcance · validación comunitaria
+    because: Tranqui tiene un solo trabajo, decirte qué pasó en tu ruta. Basta con que varias personas confirmen un reporte; los comentarios convertirían una herramienta de seguridad en una red social que no necesita ser.
+    cost: Un reporte no admite una conversación, así que su contexto tiene que caber en el propio reporte.
+  - choice: Controles nativos del navegador
+    rejected: Un menú y un acordeón hechos en JavaScript
     subtitle: dialog + details
-    because: La página usa un diálogo nativo para navegación móvil y details para las preguntas frecuentes.
-    cost: Todavía se necesitan estilos adaptables, pruebas y JavaScript para abrir el menú.
+    because: Un dialog nativo para el menú móvil y details para las preguntas frecuentes se comportan igual en todos los navegadores, con soporte de teclado y lector de pantalla incluido.
+    cost: Siguen haciendo falta estilos responsivos, pruebas y un poco de JavaScript para abrir el menú.
 ---
 
 ### Unos elementos visuales que necesitaban contexto.
