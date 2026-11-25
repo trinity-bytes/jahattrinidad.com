@@ -12,7 +12,8 @@ import type { Locale } from '../../../lib/i18n';
  */
 import { Image } from 'astro:assets';
 import photo from '../../../assets/profile/jahat.jpg';
-import { CONTACT_EMAIL, CV_URL, GARDEN_CASE_STUDY, WEB3FORMS_ACCESS_KEY } from '../../../lib/consts';
+import { CONTACT_EMAIL, GARDEN_CASE_STUDY, WEB3FORMS_ACCESS_KEY } from '../../../lib/consts';
+import { cvPath } from '../../../lib/cv';
 import { collectionPath, entryPath } from '../../../lib/paths';
 import type { Dictionary } from '../../../lib/i18n';
 
@@ -48,7 +49,7 @@ const paths = {
   data-key={WEB3FORMS_ACCESS_KEY}
   data-garden={garden}
   data-work={work}
-  data-cv={CV_URL}
+  data-cv={cvPath(lang)}
   data-copied={strings.copied}
   data-mode="idle"
   role="group"

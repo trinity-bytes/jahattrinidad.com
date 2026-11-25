@@ -202,6 +202,7 @@ export interface Dictionary {
     startConversation: string;
     copyEmail: string;
     linkedIn: string;
+    cv: string;
     lookingFor: string;
     available: string;
     basedIn: string;
@@ -248,6 +249,8 @@ export interface Dictionary {
     latestSub: (minutes: number) => string;
     writeTitle: string;
     writeSub: string;
+    cvTitle: string;
+    cvSub: string;
     elsewhere: string;
   };
   common: {
@@ -511,6 +514,7 @@ export const en: Dictionary = {
     startConversation: 'Start a conversation',
     copyEmail: 'Copy my email',
     linkedIn: 'LinkedIn',
+    cv: 'CV (PDF)',
     lookingFor: 'Looking for',
     available: 'Available',
     basedIn: 'Based in',
@@ -561,6 +565,8 @@ export const en: Dictionary = {
     latestSub: (minutes) => `Latest note · ${minutes} min read`,
     writeTitle: 'Write to me',
     writeSub: 'A short chat, straight to my inbox',
+    cvTitle: 'Download my CV',
+    cvSub: 'PDF · English',
     elsewhere: 'Elsewhere',
   },
   common: {

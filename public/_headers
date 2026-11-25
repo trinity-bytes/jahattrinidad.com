@@ -1,0 +1,15 @@
+# Cloudflare Workers Static Assets reads this file at deploy time; it is not served.
+# https://developers.cloudflare.com/workers/static-assets/headers/
+#
+# CV file names. The URL each locale links to never changes (src/lib/cv.ts); only the
+# name a recruiter's browser saves the PDF under does. To reposition for another role,
+# edit the filename on these three lines and redeploy. Keep names ASCII, no spaces.
+
+/cv/jahat-trinidad-cv-en.pdf
+  Content-Disposition: inline; filename="Jahat-Trinidad_Frontend-FullStack_CV_EN.pdf"
+
+/cv/jahat-trinidad-cv-es.pdf
+  Content-Disposition: inline; filename="Jahat-Trinidad_Frontend-FullStack_CV_ES.pdf"
+
+/cv/jahat-trinidad-cv-pt.pdf
+  Content-Disposition: inline; filename="Jahat-Trinidad_Frontend-FullStack_CV_PT.pdf"

@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Icon from '../../components/ui/Icon.astro';
 import { collectionPath, entryPath, entrySlug, listLinks, listPosts, listProjects, type Locale } from '../../lib/content';
 import { buildSeo } from '../../lib/seo';
+import { cvPath } from '../../lib/cv';
 import { getDictionary, localeGroup, localizedPath } from '../../lib/i18n';
 import sky from '../../assets/hero/sky.png';
 import hill from '../../assets/hero/near-hill.png';
@@ -69,6 +70,7 @@ const cards = [
           {cards.map((card) => (
             <li><a class="card" href={card.href}><span class="text"><span class="title">{card.title}</span><span class="sub">{card.sub}</span></span><Icon name="arrow-right" size={20} /></a></li>
           ))}
+          <li><a class="card" href={cvPath(lang)} target="_blank" rel="noopener"><span class="text"><span class="title">{copy.cvTitle}</span><span class="sub">{copy.cvSub}</span></span><Icon name="arrow-up-right" size={20} /></a></li>
           <li><a class="card filled" href={`${localizedPath(lang, '/')}#contact`}><span class="text"><span class="title">{copy.writeTitle}</span><span class="sub">{copy.writeSub}</span></span><Icon name="arrow-right" size={20} /></a></li>
         </ul>
       </nav>
