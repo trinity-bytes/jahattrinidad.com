@@ -35,6 +35,22 @@ The previous session (2026-11-25, 11:58) announced the scope: an audit of "dise√
 
 **Pass rule** (proposed by the agent that built the pipeline, used since): same width and height as the site capture, total pixel difference ‚â§ 3 % (pixels whose summed RGB delta is above 60), no 500 px band above 8 %, and a person looks at side-by-side slices (`tools/sbs.cjs`, `tools/pair.cjs`).
 
+## Continue from another clone
+
+Checked 2026-11-25 by running the tools from a folder outside the repo: `extract.cjs` (Work 390, Home Inside 390), `payload.cjs` and `diff.cjs` all work.
+
+Prerequisites:
+
+1. `npm install` in the repo (the tools load `sharp` from the repo's `node_modules`; set `REPO_ROOT=<repo>` when you run them from another folder).
+2. The dev server: `npm run dev -- --host 127.0.0.1 --port 4321` on `develop`. Check that `git log -1` matches the commit in the board captions (`5a0977a`); if the site changed since, the existing boards are out of date for those pages.
+3. A full Chromium or Chrome binary (not Playwright's bundled headless shell, which wraps text differently). The tools use `/usr/bin/chromium`; set `CHROMIUM=<path>` otherwise.
+4. The `playwright` package on `NODE_PATH`: `npm i -g playwright` (or `@playwright/mcp`), then `NODE_PATH=$(npm root -g)` (or `$(npm root -g)/@playwright/mcp/node_modules`).
+5. Figma: an MCP client logged in to Figma with edit access to file `gq6glEp9QrPOnEyYG9dldh`, and the `figma-use` skill (`use_figma` is the Plugin API call `builder.js` runs through; `upload_assets` uploads payloads and images).
+
+Copy `tools/` to a scratch folder outside the repo and work there: the extractor writes large PNGs next to itself. Never commit those outputs.
+
+Known limitation: `extract.cjs` assumes a page with the site nav and footer, so it fails on `/links/` (that page is already done by the clone method).
+
 ## Agent tooling facts learned in this change
 
 | Fact | Consequence |

@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 const [url, w, h, out] = process.argv.slice(2);
 (async () => {
-  const b = await chromium.launch({ executablePath: '/usr/bin/chromium' });
+  const b = await chromium.launch({ executablePath: process.env.CHROMIUM || '/usr/bin/chromium' });
   const p = await b.newPage({ viewport: { width: +w, height: +h } });
   await p.emulateMedia({ reducedMotion: 'reduce' });
   await p.goto(url, { waitUntil: 'networkidle' });

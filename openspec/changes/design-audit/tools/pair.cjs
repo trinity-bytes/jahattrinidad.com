@@ -1,4 +1,4 @@
-const sharp = require('/mnt/files/Projects/portfolio/node_modules/sharp');
+const sharp = require(require.resolve('sharp',{paths:[process.env.REPO_ROOT||process.cwd(),__dirname+'/../../../..']}));
 const [a, b, out, w = '700'] = process.argv.slice(2);
 (async () => {
   const W = +w;

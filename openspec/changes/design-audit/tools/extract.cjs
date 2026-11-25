@@ -1,7 +1,7 @@
 // node extract.cjs <slug> <width> <outdir> [peek]
-const {chromium}=require('playwright');const fs=require('fs');const sharp=require('/mnt/files/Projects/portfolio/node_modules/sharp');
+const {chromium}=require('playwright');const fs=require('fs');const sharp=require(require.resolve('sharp',{paths:[process.env.REPO_ROOT||process.cwd(),__dirname+'/../../../..']}));
 (async()=>{const [slug,w,out,peek]=process.argv.slice(2);const W=+w,H={1440:900,768:1024,390:844}[W];fs.mkdirSync(out,{recursive:true});
-const b=await chromium.launch({executablePath:'/usr/bin/chromium'});const p=await b.newPage({reducedMotion:'reduce',viewport:{width:W,height:H}});
+const b=await chromium.launch({executablePath:process.env.CHROMIUM||'/usr/bin/chromium'});const p=await b.newPage({reducedMotion:'reduce',viewport:{width:W,height:H}});
 await p.goto('http://127.0.0.1:4321/'+(slug==='home'?'':slug+'/'),{waitUntil:'networkidle'});if(process.env.LENS==='inside'){await p.evaluate(()=>{document.documentElement.dataset.lens='inside'});await p.waitForTimeout(800);}
 await p.evaluate(async()=>{await document.fonts.ready;for(const i of document.images)i.loading='eager';for(let y=0;y<document.documentElement.scrollHeight;y+=600){scrollTo(0,y);await new Promise(r=>setTimeout(r,120))}scrollTo(0,0);await Promise.race([Promise.all([...document.images].map(i=>i.decode().catch(()=>{}))),new Promise(r=>setTimeout(r,8000))]);document.querySelector('astro-dev-toolbar')?.remove()});
 await p.waitForTimeout(700);

@@ -1,5 +1,8 @@
 # Runbook: As-built boards from the live DOM
 
+> Portable version (2026-11-25): read `../proposal.md` "Continue from another clone" for prerequisites. Set `REPO_ROOT` (sharp) and, if needed, `CHROMIUM`. `<scratch>/work-work2` means any scratch folder where you copied these tools. The extracted images and `site.png` files from the first session are gone: re-run `extract.cjs` before uploading images or checking.
+
+
 Figma file `gq6glEp9QrPOnEyYG9dldh`, page `As built · Work & projects` = `2446:60`.
 Write only to that page. Do not edit the repo. Do not start or stop the dev server (http://127.0.0.1:4321).
 Before any Figma call: load skill `figma-use` (`skill://figma/figma-use/SKILL.md`) and call `create_session`.
