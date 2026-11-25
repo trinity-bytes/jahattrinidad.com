@@ -24,7 +24,7 @@ caseStudy:
   headlines:
     problem: 'Planejar uma safra de azeitonas é difícil sem o registro da anterior.'
     features: 'Trabalho em campo e planejamento cooperativo, conectados por dados.'
-    decisions: 'Três decisões e o trabalho que elas trouxeram.'
+    decisions: 'Quatro decisões e o custo de cada uma.'
     mistakes: 'A integração precisou de mais uma revisão.'
     growth: 'Do primeiro aplicativo web à plataforma móvel.'
   glance:
@@ -63,21 +63,26 @@ caseStudy:
     - { day: 'OUT 2026', title: 'Colheitas offline', description: 'Em 5 de outubro adicionei a fila e a sincronização no Android; depois trabalhei no assistente com Spring AI.' }
     - { day: 'NOV 2026', title: 'Uma visão para cooperativas', description: 'Alertas para gestores e o dossiê provisório chegaram ao Flutter em 10 de novembro.' }
 decisions:
-  - choice: 'Usar Spring Boot para a API mobile'
-    rejected: 'ASP.NET Core para a API mobile'
+  - choice: 'Spring Boot para a API móvel'
+    rejected: 'ASP.NET Core para a API móvel'
     subtitle: 'backend compartilhado · Kotlin + Flutter'
-    because: 'A equipe já conhecia Spring, e suas bibliotecas de dados, segurança e IA ajudaram a construir a plataforma mobile.'
-    cost: 'O backend anterior em ASP.NET Core permanece em uma base de código separada.'
-  - choice: 'Guardar registros de colheita no dispositivo'
-    rejected: 'Exigir conexão para enviar o registro da colheita'
-    subtitle: 'Room · WorkManager'
-    because: 'O produtor pode encerrar a colheita sem rede e enviar o registro depois.'
-    cost: 'Registros pendentes precisam de armazenamento, novas tentativas e uma forma de corrigi-los antes da sincronização.'
-  - choice: 'Separar os aplicativos de produtor e gestor'
-    rejected: 'Um único aplicativo com telas por papel'
-    subtitle: 'produtor Android · gestor Flutter'
-    because: 'Os papéis têm trabalhos diferentes: cuidar de uma parcela ou acompanhar membros e alertas da cooperativa.'
-    cost: 'Duas bases de código mobile consomem a API e exigem integração separada.'
+    because: 'A equipe já conhecia Spring, e suas bibliotecas de dados, segurança e IA sustentavam a plataforma móvel.'
+    cost: 'O backend anterior em ASP.NET Core continua como um código separado.'
+  - choice: 'Reavaliar os alertas da cooperativa assim que um talhão muda'
+    rejected: 'Apenas o agendador que verificava a cada 15 minutos'
+    subtitle: 'meu ADR-009 · eventos assíncronos após o commit'
+    because: 'Um gestor precisa ver uma sobrecarga de frutos ou um risco de geada na hora, não até 15 minutos depois. A verificação roda depois que a mudança do produtor é salva e fora da requisição dele, então uma falha nunca desfaz uma amostragem nem deixa o app lento; a varredura de 15 minutos fica como rede de segurança.'
+    cost: 'Um lock em memória evita alertas duplicados na única instância implantada; escalar exige um lock no banco de dados, e uma geada apenas prevista ainda espera a varredura.'
+  - choice: 'Um único limite de calor, definido no contexto de Telemetria'
+    rejected: 'Cada cliente manter sua própria constante'
+    subtitle: 'meu ADR-006 · uma fonte de verdade'
+    because: 'O app pedia para regar cedo a 30 °C enquanto nenhum alerta abria antes de 32 °C: o app se contradizia e o assistente não tinha um valor único para citar. Agora o app, a tela de alerta e o assistente leem os mesmos 32 °C e 36 °C do backend.'
+    cost: 'Não há aviso entre 30 e 32 °C, e os valores ainda precisam ser validados por um agrônomo para a variedade Sevillana.'
+  - choice: 'Certificar uma safra só após três temporadas liquidadas consecutivas'
+    rejected: 'Certificar qualquer safra liquidada'
+    subtitle: 'meu ADR-002 · PDF selado com SHA-256'
+    because: 'O dossiê certificado traz o índice de alternância, que compara temporadas consecutivas; com menos de três não há índice, e o PDF selado garantiria um número que não existe.'
+    cost: 'Um produtor novo espera três temporadas pelo certificado, e a API responde 409 até lá.'
 ---
 
 ### A web e a API não concordavam em todos os campos
