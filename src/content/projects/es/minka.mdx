@@ -9,12 +9,84 @@ featured: true
 kind: App comunitaria · Android nativo
 coverImage: '../minka/cover.png'
 coverImageAlt: 'Página de Mink’a: "Intercambia ropa, libros o muebles y haz que Lima gire" junto a la app en un teléfono'
-problem: 'En Lima, ropa, libros y muebles aún útiles terminan en la basura porque no hay una forma confiable de intercambiarlos entre vecinos.'
-whatItDoes: 'Permite a los vecinos ofrecer, encontrar e intercambiar objetos cercanos en una app nativa de Android.'
+problem: 'La ropa, los libros y los muebles útiles podrían tener otra vida mediante intercambios entre vecinos de Lima.'
+whatItDoes: 'Un prototipo nativo de Android para publicar y encontrar objetos; los intercambios aún están pendientes.'
 myPart: 'La nueva página, el diseño de la app y su desarrollo.'
 stack: [Kotlin, Jetpack Compose, Hilt, Ktor, DataStore, Astro]
 insideStack: 'Kotlin + Jetpack Compose, Hilt, Ktor con una API simulada dentro de la app, DataStore. Landing en Astro.'
-insideDecision: 'Una app nativa de Android, sin versión web: el producto lo necesitaba.'
+insideDecision: 'Una app nativa de Android reemplazó el prototipo web; el sitio ahora es una página de presentación.'
 demoUrl: 'https://minka.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/minka-android'
+heroDescription: 'Un proyecto de trueque para Lima que comenzó en equipo y continuó como una app nativa de Android. Rediseñé la página y desarrollé la app.'
+caseStudy:
+  headlines:
+    problem: Los objetos útiles merecen otra oportunidad cerca de casa.
+    features: De la página a un prototipo Android.
+    decisions: Tres decisiones y sus límites.
+    mistakes: Lo que cambió en el camino.
+    growth: De un proyecto en equipo a una app nativa.
+  glance:
+    - { label: Origen, value: 'Proyecto en equipo para un curso de la UPC' }
+    - { label: Mi parte, value: 'Rediseño de la página, diseño y desarrollo Android' }
+    - { label: Tecnologías, value: 'Astro, Kotlin, Compose, Hilt, Ktor, Room y DataStore' }
+    - { label: Estado, value: 'Prototipo Android con datos locales simulados; intercambio y chat pendientes' }
+  problem:
+    - 'Mink’a nació como un proyecto en equipo para dar otra vida a objetos útiles mediante intercambios entre vecinos de Lima.'
+    - 'Después del curso continué el proyecto, rediseñé la página y desarrollé una app nativa de Android alrededor del recorrido de intercambio.'
+  requirements: 'El recorrido previsto va desde iniciar sesión y publicar un objeto hasta descubrir ofertas, proponer un intercambio, conversar y confirmarlo.'
+  constraint: 'Todavía no hay backend. La API simulada corre dentro de la app: las cuentas y publicaciones quedan en el dispositivo y no conectan a vecinos reales.'
+  features:
+    - title: Ver lo que hay cerca
+      description: 'El inicio reúne publicaciones cercanas con sus fotos y lo que cada persona busca a cambio.'
+      detail: 'El prototipo carga publicaciones de ejemplo mediante la API simulada; no representan un mercado real.'
+      image: '../minka/app-home.webp'
+      imagePresentation: phone
+      imageAlt: 'Inicio de Android con publicaciones cercanas en Miraflores'
+    - title: Acotar la búsqueda
+      description: 'Explora una categoría y compara las publicaciones en una sola lista.'
+      detail: 'La búsqueda y los filtros usan la capa de publicaciones conectada al simulador, con una caché local en Room.'
+      image: '../minka/app-search.webp'
+      imagePresentation: phone
+      imageAlt: 'Resultados de búsqueda de Android filtrados por artículos para el hogar'
+    - title: Conocer los detalles antes de intercambiar
+      description: 'Cada publicación muestra el objeto, su estado, el distrito y lo que la persona busca a cambio.'
+      detail: 'El detalle enlaza al perfil de quien publica. Las propuestas de intercambio y el chat siguen pendientes.'
+      image: '../minka/app-detail.webp'
+      imagePresentation: phone
+      imageAlt: 'Detalle de una publicación de vajilla de cerámica en Android'
+  milestones:
+    - { day: 'NOV 2025', title: Comienza el proyecto en equipo, description: 'El repositorio original comienza con un equipo de un curso.' }
+    - { day: 'OCT 2026', title: Una nueva dirección, description: 'Se retira el prototipo web del repositorio de la página y comienza el proyecto Android.' }
+    - { day: 'NOV 2026', title: Bienvenida y publicaciones, description: 'Se construyen el inicio de sesión, el perfil, la publicación, la búsqueda y el detalle sobre la API simulada.' }
+    - { day: '23 NOV 2026', title: Android 0.1.0, description: 'La versión cierra la fase de publicaciones; el intercambio y el chat quedan pendientes.' }
+  closing:
+    - { title: Estado actual, text: 'La app es un prototipo local, todavía no una red de intercambios reales. El sitio describe la propuesta completa.' }
+decisions:
+  - choice: Mantener la API dentro de la app por ahora
+    rejected: 'Un backend desplegado'
+    subtitle: 'Ktor · motor simulado'
+    because: 'La app puede usar respuestas con forma de API y persistir el estado simulado sin un servidor.'
+    cost: 'Las cuentas y publicaciones quedan en cada dispositivo; no existe un mercado compartido.'
+  - choice: Construir la app de forma nativa
+    rejected: 'Continuar el prototipo web como producto'
+    subtitle: 'Android · Compose'
+    because: 'El motivo para elegir Android nativo en lugar del prototipo web no está documentado. [Pendiente de confirmar]'
+    cost: 'El prototipo web anterior se retiró; la versión nativa solo funciona en Android.'
+  - choice: Priorizar el tema claro
+    rejected: 'Mantener también un tema oscuro'
+    subtitle: 'Material 3 · tema claro'
+    because: 'El plan de la app registra que se descartó el tema oscuro porque su costo superaba su valor.'
+    cost: 'Actualmente la app no ofrece tema oscuro.'
 ---
+
+### Restaurar la navegación
+
+La pila de navegación no sobrevivía a la muerte del proceso. Corregí su restauración antes de cerrar la fase de bienvenida.
+
+### Un prototipo no es un mercado
+
+La página describe todo el recorrido de intercambio, pero el plan de Android todavía deja intercambios y chat para una fase futura. La API simulada guarda los datos en el dispositivo. Para conectar a vecinos reales faltan un backend compartido y esos flujos.
+
+### El prototipo web fue reemplazado
+
+El proyecto incluía un prototipo web. En octubre de 2026 lo retiré del repositorio de la página para enfocarme en la app nativa. Eso implicó dejar atrás la implementación web anterior.

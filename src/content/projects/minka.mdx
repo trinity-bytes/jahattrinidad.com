@@ -9,12 +9,84 @@ featured: true
 kind: Community app · Native Android
 coverImage: './minka/cover.png'
 coverImageAlt: 'Mink’a landing page: "Intercambia ropa, libros o muebles y haz que Lima gire" beside the app on a phone'
-problem: 'In Lima, clothes, books and furniture that still work end up in the trash, because there is no trusted way to swap them with neighbours.'
-whatItDoes: 'Lets neighbours offer, find and swap goods nearby, in a native Android app.'
+problem: 'Useful clothes, books and furniture could have another life through exchanges between neighbours in Lima.'
+whatItDoes: 'A native Android prototype for posting and finding goods; exchanges are still planned.'
 myPart: 'The new landing, the app’s design and its build.'
 stack: [Kotlin, Jetpack Compose, Hilt, Ktor, DataStore, Astro]
 insideStack: 'Kotlin + Jetpack Compose, Hilt, Ktor with a mock API inside the app, DataStore. Landing in Astro.'
-insideDecision: 'One native Android app, no web version: the product needed it.'
+insideDecision: 'A native Android app replaced the earlier web prototype; the website is now a landing.'
 demoUrl: 'https://minka.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/minka-android'
+heroDescription: 'A community barter project for Lima, begun by a team and continued as a native Android app. I redesigned the landing and built the app.'
+caseStudy:
+  headlines:
+    problem: Useful things should have another chance nearby.
+    features: From the landing to an Android prototype.
+    decisions: Three choices and their limits.
+    mistakes: What changed along the way.
+    growth: From a team project to a native app.
+  glance:
+    - { label: Origin, value: 'A team project for a UPC course' }
+    - { label: My part, value: 'Landing redesign, Android design and development' }
+    - { label: Built with, value: 'Astro, Kotlin, Compose, Hilt, Ktor, Room and DataStore' }
+    - { label: Status, value: 'Android prototype with local mock data; exchange and chat still planned' }
+  problem:
+    - 'Mink’a began as a team project around giving useful objects another life through exchanges between neighbours in Lima.'
+    - 'I continued the project after the course, redesigned the landing and built a native Android app around the exchange journey.'
+  requirements: 'The planned journey runs from sign-in and publishing an object through discovery, an exchange proposal, chat and confirmation.'
+  constraint: 'There is no backend yet. The mock API runs inside the app, so accounts and listings stay on the device and cannot connect real neighbours.'
+  features:
+    - title: See what is nearby
+      description: 'The home screen brings nearby listings together with their photos and what each owner wants in return.'
+      detail: 'The prototype loads seeded listings through the in-app mock API; the examples do not represent a live marketplace.'
+      image: './minka/app-home.webp'
+      imagePresentation: phone
+      imageAlt: 'Android home screen with nearby listings in Miraflores'
+    - title: Narrow down the search
+      description: 'Browse a category and compare matching listings in a single list.'
+      detail: 'Search and filters use the mock-backed listings data layer, with a local Room cache.'
+      image: './minka/app-search.webp'
+      imagePresentation: phone
+      imageAlt: 'Android search results filtered to household items'
+    - title: Get the details before exchanging
+      description: 'A listing shows the item, its condition, neighbourhood and what the owner wants in return.'
+      detail: 'The detail screen links to the owner profile. Exchange proposals and chat remain planned.'
+      image: './minka/app-detail.webp'
+      imagePresentation: phone
+      imageAlt: 'Android listing detail for a ceramic dish set'
+  milestones:
+    - { day: 'NOV 2025', title: Team project begins, description: 'The original repository starts with a course team.' }
+    - { day: 'OCT 2026', title: A new direction, description: 'The web prototype is removed from the landing repository and the Android project begins.' }
+    - { day: 'NOV 2026', title: Onboarding and listings, description: 'Sign-in, profile setup, publishing, search and listing details are built over the mock API.' }
+    - { day: '23 NOV 2026', title: Android 0.1.0, description: 'The release closes the listings phase; exchange and chat remain ahead.' }
+  closing:
+    - { title: Where it stands, text: 'The app is a local prototype, not a network for real exchanges yet. The website describes the broader intended product.' }
+decisions:
+  - choice: Keep the API inside the app for now
+    rejected: 'A deployed backend'
+    subtitle: 'Ktor · mock engine'
+    because: 'The app can exercise API-shaped responses and persist mock state without a server.'
+    cost: 'Accounts and listings remain on each device; there is no shared marketplace.'
+  - choice: Build the app natively
+    rejected: 'Continue the web prototype as the product'
+    subtitle: 'Android · Compose'
+    because: 'The reason for choosing native Android over the earlier web prototype is not recorded. [Owner: confirm]'
+    cost: 'The previous web prototype was removed; the native version is Android-only.'
+  - choice: Ship the light theme first
+    rejected: 'Maintain a dark theme alongside it'
+    subtitle: 'Material 3 · light theme'
+    because: 'The app plan records the dark theme being dropped because its cost outweighed its value.'
+    cost: 'The app currently offers no dark theme.'
 ---
+
+### Restoring navigation
+
+The navigation back stack did not survive process death. I fixed its restoration before closing the onboarding phase.
+
+### A prototype is not a marketplace
+
+The landing describes the complete exchange journey, but the Android plan still lists exchanges and chat as a future phase. The mock API keeps data on the device. A real shared backend and those remaining flows are needed before neighbours can actually exchange through it.
+
+### The web prototype was replaced
+
+The project previously included a web prototype. In October 2026 I removed it from the landing repository and focused on the native app instead. That meant leaving the earlier web implementation behind.
