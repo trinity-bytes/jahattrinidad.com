@@ -19,6 +19,8 @@ const projects = defineCollection({
       homeFeatured: z.boolean().default(true), // Garden appears in Home Values, not Home Work
       coverImage: image().optional(), // validated at build; missing file = Zod error
       coverImageAlt: z.string().optional(),
+      previewImage: image().optional(),
+      previewImageAlt: z.string().optional(),
       tags: z.array(z.string()).default([]), // what KIND of thing it is
       stack: z.array(z.string()), // what it was BUILT WITH
       tier: z.enum(['case-study', 'project', 'experiment']),

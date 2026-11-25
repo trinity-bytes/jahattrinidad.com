@@ -3,13 +3,15 @@ title: trama
 description: Um projeto de matemática discreta que desenha uma grade curricular como um grafo de pré-requisitos para aplicar a teoria dos grafos.
 lang: pt
 translationKey: trama
-tier: experiment
+tier: project
 publishDate: 2026-11-05
-kind: ./trama --demo
+kind: Visualização · Individual
 team: { size: 1, solo: true }
 coverImage: '../trama/cover.png'
 coverImageAlt: 'Grade curricular do trama com disciplinas por semestre'
 stack: [JavaScript, Graph theory]
 demoUrl: 'https://trama.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/trama'
+insideStack: "JavaScript sem frameworks com Cytoscape.js e Dagre."
+insideDecision: "O algoritmo de Kahn ordena as disciplinas com seus pré-requisitos primeiro. A visão de Hasse remove arestas já implícitas em caminhos mais longos, facilitando a leitura das relações restantes."
 ---

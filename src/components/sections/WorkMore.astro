@@ -3,8 +3,8 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import type { Dictionary } from '../../lib/i18n';
 import Backgrounds from './Backgrounds.astro';
-interface Props { projects: CollectionEntry<'projects'>[]; experiments: CollectionEntry<'projects'>[]; lang: string; strings: Dictionary['work'] }
-const { projects, experiments, strings: t } = Astro.props;
+interface Props { projects: CollectionEntry<'projects'>[]; experiments: CollectionEntry<'projects'>[]; lang: string; strings: Dictionary['work']; insideLabels: Dictionary['home']['inside']['work']['rowLabels'] }
+const { projects, experiments, strings: t, insideLabels } = Astro.props;
 ---
 <section class="more">
   <Backgrounds variant="experience" next="none" />
@@ -26,7 +26,11 @@ const { projects, experiments, strings: t } = Astro.props;
               <div class="body">
                 {data.kind && <p class="marker">{data.kind}</p>}
                 <h3>{data.title}</h3>
-                <p>{data.description}</p>
+                <p data-show="outside">{data.description}</p>
+                <dl data-show="inside" class="inside-facts">
+                  <div><dt>{insideLabels.stack}</dt><dd>{data.insideStack ?? data.stack.join(', ')}</dd></div>
+                  {data.insideDecision && <div><dt>{insideLabels.decision}</dt><dd>{data.insideDecision}</dd></div>}
+                </dl>
                 <div class="links">
                   {data.demoUrl && <a href={data.demoUrl}>{data.demoLabel ?? t.live} →</a>}
                   {data.repoUrl && <a href={data.repoUrl}>{t.code} →</a>}
@@ -44,10 +48,12 @@ const { projects, experiments, strings: t } = Astro.props;
         <div class="grid">
           {experiments.map(({ data }) => (
             <article class="experiment">
+              {data.previewImage && <div class="preview"><Image src={data.previewImage} alt={data.previewImageAlt ?? ''} /></div>}
               <p class="experiment-meta">$ {data.kind ?? data.stack.join(' · ')}</p>
               <h3>{data.title}</h3>
               <p>{data.description}</p>
               <p class="experiment-meta">{data.stack.join(' · ')}</p>
+              {data.demoUrl && <a href={data.demoUrl}>{t.live} →</a>}
               {data.repoUrl && <a href={data.repoUrl}>{t.code} →</a>}
             </article>
           ))}
@@ -127,14 +133,36 @@ const { projects, experiments, strings: t } = Astro.props;
   .experiments {
     margin-top: 7rem;
   }
+  .inside-facts { margin: 1rem 0; }
+  .inside-facts div + div { margin-top: .75rem; }
+  .inside-facts dt { font: 500 12px var(--font-mono); color: var(--color-text-muted); }
+  .inside-facts dd { margin: .25rem 0 0; }
   .experiment {
+    position: relative;
     background: var(--green-950);
     color: var(--cream);
     padding: 32px;
     border-radius: 16px;
   }
+  .experiment:focus-within { z-index: 2; }
+  .preview {
+    position: absolute; bottom: calc(100% - 1rem); left: 0; width: min(100%, 360px);
+    border-radius: 12px; overflow: hidden; box-shadow: 0 12px 32px rgb(0 0 0 / .3);
+    opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(8px);
+    transition: opacity .18s ease, transform .18s ease, visibility .18s;
+  }
+  .preview :global(img) { display: block; width: 100%; height: auto; }
+  @media (hover: hover) {
+    .experiment:hover { z-index: 2; }
+    .experiment:hover .preview, .experiment:focus-within .preview { opacity: 1; visibility: visible; transform: none; }
+  }
+  @media (hover: none) {
+    .experiment:has(:focus-visible) .preview { opacity: 1; visibility: visible; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .preview { transition: none; transform: none; } }
   .experiment a {
     color: var(--green-300);
+    margin-right: 1rem;
   }
   .experiment-meta {
     font: 12px/1.5 var(--font-mono);
