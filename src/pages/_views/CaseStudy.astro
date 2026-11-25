@@ -6,6 +6,7 @@ import PageFooter from '../../components/sections/PageFooter.astro';
 import Icon from '../../components/ui/Icon.astro';
 import CaseStudy from '../../components/sections/CaseStudy.astro';
 import NextCaseStudy from '../../components/sections/NextCaseStudy.astro';
+import ProjectPage from '../../components/sections/ProjectPage.astro';
 import { collectionPath, entryPath, ogImagePath, listLinks, listProjects, entrySlug, getTranslationGroup, renderEntry, type Locale, type Project } from '../../lib/content';
 import { buildSeo } from '../../lib/seo';
 import { getDictionary } from '../../lib/i18n';
@@ -45,18 +46,22 @@ const seo = buildSeo({
 });
 
 const { Content } = await renderEntry(entry);
-const nextCase = (await listProjects({ lang })).find(project => project.id !== entry.id && project.data.tier === 'case-study');
+const all = await listProjects({ lang });
+const nextCase = all.find(project => project.id !== entry.id && project.data.tier === 'case-study');
+// Project pages link to the next project page in list order, wrapping around.
+const projectPages = all.filter(project => project.data.tier === 'project' && project.data.page);
+const nextProject = projectPages.length > 1 ? projectPages[(projectPages.findIndex(project => project.id === entry.id) + 1) % projectPages.length] : undefined;
 
 const { data } = entry;
-const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
+const eyebrow = [data.page ? t.projectPage.eyebrow : t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
 ---
 
 <Base lang={lang} seo={seo} contactOnPage profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
   <PageHero variant="case">
     <a class="back" href={collectionPath('projects', lang)}><span aria-hidden="true">←</span>{t.caseStudy.allWork}</a>
     <p class="eyebrow">{eyebrow}</p>
-    <h1 class="title">{data.title}</h1>
-    <p class="sub">{data.heroDescription ?? data.description}</p>
+    <h1 class="title">{data.page?.headline ?? data.title}</h1>
+    <p class="sub">{data.page?.sub ?? data.heroDescription ?? data.description}</p>
     {(data.demoUrl || data.repoUrl) && (
       <div class="actions">
         {data.demoUrl && <a class="button primary" data-magnetic href={data.demoUrl} target="_blank" rel="noopener noreferrer">{data.demoLabel ?? t.caseStudy.openProject}<Icon name="arrow-up-right" size={18} /><span class="visually-hidden"> {newTab}</span></a>}
@@ -64,7 +69,7 @@ const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
       </div>
     )}
   </PageHero>
-  {data.caseStudy ? <CaseStudy data={data.caseStudy} decisions={data.decisions} cover={data.coverImage} coverAlt={data.coverImageAlt} website={data.demoUrl} strings={t.caseStudy}><Content /></CaseStudy> : <div class="container">
+  {data.page ? <ProjectPage page={data.page} decisions={data.decisions} cover={data.coverImage} coverAlt={data.coverImageAlt} website={data.demoUrl} strings={t} /> : data.caseStudy ? <CaseStudy data={data.caseStudy} decisions={data.decisions} cover={data.coverImage} coverAlt={data.coverImageAlt} website={data.demoUrl} strings={t.caseStudy}><Content /></CaseStudy> : <div class="container">
   <article>
     {entry.data.role && <p><strong>{t.project.role}:</strong> {entry.data.role}</p>}
     {entry.data.timeframe && <p><strong>{t.project.timeframe}:</strong> {entry.data.timeframe}</p>}
@@ -74,6 +79,7 @@ const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
     <Content />
   </article>
   </div>}
+  {data.page && nextProject && <NextCaseStudy marker={t.projectPage.nextProject} project={nextProject} href={entryPath('projects', lang, entrySlug(nextProject))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
   {data.caseStudy && nextCase && <NextCaseStudy project={nextCase} href={entryPath('projects', lang, entrySlug(nextCase))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
   <PageContact lang={lang} links={links} marker={t.caseStudy.contactMarker} />
   <PageFooter slot="footer" lang={lang} links={links} contactOnPage compact />

@@ -137,6 +137,10 @@ export interface Dictionary {
     code: string;
     play: string;
     moreExperiments: string;
+    /** Experiment stats from the GitHub API (screen-reader text; the tile shows ★ and ⑂ glyphs). */
+    stars: (count: number) => string;
+    forks: (count: number) => string;
+    updated: (date: string) => string;
   };
   caseStudy: {
     allWork: string;
@@ -229,6 +233,15 @@ export interface Dictionary {
     youtube: string;
     rss: string;
     copyright: (year: number) => string;
+  };
+  /** Project page v1 (Figma `2443:12`): the lighter technical page of a `tier: project` entry. */
+  projectPage: {
+    eyebrow: string;
+    howMarker: string;
+    decisionMarker: string;
+    nextProject: string;
+    /** Before the rejected alternative under a decision: "instead of nearest neighbour or 2-opt". */
+    insteadOf: string;
   };
   project: {
     role: string;
@@ -445,6 +458,9 @@ export const en: Dictionary = {
     code: 'Code',
     play: 'Play',
     moreExperiments: 'More experiments on GitHub',
+    stars: (count) => (count === 1 ? '1 star' : `${count} stars`),
+    forks: (count) => (count === 1 ? '1 fork' : `${count} forks`),
+    updated: (date) => `updated ${date}`,
   },
   // Case study board 2298:2; project-specific prose belongs in content entries.
   caseStudy: {
@@ -545,6 +561,13 @@ export const en: Dictionary = {
     youtube: 'YouTube',
     rss: 'RSS',
     copyright: (year) => `© ${year} Jahat Trinidad`,
+  },
+  projectPage: {
+    eyebrow: 'PROJECT',
+    howMarker: '02 — HOW IT WORKS',
+    decisionMarker: '03 — THE KEY DECISION',
+    nextProject: 'NEXT PROJECT',
+    insteadOf: 'instead of',
   },
   project: {
     role: 'Role',
