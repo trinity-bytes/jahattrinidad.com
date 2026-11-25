@@ -602,3 +602,14 @@ Board **`2356:86`** on "Portfolio" (`2029:2`), x 13626, 390 × 940. It is the li
 - `jahattrinidad.com` in white mono on the hill closes the page.
 
 Owner approved the mobile menu, the chat view and `/links/` (all breakpoints) on 2026-11-18: "me encanta. aprobado". The profile photo also replaces the "JT" placeholder in the post author card and the chat header.
+
+## Project page v1 and experiments preview v2 (proposals, 2026-11-25)
+
+Owner, 2026-11-25: "no, es solo para la home. hay que cambiar el approach para mostrar la parte tecnica. la seccion de proyectos es el momento apra msotrar la parte tecnica sin disiular. pense qu eharaias una vista simplificada por cada proyecto, menos detllada que un caso de estudio" and "me gustaria rediseñar como se muestra el preview de github en los experimentos, que ahora se ve cutre". The lens stays on Home only (code reverted in `eacea63`).
+
+Both boards are on "Work — all projects" (`2065:2`), right of the page covers proposal:
+
+- **Project page v1 · TourBench** `2443:12` (x 11800). A lighter sibling of the case study for `tier: project` entries, technical without a lens. Sections: hero `2443:13` (clone of the Work hero, display word hidden per the display-word rule; back link + type line, a claim headline, a plain sub, "Open the app" and "Code" buttons); overview (browser-framed capture + "At a glance": problem, method, scale, built with, my part, status); "How it works" (three numbered steps, each with a dark mono formula card in the experiment-tile style, plus a growth table "Why it stops at 11 points"); "The key decision" (one row of the case-study decisions table: choice + rejected subtitle, why, what it cost) `2443:123`; next project card + "All work" `2443:143`; Contact and footer clones (`2443:150`, `2443:188`). Facts come from the TourBench README and the live app; one [Draft] note on why the app stops at 11.
+- **Experiments preview v2** `2442:12` (x 10100). The GitHub social card repeated the tile in a white box outside it. The "peek" stays inside the tile: on hover or focus the text column narrows and a real capture from the repo's README slides in from the right, with a mono caption, while the chips give way to `gh`-style stats (stars, forks, language, last update). All tiles share one height (300) so the states do not shift the grid. Examples: Lock Keys OSD (its README OSD capture) and Coursera Clone Web Services (its verifier screenshot); Profile README and Forest Hero shown in the default state. Notes on the board cover data (stats from the GitHub API at build time, captures committed), motion (200 ms, reduced motion instant), touch (no peek) and Forest Hero's missing capture.
+
+Pending owner approval; no UI code until then.
