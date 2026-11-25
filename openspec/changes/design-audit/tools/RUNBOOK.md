@@ -7,7 +7,7 @@ Figma file `gq6glEp9QrPOnEyYG9dldh`, page `As built · Work & projects` = `2446:
 Write only to that page. Do not edit the repo. Do not start or stop the dev server (http://127.0.0.1:4321).
 Before any Figma call: load skill `figma-use` (`skill://figma/figma-use/SKILL.md`) and call `create_session`.
 
-## Status (2026-11-25)
+## Status (2026-11-25, first session — superseded: current state per board is in `../tasks.md` and `../reports/work.md` "Checks")
 
 | Key | Board | Node | Images uploaded | Checked |
 |---|---|---|---|---|
@@ -23,6 +23,34 @@ Before any Figma call: load skill `figma-use` (`skill://figma/figma-use/SKILL.md
 | g390 | Inspiration Garden 390 | 2471:2335 | NO | NO |
 
 All 10 boards exist, named and captioned. The old WIP clones (2446:*, 2449:*) were deleted.
+
+## Tool fixes 2026-11-25
+
+| Problem | Fix |
+|---|---|
+| CSS `monospace` became Inter | `builder.js` maps any other monospace family to Cousine; italic runs use the Italic style (`extract.cjs` records `it`) |
+| Input placeholder with `text-overflow: ellipsis` came out in full | `extract.cjs` truncates it with "…" to the input's content width (measured on a canvas; textareas are left alone) |
+| `<img>` radius and shadow were lost | `extract.cjs` records `r` and `sh` for images that are not clipped; `builder.js` applies them. A radius or shadow on a wrapper, or on a clipped image, is still not applied to the image node |
+| 1 px light seam under a section with a fractional y | `builder.js` places each plate on the whole pixel it was cut from (`r.y = pl.y + Math.round(g.y) - g.y`) |
+| `adiff.cjs` window too small for environment drift | Offsets −4…+12 px |
+
+The italic flag, placeholder and image radius/shadow fixes were checked on a new extraction of TourBench 390 and Garden 390 (data only). The plate fix and the image radius were used to build Home Outside 768 and 390; Home has no CSS `monospace` text, so the Cousine mapping has not run in a Figma build yet. The Work boards were patched by hand and were not rebuilt.
+
+Still manual:
+
+- **CSS `::before` / `::after` text** is not extracted: `extract.cjs` walks DOM nodes only, and the glyph is not in the plate when its colour follows the element's text fill. Compare side by side and add it by hand (Home 768: seven `.organisation::before` "·" separators, cloned from the organisation text node at the pseudo-element's x).
+- **Name outline over the portrait** (Home hero, both lenses): it is drawn above the portrait on the site and ends up under it on the board. Replace the portrait fill with the site's pixels masked to the portrait alpha (`site.png` crop at the image box + the alpha of `i0.png`; transparent below the hero).
+- **Confirm an image re-upload**: one `up2.sh` replacement printed `done` but the node kept its old fill. Compare the `imageHash` in the response (or the node's fill hash) with `sha1sum <file>`.
+- **Blank images in `site.png`**: it happened once (Garden 768). Capture a second reference with a second screenshot pass before blaming the board.
+
+## Home Outside boards (page `As built · Home Outside` `2449:12`, built 2026-11-25)
+
+`node extract.cjs home <width> ho<width>`, `PAGE_ID = '2449:12'`, `BOARD_Y = 100`.
+
+| Key | Board | Node (caption) | Source | x | Check (`diff.cjs`) |
+|---|---|---|---|---|---|
+| ho768 | As built · Home v3.5 OUTSIDE · TABLET 768 · 768 | 2487:61 (2487:348) | 2211:86 | 6900 | 2.41 %, worst band 5.1 % |
+| ho390 | As built · Home v3.5 OUTSIDE · MOBILE 390 · 390 | 2487:349 (2487:631) | 2210:86 | 7770 | 4.01 %, worst band 7.0 % (provisional 390 rule) |
 
 ## Remaining work
 

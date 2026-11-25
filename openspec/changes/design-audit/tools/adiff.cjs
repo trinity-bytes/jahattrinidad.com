@@ -1,0 +1,5 @@
+const sharp=require(require.resolve('sharp',{paths:[process.env.REPO_ROOT||process.cwd(),__dirname+'/../../../..']}));
+(async()=>{const [f,s]=process.argv.slice(2);const A=await sharp(f).removeAlpha().raw().toBuffer({resolveWithObject:true}),B=await sharp(s).removeAlpha().raw().toBuffer({resolveWithObject:true});const w=A.info.width,H=A.info.height;let n=0,c=0;const bands=[];
+for(let y0=0;y0<H;y0+=500){let bn=0,bc=0;for(let y=y0;y<Math.min(H,y0+500);y++){let best=1e18,bo=0;for(let o=-4;o<=12;o++){if(y+o<0||y+o>=B.info.height)continue;let d=0;for(let x=0;x<w;x+=4){const i=(y*w+x)*3,j=((y+o)*w+x)*3;d+=Math.abs(A.data[i]-B.data[j])+Math.abs(A.data[i+1]-B.data[j+1])+Math.abs(A.data[i+2]-B.data[j+2])}if(d<best){best=d;bo=o}}
+for(let x=0;x<w;x++){const i=(y*w+x)*3,j=((y+bo)*w+x)*3;if(Math.abs(A.data[i]-B.data[j])+Math.abs(A.data[i+1]-B.data[j+1])+Math.abs(A.data[i+2]-B.data[j+2])>60)bn++;bc++}}n+=bn;c+=bc;bands.push((100*bn/bc).toFixed(1))}
+console.log('aligned diff%',(100*n/c).toFixed(2),'bands',bands.join(' '))})();
