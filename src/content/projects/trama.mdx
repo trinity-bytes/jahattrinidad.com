@@ -3,13 +3,46 @@ title: trama
 description: A discrete mathematics course project that draws a curriculum as a prerequisite graph, to put graph theory to work.
 lang: en
 translationKey: trama
-tier: experiment
+tier: project
 publishDate: 2026-11-05
-kind: ./trama --demo
+kind: Visualization · Solo
 team: { size: 1, solo: true }
 coverImage: './trama/cover.png'
 coverImageAlt: 'Trama curriculum grid with courses by semester'
 stack: [JavaScript, Graph theory]
 demoUrl: 'https://trama.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/trama'
+insideStack: "Vanilla JavaScript with Cytoscape.js and Dagre."
+insideDecision: "Kahn’s algorithm orders courses with prerequisites first. The Hasse view removes edges implied by longer paths, making the remaining relationships easier to follow."
+page:
+  headline: "See a curriculum as a graph, not a list."
+  sub: "Trama connects courses to their prerequisites and shows the paths between them."
+  glance:
+    - { label: "Problem", value: "Understand dependencies across a curriculum" }
+    - { label: "Method", value: "Directed graph, topological ordering and transitive reduction" }
+    - { label: "Views", value: "Semester grid, graph and analysis" }
+    - { label: "Built with", value: "JavaScript, Cytoscape.js and Dagre" }
+    - { label: "My part", value: "The whole project, on my own" }
+  how:
+    headline: "From prerequisites to a readable plan."
+    steps:
+      - title: "Model the links"
+        text: "Each edge points from a prerequisite to the course that requires it. The curriculum view groups courses into semester lanes."
+        formula: "prerequisite → course"
+      - title: "Find an order"
+        text: "Kahn’s algorithm repeatedly takes courses with no remaining prerequisites. If courses remain after the queue is exhausted, the graph contains a cycle."
+        formula: "in-degree = 0 → queue"
+      - title: "Reduce the graph"
+        text: "The Hasse view hides an edge when another path already implies the same dependency. The full graph remains available for inspection."
+        formula: "A → B → C  ⇒  A → C is redundant"
+  decisionHeadline: "Order courses from their prerequisites."
+decisions:
+  - choice: "Sort the courses with Kahn’s algorithm"
+    rejected: "The earlier depth-first sort, which relied on reversing its result"
+    because: "Kahn follows the direction from prerequisite to course, and the same method detects cycles."
+    cost: "It has to build the in-degree counts and adjacency lists before sorting."
+  - choice: "Derive every view from one set of prerequisite links"
+    rejected: "Let each screen manage its own copy of the data"
+    because: "Analysis and exports could go stale after the curriculum was regenerated."
+    cost: "Regeneration and every view have to go through the shared state."
 ---

@@ -12,4 +12,33 @@ coverImageAlt: 'Espacio de trabajo de Grayscale Studio con la imagen original, e
 stack: [JavaScript, Web Components, OpenCV.js, Chart.js]
 demoUrl: 'https://grayscale.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/grayscale-studio'
+insideStack: "Web Components en JavaScript, OpenCV.js y Chart.js."
+insideDecision: "La ecualización usa la distribución acumulada para transformar los niveles de intensidad; la app muestra el cálculo."
+page:
+  headline: "Mira cómo cambia una imagen en grises y por qué."
+  sub: "Un estudio en el navegador compara ecualización de histogramas y expansión de contraste, mostrando el cálculo."
+  glance:
+    - { label: "Problema", value: "Explorar el contraste en imágenes en escala de grises" }
+    - { label: "Métodos", value: "Ecualización de histograma y expansión min–max" }
+    - { label: "Motor", value: "OpenCV.js y Chart.js en el navegador" }
+    - { label: "Contexto", value: "Proyecto de procesamiento de imágenes, equipo de tres" }
+    - { label: "Mi aporte", value: "Dirigí el proyecto y delegué algunas partes a mis compañeros" }
+  how:
+    headline: "Dos formas de transformar intensidades."
+    steps:
+      - title: "Leer el histograma"
+        text: "OpenCV.js comprueba que la imagen esté en escala de grises. El histograma cuenta los píxeles de cada intensidad y Chart.js lo muestra para su análisis."
+        formula: "r ∈ [0, 255]"
+      - title: "Ecualizar con la CDF"
+        text: "La distribución acumulada asigna una intensidad de salida a cada intensidad de entrada. CDFmin es el primer valor acumulado no nulo; la aplicación muestra la tabla y el cálculo. rint redondea al entero más cercano y, en empate, al par, como OpenCV."
+        formula: "s = rint(255 × (CDF(r) − CDFmin) / (1 − CDFmin))"
+      - title: "Expandir el rango"
+        text: "La expansión min–max transforma linealmente el mínimo y el máximo observados para aprovechar el rango disponible."
+        formula: "s = rint(255 × (r − min) / (max − min))"
+  decisionHeadline: "Que la explicación coincida con los píxeles."
+decisions:
+  - choice: "Mantener las transformaciones de OpenCV y ajustar las fórmulas a ellas"
+    rejected: "Procesar los píxeles con una tabla de conversión compartida con la explicación"
+    because: "La compilación de OpenCV.js no exporta cv.LUT, y un bucle de píxeles en JavaScript sin medir no era un reemplazo seguro."
+    cost: "La explicación debe reproducir el redondeo float32 y al par del motor, comprobado contra el motor real."
 ---

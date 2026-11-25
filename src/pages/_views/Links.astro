@@ -18,6 +18,7 @@ const { lang } = Astro.props;
 // S7: posts are English-only for now; every locale lists the English entries.
 const postsLang: Locale = 'en';
 const t = getDictionary(lang);
+const newTab = t.common.newTab;
 const copy = t.links;
 
 const site = Astro.site;
@@ -70,7 +71,7 @@ const cards = [
           {cards.map((card) => (
             <li><a class="card" href={card.href}><span class="text"><span class="title">{card.title}</span><span class="sub">{card.sub}</span></span><Icon name="arrow-right" size={20} /></a></li>
           ))}
-          <li><a class="card" href={cvPath(lang)} target="_blank" rel="noopener"><span class="text"><span class="title">{copy.cvTitle}</span><span class="sub">{copy.cvSub}</span></span><Icon name="arrow-up-right" size={20} /></a></li>
+          <li><a class="card" href={cvPath(lang)} target="_blank" rel="noopener noreferrer"><span class="text"><span class="title">{copy.cvTitle}</span><span class="sub">{copy.cvSub}</span></span><Icon name="arrow-up-right" size={20} /><span class="visually-hidden"> {newTab}</span></a></li>
           <li><a class="card filled" href={`${localizedPath(lang, '/')}#contact`}><span class="text"><span class="title">{copy.writeTitle}</span><span class="sub">{copy.writeSub}</span></span><Icon name="arrow-right" size={20} /></a></li>
         </ul>
       </nav>
@@ -78,7 +79,7 @@ const cards = [
         <h2 id="links-elsewhere">{copy.elsewhere}</h2>
         <ul>
           {links.map((link) => (
-            <li><a class="logo" href={link.url} rel="me noopener" aria-label={link.label}><Icon name={link.icon} size={20} /></a></li>
+            <li><a class="logo" href={link.url} target="_blank" rel="me noopener noreferrer" aria-label={`${link.label} ${newTab}`}><Icon name={link.icon} size={20} /></a></li>
           ))}
         </ul>
       </section>

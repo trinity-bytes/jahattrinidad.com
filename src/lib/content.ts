@@ -133,7 +133,8 @@ export async function getPost(slug: string, lang: Locale): Promise<Post | undefi
  * for them would be an orphan in the sitemap.
  */
 export async function projectRoutes(lang: Locale): Promise<EntryRoute<Project>[]> {
-  const entries = (await listProjects({ lang })).filter((entry) => entry.data.tier === 'case-study');
+  // Case studies, plus the projects that have a project page (`page`); the rest are cards only.
+  const entries = (await listProjects({ lang })).filter((entry) => entry.data.tier === 'case-study' || (entry.data.tier === 'project' && entry.data.page));
   return entries.map((entry) => ({ params: { slug: entrySlug(entry) }, props: { entry } }));
 }
 

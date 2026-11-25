@@ -3,13 +3,46 @@ title: trama
 description: Un proyecto de matemáticas discretas que dibuja un plan de estudios como un grafo de prerrequisitos para poner en práctica la teoría de grafos.
 lang: es
 translationKey: trama
-tier: experiment
+tier: project
 publishDate: 2026-11-05
-kind: ./trama --demo
+kind: Visualización · Individual
 team: { size: 1, solo: true }
 coverImage: '../trama/cover.png'
 coverImageAlt: 'Malla curricular de trama con cursos por semestre'
 stack: [JavaScript, Graph theory]
 demoUrl: 'https://trama.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/trama'
+insideStack: "JavaScript sin frameworks con Cytoscape.js y Dagre."
+insideDecision: "El algoritmo de Kahn ordena los cursos con sus prerrequisitos primero. La vista de Hasse elimina aristas que otras rutas ya implican, para facilitar la lectura de las relaciones restantes."
+page:
+  headline: "Mira una malla como un grafo, no como una lista."
+  sub: "Trama conecta cursos con sus requisitos y muestra los caminos entre ellos."
+  glance:
+    - { label: "Problema", value: "Entender dependencias en una malla curricular" }
+    - { label: "Método", value: "Grafo dirigido, orden topológico y reducción transitiva" }
+    - { label: "Vistas", value: "Malla por semestre, grafo y análisis" }
+    - { label: "Tecnología", value: "JavaScript, Cytoscape.js y Dagre" }
+    - { label: "Mi aporte", value: "Todo el proyecto, por mi cuenta" }
+  how:
+    headline: "De los requisitos a un plan legible."
+    steps:
+      - title: "Modelar las relaciones"
+        text: "Cada arista va de un requisito al curso que lo necesita. La malla agrupa los cursos en columnas por semestre."
+        formula: "prerequisite → course"
+      - title: "Encontrar un orden"
+        text: "El algoritmo de Kahn toma sucesivamente cursos sin requisitos pendientes. Si quedan cursos cuando se agota la cola, el grafo contiene un ciclo."
+        formula: "in-degree = 0 → queue"
+      - title: "Reducir el grafo"
+        text: "La vista de Hasse oculta una arista cuando otro camino ya implica la misma dependencia. El grafo completo sigue disponible para consultarlo."
+        formula: "A → B → C  ⇒  A → C is redundant"
+  decisionHeadline: "Ordenar los cursos según sus prerrequisitos."
+decisions:
+  - choice: "Ordenar los cursos con el algoritmo de Kahn"
+    rejected: "El orden en profundidad anterior, que dependía de invertir su resultado"
+    because: "Kahn sigue la dirección de prerrequisito a curso, y el mismo método detecta ciclos."
+    cost: "Antes de ordenar hay que construir los grados de entrada y las listas de adyacencia."
+  - choice: "Derivar todas las vistas de un único conjunto de relaciones"
+    rejected: "Dejar que cada pantalla gestione su propia copia de los datos"
+    because: "El análisis y las exportaciones podían quedar desactualizados al regenerar el plan."
+    cost: "La regeneración y todas las vistas deben pasar por el estado compartido."
 ---

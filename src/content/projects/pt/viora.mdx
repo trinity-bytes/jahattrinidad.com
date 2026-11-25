@@ -12,21 +12,101 @@ timeframe: '2026'
 coverImage: '../viora/cover.png'
 coverImageAlt: 'Página do Viora: "Anticipa la próxima cosecha" sobre uma ilustração de um olival'
 problem: 'As safras de azeitona alternam entre anos bons e ruins, e os produtores planejam cada temporada sem dados.'
-whatItDoes: 'Uma plataforma web de planejamento, um aplicativo para produtores no campo e outro para cooperativas, todos com os mesmos dados.'
+whatItDoes: 'Uma plataforma web de planejamento e aplicativos móveis para produtores no campo e cooperativas.'
 myPart: 'Full stack em uma equipe de cinco: o aplicativo web em Vue, um backend Spring Boot com assistente de IA, liquidações de colheita offline no Android e alertas para cooperativas em Flutter.'
 stack: [Vue, Angular, Spring Boot, ASP.NET Core, Spring AI, PostgreSQL, Kotlin, Jetpack Compose, Flutter]
-insideStack: 'Spring Boot + Angular e ASP.NET Core + Vue na web, um aplicativo Kotlin e outro Flutter, tudo em uma API.'
+insideStack: 'Uma plataforma web anterior em Angular e Vue, seguida por aplicativos Kotlin e Flutter com uma API Spring Boot.'
 insideDecision: "Para a API dos aplicativos móveis escolhemos Spring Boot em vez de ASP.NET Core. A equipe já o conhecia, e Spring Data, Spring Security e Spring AI forneceram armazenamento, login e o assistente sem criá-los do zero."
 demoUrl: 'https://viora-landing-page-sable.vercel.app/'
 repoUrl: 'https://github.com/upc-pre-1acc0238-2620-4951-arcadiadevs/viora-platform'
+heroDescription: 'Uma equipe universitária criou ferramentas para olivicultores e cooperativas. Trabalhei na web, na API e nos aplicativos móveis.'
+caseStudy:
+  headlines:
+    problem: 'Planejar uma safra de azeitonas é difícil sem o registro da anterior.'
+    features: 'Trabalho em campo e planejamento cooperativo, conectados por dados.'
+    decisions: 'Quatro decisões e o custo de cada uma.'
+    mistakes: 'Os testes em campo revelaram as lacunas.'
+    growth: 'Do primeiro aplicativo web à plataforma móvel.'
+  glance:
+    - { label: Equipe, value: 'Cinco pessoas, projeto universitário' }
+    - { label: Meu papel, value: 'Desenvolvimento web, backend e mobile' }
+    - { label: Público, value: 'Olivicultores e gestores de cooperativas do sul do Peru' }
+    - { label: Tecnologias, value: 'Vue, Angular, Spring Boot, ASP.NET Core, PostgreSQL, Kotlin e Flutter' }
+    - { label: Status, value: 'Página na Vercel e API no Render, ambas no ar; versões Android e Flutter chegaram aos testadores pelo Firebase App Distribution.' }
+  problem:
+    - 'A equipe entrevistou três produtores e três gestores técnicos de cooperativas. Os produtores dependiam da observação em campo e enfrentavam conexão instável; os gestores precisavam planejar o recebimento entre vários talhões.'
+    - 'Um gestor descreveu a projeção simples como “um ano sim, outro não”. A pesquisa mostrou que a orientação precisa chegar antes do fim da janela biológica útil e que os registros devem funcionar sem sinal.'
+  requirements: 'Registrar talhões e colheitas offline, explicar as orientações da temporada e oferecer aos gestores uma visão dos talhões e riscos de recebimento.'
+  constraint: 'No campo, não é possível contar com conexão. O fluxo de colheita no Android precisa guardar o registro até poder sincronizá-lo.'
+  features:
+    - title: 'Acompanhar a temporada'
+      description: 'O aplicativo do produtor reúne condições das parcelas, orientações para a temporada e alertas.'
+      detail: 'A equipe construiu a experiência Android do produtor e a API compartilhada. Contribuí para a API e o trabalho no aplicativo do produtor, incluindo o fluxo de colheita offline.'
+      image: '../viora/season.webp'
+      imagePresentation: phone
+      imageAlt: 'Aplicativo do produtor com resumo diário e orientação para a temporada'
+    - title: 'Encerrar uma colheita em campo'
+      description: 'Um produtor pode registrar o fechamento da colheita offline e sincronizá-lo depois.'
+      detail: 'Implementei a fila de registros pendentes no Android com Room e WorkManager, incluindo a correção de um registro antes da sincronização.'
+      image: '../viora/harvest.webp'
+      imagePresentation: phone
+      imageAlt: 'Formulário de colheita com azeitonas verdes, pretas e de descarte'
+    - title: 'Uma visão para as cooperativas'
+      description: 'Gestores podem acompanhar alertas e abrir o dossiê da parcela de um membro.'
+      detail: 'Construí os alertas para gestores e o dossiê provisório de parcela em Flutter, com trabalho correspondente na área territorial da API.'
+      image: '../viora/dossier.webp'
+      imagePresentation: phone
+      imageAlt: 'Aplicativo do gestor com dossiê provisório da parcela e download em PDF'
+    - title: 'Uma API, dois apps, ambos offline'
+      description: 'Produtores usam um app Android nativo e gestores um app Flutter. Os dois mantêm um banco local, então o trabalho de campo sobrevive sem sinal, e ambos sincronizam com uma única API Spring Boot.'
+      detail: 'Diagrama de contêineres C4 do relatório da equipe. O Mapbox desenha os talhões, o Open-Meteo fornece o clima e o Mercado Pago cuida das assinaturas. O diagrama é de um colega; eu trabalhei na API, na fila offline do Android e nas telas do gestor em Flutter.'
+      image: '../viora/architecture.webp'
+      imagePresentation: screenshot
+      imageAlt: 'Diagrama de contêineres C4: página, apps Android e Flutter com bancos locais, API Spring Boot com PostgreSQL e serviços externos'
+    - title: 'Conferir o talhão antes de salvar'
+      description: 'Após a validação, o app compara a área traçada com a declarada e pede confirmação quando elas diferem.'
+      detail: 'Implementei a comparação de áreas; a equipe identificou o problema nas entrevistas e na avaliação heurística.'
+      image: '../viora/area-check.webp'
+      imagePresentation: phone
+      imageAlt: 'Aviso do aplicativo quando a área traçada difere da área declarada'
+  milestones:
+    - { day: 'MAI–JUL 2026', title: 'A plataforma web', description: 'O primeiro curso construiu o Viora na web, em Angular e depois em Vue, com backends em ASP.NET Core e Spring Boot. Trabalhei em alertas, layout e na integração com o backend.' }
+    - { day: '26 SET 2026', title: 'Página publicada', description: 'A equipe publicou a página durante o Sprint 1.' }
+    - { day: '13 OUT 2026', title: 'Revisão do Sprint 1', description: 'A página e a API inicial estavam implantadas; o primeiro app Android permitia registros em campo offline.' }
+    - { day: '13 NOV 2026', title: 'Revisão do Sprint 2', description: 'A equipe havia implantado a API no Render e distribuído versões Android e Flutter pelo Firebase App Distribution.' }
+    - { day: 'NOV 2026', title: 'Validação em campo', description: 'Dois produtores testaram o Android; seus comentários e a avaliação heurística orientaram o Sprint 3.' }
+    - { day: '19 NOV 2026', title: 'Primeiras melhorias', description: 'Implementei a detecção de GPS, a comparação de áreas, ajudas contextuais e notificações críticas; o Android 1.23.0 foi lançado.' }
+    - { day: '23–24 NOV 2026', title: 'Melhorias do Sprint 3', description: 'Chegaram o Android 2.0.0 e 2.0.1; a equipe também distribuiu versões atualizadas do Flutter.' }
+  proof:
+    title: '9 contextos'
+    text: 'Nove contextos delimitados identificados com EventStorming, 37 arquivos de aceitação escritos no Sprint 1, dez ADRs no backend e as melhorias da validação em campo publicadas como Android 1.23.0.'
+decisions:
+  - choice: 'Spring Boot para a API móvel'
+    rejected: 'ASP.NET Core para a API móvel'
+    subtitle: 'backend compartilhado · Kotlin + Flutter'
+    because: 'A equipe já conhecia Spring, e suas bibliotecas de dados, segurança e IA sustentavam a plataforma móvel.'
+    cost: 'O backend anterior em ASP.NET Core continua como um código separado.'
+  - choice: 'Reavaliar os alertas da cooperativa assim que um talhão muda'
+    rejected: 'Apenas o agendador que verificava a cada 15 minutos'
+    subtitle: 'meu ADR-009 · eventos assíncronos após o commit'
+    because: 'Um gestor precisa ver uma sobrecarga de frutos ou um risco de geada na hora, não até 15 minutos depois. A verificação roda depois que a mudança do produtor é salva e fora da requisição dele, então uma falha nunca desfaz uma amostragem nem deixa o app lento; a varredura de 15 minutos fica como rede de segurança.'
+    cost: 'Um lock em memória evita alertas duplicados na única instância implantada; escalar exige um lock no banco de dados, e uma geada apenas prevista ainda espera a varredura.'
+  - choice: 'Um único limite de calor, definido no contexto de Telemetria'
+    rejected: 'Cada cliente manter sua própria constante'
+    subtitle: 'meu ADR-006 · uma fonte de verdade'
+    because: 'O app pedia para regar cedo a 30 °C enquanto nenhum alerta abria antes de 32 °C: o app se contradizia e o assistente não tinha um valor único para citar. Agora o app, a tela de alerta e o assistente leem os mesmos 32 °C e 36 °C do backend.'
+    cost: 'Não há aviso entre 30 e 32 °C, e os valores ainda precisam ser validados por um agrônomo para a variedade Sevillana.'
+  - choice: 'Certificar uma safra só após três temporadas liquidadas consecutivas'
+    rejected: 'Certificar qualquer safra liquidada'
+    subtitle: 'meu ADR-002 · PDF selado com SHA-256'
+    because: 'O dossiê certificado traz o índice de alternância, que compara temporadas consecutivas; com menos de três não há índice, e o PDF selado garantiria um número que não existe.'
+    cost: 'Um produtor novo espera três temporadas pelo certificado, e a API responde 409 até lá.'
 ---
 
-Uma plataforma que ajuda olivicultores do sul do Peru a gerenciar sua temporada: planejamento web, um aplicativo para produtores no campo e outro para cooperativas, todos com os mesmos dados. Equipe de cinco.
+### O teste em campo mudou a interface
 
-Minha contribuição em todo o produto:
+Durante a validação do Android, um produtor teve dificuldade para localizar o talhão com o GPS desligado. Outra produtora traçou um talhão muito menor que a área declarada e pediu explicações mais claras dos termos agronômicos e avisos de frio fora do app.
 
-- Web (Vue): layout e navegação compartilhados, inglês/espanhol, alertas, redesign do login, onboarding e versões conectadas ao backend real.
-- Web (Angular, primeira versão): o módulo de alertas.
-- Backend (Spring Boot): um assistente com Spring AI, códigos de associação a cooperativas e liquidações de colheita.
-- Android (Kotlin): liquidações de colheita que funcionam offline e sincronizam depois.
-- Aplicativo para cooperativas (Flutter): alertas para gestores e dossiês das parcelas dos membros.
+Adicionei um aviso de GPS desligado com desenho manual, confirmação de diferença de áreas, ajudas contextuais, um resumo diário coerente e notificações críticas do sistema. Foi pedido WhatsApp, mas essas mudanças usam notificações Android; não são uma integração com WhatsApp. Uma colega cuidou do calendário ajustável e das azeitonas de descarte.
+
+A equipe construiu o Viora em conjunto. Meu trabalho também incluiu alertas e layout da web, partes da API e do assistente, registros de colheita offline e alertas e dossiês para gestores em Flutter.

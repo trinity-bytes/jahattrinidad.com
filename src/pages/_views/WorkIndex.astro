@@ -28,6 +28,7 @@ const projects = await listProjects({ lang });
 const featured = projects.filter(p => p.data.tier === 'case-study' && p.data.featured).map(p => ({ data: p.data, href: entryPath('projects', lang, entrySlug(p)), meta: [p.data.kind, p.data.team && (p.data.team.solo ? t.work.solo : t.common.teamOf(p.data.team.size))].filter(Boolean).join(' · '), problem: p.data.problem, whatItDoes: p.data.whatItDoes, mirrored: entrySlug(p) === 'inspiration-garden' }));
 const more = projects.filter(p => p.data.tier === 'project');
 const experiments = projects.filter(p => p.data.tier === 'experiment');
+const pageHrefs = Object.fromEntries(more.filter(p => p.data.page).map(p => [p.id, entryPath('projects', lang, entrySlug(p))]));
 
 const seo = buildSeo({
   title: t.nav.work,
@@ -46,7 +47,7 @@ const seo = buildSeo({
     <p class="sub">{t.work.sub}</p>
   </PageHero>
   {featured.length > 0 && <Work index copy={{ ...t.home.outside.work, marker: t.work.featuredMarker }} insideCopy={t.home.inside.work} headline={t.work.featuredHeading} labels={{ ...t.common, seeProject: t.work.seeProject }} projects={featured} count={featured.length} allProjectsHref={collectionPath('projects', lang)} />}
-  {(more.length > 0 || experiments.length > 0) && <WorkMore projects={more} experiments={experiments} lang={lang} strings={t.work} />}
+  {(more.length > 0 || experiments.length > 0) && <WorkMore projects={more} experiments={experiments} lang={lang} strings={t.work} pageHrefs={pageHrefs} />}
   <PageContact lang={lang} links={links} marker={t.work.contactMarker} />
   <PageFooter slot="footer" lang={lang} links={links} contactOnPage />
 </Base>

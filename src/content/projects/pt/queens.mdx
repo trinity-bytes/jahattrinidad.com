@@ -1,6 +1,6 @@
 ---
 title: Queens
-description: 'Um desafio diário de lógica: uma rainha por linha, coluna e cor. Feito como presente.'
+description: "Um desafio de lógica: coloque uma rainha por linha, coluna e cor sem que elas se toquem. Feito como presente."
 lang: pt
 translationKey: queens
 tier: project
@@ -13,4 +13,36 @@ stack: [Next.js, React, TypeScript, Cloudflare Workers, D1]
 demoUrl: 'https://queens.jahattrinidad.com/'
 demoLabel: Jogar
 repoUrl: 'https://github.com/trinity-bytes/queens-game'
+insideStack: "Next.js e React com um Worker da Cloudflare e D1."
+insideDecision: "O jogo roda no navegador; o Worker valida os envios ao ranking e recalcula as pontuações."
+page:
+  headline: "Uma rainha em cada linha, coluna e cor."
+  sub: "Um quebra-cabeça de navegador feito como presente, com tabuleiros gerados e ranking."
+  glance:
+    - { label: "Problema", value: "Posicionar rainhas sem conflitos" }
+    - { label: "Regras", value: "Uma por linha, coluna e região; não podem se tocar" }
+    - { label: "Geração", value: "Regiões aleatórias verificadas para ter solução única" }
+    - { label: "Tecnologia", value: "Next.js, React, Cloudflare Worker e D1" }
+    - { label: "Minha parte", value: "Design e desenvolvimento por conta própria" }
+  how:
+    headline: "Um quebra-cabeça é um conjunto de restrições."
+    steps:
+      - title: "Posicionar as rainhas"
+        text: "Cada linha, coluna e região colorida deve conter uma rainha. Elas não podem se tocar, nem na diagonal; podem compartilhar uma diagonal distante."
+        formula: "row = 1  ·  column = 1  ·  region = 1"
+      - title: "Gerar e verificar"
+        text: "O gerador parte de uma disposição válida, expande regiões ao redor das rainhas e busca soluções. Um candidato só é aceito quando encontra exatamente uma."
+        formula: "solutions = 1"
+      - title: "Validar uma pontuação"
+        text: "O Worker verifica os campos e o registro da partida e recalcula a pontuação, em vez de confiar no navegador. Publicar é uma ação do jogador."
+  decisionHeadline: "Verificar pontuações no servidor."
+decisions:
+  - choice: "Fechar a escrita direta e recalcular cada pontuação no servidor"
+    rejected: "Deixar o navegador escrever na tabela do ranking com sua chave pública"
+    because: "Com a segurança em nível de linha desativada, qualquer pessoa com essa chave podia reescrever ou apagar todas as pontuações."
+    cost: "A validação acrescenta regras no servidor e não torna um cliente anônimo totalmente confiável."
+  - choice: "Pontuar cada tabuleiro pela dificuldade"
+    rejected: "Manter a pontuação anterior, que premiava a velocidade"
+    because: "Resolver às pressas e sem erros um tabuleiro trivial valia cerca de 16 vezes mais que resolver com calma um brutal, então compensava gerar outro até sair um fácil."
+    cost: "O tempo de resolução já não altera a pontuação."
 ---

@@ -3,13 +3,46 @@ title: trama
 description: Um projeto de matemática discreta que desenha uma grade curricular como um grafo de pré-requisitos para aplicar a teoria dos grafos.
 lang: pt
 translationKey: trama
-tier: experiment
+tier: project
 publishDate: 2026-11-05
-kind: ./trama --demo
+kind: Visualização · Individual
 team: { size: 1, solo: true }
 coverImage: '../trama/cover.png'
 coverImageAlt: 'Grade curricular do trama com disciplinas por semestre'
 stack: [JavaScript, Graph theory]
 demoUrl: 'https://trama.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/trama'
+insideStack: "JavaScript sem frameworks com Cytoscape.js e Dagre."
+insideDecision: "O algoritmo de Kahn ordena as disciplinas com seus pré-requisitos primeiro. A visão de Hasse remove arestas já implícitas em caminhos mais longos, facilitando a leitura das relações restantes."
+page:
+  headline: "Veja uma grade como um grafo, não como uma lista."
+  sub: "Trama conecta disciplinas aos seus pré-requisitos e mostra os caminhos entre elas."
+  glance:
+    - { label: "Problema", value: "Entender dependências em uma grade curricular" }
+    - { label: "Método", value: "Grafo dirigido, ordenação topológica e redução transitiva" }
+    - { label: "Visões", value: "Grade por semestre, grafo e análise" }
+    - { label: "Tecnologia", value: "JavaScript, Cytoscape.js e Dagre" }
+    - { label: "Minha parte", value: "Todo o projeto, por conta própria" }
+  how:
+    headline: "Dos pré-requisitos a um plano legível."
+    steps:
+      - title: "Modelar as relações"
+        text: "Cada aresta vai de um pré-requisito à disciplina que o exige. A grade agrupa as disciplinas em colunas por semestre."
+        formula: "prerequisite → course"
+      - title: "Encontrar uma ordem"
+        text: "O algoritmo de Kahn retira sucessivamente disciplinas sem pré-requisitos pendentes. Se restarem disciplinas quando a fila acabar, o grafo contém um ciclo."
+        formula: "in-degree = 0 → queue"
+      - title: "Reduzir o grafo"
+        text: "A visão de Hasse oculta uma aresta quando outro caminho já implica a mesma dependência. O grafo completo continua disponível para consulta."
+        formula: "A → B → C  ⇒  A → C is redundant"
+  decisionHeadline: "Ordenar as disciplinas pelos pré-requisitos."
+decisions:
+  - choice: "Ordenar as disciplinas com o algoritmo de Kahn"
+    rejected: "A ordenação em profundidade anterior, que dependia de inverter o resultado"
+    because: "Kahn segue a direção do pré-requisito para a disciplina, e o mesmo método detecta ciclos."
+    cost: "Antes de ordenar, é preciso montar os graus de entrada e as listas de adjacência."
+  - choice: "Derivar todas as visões de um único conjunto de relações"
+    rejected: "Deixar cada tela gerenciar sua própria cópia dos dados"
+    because: "A análise e as exportações podiam ficar desatualizadas depois de gerar um novo currículo."
+    cost: "A nova geração e todas as visões precisam passar pelo estado compartilhado."
 ---

@@ -1,12 +1,46 @@
 ---
 title: forest-hero-2
-description: Un juego de pixel art con su propio ciclo de sprites y colisiones, proyecto final de un curso de algoritmos.
+description: "Un juego de pixel art sobre reunir recursos y plantar árboles para recuperar un bosque."
 lang: es
 translationKey: forest-hero-2
-tier: experiment
+tier: project
 publishDate: 2026-03-01
-kind: ./forest-hero-2
-team: { size: 1, solo: true }
-stack: [C++, Game loop]
+kind: Juego · Equipo de 3
+team: { size: 3, solo: false }
+coverImage: "../forest-hero-2/cover.png"
+coverImageAlt: "Menú principal de Forest Hero 2 con un mapache"
+stack: [C++/CLI, Windows Forms]
 repoUrl: 'https://github.com/trinity-bytes/forest-hero-2'
+insideStack: "Un juego 2D hecho con C++/CLI y Windows Forms."
+insideDecision: "Los enemigos cambian de dirección al azar; las colisiones marcan semillas y enemigos para eliminarlos cuando terminan las comprobaciones."
+page:
+  headline: "Restaura un bosque antes de que termine el tiempo."
+  sub: "Un juego 2D hecho en equipo para un curso de Algoritmos, con recursos, enemigos y reforestación."
+  glance:
+    - { label: "Problema", value: "Convertir la reforestación en un objetivo de juego" }
+    - { label: "Ciclo", value: "Recoger recursos, plantar árboles y evitar enemigos" }
+    - { label: "Plataforma", value: "Windows Forms y C++/CLI" }
+    - { label: "Contexto", value: "Proyecto de Algoritmos, equipo de tres" }
+    - { label: "Mi aporte", value: "El gameplay, la gestión de estados del juego y el diseño de la interfaz" }
+  how:
+    headline: "Un juego basado en recursos y tiempo."
+    steps:
+      - title: "Recolectar y plantar"
+        text: "El guardián recoge semillas y agua, y usa ambos para plantar árboles antes de que se agote el tiempo."
+        formula: "seeds + water → tree"
+      - title: "Actualizar el mundo"
+        text: "Los enemigos se mueven y pueden cambiar de dirección al azar. Durante la partida se revisan colisiones entre el guardián, los recursos y los enemigos."
+      - title: "Eliminar después de revisar"
+        text: "El manejo de colisiones reúne índices y elimina semillas y enemigos después de las comprobaciones."
+        formula: "check collisions → collect indices → remove"
+  decisionHeadline: "Recorrer las colisiones de forma segura."
+decisions:
+  - choice: "Registrar cada índice una vez y eliminar después de las comprobaciones"
+    rejected: "Anotar un índice cada vez que una colisión lo reporta"
+    because: "Un índice repetido puede hacer que una eliminación caiga fuera del vector."
+    cost: "Cada colisión afectada debe buscar en la lista pendiente antes de agregar."
+  - choice: "Añadir cada puntuación a un archivo binario"
+    rejected: "El archivo de texto anterior, que solo se escribía si aún no existía"
+    because: "Esa versión solo guardaba una puntuación al crear el archivo; añadir un registro de tamaño fijo conserva cada nueva."
+    cost: "El archivo ya no se lee como texto plano, y la escritura y la lectura deben compartir el formato del registro."
 ---

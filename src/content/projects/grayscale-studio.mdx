@@ -12,4 +12,33 @@ coverImageAlt: 'Grayscale Studio workspace with the original image, the result a
 stack: [JavaScript, Web Components, OpenCV.js, Chart.js]
 demoUrl: 'https://grayscale.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/grayscale-studio'
+insideStack: "JavaScript Web Components, OpenCV.js and Chart.js."
+insideDecision: "Histogram equalization uses the cumulative distribution to map intensity levels; the app exposes the calculation."
+page:
+  headline: "See how a grayscale image changes, and why."
+  sub: "A browser studio compares histogram equalization and contrast stretching, with the calculation visible."
+  glance:
+    - { label: "Problem", value: "Explore contrast in grayscale images" }
+    - { label: "Methods", value: "Histogram equalization and min–max expansion" }
+    - { label: "Engine", value: "OpenCV.js and Chart.js in the browser" }
+    - { label: "Context", value: "Image-processing project, team of three" }
+    - { label: "My part", value: "I led the project and delegated parts of it to teammates" }
+  how:
+    headline: "Two ways to remap intensity."
+    steps:
+      - title: "Read the histogram"
+        text: "OpenCV.js checks that the image is grayscale. The histogram counts pixels at each intensity; Chart.js displays it for inspection."
+        formula: "r ∈ [0, 255]"
+      - title: "Equalize with the CDF"
+        text: "The cumulative distribution maps each input intensity to an output intensity. CDFmin is the first nonzero cumulative value; the app shows the lookup table and calculation. rint rounds to the nearest integer, ties to even, as OpenCV does."
+        formula: "s = rint(255 × (CDF(r) − CDFmin) / (1 − CDFmin))"
+      - title: "Stretch the range"
+        text: "Min–max expansion maps the observed minimum and maximum across the available range with a linear transformation."
+        formula: "s = rint(255 × (r − min) / (max − min))"
+  decisionHeadline: "Make the explanation match the pixels."
+decisions:
+  - choice: "Keep OpenCV’s transforms and align the math to them"
+    rejected: "Run the pixels through a lookup table shared with the explanation"
+    because: "The OpenCV.js build doesn’t export cv.LUT, and an unbenchmarked JavaScript pixel loop wasn’t a safe substitute."
+    cost: "The explanation has to reproduce the engine’s float32 and ties-to-even rounding, checked against the real engine."
 ---

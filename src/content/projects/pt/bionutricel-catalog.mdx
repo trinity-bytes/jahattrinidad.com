@@ -9,6 +9,37 @@ kind: Trabalho para cliente · Individual
 team: { size: 1, solo: true }
 coverImage: '../bionutricel-catalog/cover.png'
 coverImageAlt: 'Catálogo Bionutricel: busca, categorias e produtos em destaque'
-stack: [Astro, Vue, Cloudflare Workers, D1]
+stack: [Astro, Vue, Cloudflare Workers, Google Sheets]
 demoUrl: 'https://bionutricel.com/catalogo/'
+insideStack: "Astro e Vue com Cloudflare Workers e Google Sheets."
+insideDecision: "O catálogo combina a navegação por produtos com pedidos pelo WhatsApp."
+page:
+  headline: "Um catálogo que leva de uma necessidade a uma conversa."
+  sub: "Clientes exploram produtos naturais e consultam a loja pelo WhatsApp."
+  glance:
+    - { label: "Problema", value: "Ajudar a encontrar produtos e pedir informações" }
+    - { label: "Navegação", value: "Busca e categorias por necessidade" }
+    - { label: "Pedidos", value: "Links de WhatsApp por produto" }
+    - { label: "Tecnologia", value: "Astro, Vue, Cloudflare Workers e Google Sheets" }
+    - { label: "Minha parte", value: "Projeto para cliente, desenvolvido por conta própria" }
+  how:
+    headline: "Da busca à consulta sobre um produto."
+    steps:
+      - title: "Encontrar um produto"
+        text: "O catálogo oferece busca e categorias para explorar por produto, marca ou necessidade."
+      - title: "Ver os detalhes"
+        text: "As fichas mostram informações como marca, apresentação e preço antes do contato com a loja."
+      - title: "Continuar no WhatsApp"
+        text: "O link abre o WhatsApp com uma mensagem codificada que inclui o produto e sua referência. O cliente pode revisar a mensagem antes de enviá-la."
+        formula: "wa.me/<number>?text=<encoded message>"
+  decisionHeadline: "Levar a conversa ao WhatsApp."
+decisions:
+  - choice: "Enviar cada pedido ao WhatsApp, sem carrinho"
+    rejected: "Um carrinho com pagamento on-line"
+    because: "As vendas da loja vêm de indicações, e os clientes já compartilham links pelo WhatsApp."
+    cost: "A loja ainda precisa atender à conversa e ao pedido; o link não conclui uma compra."
+  - choice: "Publicar a partir de uma planilha de catálogo separada"
+    rejected: "Manter a antiga aba única de publicação"
+    because: "Com três abas em um arquivo próprio, o build nunca toca o estoque mestre, que guarda custos, margens e fornecedores."
+    cost: "As abas precisam ser unidas pelo código do produto e validadas a cada build."
 ---

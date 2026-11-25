@@ -1,6 +1,6 @@
 ---
 title: Queens
-description: 'Un acertijo de lógica diario: una reina por fila, columna y color. Hecho como regalo.'
+description: "Un acertijo de lógica: coloca una reina por fila, columna y color sin que se toquen. Hecho como regalo."
 lang: es
 translationKey: queens
 tier: project
@@ -13,4 +13,36 @@ stack: [Next.js, React, TypeScript, Cloudflare Workers, D1]
 demoUrl: 'https://queens.jahattrinidad.com/'
 demoLabel: Jugar
 repoUrl: 'https://github.com/trinity-bytes/queens-game'
+insideStack: "Next.js y React con un Worker de Cloudflare y D1."
+insideDecision: "El juego funciona en el navegador; el Worker valida los envíos a la clasificación y recalcula los puntajes."
+page:
+  headline: "Una reina en cada fila, columna y color."
+  sub: "Un rompecabezas para navegador hecho como regalo, con tableros generados y clasificación."
+  glance:
+    - { label: "Problema", value: "Colocar reinas sin conflictos" }
+    - { label: "Reglas", value: "Una por fila, columna y región; no pueden tocarse" }
+    - { label: "Generación", value: "Regiones aleatorias verificadas para tener una única solución" }
+    - { label: "Tecnología", value: "Next.js, React, Cloudflare Worker y D1" }
+    - { label: "Mi aporte", value: "Diseño y desarrollo por mi cuenta" }
+  how:
+    headline: "Un rompecabezas es un conjunto de restricciones."
+    steps:
+      - title: "Colocar las reinas"
+        text: "Cada fila, columna y región de color debe contener una reina. Las reinas no pueden tocarse, ni siquiera en diagonal; sí pueden compartir una diagonal distante."
+        formula: "row = 1  ·  column = 1  ·  region = 1"
+      - title: "Generar y comprobar"
+        text: "El generador parte de una disposición válida, expande regiones alrededor de las reinas y busca soluciones. Solo acepta un candidato si encuentra exactamente una."
+        formula: "solutions = 1"
+      - title: "Validar una puntuación"
+        text: "El Worker comprueba los campos y el registro de la partida y vuelve a calcular la puntuación, en lugar de confiar en el navegador. La publicación es una acción del jugador."
+  decisionHeadline: "Comprobar las puntuaciones en el servidor."
+decisions:
+  - choice: "Cerrar la escritura directa y recalcular cada puntuación en el servidor"
+    rejected: "Dejar que el navegador escriba en la tabla de clasificación con su clave pública"
+    because: "Con la seguridad por filas desactivada, cualquiera con esa clave podía reescribir o borrar todas las puntuaciones."
+    cost: "La validación agrega reglas en el servidor y no puede hacer completamente confiable a un cliente anónimo."
+  - choice: "Puntuar cada tablero según su dificultad"
+    rejected: "Mantener la puntuación anterior, que premiaba la velocidad"
+    because: "Resolver a toda prisa y sin errores un tablero trivial daba unas 16 veces más puntos que resolver con calma uno brutal, así que convenía regenerar hasta que saliera uno fácil."
+    cost: "El tiempo de resolución ya no cambia la puntuación."
 ---

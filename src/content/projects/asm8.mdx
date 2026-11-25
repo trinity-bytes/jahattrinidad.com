@@ -12,4 +12,36 @@ coverImageAlt: 'ASM8 welcome screen with recent files and the assembly editor'
 stack: [Svelte, TypeScript, CodeMirror, Web Workers]
 demoUrl: 'https://asm8.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/asm8-ide-simulator'
+insideStack: "Svelte and TypeScript with CodeMirror and Web Workers."
+insideDecision: "The simulated CPU runs in a worker so execution does not block the editor."
+page:
+  headline: "An 8-bit machine you can write, run and inspect."
+  sub: "ASM8 remakes an assembler simulator as an installable browser IDE."
+  glance:
+    - { label: "Problem", value: "Learn assembly by watching a machine execute" }
+    - { label: "Machine", value: "Registers, flags and 256 bytes of memory" }
+    - { label: "Tools", value: "Assembler, debugger and offline PWA" }
+    - { label: "Built with", value: "Svelte, TypeScript, CodeMirror and Web Workers" }
+    - { label: "My part", value: "Remake and redesign of Marco Schweighauser’s simulator" }
+  how:
+    headline: "From assembly text to a running machine."
+    steps:
+      - title: "Assemble the program"
+        text: "The assembler emits instruction bytes and records label addresses, then resolves label references. It reports errors such as an undefined label."
+        formula: "label → address → byte"
+      - title: "Run and inspect"
+        text: "The simulated CPU changes registers, flags and memory as instructions execute. IN waits for keyboard input; OUT prints a character."
+        formula: "IN A  →  OUT A"
+      - title: "Debug without freezing the editor"
+        text: "A Web Worker runs the CPU while the interface receives snapshots. Step through instructions or pause at a breakpoint; the PWA also works offline."
+  decisionHeadline: "Keep execution away from the editor."
+decisions:
+  - choice: "Run the CPU in a Web Worker"
+    rejected: "Keep the original’s run loop, a timer on the page’s own thread"
+    because: "The simulated machine can keep running without freezing the page."
+    cost: "The worker and interface must exchange commands and state snapshots."
+  - choice: "Fix the original’s SUB reg, SP bug and document it"
+    rejected: "Stay bug-compatible with the original"
+    because: "The original subtracted an undefined value there instead of SP."
+    cost: "The new core no longer matches the original in every case, so each intentional difference has to be listed next to the parity tests."
 ---

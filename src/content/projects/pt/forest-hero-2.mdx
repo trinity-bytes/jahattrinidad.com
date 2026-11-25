@@ -1,12 +1,46 @@
 ---
 title: forest-hero-2
-description: Um jogo de pixel art com seu próprio ciclo de sprites e colisões, projeto final de um curso de algoritmos.
+description: "Um jogo em pixel art sobre reunir recursos e plantar árvores para recuperar uma floresta."
 lang: pt
 translationKey: forest-hero-2
-tier: experiment
+tier: project
 publishDate: 2026-03-01
-kind: ./forest-hero-2
-team: { size: 1, solo: true }
-stack: [C++, Game loop]
+kind: Jogo · Equipe de 3
+team: { size: 3, solo: false }
+coverImage: "../forest-hero-2/cover.png"
+coverImageAlt: "Menu principal de Forest Hero 2 com um guaxinim"
+stack: [C++/CLI, Windows Forms]
 repoUrl: 'https://github.com/trinity-bytes/forest-hero-2'
+insideStack: "Um jogo 2D feito com C++/CLI e Windows Forms."
+insideDecision: "Os inimigos mudam de direção aleatoriamente; as colisões marcam sementes e inimigos para remoção quando as verificações terminam."
+page:
+  headline: "Restaure uma floresta antes que o tempo acabe."
+  sub: "Um jogo 2D feito em equipe para uma disciplina de Algoritmos, com recursos, inimigos e reflorestamento."
+  glance:
+    - { label: "Problema", value: "Transformar o reflorestamento em objetivo de jogo" }
+    - { label: "Ciclo", value: "Coletar recursos, plantar árvores e evitar inimigos" }
+    - { label: "Plataforma", value: "Windows Forms e C++/CLI" }
+    - { label: "Contexto", value: "Projeto de Algoritmos, equipe de três" }
+    - { label: "Minha parte", value: "A jogabilidade, o gerenciamento de estados do jogo e o design da interface" }
+  how:
+    headline: "Um jogo baseado em recursos e tempo."
+    steps:
+      - title: "Coletar e plantar"
+        text: "O guardião coleta sementes e água e usa ambos para plantar árvores antes de o tempo acabar."
+        formula: "seeds + water → tree"
+      - title: "Atualizar o mundo"
+        text: "Os inimigos se movem e podem mudar de direção aleatoriamente. Durante a partida, o jogo verifica colisões entre o guardião, os recursos e os inimigos."
+      - title: "Remover após verificar"
+        text: "O tratamento de colisões reúne índices e remove sementes e inimigos depois das verificações."
+        formula: "check collisions → collect indices → remove"
+  decisionHeadline: "Verificar colisões com segurança."
+decisions:
+  - choice: "Registrar cada índice uma vez e remover depois das verificações"
+    rejected: "Anotar um índice toda vez que uma colisão o informa"
+    because: "Um índice repetido pode fazer uma remoção cair fora do vetor."
+    cost: "Cada colisão afetada precisa consultar a lista pendente antes de adicionar."
+  - choice: "Acrescentar cada pontuação a um arquivo binário"
+    rejected: "O arquivo de texto anterior, gravado só quando ainda não existia"
+    because: "Aquela versão só salvava uma pontuação ao criar o arquivo; acrescentar um registro de tamanho fixo preserva cada nova."
+    cost: "O arquivo deixou de ser legível como texto simples, e a escrita e a leitura precisam compartilhar o formato do registro."
 ---

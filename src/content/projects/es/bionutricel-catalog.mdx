@@ -9,6 +9,37 @@ kind: Trabajo para cliente · Individual
 team: { size: 1, solo: true }
 coverImage: '../bionutricel-catalog/cover.png'
 coverImageAlt: 'Catálogo de Bionutricel: búsqueda, categorías y productos destacados'
-stack: [Astro, Vue, Cloudflare Workers, D1]
+stack: [Astro, Vue, Cloudflare Workers, Google Sheets]
 demoUrl: 'https://bionutricel.com/catalogo/'
+insideStack: "Astro y Vue con Cloudflare Workers y Google Sheets."
+insideDecision: "El catálogo combina la exploración de productos con pedidos por WhatsApp."
+page:
+  headline: "Un catálogo que conecta una necesidad con una conversación."
+  sub: "Los clientes exploran productos naturales y consultan a la tienda por WhatsApp."
+  glance:
+    - { label: "Problema", value: "Ayudar a encontrar productos y consultar por ellos" }
+    - { label: "Exploración", value: "Búsqueda y categorías por necesidad" }
+    - { label: "Pedidos", value: "Enlaces de WhatsApp por producto" }
+    - { label: "Tecnología", value: "Astro, Vue, Cloudflare Workers y Google Sheets" }
+    - { label: "Mi aporte", value: "Proyecto para un cliente, desarrollado por mi cuenta" }
+  how:
+    headline: "De la búsqueda a una consulta por producto."
+    steps:
+      - title: "Encontrar un producto"
+        text: "El catálogo ofrece búsqueda y categorías para explorar por producto, marca o necesidad."
+      - title: "Ver los detalles"
+        text: "Las fichas muestran datos como marca, presentación y precio antes de contactar a la tienda."
+      - title: "Continuar en WhatsApp"
+        text: "El enlace abre WhatsApp con un mensaje codificado que incluye el producto y su referencia. El cliente puede revisar el mensaje antes de enviarlo."
+        formula: "wa.me/<number>?text=<encoded message>"
+  decisionHeadline: "Llevar la conversación a WhatsApp."
+decisions:
+  - choice: "Enviar cada pedido a WhatsApp, sin carrito"
+    rejected: "Un carrito con pagos en línea"
+    because: "Las ventas de la tienda vienen de recomendaciones y los clientes ya comparten enlaces por WhatsApp."
+    cost: "La tienda aún debe atender la conversación y el pedido; el enlace no completa una compra."
+  - choice: "Publicar desde una hoja de cálculo de catálogo separada"
+    rejected: "Mantener la pestaña única de publicación anterior"
+    because: "Con tres pestañas en su propio archivo, la compilación nunca toca el inventario maestro, que contiene costos, márgenes y proveedores."
+    cost: "Las pestañas deben unirse por código de producto y validarse en cada compilación."
 ---
