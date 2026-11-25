@@ -14,4 +14,29 @@ demoUrl: 'https://allin.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/allin-band'
 insideStack: "Static HTML, CSS and JavaScript."
 insideDecision: "Desktop scrolling moves a horizontal story; on small screens or without JavaScript, its panels stay in a vertical stack."
+page:
+  headline: "A concept band explained through a story, not a product pitch."
+  sub: "A static landing page for an academic concept: a band that asks before alerting others."
+  glance:
+    - { label: "Problem", value: "Explain a proposed response to a health emergency" }
+    - { label: "Format", value: "A landing page with an interactive story" }
+    - { label: "Approach", value: "HTML, CSS and JavaScript without a framework" }
+    - { label: "Context", value: "Vivessence, a four-person course team" }
+    - { label: "My part", value: "Team contributor; individual responsibilities need confirmation" }
+  how:
+    headline: "A story that works without the motion."
+    steps:
+      - title: "Start with HTML"
+        text: "The content lives in a single HTML page. Without JavaScript, the journey remains readable as a vertical sequence."
+      - title: "Move through the day"
+        text: "On suitable desktop screens, a sticky stage translates the track as the visitor scrolls. The pulse changes with the story’s moments."
+        formula: "vertical scroll → horizontal translation"
+      - title: "Keep control"
+        text: "Small screens and reduced-motion settings keep the panels stacked. Keyboard focus and links navigate to the right panel."
+  decisionHeadline: "Make the story readable without JavaScript."
+decisions:
+  - choice: "Keep content in HTML and enhance the journey"
+    rejected: "Require JavaScript to reveal the story"
+    because: "The complete page remains readable if scripts do not run."
+    cost: "The horizontal experience needs extra logic for scrolling, links and keyboard focus."
 ---

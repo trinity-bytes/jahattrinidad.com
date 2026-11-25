@@ -14,4 +14,29 @@ demoUrl: 'https://allin.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/allin-band'
 insideStack: "HTML, CSS e JavaScript estáticos."
 insideDecision: "A rolagem move uma história horizontal no desktop; em telas pequenas ou sem JavaScript, os painéis ficam empilhados na vertical."
+page:
+  headline: "Uma pulseira conceitual explicada por uma história."
+  sub: "Uma landing page estática para um conceito acadêmico: uma pulseira que pergunta antes de alertar outras pessoas."
+  glance:
+    - { label: "Problema", value: "Explicar uma resposta proposta a uma emergência de saúde" }
+    - { label: "Formato", value: "Landing page com história interativa" }
+    - { label: "Abordagem", value: "HTML, CSS e JavaScript sem framework" }
+    - { label: "Contexto", value: "Vivessence, equipe de quatro em uma disciplina" }
+    - { label: "Minha parte", value: "Integrante da equipe; responsabilidades individuais a confirmar" }
+  how:
+    headline: "Uma história que funciona sem movimento."
+    steps:
+      - title: "Começar pelo HTML"
+        text: "O conteúdo está em uma única página HTML. Sem JavaScript, o percurso continua legível em uma sequência vertical."
+      - title: "Percorrer o dia"
+        text: "Em telas adequadas de desktop, uma área fixa desloca a faixa conforme a pessoa rola a página. O pulso muda de acordo com o momento da história."
+        formula: "vertical scroll → horizontal translation"
+      - title: "Manter o controle"
+        text: "Em telas pequenas e com movimento reduzido, os painéis ficam empilhados. O foco do teclado e os links levam ao painel correspondente."
+  decisionHeadline: "Tornar a história legível sem JavaScript."
+decisions:
+  - choice: "Manter o conteúdo em HTML e aprimorar o percurso"
+    rejected: "Exigir JavaScript para mostrar a história"
+    because: "A página inteira continua legível se os scripts não forem executados."
+    cost: "O percurso horizontal precisa de lógica adicional para rolagem, links e foco do teclado."
 ---

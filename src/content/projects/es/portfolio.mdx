@@ -13,4 +13,30 @@ stack: [Astro, TypeScript, GSAP]
 repoUrl: "https://github.com/trinity-bytes/jahattrinidad.com"
 insideStack: "Astro, TypeScript y GSAP, compilados como sitio estático."
 insideDecision: "Todo el acceso al contenido pasa por un módulo, con una verificación en cada compilación, para que un cambio futuro de fuente tenga un solo punto de adaptación."
+page:
+  headline: "Un portafolio, dos maneras de ver el trabajo."
+  sub: "Outside cuenta la historia; Inside muestra las decisiones técnicas que hay detrás."
+  glance:
+    - { label: "Problema", value: "Presentar diseño e ingeniería en un solo portafolio" }
+    - { label: "Interfaz", value: "Lente Outside e Inside en Home" }
+    - { label: "Idiomas", value: "Inglés, español y portugués brasileño" }
+    - { label: "Tecnología", value: "Astro, TypeScript, GSAP y Cloudflare" }
+    - { label: "Mi aporte", value: "Diseño y desarrollo por mi cuenta" }
+  how:
+    headline: "Una base compartida para tres idiomas."
+    steps:
+      - title: "Un límite para el contenido"
+        text: "Las colecciones pasan por src/lib/content.ts. Una comprobación rechaza importaciones directas de la API de contenido en otros archivos y deja un punto de cambio para una fuente futura."
+        formula: "content → src/lib/content.ts → views"
+      - title: "Idiomas explícitos"
+        text: "Las vistas compartidas usan rutas localizadas y diccionarios tipados. El acceso al contenido exige un idioma en lugar de asignar uno silenciosamente; las notas siguen solo en inglés por ahora."
+        formula: "en / es / pt"
+      - title: "Dos lentes, salida estática"
+        text: "El lente de Home cambia la presentación de Outside a Inside. Astro genera archivos estáticos que Cloudflare sirve sin un adaptador de servidor de Astro."
+  decisionHeadline: "Un solo punto de acceso al contenido."
+decisions:
+  - choice: "Centralizar el acceso al contenido en un módulo"
+    rejected: "Llamar a las API de contenido de Astro desde cada página"
+    because: "Un cambio futuro de fuente tiene un solo límite de acceso que actualizar, verificado por un script."
+    cost: "Las nuevas operaciones de contenido necesitan una función explícita en el módulo compartido."
 ---

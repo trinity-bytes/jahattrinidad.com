@@ -13,4 +13,30 @@ stack: [Astro, TypeScript, GSAP]
 repoUrl: "https://github.com/trinity-bytes/jahattrinidad.com"
 insideStack: "Astro, TypeScript e GSAP, compilados como site estático."
 insideDecision: "Todo o acesso ao conteúdo passa por um módulo, verificado a cada compilação, para que uma futura troca de fonte tenha um único ponto de adaptação."
+page:
+  headline: "Um portfólio, duas formas de ver o trabalho."
+  sub: "Outside conta a história; Inside revela as decisões técnicas por trás dela."
+  glance:
+    - { label: "Problema", value: "Apresentar design e engenharia em um portfólio" }
+    - { label: "Interface", value: "Lente Outside e Inside na Home" }
+    - { label: "Idiomas", value: "Inglês, espanhol e português brasileiro" }
+    - { label: "Tecnologia", value: "Astro, TypeScript, GSAP e Cloudflare" }
+    - { label: "Minha parte", value: "Design e desenvolvimento por conta própria" }
+  how:
+    headline: "Uma base compartilhada para três idiomas."
+    steps:
+      - title: "Um limite para o conteúdo"
+        text: "As coleções passam por src/lib/content.ts. Uma verificação rejeita importações diretas da API de conteúdo em outros arquivos e deixa um ponto de mudança para uma fonte futura."
+        formula: "content → src/lib/content.ts → views"
+      - title: "Idiomas explícitos"
+        text: "As views compartilhadas usam rotas localizadas e dicionários tipados. O acesso ao conteúdo exige um idioma em vez de assumir um silenciosamente; as notas continuam apenas em inglês por enquanto."
+        formula: "en / es / pt"
+      - title: "Duas lentes, saída estática"
+        text: "A lente da Home muda a apresentação de Outside para Inside. O Astro gera arquivos estáticos que a Cloudflare serve sem um adaptador de servidor Astro."
+  decisionHeadline: "Um único ponto de acesso ao conteúdo."
+decisions:
+  - choice: "Centralizar o acesso ao conteúdo em um módulo"
+    rejected: "Chamar as APIs de conteúdo do Astro em cada página"
+    because: "Uma futura mudança de fonte tem um único limite de acesso para atualizar, verificado por um script."
+    cost: "Novas operações de conteúdo precisam de uma função explícita no módulo compartilhado."
 ---

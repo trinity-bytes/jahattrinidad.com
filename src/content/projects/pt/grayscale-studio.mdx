@@ -14,4 +14,31 @@ demoUrl: 'https://grayscale.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/grayscale-studio'
 insideStack: "Web Components em JavaScript, OpenCV.js e Chart.js."
 insideDecision: "A equalização usa a distribuição acumulada para transformar os níveis de intensidade; o app mostra o cálculo."
+page:
+  headline: "Veja como uma imagem em cinza muda e por quê."
+  sub: "Um estúdio no navegador compara equalização de histograma e expansão de contraste, mostrando o cálculo."
+  glance:
+    - { label: "Problema", value: "Explorar contraste em imagens em escala de cinza" }
+    - { label: "Métodos", value: "Equalização de histograma e expansão min–max" }
+    - { label: "Motor", value: "OpenCV.js e Chart.js no navegador" }
+    - { label: "Contexto", value: "Projeto de processamento de imagens, equipe de três" }
+    - { label: "Minha parte", value: "Integrante da equipe; responsabilidades individuais a confirmar" }
+  how:
+    headline: "Duas formas de transformar intensidades."
+    steps:
+      - title: "Ler o histograma"
+        text: "OpenCV.js verifica se a imagem está em escala de cinza. O histograma conta os pixels de cada intensidade e o Chart.js o apresenta para análise."
+        formula: "r ∈ [0, 255]"
+      - title: "Equalizar com a CDF"
+        text: "A distribuição acumulada associa cada intensidade de entrada a uma de saída. CDFmin é o primeiro valor acumulado não nulo; o aplicativo mostra a tabela e o cálculo."
+        formula: "s = round(255 × (CDF(r) − CDFmin) / (1 − CDFmin))"
+      - title: "Expandir o intervalo"
+        text: "A expansão min–max transforma linearmente o mínimo e o máximo observados para aproveitar o intervalo disponível."
+        formula: "s = round(255 × (r − min) / (max − min))"
+  decisionHeadline: "Mostrar a transformação, não só a imagem."
+decisions:
+  - choice: "Mostrar a CDF e a tabela de conversão junto ao resultado"
+    rejected: "Mostrar apenas a imagem processada"
+    because: "Os valores intermediários permitem inspecionar como uma intensidade foi transformada."
+    cost: "A interface e a lógica de domínio também precisam apresentar e manter os dados do cálculo."
 ---

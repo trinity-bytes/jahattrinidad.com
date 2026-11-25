@@ -14,4 +14,31 @@ demoUrl: 'https://grayscale.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/grayscale-studio'
 insideStack: "Web Components en JavaScript, OpenCV.js y Chart.js."
 insideDecision: "La ecualización usa la distribución acumulada para transformar los niveles de intensidad; la app muestra el cálculo."
+page:
+  headline: "Mira cómo cambia una imagen en grises y por qué."
+  sub: "Un estudio en el navegador compara ecualización de histogramas y expansión de contraste, mostrando el cálculo."
+  glance:
+    - { label: "Problema", value: "Explorar el contraste en imágenes en escala de grises" }
+    - { label: "Métodos", value: "Ecualización de histograma y expansión min–max" }
+    - { label: "Motor", value: "OpenCV.js y Chart.js en el navegador" }
+    - { label: "Contexto", value: "Proyecto de procesamiento de imágenes, equipo de tres" }
+    - { label: "Mi aporte", value: "Integrante del equipo; responsabilidades individuales por confirmar" }
+  how:
+    headline: "Dos formas de transformar intensidades."
+    steps:
+      - title: "Leer el histograma"
+        text: "OpenCV.js comprueba que la imagen esté en escala de grises. El histograma cuenta los píxeles de cada intensidad y Chart.js lo muestra para su análisis."
+        formula: "r ∈ [0, 255]"
+      - title: "Ecualizar con la CDF"
+        text: "La distribución acumulada asigna una intensidad de salida a cada intensidad de entrada. CDFmin es el primer valor acumulado no nulo; la aplicación muestra la tabla y el cálculo."
+        formula: "s = round(255 × (CDF(r) − CDFmin) / (1 − CDFmin))"
+      - title: "Expandir el rango"
+        text: "La expansión min–max transforma linealmente el mínimo y el máximo observados para aprovechar el rango disponible."
+        formula: "s = round(255 × (r − min) / (max − min))"
+  decisionHeadline: "Mostrar la transformación, no solo la imagen."
+decisions:
+  - choice: "Mostrar la CDF y la tabla de conversión junto al resultado"
+    rejected: "Mostrar solo la imagen procesada"
+    because: "Los valores intermedios permiten inspeccionar cómo se transformó una intensidad."
+    cost: "La interfaz y la lógica de dominio también deben presentar y mantener los datos del cálculo."
 ---

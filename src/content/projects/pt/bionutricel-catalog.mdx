@@ -13,4 +13,29 @@ stack: [Astro, Vue, Cloudflare Workers, D1]
 demoUrl: 'https://bionutricel.com/catalogo/'
 insideStack: "Astro e Vue com Cloudflare Workers e D1."
 insideDecision: "O catálogo combina a navegação por produtos com pedidos pelo WhatsApp."
+page:
+  headline: "Um catálogo que leva de uma necessidade a uma conversa."
+  sub: "Clientes exploram produtos naturais e consultam a loja pelo WhatsApp."
+  glance:
+    - { label: "Problema", value: "Ajudar a encontrar produtos e pedir informações" }
+    - { label: "Navegação", value: "Busca e categorias por necessidade" }
+    - { label: "Pedidos", value: "Links de WhatsApp por produto" }
+    - { label: "Tecnologia", value: "Astro, Vue, Cloudflare Workers e D1" }
+    - { label: "Minha parte", value: "Projeto para cliente, desenvolvido por conta própria" }
+  how:
+    headline: "Da busca à consulta sobre um produto."
+    steps:
+      - title: "Encontrar um produto"
+        text: "O catálogo oferece busca e categorias para explorar por produto, marca ou necessidade."
+      - title: "Ver os detalhes"
+        text: "As fichas mostram informações como marca, apresentação e preço antes do contato com a loja."
+      - title: "Continuar no WhatsApp"
+        text: "O link abre o WhatsApp com uma mensagem codificada que inclui o produto e sua referência. O cliente pode revisar a mensagem antes de enviá-la."
+        formula: "wa.me/<number>?text=<encoded message>"
+  decisionHeadline: "Levar a conversa ao WhatsApp."
+decisions:
+  - choice: "Usar links de WhatsApp com mensagens prontas"
+    rejected: "Criar um checkout dentro do catálogo"
+    because: "O link leva o contexto do produto ao canal de conversa da loja."
+    cost: "A loja ainda precisa atender à conversa e ao pedido; o link não conclui uma compra."
 ---

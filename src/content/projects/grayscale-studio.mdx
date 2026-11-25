@@ -14,4 +14,31 @@ demoUrl: 'https://grayscale.jahattrinidad.com/'
 repoUrl: 'https://github.com/trinity-bytes/grayscale-studio'
 insideStack: "JavaScript Web Components, OpenCV.js and Chart.js."
 insideDecision: "Histogram equalization uses the cumulative distribution to map intensity levels; the app exposes the calculation."
+page:
+  headline: "See how a grayscale image changes, and why."
+  sub: "A browser studio compares histogram equalization and contrast stretching, with the calculation visible."
+  glance:
+    - { label: "Problem", value: "Explore contrast in grayscale images" }
+    - { label: "Methods", value: "Histogram equalization and min–max expansion" }
+    - { label: "Engine", value: "OpenCV.js and Chart.js in the browser" }
+    - { label: "Context", value: "Image-processing project, team of three" }
+    - { label: "My part", value: "Team contributor; individual responsibilities need confirmation" }
+  how:
+    headline: "Two ways to remap intensity."
+    steps:
+      - title: "Read the histogram"
+        text: "OpenCV.js checks that the image is grayscale. The histogram counts pixels at each intensity; Chart.js displays it for inspection."
+        formula: "r ∈ [0, 255]"
+      - title: "Equalize with the CDF"
+        text: "The cumulative distribution maps each input intensity to an output intensity. CDFmin is the first nonzero cumulative value; the app shows the lookup table and calculation."
+        formula: "s = round(255 × (CDF(r) − CDFmin) / (1 − CDFmin))"
+      - title: "Stretch the range"
+        text: "Min–max expansion maps the observed minimum and maximum across the available range with a linear transformation."
+        formula: "s = round(255 × (r − min) / (max − min))"
+  decisionHeadline: "Expose the transformation, not just the image."
+decisions:
+  - choice: "Show the CDF and lookup table alongside the result"
+    rejected: "Show only the processed image"
+    because: "The intermediate values make it possible to inspect how an intensity was transformed."
+    cost: "The interface and domain logic must also present and maintain the calculation data."
 ---

@@ -13,4 +13,29 @@ stack: [Astro, Vue, Cloudflare Workers, D1]
 demoUrl: 'https://bionutricel.com/catalogo/'
 insideStack: "Astro and Vue with Cloudflare Workers and D1."
 insideDecision: "The catalog combines product browsing with a WhatsApp ordering path."
+page:
+  headline: "A catalog that leads from a need to a conversation."
+  sub: "Customers explore natural-health products and ask the shop about them on WhatsApp."
+  glance:
+    - { label: "Problem", value: "Help customers find and ask about products" }
+    - { label: "Browsing", value: "Search and categories by need" }
+    - { label: "Ordering", value: "Product-specific WhatsApp links" }
+    - { label: "Built with", value: "Astro, Vue, Cloudflare Workers and D1" }
+    - { label: "My part", value: "Client project, built on my own" }
+  how:
+    headline: "From browsing to a product inquiry."
+    steps:
+      - title: "Find a product"
+        text: "The catalog offers search and categories so visitors can browse by product, brand or need."
+      - title: "See the details"
+        text: "Product entries show information such as brand, presentation and price before the visitor contacts the shop."
+      - title: "Continue on WhatsApp"
+        text: "A product link opens WhatsApp with an encoded message that names the product and its reference. The customer can review the message before sending it."
+        formula: "wa.me/<number>?text=<encoded message>"
+  decisionHeadline: "Take the order conversation to WhatsApp."
+decisions:
+  - choice: "Use prefilled WhatsApp links"
+    rejected: "Build a checkout into the catalog"
+    because: "The link carries product context into the shop’s existing conversation channel."
+    cost: "The conversation and order still need to be handled by the shop; the link is not a completed purchase."
 ---

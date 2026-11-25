@@ -13,4 +13,30 @@ stack: [Astro, TypeScript, GSAP]
 repoUrl: "https://github.com/trinity-bytes/jahattrinidad.com"
 insideStack: "Astro, TypeScript and GSAP, built as a static site."
 insideDecision: "All content access goes through one module, enforced by a check on every build, so a future content source change has one seam to update."
+page:
+  headline: "One portfolio, two ways to see the work."
+  sub: "Outside tells the story; Inside reveals the technical decisions behind it."
+  glance:
+    - { label: "Problem", value: "Present design and engineering in one portfolio" }
+    - { label: "Interface", value: "Outside and Inside lens on Home" }
+    - { label: "Languages", value: "English, Spanish and Brazilian Portuguese" }
+    - { label: "Built with", value: "Astro, TypeScript, GSAP and Cloudflare" }
+    - { label: "My part", value: "Design and development, on my own" }
+  how:
+    headline: "A shared foundation for three languages."
+    steps:
+      - title: "One content boundary"
+        text: "Content collections pass through src/lib/content.ts. A boundary check rejects direct content API imports elsewhere, keeping one seam for a future source change."
+        formula: "content → src/lib/content.ts → views"
+      - title: "Explicit locales"
+        text: "Shared views use localized routes and typed dictionaries. Content access requires a language rather than silently defaulting; notes remain English-only for now."
+        formula: "en / es / pt"
+      - title: "Two lenses, static output"
+        text: "The Home lens changes the presentation from Outside to Inside. Astro builds static assets that Cloudflare serves without an Astro server adapter."
+  decisionHeadline: "Keep one seam for content."
+decisions:
+  - choice: "Centralize content access in one module"
+    rejected: "Call Astro content APIs directly from each page"
+    because: "A future source change has one access boundary to update, enforced by a script."
+    cost: "New content operations need an explicit function in the shared module."
 ---
