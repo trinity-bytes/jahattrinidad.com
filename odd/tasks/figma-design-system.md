@@ -1,0 +1,33 @@
+# Figma design system — foundations and corrected components
+
+Objective: the Figma file gets variables, text styles and components in their corrected form (design audit phase 2), so the correction proposals are built from instances, not hand-styled layers. Branch: develop (Figma only in this feature; code follows after owner approval). Delivery: Figma file `gq6glEp9QrPOnEyYG9dldh` plus this log. Runner: none (structural checks through the Plugin API and screenshots).
+
+## Specs
+
+- S1 Owner, verbatim: "vamos a pasar a la fase de correcion del diseño y comprotamiento. tenemos cosas que corregir en figma y otrs en el codigo. empezaremos por figma [...] uno de ellos en figa es la falta de uso de componentes, deberiamos adoptar buenas practicas de uso de figrma y parte de eso tiene que ver con eso"
+- S2 Owner, verbatim: "pos es mejor hacerlos de la forma corregida. para evitar trabajo en vano." Components are built in the corrected form from `openspec/changes/design-audit/reports/audit-system.md` (SY-01…SY-14, §4 patterns), never as a copy of the current drift.
+- S3 Variables come from `src/styles/tokens.css` (primitives, semantic aliases with `light-dark()`), with the lens as two modes: Outside (light) and Inside (dark). Every variable has explicit scopes and WEB code syntax `var(--name)` matching the CSS name; tokens the audit adds (SY-05, SY-09, SY-10, SY-14, focus) use the names the audit proposes.
+- S4 Text styles follow the corrected ramp (SY-10, SY-05): display, h1–h4, body, small, caption, marker, meta; font sizes bound to a Typography collection with one mode per breakpoint (1440 / 768 / 390).
+- S5 Components on a new page `Design system`, bound to variables and styles: Button (primary, secondary × default, hover, pressed, focus, plus Inside through modes), TextLink, BackLink, Label (marker, meta), Icon (role sizes, 1.5 px stroke). The existing Nav, Lens and Annotation components move onto the variables.
+- S6 Owner, verbatim: "empeiza por donde creas conveniente y ve aplicando prograsivamente las correcciones. por favor, asegurate de mantener los altos estandares de calidad que te caracterizan". After the foundations, the corrections are applied progressively in Figma beside the `As built` boards, built from the components.
+- S7 Agents: Codex and Copilot through Herdr are available. Figma writes stay sequential (one writer per file at a time).
+
+## Tasks
+
+| ID | Specs | Scope | Route | Status |
+|---|---|---|---|---|
+| T1 | S3 | Variables: Primitives, Color (Outside/Inside), Breakpoint (1440/768/390), Foundation | inline (needs the full audit context; Figma writes are sequential) | done: 105 variables, 0 with ALL_SCOPES, every one with WEB code syntax |
+| T2 | S4 | Typography collection + text styles | inline | done: 16 text styles, size and family bound to variables |
+| T3 | S5 | Page `Design system` `2501:136`; Icon, Button, TextLink, BackLink | inline | done: 15 icons (Section `2501:137`), Button `2504:54` (8 variants), TextLink `2505:67` (9), BackLink `2505:84` (3), review frame `2505:85` checked in both modes |
+| T4 | S5 | Nav, Footer, Contact as section components built from the new controls (the old Nav/Lens/Annotation stay as approved records) | inline | in progress |
+| T5 | S6 | Progressive corrections beside the As built boards, from instances | to plan after T1–T4 | pending |
+
+## Log
+
+- L1 (2026-11-25) Owner: "vamos a pasar a la fase de correcion del diseño y comprotamiento. tenemos cosas que corregir en figma y otrs en el codigo. empezaremos por figma, en engram y openspec tienes los detalles, pero basicamente tenemos varios probleemas y uno de ellos en figa es la falta de uso de componentes, deberiamos adoptar buenas practicas de uso de figrma y parte de eso tiene que ver con eso, croe qu ees de los primeros puntos que puedes abordar para facilitar tu trabajo."
+- L2 Inventory (2026-11-25): 0 variable collections, 0 text/paint/effect styles. Components: Annotation (Inside) set `2165:10`, Lens hover/focus `2168:10`, Nav set `2185:122` (page Portfolio), favicon `2377:178` (Brand). The As built boards are flat DOM-pipeline frames. `tokens.css` already holds the real brand; the CLAUDE.md line calling it a placeholder is stale.
+- L3 (2026-11-25) Owner: "pos es mejor hacerlos de la forma corregida. para evitar trabajo en vano. recuerda que tienes a tu disposicion codex y copilot para que te ayuden en tu trabajo y los puedes gestionar con herdr a conveniencia. empeiza por donde creas conveniente y ve aplicando prograsivamente las correcciones. por favor, asegurate de mantener los altos estandares de calidad que te caracterizan, tienes skills y herramientas para que puedas lograrlo."
+- L4 Decision: library lives in this same file (one owner, no publishing need). Type ramp per breakpoint (SY-10 plus design.md step-downs; NL-04 asks h1 40 at 390 so h1 > h2): display 300/210/130, h1 60/48/40, h2 48/40/34, h3 34/30/26, h4 26/24/22, body 18/17/16, small 16, caption 14, marker 13, meta 12.
+- L5 Built T1–T3 (2026-11-25). Collections: Primitives `2501:12` (23, hidden), Color `2501:36` (modes Outside / Inside; 39), Breakpoint `2501:76` (modes Desktop 1440 / Tablet 768 / Mobile 390; type sizes and layout), Foundation `2501:91` (space, radius, focus, icon, motion, font families). New token names chosen where the audit gave none: `--color-accent-hover`, `--font-size-h1..h4`, `--font-size-small`, `--font-size-caption`, `--font-size-marker`, `--radius-sm..full`. Radius scale from the values in use (4, 12, 16, 20, 24, 999).
+- L6 Review frame caught two defects, both fixed: `color/surface` and `color/card*` had their modes swapped at creation; the TextLink underline did not survive a node-level decoration after the text style, so the underline lives in a new style `Body/Link`, with colour and 2 px hover thickness set per variant.
+- L7 Decisions: no Label component (a single text with `Label/Marker` or `Label/Meta` is enough; a component would add nothing). Button Pressed shares the hover colour; the 0.97 scale is documented in the description, not drawn. The old Nav, Lens and Annotation components are approved records: Nav is rebuilt from Button and TextLink instead of rebinding hard-coded layers. The lens control waits on the owner (HO-03, HO-04 open decision).
