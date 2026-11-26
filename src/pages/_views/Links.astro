@@ -112,6 +112,9 @@ const cards = [
     --sky-w: 1981.415px; --sky-left: calc(50cqw - 736px); --sky-top: -402px;
     --hill-w: 2371.521px; --hill-left: calc(50cqw - 929px); --hill-top: -345px;
     --veil-h: 520px;
+    /* The hill is anchored to the page's bottom, so its ridge keeps the same distance from the foot
+       of the page at any height: board 1180 tall, hill 2371.521 wide (ratio 0.71274) from top -345. */
+    --hill-bottom: -165.3px;
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -119,7 +122,9 @@ const cards = [
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: max(100svh, 1180px);
+    /* The board heights (1180 / 1120) were a frame, not a minimum: a phone scrolled past ~150px of
+       empty sky (owner, 2026-11-26). The page is the screen's height or its content's. */
+    min-height: 100svh;
     padding: 72px var(--gutter);
     background: var(--color-bg);
     color: var(--color-text);
@@ -127,7 +132,7 @@ const cards = [
   .landscape { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: var(--color-light-sun); }
   .layer { position: absolute; display: block; max-width: none; height: auto; }
   .sky { width: var(--sky-w); left: var(--sky-left); top: var(--sky-top); }
-  .hill { width: var(--hill-w); left: var(--hill-left); top: var(--hill-top); }
+  .hill { width: var(--hill-w); left: var(--hill-left); bottom: var(--hill-bottom); }
   .veil { position: absolute; inset: 0 0 auto; height: var(--veil-h); background: linear-gradient(to bottom, color-mix(in srgb, var(--cream) 55%, transparent), transparent); }
 
   .content { display: flex; flex-direction: column; gap: var(--space-xl); width: 100%; max-width: 27.5rem; margin-inline: auto; }
@@ -180,7 +185,7 @@ const cards = [
       --sky-w: 2972px; --sky-left: calc(50cqw - 1486px); --sky-top: -600px;
       --hill-w: 3320px; --hill-left: calc(50cqw - 1660px); --hill-top: -699px;
       --veil-h: 620px;
-      min-height: max(100svh, 1120px);
+      --hill-bottom: -547.3px; /* Board 1120 tall, hill 3320 wide from top -699. */
     }
   }
   @media (min-width: 64.0625rem) {
@@ -189,6 +194,8 @@ const cards = [
       --hill-w: 1617px; --hill-left: calc(50cqw - 806px); --hill-top: -13px;
       --veil-h: 640px;
       min-height: max(100svh, 900px);
+      /* Desktop keeps the board's frame: the hill is placed from the top again. */
+      --hill-bottom: auto;
       /* No side padding here: the landscape is placed in cqw, measured on this box's content width. */
       padding: 4rem 0;
     }
@@ -199,5 +206,6 @@ const cards = [
     .elsewhere { grid-area: elsewhere; align-self: start; padding: 0; background: none; gap: var(--space-xl); }
     .elsewhere ul { padding: var(--space-xs); border-radius: var(--radius-lg); background: var(--color-card); }
     .domain { left: max(var(--gutter), 50% - 33.125rem); }
+    .hill { top: var(--hill-top); }
   }
 </style>
