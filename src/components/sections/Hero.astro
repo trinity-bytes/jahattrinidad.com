@@ -96,7 +96,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     <p class="headline" data-show="outside">{strings.headline}</p>
     <p class="headline" data-show="inside">{insideStrings.headline}</p>
     <p class="sub" data-show="outside">{strings.sub}</p>
-    <p class="sub" data-show="inside">{insideStrings.sub}</p>
+    <p class="sub" data-show="inside"><span class="with-key">{insideStrings.sub}</span><span class="without-key">{insideStrings.subTouch}</span></p>
     <Button class="cta" data-magnetic href={workHref} label={strings.cta} icon="arrow-right" />
   </div>
   <p class="footnote">
@@ -258,6 +258,16 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     color: var(--color-heading);
   }
   .sub { max-width: 520px; font: 400 var(--font-size-body) / 1.5 var(--font-sans), sans-serif; color: var(--color-hero-text); }
+  /* "Press I anywhere" only where there is a key to press (owner, 2026-11-26): a mouse or trackpad
+     suggests a keyboard; a touch-only screen gets the sentence without the shortcut, until a physical
+     key press shows there is a keyboard after all (a tablet with a keyboard case). */
+  .without-key { display: none; }
+  @media not all and (any-pointer: fine) {
+    .with-key { display: none; }
+    .without-key { display: inline; }
+  }
+  :global(:root[data-keyboard]) .sub .with-key { display: inline; }
+  :global(:root[data-keyboard]) .sub .without-key { display: none; }
 
   .footnote {
     position: absolute;
@@ -384,6 +394,18 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
   :global(html[data-hero-intro] [data-lens-dock]) { opacity: 0; }
 </style>
 
+
+<script>
+  // A physical key press outside a text field means there is a keyboard: show the "Press I" wording.
+  // Typing in a field is skipped, since an on-screen keyboard fires key events there too.
+  const onKey = (event: KeyboardEvent) => {
+    const target = event.target;
+    if (target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
+    document.documentElement.dataset.keyboard = '';
+    window.removeEventListener('keydown', onKey);
+  };
+  window.addEventListener('keydown', onKey);
+</script>
 
 <script>
   /*

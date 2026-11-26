@@ -19,6 +19,8 @@ interface HeroCopy {
 
 /** Inside annotations of the hero, in list order (the number shown on small screens). */
 interface InsideHeroCopy extends HeroCopy {
+  /** `sub` without the keyboard shortcut: shown on touch-only devices, where there is no I key to press. */
+  subTouch: string;
   notesLabel: string;
   annotations: Record<'sky' | 'hill' | 'name' | 'portrait', { title: string; note: string }>;
 }
@@ -390,6 +392,7 @@ export const en: Dictionary = {
         headline:
           'The same page, taken apart — every layer, token and decision.',
         sub: 'Press I anywhere to see how a thing is built: what it is made of, and why.',
+        subTouch: 'See how a thing is built: what it is made of, and why.',
         notesLabel: 'Hero layer notes',
         annotations: {
           sky: { title: '[layer 01 · sky + far hills]', note: 'sky.png · moves slowest' },

@@ -15,6 +15,13 @@ const newTab = getDictionary(lang as Locale).common.newTab;
 const dict = getDictionary(lang as Locale);
 // Live numbers from the GitHub API at build time; null when GitHub cannot be reached (the tile keeps its chips).
 const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.repoUrl)));
+// The browser bar shows where the project lives. This site has no demo link (a visitor is already on
+// it), so its card shows the site's own hostname: the project whose repository is named after it.
+const siteHost = Astro.site?.hostname;
+const barHost = (data: CollectionEntry<'projects'>['data']) =>
+  data.demoUrl ? new URL(data.demoUrl).hostname
+  : siteHost && data.repoUrl?.replace(/\/$/, '').endsWith(`/${siteHost}`) ? siteHost
+  : undefined;
 ---
 <section class="more">
   <Backgrounds variant="experience" next="none" />
@@ -28,7 +35,7 @@ const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.rep
           {projects.map((entry) => { const { data } = entry; return (
             <article class="card">
               <div class="frame">
-                <div class="bar" aria-hidden="true"><i></i><i></i><i></i>{data.demoUrl && <span>{new URL(data.demoUrl).hostname}</span>}</div>
+                <div class="bar" aria-hidden="true"><i></i><i></i><i></i>{barHost(data) && <span>{barHost(data)}</span>}</div>
                 <div class="capture">
                   {data.coverImage && <Image src={data.coverImage} alt={data.coverImageAlt ?? ''} />}
                 </div>
@@ -130,20 +137,20 @@ const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.rep
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
+  /* Option B (owner 2026-11-26, components 2520:50 and 2522:481): the card is the browser window.
+     The bar is the card's top edge and the capture fills the full width under it, no inset. */
   .frame {
     background: var(--color-surface);
-    padding: var(--space-lg) var(--space-lg) 0;
   }
   .bar {
     display: flex;
     align-items: center;
     gap: var(--space-xs);
-    min-height: 29px; /* Browser-bar height has no token. */
+    min-height: 36px; /* Browser-bar height has no token. */
     background: var(--color-bg);
     color: var(--green-500);
     font: var(--type-meta);
     padding: 0 var(--space-md);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
   }
   .bar i {
     flex: none;
