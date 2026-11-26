@@ -44,6 +44,15 @@ class Chat {
     this.note = this.one('[data-note]');
     this.pinned = this.one('[data-pinned]');
 
+    // The long placeholder would truncate on phones. It only matters while the composer is idle.
+    const phone = matchMedia('(max-width: 47.9375rem)');
+    const idlePlaceholder = () => {
+      if (this.state.step !== 'idle') return;
+      this.input.placeholder = (phone.matches ? root.dataset.placeholderShort : root.dataset.placeholder) ?? '';
+    };
+    phone.addEventListener('change', idlePlaceholder);
+    idlePlaceholder();
+
     // Progressive enhancement: the controls ship disabled and come alive with the script.
     root.querySelectorAll<HTMLButtonElement | HTMLInputElement>(':disabled').forEach((el) => (el.disabled = false));
 
@@ -109,6 +118,8 @@ class Chat {
   private open(): void {
     const before = this.root.getBoundingClientRect().height;
     this.root.dataset.open = '';
+    // The card draws the chips above the composer: move them, so the Tab order follows what is seen.
+    this.chips.parentElement!.prepend(this.chips);
     if (this.section) {
       this.section.dataset.chatting = '';
       // The lens dock is fixed bottom-right and would cover the composer: hide it while the

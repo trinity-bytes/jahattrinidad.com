@@ -19,6 +19,8 @@ export function createPreview(main: HTMLElement): Preview {
   clone.removeAttribute('id');
   clone.removeAttribute('tabindex');
   clone.dataset.lens = 'inside';
+  // The lens control lives inside <main>; the preview shows the page, not the control that draws it.
+  clone.querySelector('[data-lens-dock]')?.remove();
 
   // The real page keeps every id, so anchors, labels and url(#id) references resolve there.
   for (const element of clone.querySelectorAll('[id]')) element.id = ID_PREFIX + element.id;
@@ -27,6 +29,10 @@ export function createPreview(main: HTMLElement): Preview {
       const value = element.getAttribute(name);
       if (value?.includes('url(#')) element.setAttribute(name, value.replaceAll('url(#', `url(#${ID_PREFIX}`));
     }
+  }
+
+  for (const use of clone.querySelectorAll('use[href^="#"]')) {
+    use.setAttribute('href', `#${ID_PREFIX}${use.getAttribute('href')!.slice(1)}`);
   }
 
   const top = main.getBoundingClientRect().top + window.scrollY;

@@ -32,7 +32,7 @@ const notes = [insideCopy.annotations.source];
         <span data-show="outside">{copy.marker}</span><span data-show="inside">{insideCopy.marker}</span>
       </p>
       <h2 id="values-heading" data-background-text data-reveal="text">
-        <span data-show="outside">{copy.headline}</span><span data-show="inside">{insideCopy.headline}</span>
+        <span data-show="outside">{copy.headline.map((phrase, i) => (<>{i > 0 && ' '}<span class="phrase">{phrase}</span></>))}</span><span data-show="inside">{insideCopy.headline.map((phrase, i) => (<>{i > 0 && ' '}<span class="phrase">{phrase}</span></>))}</span>
       </h2>
       <p class="sub" data-show="outside" data-background-text data-reveal="text">{copy.sub}</p>
       <div class="sub sub-frame" data-show="inside" data-reveal>
@@ -41,7 +41,7 @@ const notes = [insideCopy.annotations.source];
           n={1}
           x="calc(100% + 8px)"
           y="50%"
-          pinX="-8px"
+          pinX="calc(100% - 8px)"
           pinY="-8px"
           bound={{ x: '-8px', y: '-8px', width: 'calc(100% + 16px)', height: 'calc(100% + 16px)' }}
           {...notes[0]}
@@ -61,7 +61,7 @@ const notes = [insideCopy.annotations.source];
               {
                 copy.rows.map((row) => (
                   <li>
-                    <h3 data-background-text>{row.title}</h3>
+                    <h3 data-background-text>{row.title.map((phrase, i) => (<>{i > 0 && ' '}<span class="phrase">{phrase}</span></>))}</h3>
                     <p data-background-text>{row.description}</p>
                   </li>
                 ))
@@ -100,7 +100,7 @@ const notes = [insideCopy.annotations.source];
 <style>
   .values {
     position: relative;
-    padding: 5rem 0;
+    padding: var(--section-pad) 0;
     background: var(--color-bg);
   }
   /* While the rise glow is live, the top 120px are transparent so the hero's ground bleed shows
@@ -125,20 +125,31 @@ const notes = [insideCopy.annotations.source];
     padding: 0;
   }
 
-  .marker,
-  .label {
-    font: 500 var(--font-size-label) / 1.5 var(--font-mono);
-    color: var(--color-text-muted);
+  /* A line breaks between phrases, and inside one only when it does not fit. */
+  .phrase {
+    display: inline-block;
   }
 
   .marker {
-    font-size: 0.8125rem;
+    font: var(--type-marker);
+    letter-spacing: var(--type-marker-tracking);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .label {
+    font: var(--type-meta);
+    letter-spacing: var(--type-meta-tracking);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   h2 {
     max-width: 62rem;
-    margin-top: var(--space-xs);
-    font: 600 var(--font-size-heading-lg) / 1.05 var(--font-display);
+    /* With the phrases unbreakable, filling each line gives the boards' breaks; balance would not. */
+    text-wrap: wrap;
+    margin-top: var(--space-sm);
+    font: 600 var(--font-size-h1) / 1.05 var(--font-display);
     letter-spacing: -0.02em;
     color: var(--color-heading);
   }
@@ -147,7 +158,7 @@ const notes = [insideCopy.annotations.source];
     max-width: 40rem;
     margin-top: var(--space-xl);
     font-size: var(--font-size-body);
-    line-height: 1.6;
+    line-height: 1.5;
   }
 
   /* The Inside sub is narrower than the Outside one, and carries the annotation. */
@@ -157,9 +168,6 @@ const notes = [insideCopy.annotations.source];
   }
 
   .layout {
-    /* Label row height plus its padding: where the full-width rule sits on desktop. */
-    --head: calc(var(--font-size-label) * 1.5 + var(--space-sm));
-    position: relative;
     margin-top: var(--space-2xl);
   }
 
@@ -169,29 +177,33 @@ const notes = [insideCopy.annotations.source];
 
   .rows {
     list-style: none;
-    border-top: 1px solid var(--color-heading);
   }
 
   .rows li {
-    padding: var(--space-xl) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-lg) 0 var(--space-xl);
+    border-top: 1px solid var(--color-heading);
+  }
+
+  .rows li:last-child {
     border-bottom: 1px solid var(--color-heading);
   }
 
   .rows h3 {
-    max-width: 26rem;
-    font: 600 var(--font-size-heading-sm) / 1.1 var(--font-display);
-    letter-spacing: -0.015em;
+    font: 600 var(--font-size-h3) / 1.15 var(--font-display);
+    letter-spacing: -0.02em;
     color: var(--color-heading);
   }
 
   .rows p {
-    margin-top: var(--space-sm);
     font-size: var(--font-size-body);
-    line-height: 1.6;
+    line-height: 1.5;
   }
 
   .proof {
-    margin-top: var(--space-3xl);
+    margin-top: var(--space-xl);
   }
 
   .proof .label {
@@ -201,7 +213,7 @@ const notes = [insideCopy.annotations.source];
   .card {
     overflow: hidden;
     background: var(--color-card);
-    border-radius: 1rem;
+    border-radius: var(--radius-lg);
   }
 
   .card img {
@@ -213,136 +225,83 @@ const notes = [insideCopy.annotations.source];
   }
 
   .card-body {
-    padding: var(--space-xl) var(--space-xl) var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-xl);
   }
 
   .card h3 {
-    font: 500 1.5rem / 1.2 var(--font-display);
+    font: 600 var(--font-size-h4) / 1.2 var(--font-display);
+    letter-spacing: -0.02em;
     color: var(--color-heading);
   }
 
-  .card-body {
-    font-size: 1rem;
-  }
-
   .card-body > p {
-    margin-top: var(--space-xs);
+    font-size: var(--font-size-small);
     line-height: 1.5;
   }
 
   dl {
-    margin-top: var(--space-md);
+    width: 100%;
   }
 
   dl div {
     display: grid;
-    grid-template-columns: 7.75rem minmax(0, 1fr);
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: var(--space-md);
     align-items: center;
-    padding: 0.625rem 0;
+    padding: var(--space-xs) 0;
     border-top: 1px solid var(--color-border);
-  }
-
-  dt span {
-    padding: 0.125rem 0.375rem;
-    font-weight: 500;
-    color: var(--color-heading);
-    background: var(--color-light-sun);
-    border-radius: 0.25rem;
-  }
-
-  /* Inside: the figure marker flips to the accent colors instead of the sun. */
-  [data-show='inside'] dt span {
-    color: var(--color-accent-text);
-    background: var(--color-accent);
-  }
-
-  dd {
-    font-size: 0.9375rem;
+    font-size: var(--font-size-caption);
     line-height: 1.4;
   }
 
-  .proof-link { margin-block-start: calc(var(--space-xs) - var(--hit-pad)); }
-
+  dt span {
+    display: inline-block;
+    padding: 0 var(--space-xs);
+    color: var(--color-highlight-text);
+    background: var(--color-highlight);
+    border-radius: var(--radius-sm);
+  }
 
   @media (min-width: 48rem) {
-    .values {
-      padding: 6rem 0 6.5rem;
-    }
-
     .layout {
-      margin-top: 4.5rem;
+      margin-top: var(--space-3xl);
     }
 
     .column-labels,
     .rows li {
       display: grid;
-      grid-template-columns: 18.5rem minmax(0, 1fr);
-      gap: var(--space-xl);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-3xl);
     }
 
     .column-labels {
       padding-bottom: var(--space-sm);
-      border-bottom: 1px solid var(--color-heading);
-    }
-
-    .rows {
-      border-top: 0;
     }
 
     .rows li {
-      padding: 2rem 0;
-    }
-
-    .rows p {
-      margin-top: 0.375rem;
+      align-items: start;
+      padding: var(--space-2xl-b) 0 var(--space-3xl);
     }
 
     .proof {
-      margin-top: var(--space-3xl);
+      margin-top: var(--space-xl);
     }
   }
 
   @media (min-width: 64.0625rem) {
-    .values {
-      padding: 7.5rem 0 11.25rem;
-    }
-
     .layout {
       display: grid;
-      grid-template-columns: minmax(0, 876fr) minmax(0, 376fr);
-      gap: 3.75rem;
-    }
-
-    /* The rule under the column labels also runs above the proof card. */
-    .layout::before {
-      content: '';
-      position: absolute;
-      inset: var(--head) 0 auto;
-      border-top: 1px solid var(--color-heading);
-    }
-
-    .column-labels {
-      border-bottom: 0;
-    }
-
-    .column-labels,
-    .rows li {
-      grid-template-columns: minmax(0, 496fr) minmax(0, 380fr);
-      gap: 0;
-    }
-
-    .rows li {
-      min-height: 12.5rem;
-      padding: 1.875rem 0 1.5rem;
+      grid-template-columns: minmax(0, 1fr) 23.5rem;
+      gap: var(--space-4xl);
+      align-items: start;
     }
 
     .proof {
       margin-top: 0;
-    }
-
-    .proof .label {
-      /* Same height as the column labels and their rule, then a 24px gap to the card. */
-      margin-bottom: calc(var(--head) - var(--font-size-label) * 1.5 + 1px + var(--space-xl));
     }
   }
 </style>

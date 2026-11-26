@@ -6,5 +6,5 @@ const { src, alt, caption } = Astro.props;
 ---
 <figure><Image {src} {alt} /><figcaption>{caption}</figcaption></figure>
 <style>
-  figure { margin: 0; } figure :global(img) { display: block; width: 100%; height: auto; border-radius: .75rem; } figcaption { margin-top: .75rem; color: var(--green-900); font: 400 .75rem/1.5 var(--font-mono); }
+  figure { margin: 0; } figure :global(img) { display: block; width: 100%; height: auto; border-radius: var(--radius-md); } figcaption { margin-top: var(--space-sm); color: var(--green-900); font: 400 var(--font-size-label)/1.5 var(--font-mono), monospace; }
 </style>

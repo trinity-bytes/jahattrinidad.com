@@ -1,5 +1,6 @@
 ---
 import Button from '../../ui/Button.astro';
+import Icon from '../../ui/Icon.astro';
 import { getDictionary, type Locale } from '../../../lib/i18n';
 /*
  * The Contact composer and the conversation it grows into (task 7.3, boards 2353:103 to 2354:320,
@@ -29,14 +30,6 @@ const ui = chat.ui;
 const script = chat.script;
 const garden = entryPath('projects', lang, GARDEN_CASE_STUDY);
 const work = collectionPath('projects', lang);
-const svg = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false' } as const;
-const paths = {
-  up: '<path d="m5 12 7-7 7 7" /><path d="M12 19V5" />',
-  pencil: '<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /><path d="m15 5 4 4" />',
-  alert: '<circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" />',
-  check: '<path d="M20 6 9 17l-5-5" />',
-  loader: '<path d="M21 12a9 9 0 1 1-6.219-8.56" />',
-};
 ---
 <div
   class="chat"
@@ -49,12 +42,14 @@ const paths = {
   data-work={work}
   data-cv={cvPath(lang)}
   data-copied={strings.copied}
+  data-placeholder={chat.composerPlaceholder}
+  data-placeholder-short={chat.composerPlaceholderShort}
   data-mode="idle"
   role="group"
   aria-label={ui.cardLabel}
 >
   <div class="head" data-card-part>
-    <Image class="avatar" src={photo} alt="" width={34} height={34} widths={[34, 68, 102]} sizes="34px" loading="lazy" />
+    <Image class="avatar" src={photo} alt="" width={40} height={40} widths={[40, 80, 120]} sizes="40px" loading="lazy" />
     <div class="who">
       <p class="name">{ui.author}</p>
       <p class="status"><span class="dot" aria-hidden="true"></span>{ui.status}</p>
@@ -66,22 +61,22 @@ const paths = {
   </div>
   <div class="log" data-lenis-prevent data-card-part data-log role="log" aria-live="polite" aria-relevant="additions" aria-label={ui.logLabel}></div>
   <div class="area">
+    <form class="composer" data-form novalidate>
+      <div class="field">
+        <input type="text" name="message" data-input autocomplete="off" aria-label={strings.composerLabel} placeholder={chat.composerPlaceholder} disabled />
+        <button type="submit" class="send" aria-label={strings.send} disabled>
+          <Icon name="send" sizing="control" />
+        </button>
+        <slot name="annotation" />
+      </div>
+      {/* Honeypot: people never see or fill it; bots that tick it are dropped by Web3Forms. */}
+      <input type="checkbox" name="botcheck" data-botcheck class="trap" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    </form>
     <ul class="chips" data-chips aria-label={chat.suggestionsLabel}>
       {script.idle.chips.map((chip) => (
         <li><Button type="button" variant="secondary" label={chip.label} data-chip={chip.value} disabled /></li>
       ))}
     </ul>
-    <form class="composer" data-form novalidate>
-      <div class="field">
-        <input type="text" name="message" data-input autocomplete="off" aria-label={strings.composerLabel} placeholder={chat.composerPlaceholder} disabled />
-        <button type="submit" class="send" aria-label={strings.send} disabled>
-          <svg {...svg} width="20" height="20" set:html={paths.up} />
-        </button>
-        <slot name="annotation" />
-      </div>
-      <!-- Honeypot: people never see or fill it; bots that tick it are dropped by Web3Forms. -->
-      <input type="checkbox" name="botcheck" data-botcheck class="trap" tabindex="-1" autocomplete="off" aria-hidden="true" />
-    </form>
     <p class="note" data-note>{ui.privacy}</p>
   </div>
 
@@ -89,8 +84,8 @@ const paths = {
   <template data-tpl="bot"><div class="msg bot"><div class="bubble"><p></p></div></div></template>
   <template data-tpl="visitor"><div class="msg visitor"><div class="bubble"><p></p></div></div></template>
   <template data-tpl="typing"><div class="msg bot" data-typing><div class="bubble typing"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="visually-hidden">{ui.typing}</span></div></div></template>
-  <template data-tpl="error"><div class="msg bot" data-transient><div class="bubble error"><svg {...svg} width="18" height="18" set:html={paths.alert} /><p></p></div></div></template>
-  <template data-tpl="sent"><div class="msg bot"><div class="bubble sent"><svg {...svg} width="18" height="18" set:html={paths.check} /><p></p></div></div></template>
+  <template data-tpl="error"><div class="msg bot" data-transient><div class="bubble error"><Icon name="alert-circle" size={18} /><p></p></div></div></template>
+  <template data-tpl="sent"><div class="msg bot"><div class="bubble sent"><Icon name="check" size={18} /><p></p></div></div></template>
   <template data-tpl="next"><ul class="next"></ul></template>
   <template data-tpl="step"><li><Button href="#" variant="secondary" label="" icon="arrow-right" /></li></template>
   {/* A step that leaves the site (the CV PDF): ↗, a new tab and the screen-reader note. */}
@@ -103,14 +98,14 @@ const paths = {
       </div>
       <div class="confirm">
         <Button type="button" label={script.summary.confirm} data-confirm />
-        <Button type="button" class="sending" label={script.summary.sending} data-sending aria-disabled="true"><svg class="spin" {...svg} width="16" height="16" set:html={paths.loader} /> {script.summary.sending}</Button>
+        <Button type="button" class="sending" label={script.summary.sending} icon="loader" data-sending aria-disabled="true" />
       </div>
     </div>
   </template>
   <template data-tpl="row">
     <li class="row">
       <div class="text"><p class="key"></p><p class="value"></p></div>
-      <button type="button" class="pencil" data-edit><svg {...svg} width="16" height="16" set:html={paths.pencil} /></button>
+      <button type="button" class="pencil" data-edit><Icon name="pencil" sizing="control" /></button>
     </li>
   </template>
   <template data-tpl="actions">
@@ -125,85 +120,87 @@ const paths = {
   initChat();
 </script>
 <style>
-  /* Idle: the composer exactly as it was designed for Home (board 2191:86). */
-  .chat { display: flex; flex-direction: column; width: 100%; max-width: 38.75rem; color: var(--color-heading); }
+  /* Idle: the composer of Contact section 2516:702 (Composer 2515:570). Open: ChatCard 2519:1180,
+     one 16px inset, Label/Meta for every label, 44px controls. */
+  .chat { display: flex; flex-direction: column; width: 100%; color: var(--color-heading); }
   .head, .pinned, .log { display: none; }
   .area { display: flex; flex-direction: column; gap: var(--space-sm); }
-  .composer { order: 1; }
-  .chips { order: 2; }
-  .note { order: 3; }
-  .field { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); height: 4rem; padding: 0 var(--space-xs) 0 1.75rem; border: 1px solid var(--color-heading); border-radius: 999px; background: var(--color-card); }
-  input[type='text'] { flex: 1; min-width: 0; text-overflow: ellipsis; border: 0; background: none; font: 400 1.125rem/1.3 var(--font-sans); color: var(--color-heading); }
+  .field { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); height: 4rem; padding: 0 var(--space-xs) 0 1.75rem; border: 1px solid var(--color-heading); border-radius: var(--radius-full); background: var(--color-card); }
+  input[type='text'] { flex: 1; min-width: 0; text-overflow: ellipsis; border: 0; background: none; font: 400 1.125rem/1.5 var(--font-sans); color: var(--color-heading); }
   input[type='text']::placeholder { color: var(--color-placeholder); opacity: 1; }
   input[type='text']:focus-visible { outline: none; }
-  .field:has(input:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 3px; }
-  .send { display: grid; place-items: center; flex: none; width: 3rem; height: 3rem; padding: 0; border: 0; border-radius: 50%; background: var(--color-accent); color: var(--color-accent-text); cursor: pointer; }
+  .field:has(input:focus-visible) { outline: var(--focus-width) solid var(--color-focus); outline-offset: var(--focus-offset); }
+  .send { display: grid; place-items: center; flex: none; width: 3rem; height: 3rem; padding: 0; border: 0; border-radius: 50%; background: var(--color-accent); color: var(--color-accent-text); cursor: pointer; transition: background-color var(--dur-press) var(--ease-out), scale var(--dur-press) var(--ease-out); }
+  /* The paper plane's weight sits up and to the right: nudged for optical centring. */
+  .send :global(svg) { translate: -1px 1px; }
+  .send:not(:disabled):active { background: var(--color-accent-hover); scale: 0.97; }
   .trap { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
   .chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin: 0; padding: 0; list-style: none; }
-  .note { margin: 0; font: 500 0.6875rem/1.3 var(--font-mono); letter-spacing: 0.02em; color: var(--color-text); }
-  button:focus-visible, a:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+  .chips:empty { display: none; }
+  .note { margin: 0; font: var(--type-meta); letter-spacing: 0.02em; color: var(--color-text); }
   /* Without JavaScript the controls stay disabled: keep them reading as the finished design. */
   input:disabled, button:disabled { opacity: 1; cursor: default; }
 
-  /* Open: the conversation card (boards 2353:103 to 2354:320). */
+  /* Open: the conversation card. */
   .chat[data-open] { max-width: none; height: 44.6875rem; overflow: hidden; border: 1px solid var(--color-heading); border-radius: 28px; background: var(--color-card); }
   .chat[data-open] .head, .chat[data-open] .pinned { display: flex; flex: none; }
   .chat[data-open] .log { display: flex; }
-  .head { align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--color-border); }
-  .avatar { flex: none; width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+  .head { align-items: center; gap: var(--space-sm); padding: var(--space-md); border-bottom: 1px solid var(--color-border); }
+  .avatar { flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; object-fit: cover; }
   .who { display: flex; flex-direction: column; gap: 2px; }
-  .name { margin: 0; font: 500 0.9375rem/20px var(--font-sans); color: var(--color-heading); }
-  .status { display: flex; align-items: center; gap: 6px; margin: 0; font: 500 0.6875rem/1.3 var(--font-mono); letter-spacing: 0.04em; color: var(--color-text-muted); }
+  .name { margin: 0; font: 500 var(--font-size-small)/1.25rem var(--font-sans); color: var(--color-heading); }
+  .status, .label, .key { margin: 0; font: var(--type-meta); letter-spacing: var(--type-meta-tracking); text-transform: uppercase; color: var(--color-text-muted); }
+  .status { display: flex; align-items: center; gap: 6px; }
   .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-signal); }
   /* Inside: the composer's annotation describes the idle composer. In the conversation it would run off
      the screen, so it leaves with its numbered list (which closes the Contact section, outside the card). */
   .chat[data-open] :global(.annotation),
   :global(#contact[data-chatting] .annotation-list) { display: none; }
-  .pinned { flex-direction: column; gap: 4px; padding: 10px 18px; border-bottom: 1px solid var(--color-border); background: var(--color-bg); }
-  .label { margin: 0; font: 500 0.6875rem/1.3 var(--font-mono); letter-spacing: 0.04em; color: var(--color-text-muted); }
-  .first { margin: 0; overflow-wrap: anywhere; font: 500 0.9375rem/20px var(--font-sans); color: var(--color-heading); }
-  .log { flex: 1; min-height: 0; flex-direction: column; gap: 10px; padding: 12px 16px; overflow-y: auto; overscroll-behavior: contain; }
+  .pinned { flex-direction: column; gap: var(--space-2xs); padding: var(--space-md); border-bottom: 1px solid var(--color-border); background: var(--color-surface); }
+  .first, .value { margin: 0; overflow-wrap: anywhere; font: 400 var(--font-size-small)/1.5 var(--font-sans); color: var(--color-heading); }
+  .log { flex: 1; min-height: 0; flex-direction: column; gap: var(--space-sm); padding: var(--space-md); overflow-y: auto; overscroll-behavior: contain; }
   /* Bottom-anchored but still scrollable: the first child's auto margin takes the free space. */
   .log > :global(:first-child) { margin-top: auto; }
-  .chat[data-open] .area { flex: none; padding: 4px 16px 16px; gap: 10px; }
-  .chat[data-open] .composer { order: 2; }
-  .chat[data-open] .chips { order: 1; }
-  .chat[data-open] .field { height: auto; padding: 6px 6px 6px 20px; background: var(--color-bg); }
-  .chat[data-open] input[type='text'] { font: 400 1rem/1.3 var(--font-sans); }
+  .chat[data-open] .area { flex: none; padding: 0 var(--space-md) var(--space-md); }
+  .chat[data-open] .field { height: auto; padding: 6px 6px 6px var(--space-lg); background: var(--color-bg); }
+  .chat[data-open] input[type='text'] { font: 400 var(--font-size-small)/1.5 var(--font-sans); }
   .chat[data-open] .send { width: 2.75rem; height: 2.75rem; }
 
   .msg { display: flex; flex: none; }
   .msg.visitor { justify-content: flex-end; }
-  .bubble { display: flex; gap: 8px; max-width: 17.5rem; padding: 10px 14px; border: 1px solid var(--color-border); border-radius: 20px 20px 20px 6px; background: var(--color-bg); font: 400 1rem/22px var(--font-sans); color: var(--color-heading); }
+  .bubble { display: flex; gap: var(--space-xs); max-width: 80%; padding: var(--space-sm) var(--space-md); border: 1px solid var(--color-border); border-radius: var(--radius-xl) var(--radius-xl) var(--radius-xl) 6px; background: var(--color-surface); font: 400 var(--font-size-small)/1.5 var(--font-sans); color: var(--color-text); }
   .bubble p { margin: 0; overflow-wrap: anywhere; }
-  .visitor .bubble { border-color: var(--color-accent); border-radius: 20px 20px 6px 20px; background: var(--color-accent); color: var(--color-accent-text); }
-  .bubble svg { flex: none; margin-top: 2px; }
-  .bubble.sent svg { color: var(--color-text-muted); }
+  .visitor .bubble { border-color: var(--color-accent); border-radius: var(--radius-xl) var(--radius-xl) 6px var(--radius-xl); background: var(--color-accent); color: var(--color-accent-text); }
+  .bubble :global(svg) { flex: none; margin-top: 2px; }
+  .bubble.sent :global(svg) { color: var(--color-text-muted); }
   .bubble.error { border-color: var(--color-heading); background: var(--color-tutorial-chip); color: var(--color-tutorial-chip-text); }
-  .bubble.typing { align-items: center; padding: 14px 16px; }
+  .bubble.typing { align-items: center; padding-block: var(--space-md); }
   .dots { display: flex; gap: 5px; }
   .dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--color-text-muted); }
   .dots i:nth-child(2) { opacity: 0.6; }
   .dots i:nth-child(3) { opacity: 0.3; }
 
-  .block { display: flex; flex: none; flex-direction: column; align-items: flex-start; gap: 10px; }
-  .card { width: 100%; padding: 14px 16px 6px; border: 1px solid var(--color-border); border-radius: 20px; background: var(--color-card-raised); }
+  .block { display: flex; flex: none; flex-direction: column; align-items: flex-start; gap: var(--space-sm); }
+  .card { display: flex; flex-direction: column; gap: var(--space-2xs); width: 100%; padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-card-raised); }
   .rows { margin: 0; padding: 0; list-style: none; }
-  .row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+  .row { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs) 0; border-bottom: 1px solid var(--color-border); }
   .row:last-child { border-bottom: 0; }
   .text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-  .key { margin: 0; font: 500 0.6875rem/1.3 var(--font-mono); letter-spacing: 0.02em; color: var(--color-text-muted); }
-  .value { margin: 0; overflow-wrap: anywhere; font: 500 0.9375rem/20px var(--font-sans); color: var(--color-heading); }
-  .pencil { display: grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--color-heading); cursor: pointer; }
-  .pencil:hover { background: var(--color-bg); }
+  .pencil { display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--color-heading); cursor: pointer; transition: background-color var(--dur-press) var(--ease-out), scale var(--dur-press) var(--ease-out); }
+  /* color-current differs from the card in both lenses (HI-06). */
+  .pencil:active { background: var(--color-current); scale: 0.97; }
+  @media (hover: hover) and (pointer: fine) {
+    .pencil:hover { background: var(--color-current); }
+    .send:not(:disabled):hover { background: var(--color-accent-hover); }
+  }
   .confirm .sending { display: none; }
   .block[data-state='sending'] .confirm [data-confirm], .block[data-state='failed'] .confirm, .block[data-state='sent'] .confirm { display: none; }
   .block[data-state='sending'] .confirm .sending { display: inline-flex; cursor: default; opacity: 0.75; }
   .block[data-state='sending'] .pencil { opacity: 0.35; pointer-events: none; }
   .block[data-state='sent'] .card { opacity: 0.6; }
   .block[data-state='sent'] .pencil { display: none; }
-  .actions, .next { display: flex; flex-wrap: wrap; gap: 8px; flex: none; margin: 0; padding: 0; list-style: none; }
-  .next { flex-direction: column; align-items: flex-start; }
+  .actions, .next { display: flex; flex-wrap: wrap; gap: var(--space-xs); flex: none; margin: 0; padding: 0; list-style: none; }
+  .actions { flex-direction: column; align-items: flex-start; }
 
   /* States that have no composer: summary, sending and failed show only the note. */
   .chat[data-mode='summary'] .chips, .chat[data-mode='summary'] .composer,
@@ -215,14 +212,20 @@ const paths = {
 
   @media (min-width: 48rem) {
     .chat[data-open] { height: 40rem; }
-    .chat[data-open] .head, .chat[data-open] .pinned { padding-inline: 18px; }
+  }
+  @media (min-width: 64.0625rem) {
+    .chat { max-width: 38.75rem; }
   }
   @media (prefers-reduced-motion: no-preference) {
     .msg, .block, .next, .actions { animation: rise 240ms ease-out; }
     .dots i { animation: pulse 1.2s ease-in-out infinite; }
     .dots i:nth-child(2) { animation-delay: 0.2s; }
     .dots i:nth-child(3) { animation-delay: 0.4s; }
-    .spin { animation: turn 1s linear infinite; }
+    .sending :global(svg) { animation: turn 1s linear infinite; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .send, .pencil { transition: none; }
+    .send:not(:disabled):active, .pencil:active { scale: none; }
   }
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
   @keyframes pulse { 50% { transform: translateY(-2px); } }

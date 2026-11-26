@@ -1,6 +1,6 @@
 ---
 /*
- * The lens: docked bottom-right of the viewport. Drag it over the page to look
+ * The lens: a labelled pill docked bottom-right of the viewport (Home / Lens control, 2538:149). Drag it over the page to look
  * through a circle at the Inside, drop it to switch; click, Enter or the I key switch
  * without dragging; Esc or "Back outside" return (design.md §2, board 2109:103).
  * The state lives on <html data-lens> and is not persisted; only "shortcut disabled" is kept in localStorage.
@@ -24,18 +24,12 @@ const { strings } = Astro.props;
     class="lens"
     type="button"
     data-lens-open
-    aria-label={strings.lookInside}
-    aria-describedby="lens-hint"
     aria-keyshortcuts="I"
   >
-    <Icon name="search" size={28} />
+    <Icon name="search" sizing="control" />
+    {strings.lookInside}
   </button>
-  <span class="pill" id="lens-hint">
-    <span class="pill-pointer">{strings.pointerHint}</span>
-    <span class="pill-touch">{strings.touchHint}</span>
-  </span>
   <button class="back" type="button" data-lens-back aria-keyshortcuts="Escape">
-    <Icon name="search" size={20} />
     {strings.backOutside}
     <kbd aria-hidden="true">{strings.escapeKey}</kbd>
   </button>
@@ -65,7 +59,6 @@ const { strings } = Astro.props;
   const ring = dock?.querySelector<HTMLElement>('[data-lens-ring]');
   const main = document.querySelector<HTMLElement>('main');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const coarsePointer = matchMedia('(pointer: coarse)');
 
   if (dock && lens && back && ring && main) {
     ring.style.setProperty('--lens-radius', `${RADIUS}px`);
@@ -90,13 +83,18 @@ const { strings } = Astro.props;
       return { x: box.left + box.width / 2, y: box.top + box.height / 2, r: Math.min(box.width, box.height) / 2 };
     }
 
+    /** The first switch of a visit opens slowly enough to be understood; the next ones answer at once. */
+    const FIRST_REVEAL = { duration: 900, easing: 'cubic-bezier(0.87, 0, 0.13, 1)' };
+    const NEXT_REVEAL = { duration: 450, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' };
+    let revealed = false;
+
     /** One reveal at a time: a second view transition during one crashes Chromium. */
     const reveal = createTransitionGuard();
 
     /**
      * Switches the page state; `cleanup` runs with it so the transition's snapshot can include the preview.
      * The new state is revealed by a circle that opens from `origin` (the lens, the dropped x-ray circle or
-     * the Back outside button) with the same expo in-out curve as the hero's load, only quicker.
+     * the Back outside button): FIRST_REVEAL once, NEXT_REVEAL afterwards.
      * A request made while a reveal runs is dropped.
      */
     function switchTo(next: Lens, cleanup?: () => void, origin?: Origin) {
@@ -118,13 +116,15 @@ const { strings } = Astro.props;
         return;
       }
       reveal.run(async () => {
+        const timing = revealed ? NEXT_REVEAL : FIRST_REVEAL;
+        revealed = true;
         root.dataset.lensReveal = '';
         const transition = document.startViewTransition(apply);
         transition.ready.then(() => {
           const end = Math.hypot(Math.max(from.x, innerWidth - from.x), Math.max(from.y, innerHeight - from.y));
           root.animate(
             { clipPath: [`circle(${from.r}px at ${from.x}px ${from.y}px)`, `circle(${end}px at ${from.x}px ${from.y}px)`] },
-            { duration: 900, easing: 'cubic-bezier(0.87, 0, 0.13, 1)', pseudoElement: '::view-transition-new(root)' },
+            { ...timing, pseudoElement: '::view-transition-new(root)' },
           );
         }).catch(() => {});
         try { await transition.finished; }
@@ -201,7 +201,6 @@ const { strings } = Astro.props;
       if (event.button !== 0 || !event.isPrimary) return;
       lens.setPointerCapture(event.pointerId);
       drag = { id: event.pointerId, startX: event.clientX, startY: event.clientY, center: { x: 0, y: 0 } };
-      delete dock.dataset.hint;
     });
     lens.addEventListener('pointermove', (event) => {
       if (!drag || event.pointerId !== drag.id) return;
@@ -238,7 +237,7 @@ const { strings } = Astro.props;
       if (action === 'cancel-drag') cancelDrag();
       else if (action === 'leave-inside') switchTo('outside');
       else if (action === 'blur-field') (event.target as HTMLElement).blur();
-      else if (action === 'toggle') {
+      else if (action === 'toggle' && !event.repeat) {
         discover();
         toggle();
       }
@@ -246,7 +245,7 @@ const { strings } = Astro.props;
 
     // On every page load, until the visitor uses the lens on that page, it gives a gentle shake every few
     // seconds (only Outside, never while hovered, dragged or in a background tab), so the curious move the
-    // pointer to it and find its hint. Using it is remembered for this page load only, on purpose.
+    // pointer to it and try it. Using it is remembered for this page load only, on purpose.
     let discovered = false;
     try { localStorage.removeItem(LEGACY_DISCOVERED_KEY); } catch { /* Storage can be unavailable. */ }
     let nudges = 0;
@@ -283,16 +282,6 @@ const { strings } = Astro.props;
         setTimeout(start, 6000);
       } else start();
     }
-
-    // Touch has no hover: show the touch hint ("Tap to see my technical side") for a few seconds once the page has loaded.
-    if (coarsePointer.matches) {
-      const showHint = () => {
-        dock.dataset.hint = '';
-        setTimeout(() => delete dock.dataset.hint, 5000);
-      };
-      if (document.readyState === 'complete') showHint();
-      else window.addEventListener('load', showHint, { once: true });
-    }
   }
 </script>
 
@@ -307,78 +296,61 @@ const { strings } = Astro.props;
     justify-content: flex-end;
     align-items: center;
   }
+  @media (min-width: 64.0625rem) { .dock { bottom: 3.5rem; } }
+  .lens, .back {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    height: 3rem;
+    padding: 0 var(--space-lg);
+    border: 1px solid transparent;
+    border-radius: var(--radius-full);
+    font: 500 var(--font-size-small) / 1.25 var(--font-sans), sans-serif;
+    white-space: nowrap;
+    cursor: pointer;
+  }
   .lens {
-    display: grid;
-    place-items: center;
-    width: 64px;
-    height: 64px;
-    padding: 0;
-    border: 1.5px solid var(--green-950);
-    border-radius: 50%;
-    background: var(--card);
-    color: var(--green-950);
-    cursor: grab;
+    background: var(--color-card);
+    color: var(--color-heading);
+    /* The pill floats over cream cards too, where its fill alone would vanish. */
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--green-950) 14%, transparent);
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
     transform: translate(var(--dx, 0), var(--dy, 0)) scale(var(--scale, 1));
-    transition: transform 0.2s;
+    transition: transform var(--dur-ui) var(--ease-out), background-color var(--dur-press) var(--ease-out);
   }
-  /* Two tones so the ring shows on the cream page and on the near-black footer ground. */
-  .lens:focus-visible { outline: 3px solid var(--green-950); outline-offset: 2px; box-shadow: 0 0 0 2px var(--card); }
+  .lens:active { background: var(--color-surface); --scale: 0.97; }
   .dock[data-dragging] .lens { --scale: 1.25; cursor: grabbing; transition: none; }
-
-  .pill {
-    position: absolute;
-    right: calc(100% + 12px);
-    top: 50%;
-    translate: 0 -50%;
-    width: max-content;
-    max-width: min(30rem, calc(100vw - 2 * var(--gutter) - 64px - 12px));
-    padding: 12px 20px;
-    border: 1px solid color-mix(in srgb, var(--green-950) 12%, transparent);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--card) 70%, transparent);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 4px 16px color-mix(in srgb, var(--green-950) 14%, transparent);
-    color: var(--green-950);
-    font: 500 1rem/1.25 var(--font-sans);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.15s;
-  }
-  .pill-touch { display: none; }
-  .lens:is(:hover, :focus-visible) ~ .pill,
-  .dock[data-hint] .pill { opacity: 1; }
-  .dock[data-dragging] .pill { opacity: 0; }
-  @media (pointer: coarse) {
-    .pill-pointer { display: none; }
-    .pill-touch { display: inline; }
-  }
 
   .back {
     display: none;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 22px 12px 18px;
-    border: 0;
-    border-radius: 999px;
-    background: var(--green-300);
-    color: var(--green-950);
-    font: 500 1rem/normal var(--font-sans);
-    cursor: pointer;
+    padding-right: var(--space-sm);
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    transition: background-color var(--dur-press) var(--ease-out), scale var(--dur-press) var(--ease-out);
   }
+  .back:active { background: var(--color-accent-hover); scale: 0.97; }
   .back kbd {
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: var(--green-950);
-    color: var(--green-300);
-    font: 500 0.75rem/normal var(--font-mono);
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-sm);
+    background: var(--color-accent-text);
+    color: var(--color-accent);
+    font: var(--type-meta);
+    letter-spacing: 0.02em;
   }
-  @media (pointer: coarse) { .back kbd { display: none; } }
-  :global(:root[data-lens='inside']) .lens,
-  :global(:root[data-lens='inside']) .pill { display: none; }
+  @media (pointer: coarse) {
+    .back { padding-right: var(--space-lg); }
+    .back kbd { display: none; }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .lens:hover { background: var(--color-surface); }
+    .back:hover { background: var(--color-accent-hover); }
+  }
+  @media (forced-colors: active) { .lens, .back { border-color: ButtonText; } }
+  :global(:root[data-lens='inside']) .lens { display: none; }
   :global(:root[data-lens='inside']) .back { display: inline-flex; }
 
   .ring {
@@ -395,7 +367,9 @@ const { strings } = Astro.props;
   .dock[data-dragging] .ring { visibility: visible; }
 
   @media (prefers-reduced-motion: reduce) {
-    .lens, .pill { transition: none; }
+    .lens, .back { transition: none; }
+    .lens:active { --scale: 1; }
+    .back:active { scale: none; }
   }
 
   /* Built by script, so these rules are global. */

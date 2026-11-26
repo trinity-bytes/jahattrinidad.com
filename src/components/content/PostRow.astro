@@ -1,45 +1,78 @@
 ---
+import TextLink from '../ui/TextLink.astro';
+import KeepHyphenated from '../ui/KeepHyphenated.astro';
+
 interface Props {
   href: string;
   title: string;
-  /** Localized chip text, e.g. "ESSAY". */
+  /** Localized chip text, e.g. "ESSAY". Only the featured card shows it. */
   typeLabel: string;
   type: 'essay' | 'tutorial';
-  /** Reading time, and the date when featured; already formatted. */
+  /** Date and reading time, already formatted. */
   meta: string;
   /** The featured post is a card with its description. */
   featured?: boolean;
   description?: string;
+  /** The Notes index and the post pages; without it the row has the Home treatment. */
   detailed?: boolean;
 }
 
 const { href, title, typeLabel, type, meta, featured = false, description, detailed = false } = Astro.props;
 ---
-<a class:list={['post', { featured, detailed }]} href={href}>
-  <span class={`chip ${type}`} data-background-text>{typeLabel}</span>
-  {detailed ? <span class="details"><span class="title" data-background-text>{title}</span>{description && <span class="description" data-background-text>{description}</span>}</span> : <><span class="title" data-background-text>{title}</span>{featured && description && <span class="description" data-background-text>{description}</span>}</>}
-  <span class="meta" data-background-text>{meta}</span>
-</a>
+{featured ? (
+  <a class:list={['post', 'featured', { detailed }]} href={href}>
+    <span class={`chip ${type}`} data-background-text>{typeLabel}</span>
+    <span class="title" data-background-text><KeepHyphenated text={title} /></span>
+    {description && <span class="description" data-background-text>{description}</span>}
+    <span class="meta" data-background-text>{meta}</span>
+  </a>
+) : detailed ? (
+  /* Component 2520:155: the title is the link, with the shared TextLink arrow; the date sits under it. */
+  <div class="post-entry">
+    <TextLink href={href} label={title} data-background-text />
+    <span class="meta" data-background-text>{meta}</span>
+  </div>
+) : (
+  /* Component 2538:135 (Home list row): the whole row is the link, without an arrow. */
+  <a class="post row" href={href}>
+    <span class="title" data-background-text>{title}</span>
+    <span class="meta" data-background-text>{meta}</span>
+  </a>
+)}
 <style>
-  .post { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-xs); padding-block: var(--space-lg); border-top: 1px solid var(--color-rule); color: var(--color-heading); text-decoration: none; }
-  .chip { padding: 0.1875rem var(--space-xs); border-radius: 999px; font: 500 var(--font-size-label)/1.33 var(--font-mono); color: var(--green-950); }
-  .essay { background: var(--green-200); }
+  .post { display: flex; flex-direction: column; align-items: flex-start; color: var(--color-heading); text-decoration: none; }
+  .meta { color: var(--color-text-muted); font: var(--type-meta); letter-spacing: 0.02em; }
+
+  .post-entry { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-sm); }
+  .post-entry .meta { letter-spacing: var(--type-meta-tracking); text-transform: uppercase; }
+
+  .row { gap: var(--space-xs); padding-block: var(--space-lg); border-top: 1px solid var(--color-border); }
+  .row .title { font: 500 var(--font-size-body)/1.5 var(--font-sans), sans-serif; }
+
+  /* Home featured card (component 2538:134). */
+  .featured { gap: var(--space-md); padding: var(--post-card-pad-y) var(--post-card-pad-x); border-radius: var(--radius-lg); background: var(--color-card-raised); }
+  .chip { padding: var(--space-2xs) var(--space-xs); border: 1px solid var(--color-tag-border); border-radius: var(--radius-sm); background: var(--color-essay-chip); color: var(--color-essay-chip-text); font: var(--type-meta); letter-spacing: var(--type-meta-tracking); text-transform: uppercase; }
   .tutorial { background: var(--color-tutorial-chip); color: var(--color-tutorial-chip-text); }
-  .title { font: 400 1.125rem/1.4 var(--font-sans); }
-  .details { display: flex; flex-direction: column; gap: 0.25rem; }
-  .detailed:not(.featured) .description { font: 400 1rem/1.5 var(--font-sans); color: var(--green-900); }
-  .detailed:not(.featured) .title { font: 500 1.1875rem/1.5 var(--font-sans); }
-  .meta { font: 400 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text-muted); }
+  .featured .title { font: 600 var(--font-size-h3)/1.15 var(--font-display), sans-serif; letter-spacing: -0.02em; text-wrap: balance; }
+  .featured .description { color: var(--color-text); font: 400 var(--font-size-body)/1.5 var(--font-sans), sans-serif; text-wrap: pretty; }
+
+  /* Notes index featured card (component 2522:475): plain labels, one heading step down. */
+  .detailed.featured { gap: var(--space-sm); background: var(--color-card); }
+  .detailed .chip { padding: 0; border: 0; background: none; color: var(--color-text-muted); }
+  .detailed.featured .title { font-size: var(--font-size-h4); line-height: 1.2; }
+  .detailed.featured .description { color: var(--color-heading); }
+  .detailed.featured .meta { letter-spacing: var(--type-meta-tracking); text-transform: uppercase; }
+
+  .post .title { text-underline-offset: 0.15em; }
   .post:focus-visible .title, .post:active .title { text-decoration: underline; }
-  @media (hover: hover) and (pointer: fine) { .post:hover .title { text-decoration: underline; } }
-  .featured { gap: var(--space-md); padding: var(--post-card-pad-y) var(--post-card-pad-x); border: 0; border-radius: var(--space-md); background: var(--color-card-alt); }
-  .featured .details { gap: var(--space-md); }
-  .featured .title { font: 600 var(--font-size-heading-sm)/1.12 var(--font-display); letter-spacing: -0.015em; }
-  .featured .description { font: 400 var(--font-size-body)/1.5 var(--font-sans); color: var(--color-text); }
-  .featured .meta { font-size: 0.8125rem; }
+  @media (hover: hover) and (pointer: fine) {
+    .post:hover .title { text-decoration: underline; }
+    /* Home: the underline plus one card step. The index card keeps its fill. */
+    .featured:not(.detailed):hover { background: linear-gradient(var(--color-current), var(--color-current)), var(--color-card-raised); }
+  }
+
   @media (min-width: 48rem) {
-    .post { display: grid; grid-template-columns: 6rem 1fr auto; align-items: center; gap: var(--space-xl); }
-    .chip { justify-self: start; }
-    .featured { display: flex; align-items: flex-start; }
+    .row { flex-direction: row; align-items: center; gap: var(--space-xl); }
+    .row .title { flex: 1; min-width: 0; }
   }
 </style>
