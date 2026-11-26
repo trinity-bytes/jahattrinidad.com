@@ -38,7 +38,8 @@ interface Props {
 }
 
 const { lang, postsLang, marker, headline, strings, inside, posts, allWritingHref, elsewhere = [], seed = 5, index = false } = Astro.props;
-const newTab = getDictionary(lang).common.newTab;
+const dictionary = getDictionary(lang);
+const newTab = dictionary.common.newTab;
 const [featured, ...rest] = posts;
 const typeLabel = (type: 'essay' | 'tutorial') => strings[type];
 const note = inside.annotations;
@@ -83,7 +84,7 @@ const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', postsLa
             description={featured.entry.data.description}
             type={featured.entry.data.type}
             typeLabel={typeLabel(featured.entry.data.type)}
-            meta={`${strings.minutes(featured.readingTime)} read · ${formatDate(featured.entry.data.publishDate, lang)}`}
+            meta={`${dictionary.post.readingTime(featured.readingTime)} · ${formatDate(featured.entry.data.publishDate, lang)}`}
           />
           {/* Inside: the type chip sits inside the card's link, so its annotation anchors to an invisible copy of the chip. */}
           {!index && <div class="chip-anchor" data-show="inside">
@@ -158,6 +159,8 @@ const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', postsLa
   .label { margin: 0; font: 500 var(--font-size-label)/1.33 var(--font-mono); text-transform: uppercase; color: var(--color-text-muted); }
   .elsewhere .label { padding-bottom: var(--space-md); }
   .featured-card, .rows-wrap { position: relative; }
+  /* The meta line may wrap (longer in es and pt): the card's arrow never wraps alone. */
+  .featured-card :global(.meta .arrow) { white-space: nowrap; }
   .rows-wrap { margin-top: var(--space-xl); }
   .rows, .elsewhere ul { margin: 0; padding: 0; list-style: none; }
   .layout > :global(.notes) { padding: 0; }

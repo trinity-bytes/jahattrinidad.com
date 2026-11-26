@@ -58,7 +58,7 @@ const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.rep
               <article class:list={['experiment', { 'has-peek': data.peekImage, 'has-stats': s }]}>
                 <div class="text">
                   <p class="prompt">$ {data.kind ?? data.stack.join(' · ')}</p>
-                  <h3>{data.title}</h3>
+                  <h3 title={data.title}>{data.title}</h3>
                   <p class="description">{data.description}</p>
                   <div class="meta">
                     <ul class="chips">{data.stack.map((item) => <li>{item}</li>)}</ul>
@@ -181,8 +181,9 @@ const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.rep
   .experiments {
     margin-top: 7rem;
   }
-  /* Experiments preview v2 (Figma `2442:12`): the "peek" stays inside the tile. On hover or focus the
-     text column narrows, the README capture slides in from the right and the stats replace the chips. */
+  /* Experiments preview v2 (Figma `2442:12`, states `2524:2560`): the "peek" stays inside the tile. On
+     hover or focus (desktop) the text column narrows, the README capture slides in from the right and the
+     stats replace the chips. The tile's height is fixed there, so no state ever moves the grid. */
   .experiments .grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -283,13 +284,21 @@ const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.rep
   .peek figcaption {
     white-space: nowrap;
   }
-  /* Touch screens have no hover: no peek, the chips stay. */
   @media (hover: hover) {
     .experiment:is(:hover, :focus-within) {
       border-color: var(--green-300);
     }
+  }
+  /* Touch screens have no hover, and narrower tiles have no room: no peek, the chips stay. */
+  @media (min-width: 1025px) {
+    .experiment {
+      height: 300px;
+      grid-template-rows: minmax(0, 1fr);
+    }
+  }
+  @media (hover: hover) and (min-width: 1025px) {
     .experiment.has-peek:is(:hover, :focus-within) {
-      grid-template-columns: 1fr 268px;
+      grid-template-columns: minmax(0, 1fr) min(268px, 42%);
       column-gap: 24px;
       padding-right: 16px;
     }
@@ -302,6 +311,31 @@ const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.rep
     }
     .experiment.has-stats:is(:hover, :focus-within) .stats {
       display: block;
+    }
+    /* The narrow column must not need more height: one line of title, three of description. */
+    .experiment.has-peek:is(:hover, :focus-within) h3 {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .experiment.has-peek:is(:hover, :focus-within) .description {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+    }
+    /* Stats, then the links on their own row (board 2524:2560). */
+    .experiment.has-peek:is(:hover, :focus-within) .meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .experiment.has-peek:is(:hover, :focus-within) .meta .links {
+      margin-left: 0;
+    }
+    .experiment.has-peek:is(:hover, :focus-within) .stats {
+      white-space: pre-wrap;
     }
   }
   @media (prefers-reduced-motion: reduce) {

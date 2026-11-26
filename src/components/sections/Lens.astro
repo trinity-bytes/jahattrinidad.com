@@ -44,6 +44,8 @@ const { strings } = Astro.props;
 
 <script>
   import { createPreview, type Preview } from './lens/preview';
+  import { lensKeyAction } from '../../lib/lens-keys';
+  import { createTransitionGuard } from '../../lib/transition-guard';
 
   /** Circle radius: 190 px, measured on the Lens states board (2109:103, drawn at half scale). */
   const RADIUS = 190;
@@ -55,7 +57,6 @@ const { strings } = Astro.props;
   const LEGACY_DISCOVERED_KEY = 'lens-discovered';
   const NUDGE_EVERY = 7000;
   const FIRST_NUDGE = 1200;
-  const EDITABLE = 'input, textarea, select, [contenteditable]:not([contenteditable="false"])';
 
   const root = document.documentElement;
   const dock = document.querySelector<HTMLElement>('[data-lens-dock]');
@@ -89,13 +90,17 @@ const { strings } = Astro.props;
       return { x: box.left + box.width / 2, y: box.top + box.height / 2, r: Math.min(box.width, box.height) / 2 };
     }
 
+    /** One reveal at a time: a second view transition during one crashes Chromium. */
+    const reveal = createTransitionGuard();
+
     /**
      * Switches the page state; `cleanup` runs with it so the transition's snapshot can include the preview.
      * The new state is revealed by a circle that opens from `origin` (the lens, the dropped x-ray circle or
      * the Back outside button) with the same expo in-out curve as the hero's load, only quicker.
+     * A request made while a reveal runs is dropped.
      */
     function switchTo(next: Lens, cleanup?: () => void, origin?: Origin) {
-      if (root.dataset.lens === next) {
+      if (reveal.busy || root.dataset.lens === next) {
         cleanup?.();
         return;
       }
@@ -112,16 +117,19 @@ const { strings } = Astro.props;
         apply();
         return;
       }
-      root.dataset.lensReveal = '';
-      const transition = document.startViewTransition(apply);
-      transition.ready.then(() => {
-        const end = Math.hypot(Math.max(from.x, innerWidth - from.x), Math.max(from.y, innerHeight - from.y));
-        root.animate(
-          { clipPath: [`circle(${from.r}px at ${from.x}px ${from.y}px)`, `circle(${end}px at ${from.x}px ${from.y}px)`] },
-          { duration: 900, easing: 'cubic-bezier(0.87, 0, 0.13, 1)', pseudoElement: '::view-transition-new(root)' },
-        );
-      }).catch(() => {});
-      transition.finished.finally(() => delete root.dataset.lensReveal);
+      reveal.run(async () => {
+        root.dataset.lensReveal = '';
+        const transition = document.startViewTransition(apply);
+        transition.ready.then(() => {
+          const end = Math.hypot(Math.max(from.x, innerWidth - from.x), Math.max(from.y, innerHeight - from.y));
+          root.animate(
+            { clipPath: [`circle(${from.r}px at ${from.x}px ${from.y}px)`, `circle(${end}px at ${from.x}px ${from.y}px)`] },
+            { duration: 900, easing: 'cubic-bezier(0.87, 0, 0.13, 1)', pseudoElement: '::view-transition-new(root)' },
+          );
+        }).catch(() => {});
+        try { await transition.finished; }
+        finally { delete root.dataset.lensReveal; }
+      });
     }
 
     const toggle = () => switchTo(root.dataset.lens === 'inside' ? 'outside' : 'inside');
@@ -226,16 +234,14 @@ const { strings } = Astro.props;
     back.addEventListener('click', () => switchTo('outside'));
 
     window.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        if (drag) cancelDrag();
-        else if (root.dataset.lens === 'inside') switchTo('outside');
-        return;
+      const action = lensKeyAction(event, { inside: root.dataset.lens === 'inside', dragging: drag !== null, shortcutDisabled });
+      if (action === 'cancel-drag') cancelDrag();
+      else if (action === 'leave-inside') switchTo('outside');
+      else if (action === 'blur-field') (event.target as HTMLElement).blur();
+      else if (action === 'toggle') {
+        discover();
+        toggle();
       }
-      const isShortcut = event.key.toLowerCase() === 'i' && !event.ctrlKey && !event.metaKey && !event.altKey;
-      if (!isShortcut || event.repeat || event.isComposing || shortcutDisabled || drag) return;
-      if (event.target instanceof Element && event.target.closest(EDITABLE)) return;
-      discover();
-      toggle();
     });
 
     // On every page load, until the visitor uses the lens on that page, it gives a gentle shake every few
