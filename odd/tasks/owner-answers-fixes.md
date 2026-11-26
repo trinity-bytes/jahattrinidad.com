@@ -19,12 +19,18 @@ Branch: `feat/owner-answers-fixes` (from `feat/t3-t7-closeout`). Delivery: ask-o
 
 | ID | Specs | Route | Status | Commit |
 |---|---|---|---|---|
-| T1 | S1 | inline | open | |
-| T2 | S2, S3 | inline | open | |
-| T3 | S4, S5 | inline | open | |
-| T4 | S6, S7 | inline | open | |
-| T5 | S8 | inline | open | |
+| T1 | S1 | inline | done | fc7daed |
+| T2 | S2, S3 | inline | done | 734ecfe |
+| T3 | S4, S5 | inline | done | fc7daed |
+| T4 | S6, S7 | inline | done | 27fa1df |
+| T5 | S8 | inline | done (measured) | docs commit |
 
 ## Log
 
 - L1 (2026-11-26, owner): "aprobado todo. procede con el codigo" — after the Figma corrections listed in `openspec/changes/design-audit/tasks.md`, "Owner answers, 2026-11-26".
+- L2: S5 correction. The composed post board (`2522:1287`) also shows the footer's dark hill rising over the band; the earlier comparison used the band component alone. The only real difference was the cream fade, now removed. The footer hill stays (it is the footer on every page).
+- L3: S3. A live link from the Portfolio card to this site fails the link rule (absolute link to the site) and points at the page the visitor is on, so Portfolio has no `demoUrl`; its bar shows the site hostname, found by the repository name. Experiments keep the `publishDate` order, so Coursera Clone and Forest Hero 2 sit second and third, not last as on the board.
+- L4: checks. `npm run check` exit 0 after each commit (95/95 tests, 0 astro errors, links clean). Captures at 390 / 768 / 1440: project hero, Notes hero (en, es), post band, More cards, /links/; no horizontal overflow. S6 checked in two Playwright contexts: desktop shows the "Press I" wording; emulated touch shows the touch wording, and the "Press I" wording after one physical key press.
+- L5: S8 measured 2026-11-26 (glyph pixels from a with/without-text capture pair, text colour composited at its effective alpha over the pixel behind; median / p5):
+  - HO-09 "Jahat", white on the sky: 1440 3.08 / 2.11, 768 2.96 / 2.64, 390 3.02 / 2.26. Large text needs 3:1: the median sits on the line and fails at 768; p5 fails where the word crosses the sun glow. Still open; the fix is a design decision.
+  - HI-04 annotation notes (cream 60 %): every note passes 4.5:1 at every width; lowest p5 4.62 (1440), 5.13 (390), 5.18 (768). Was 2.05–3.61 in the audit. Closed.

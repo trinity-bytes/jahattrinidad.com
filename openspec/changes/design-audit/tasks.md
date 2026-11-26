@@ -217,7 +217,9 @@ Each is detailed in its report. The code keeps the current behaviour until decid
 9. More cards: the mock browser frame shrinks the image for nothing. Options A (image edge to edge, host chip) and B (the card is the window) in `2586:5221`. **Approved 2026-11-26: Option B.**
 
 **Applied to Figma 2026-11-26** (proposal sections deleted): project hero components (TourBench and Inspiration Garden, tablet and mobile) are option A; `Project card / More` and its mobile variant are option B; coursera-clone and forest-hero-2 left More projects at 1440/768/390 and are tiles "Coursera Clone" and "Forest Hero 2" in Small experiments; Portfolio shows `jahattrinidad.com`; `ChatCard` avatar is the photo and its description fixes the width (350 / 640); `MobileMenu` description states the circle reveal. Code phase may start on these. coursera-clone and forest-hero-2 move to Small experiments (tiles in the same section) and get real titles.
-10. Re-measure HO-09 and HI-04.
+10. Re-measure HO-09 and HI-04. **Measured 2026-11-26** (`odd/tasks/owner-answers-fixes.md` L5): HI-04 passes everywhere (lowest p5 4.62:1), closed. HO-09 "Jahat" median 3.08 / 2.96 / 3.02 and p5 2.11 / 2.64 / 2.26 at 1440 / 768 / 390: still under 3:1 where it crosses the sun glow, open for a design decision.
+
+**Code done 2026-11-26** on `feat/owner-answers-fixes` (`fc7daed`, `734ecfe`, `27fa1df`): items 3 (no change), 4, 5, 7, 8, 9. Still open: 1 (lens hint) and 6 (filled card hover) need a Figma proposal; 2 needs no code; HO-09.
 
 ### SEO and indexing (2026-11-26)
 
