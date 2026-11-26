@@ -98,12 +98,63 @@ Owner, 2026-11-25: "vamos a pasar a la fase de correcion del diseño y comprotam
   - [x] Delete the five pages (2026-11-25, after the owner saved the version "Before removing deprecated pages" by hand; the Plugin API cannot, `saveVersionHistoryAsync` is not supported). The `Nav` instance on `As built · Nav — states` was detached first (now frame `2575:57`). Deleted one page per call: all five in one script failed and rolled back. After: 11 pages, 0 orphan instances on the pages that hold instances. Before deleting Portfolio, detach the one `Nav` instance on `As built · Nav — states`. No component on the other four has instances elsewhere.
 - [x] 3.9 (2026-11-25) The owner deleted the four `As built · …` pages by hand ("eliminé las apginas de as built. no son necesarioas ahora"). The file now holds Brand, Design system, `---`, Proposed · Home / Work & projects / Notes & links. Node ids cited in `reports/` for As built boards are history. Next: the code phase.
 
-## Code phase and SEO (2026-11-26)
+## Phase 4 — Code (started 2026-11-26)
 
-Code tasks are tracked in `odd/tasks/design-corrections-code.md` (branch `feat/design-corrections`), worker briefs in `prompts/code-*.md`, worker reports in `reports/code-t*.md`.
+Owner, 2026-11-26:
 
-- [x] T2 foundations (`1bd86ef`, `reports/code-t2-foundations.md`) and T1 behaviour defects (`a4abdf0`, `reports/code-t1-behaviour.md`), by two Sonnet workers; `npm run check` passes
-- [ ] T1 close-out: live re-check on the combined tree (`odd/tasks/design-corrections-code.md` L10), then T3 shared controls, T4–T6 pages
-- [x] SEO check of the search results for the owner's name (Google, Bing, DuckDuckGo, Ecosia) and of Bing Webmaster Tools → `reports/seo-search-results.md` (findings F1–F10, owner actions)
-- [x] Bing: the 25 production sitemap URLs submitted through URL Submission (2026-11-26)
-- [ ] T7 SEO fixes in code; T8 owner actions (deploy and check the favicon, Cloudflare Crawler Hints, Search Console indexing, profile alignment, submit TourBench to Bing after the next deploy)
+> "vamos a pasar a la implementacion de las mejoras en el codigo. de momento inicia delegando a agentes sonnet con herdr pero pronto podras usar agentes codex tambien. recuerda que tambien tienes a copilot qu ete puede ayudar con soas sensillas aunque suele usar modelos tipo gpt 6 luna. encargate de mantener los estandares de calidad tanto en diseño, experiencia y codigo"
+
+Goal: the site implements the approved Proposed boards (Figma `gq6glEp9QrPOnEyYG9dldh`: `Proposed · Home` `2536:12`, `Proposed · Work & projects` `2520:22`, `Proposed · Notes & links` `2520:12`, components on `Design system` `2501:136`) and fixes the audit's behaviour defects. Work lands on `develop` (merged from `feat/design-corrections` at `7ffea98`); start the next unit on a new feature branch from `develop`. `odd/tasks/design-corrections-code.md` is the running logbook of the same plan; this section is enough to continue without it.
+
+### How the work is run
+
+- One supervisor session owns git, reviews every diff against the worker's edit surface, runs `npm run check`, looks at the pages and commits. Workers never commit.
+- Workers: Claude Sonnet in a separate Herdr tab: `herdr agent start <name> --kind claude --pane <id> -- --model sonnet --permission-mode bypassPermissions`, then `herdr agent prompt <name> "<one line pointing to the briefs>"` (no `--timeout` without `--wait`). Two at a time with disjoint edit surfaces; one owner per shared file. Codex and Copilot may join later (Copilot for mechanical work: captures, pixel checks).
+- Briefs: `prompts/code-common.md` (rules every worker follows: Figma is the reference and is read only, i18n in en/es/pt, accessibility, test first for isolable logic in `src/lib/`, before/after captures, report format, `WORKER DONE <report>`), plus one brief per unit (`prompts/code-t1-behaviour.md`, `prompts/code-t2-foundations.md`). Write the next brief in the same shape.
+- The dev server runs at `http://127.0.0.1:4321/` (`npm run dev -- --host 127.0.0.1 --port 4321`); workers must not start another. Captures need a full Chromium (`/usr/bin/chromium`) and `playwright` on `NODE_PATH` (see "Continue from another clone" in `proposal.md`). Worker scratch lives outside the repo and does not survive the session.
+- Gate before every commit: `npm run check` exit 0, diff only inside the surface, captures looked at.
+
+### Tasks
+
+| ID | Scope | Status | Commit / report |
+|---|---|---|---|
+| T1 | The eight behaviour defects of `reports/phase-2-audit.md` §1 (NL-01, HI-01, HI-02, NL-03, WK-17, NL-02, HI-03, WK-01) | code done, `npm run check` passes; **live re-check pending** (below) | `a4abdf0`, `reports/code-t1-behaviour.md` |
+| T2 | Foundations: tokens from the Figma variables, `@layer base` defaults (line height, `text-wrap`, form fonts, mono), focus tokens and `[data-surface="dark"]`, `Icon` `sizing` prop (`inline` / `control` / `brand`) with a 1.5 px non-scaling stroke, motion tokens | done | `1bd86ef`, `reports/code-t2-foundations.md` |
+| T3 | Shared controls `ui/Button`, `ui/TextLink`, `ui/BackLink` as on `Design system` (system causes S1, S6 hit areas, S7 hover/press of `phase-2-audit.md` §2); migrate every hand-built call site; remove the temporary `.site-nav .contact` line-height rule in `src/layouts/Base.astro` | next | input: T2 report "Call sites to adopt" |
+| T4 | Home Outside, Inside, chat, nav, footer: every item `reports/phase-3-home.md` marks "code", plus the label sweep (S3) and adopting T2's tokens | after T3 | |
+| T5 | Work index and project pages: items marked "code" in `reports/phase-3-work.md` | after T3 | |
+| T6 | Notes, post, `/links/`: items marked "code" in `reports/phase-3-notes.md` | after T3 | |
+| T7 | SEO in code, findings F3–F8 and F1's IndexNow key of `reports/seo-search-results.md`: `WebSite` JSON-LD; titles `<page> — <what it is> · Jahat Trinidad` and 140–160 character descriptions in en/es/pt via the dictionary; `data-nosnippet` on the skip link and nav handle; `Person` with one `@id`, full `sameAs`, portrait `image`; `alt="Jahat Trinidad"` on the hero portrait and avatar; `BreadcrumbList`, `BlogPosting`, project schema | independent of T3–T6 | |
+| T8 | Owner actions (outside the repo): deploy, then confirm production links `/favicon.ico` and `/favicon.svg` instead of `data:` icons; Cloudflare Crawler Hints; submit TourBench to Bing after the deploy (it is missing from the production sitemap); Search Console indexing of TourBench, Inspiration Garden and the posts; re-check Bing Site Explorer around 2026-12-03; LinkedIn headline and website links on every profile | owner | |
+
+### Resume here
+
+1. **T1 live re-check**, on the current `develop` with fresh captures:
+   - WK-01: experiment tiles stay 300 px tall at rest, on hover and on keyboard focus at 1025, 1100, 1199, 1280, 1440 and 1920 px in en, es and pt, and the page height does not change. T2's root line height landed after the worker's last measurement, so this is the check that matters most.
+   - HI-01: press `I` twice during the lens reveal (gaps 200, 600, 950 ms) and spam the lens button: no crash, the lens ends in one state.
+   - HI-02: Esc while typing in the chat composer does not switch the lens; Esc in an empty field only blurs it.
+   - HI-03: with the chat open the composer annotation and the Contact annotation list are hidden, at 1440 / 768 / 390.
+   - NL-01: on `/notes/why-a-boundary-checker/`, each "In this post" link lands its heading at 96 px from the top and that item carries `aria-current`, at 1440 / 768 / 390, with and without reduced motion.
+   - NL-02, NL-03, WK-17 were checked by the worker; look at them once in the captures.
+   Fix what fails, commit, then tick T1.
+2. **T3**, then T4–T6 (two workers at a time where surfaces are disjoint). **T7** can run beside T3: it touches `src/lib/seo.ts`, `src/layouts/Base.astro`, the dictionaries and content, not the controls.
+
+### Open questions (owner or the next unit decides)
+
+- T1-1 NL-02: Figma `2520:35` draws "Copy" white at rest with no hover; the code keeps green-200 so a cream hover shows. If T6 makes it white, the hover needs a decision.
+- T1-2 WK-01: below 1025 px the peek and stats swap are removed for mouse users too (follows the 768 boards). Confirm.
+- T1-3 WK-01: long titles truncate in the peek ("GitHub Profile READ…"); full name in `title`.
+- T1-4 HI-03: the report's idle bound "inset 8 px" was not applied (`Contact.astro` was outside T1's surface); compare with the Home Inside board in T4.
+- T2-1: `text-wrap: balance` breaks three Home headings at other points than the boards' manual breaks ("Faster launches. Fewer / handoffs. Nothing rebuilt.", "A bridge between / design and engineering.", "Built to grow, not / to be redone."). Accept, or authored breaks per locale in `Values.astro` (T4).
+- T2-2: TourBench facts need non-breaking characters: U+00A0 in `3 628 800`, U+2011 or a no-wrap span in `--test` (`src/content/projects/{,es/,pt/}tourbench.mdx`) (T5).
+- T2-3: token names assumed without a direct Figma read: `--radius-xl`, `--radius-2xl`, `--icon-*`, the motion durations and easings. Confirm against the Foundation collection with a Plugin API read.
+- T2-4: the Design system icon section holds 20 icons, not 15.
+- Known leftovers: `components/content/PostRow.astro` `&nbsp; →` still has a breakable space; Contact chips "I'm hiring" with a straight apostrophe; the send button still draws `arrow-up` instead of a paper plane (owner asked for a typical send icon, `odd/tasks/figma-design-system.md` L14).
+
+### SEO and indexing (2026-11-26)
+
+Owner: "antes de cerrar sesion quisiera que mejoremos e tema de seo y de la indexacion. [...] atencion especial en google. quiero qu eveas como muestra la pagina web, que contenido muestra de ella y como podemos mejorar no solo el raking sino el contenido qu ese muestra en la lista de resultados. anotas ensas mejoras y las incluyes en el plakn de implemntacion"
+
+- [x] Search results for the owner's name on Google, Bing, DuckDuckGo and Ecosia, and Bing Webmaster Tools → `reports/seo-search-results.md` (F1–F10, owner actions). Google ranks the site first; Bing knew only `/`.
+- [x] The 25 production sitemap URLs submitted in Bing Webmaster Tools → URL Submission (2026-11-26, "Success: 25 URLs submitted").
+- [ ] T7 (code) and T8 (owner), table above.

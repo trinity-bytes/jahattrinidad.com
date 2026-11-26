@@ -1,6 +1,6 @@
 # Design audit: UI/UX, consistency, usability and interactions
 
-> Status: **phase 1 (as-built baseline) done 2026-11-25; phase 2 waiting for the owner**. Summary: `reports/phase-1-summary.md`. Started 2026-11-25. Read this file and `tasks.md` before touching Figma or the audit. Everything needed to continue is in this folder and in the repo; nothing depends on Engram or on a previous session.
+> Status: **phases 1–3 done (baseline, audit, corrected Figma boards approved 2026-11-25); phase 4, code, started 2026-11-26: T1 and T2 merged on `develop`, resume at `tasks.md` "Phase 4 — Code" → "Resume here"**. Summaries: `reports/phase-1-summary.md`, `reports/phase-2-audit.md`. Started 2026-11-25. Read this file and `tasks.md` before touching Figma or the audit. Everything needed to continue is in this folder and in the repo; nothing depends on Engram or on a previous session.
 
 ## Why
 
