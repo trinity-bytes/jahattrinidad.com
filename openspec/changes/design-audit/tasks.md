@@ -97,3 +97,12 @@ Owner, 2026-11-25: "vamos a pasar a la fase de correcion del diseño y comprotam
   - [x] Organise (2026-11-25): page order Brand, Design system, `---`, Proposed · Home / Work / Notes (approved), `---`, As built × 4 (baseline), `---`, pages to delete. One Section per screen on every Proposed and As built page (`Proposed · Home Outside` `2573:9840` … `As built · /links/` `2573:9901`), boards 1440 → 768 → 390 with captions above, nothing loose. Brand: `Brand foundations v1` `2573:9902`, `Banners and images` `2573:9903`.
   - [x] Delete the five pages (2026-11-25, after the owner saved the version "Before removing deprecated pages" by hand; the Plugin API cannot, `saveVersionHistoryAsync` is not supported). The `Nav` instance on `As built · Nav — states` was detached first (now frame `2575:57`). Deleted one page per call: all five in one script failed and rolled back. After: 11 pages, 0 orphan instances on the pages that hold instances. Before deleting Portfolio, detach the one `Nav` instance on `As built · Nav — states`. No component on the other four has instances elsewhere.
 - [x] 3.9 (2026-11-25) The owner deleted the four `As built · …` pages by hand ("eliminé las apginas de as built. no son necesarioas ahora"). The file now holds Brand, Design system, `---`, Proposed · Home / Work & projects / Notes & links. Node ids cited in `reports/` for As built boards are history. Next: the code phase.
+
+## Code phase and SEO (2026-11-26)
+
+Code tasks are tracked in `odd/tasks/design-corrections-code.md` (branch `feat/design-corrections`), worker briefs in `prompts/code-*.md`, worker reports in `reports/code-t*.md`.
+
+- [ ] T1 behaviour defects (`phase-2-audit.md` §1), T2 foundations: delegated to two Sonnet workers
+- [x] SEO check of the search results for the owner's name (Google, Bing, DuckDuckGo, Ecosia) and of Bing Webmaster Tools → `reports/seo-search-results.md` (findings F1–F10, owner actions)
+- [x] Bing: the 25 production sitemap URLs submitted through URL Submission (2026-11-26)
+- [ ] T7 SEO fixes in code; T8 owner actions (deploy and check the favicon, Cloudflare Crawler Hints, Search Console indexing, profile alignment, submit TourBench to Bing after the next deploy)
