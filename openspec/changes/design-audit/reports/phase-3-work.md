@@ -2,46 +2,109 @@
 
 ## Progress
 
-In progress. Page `Proposed · Work & projects` (`2520:22`) is immediately after the As built page. `Page components` section: `2520:23`.
+Complete. All boards in the brief are built, checked and captioned. Page `Proposed · Work & projects` (`2520:22`), immediately after the As built page. `Page components` section: `2520:23`.
 
-### Page components
+## Page components
 
-| ID | Name | Variants | Findings | Status |
-|---|---|---|---|---|
-| `2520:29` | Mock browser bar | None yet | WK-31 (intended); mobile legibility | Draft; used in the card. Mobile hostname hiding still needs a variant; not verified at 390. |
-| `2520:50` | Project card / More | None yet | WK-03, WK-04, WK-06, WK-07, WK-31 (intended) | Draft; desktop screenshot inspected after the hostname and action-row correction. Needs adaptive sizing and a baseline comparison. |
-| `2520:1658` | Project card / Featured | None yet | WK-03 proposal, WK-09 (intended) | Draft; Viora desktop screenshot inspected. Text properties added afterward; responsive layout and baseline comparison remain. |
-| `2522:481` | Project card / More · Mobile | None yet | WK-03 proposal, WK-04, WK-06, WK-07, WK-31 (intended) | Draft; mobile screenshot inspected after applying breakpoint and grouping external links. Still needs baseline comparison and integration. |
-| `2522:39` | Experiment tile | Default, Peek | WK-01, WK-11 (intended) | Draft; both 300 px states screenshotted. Default and Peek states inspected; stats use page-local vector icons and action/caption share a row. Used on checked Work and peek boards. |
-| `2522:449` | Project hero / Desktop | None yet | WK-20 (intended) | Draft; TourBench screenshot inspected. Responsive variants and baseline comparison remain. |
-| `2522:840` | At a glance fact | None | WK-26 proposal | Checked in TourBench 1440; page-local 20/30 text style `Work/At a glance value`. |
-| `2522:843` | Step card | None | WK-18, WK-21 proposal, WK-22 | Checked in TourBench 1440 with equal-height dark formula cards. |
-| `2522:848` | Next project / Desktop | None yet | WK-17, WK-19 proposal, WK-20 (intended) | Draft; screenshot inspected. Responsive variants and baseline comparison remain. |
-| `2522:1282` | Work hero / Desktop | None yet | SY-12 outstanding | Draft; uses baseline art and text. Compared as part of the WIP desktop board. |
-| `2522:1429` | Project card / Featured · Mobile | None yet | WK-03 proposal | Draft; mobile screenshot inspected. |
-| `2522:1506` | Project card / Featured · Paired | None yet | WK-03 proposal, WK-09 intended | Draft; screenshot inspected and used on the WIP desktop board. |
-| `2523:2246` | Project card / Featured · Reverse | None yet | WK-03 proposal, WK-09 intended | Draft; restores Garden’s image-right layout on the WIP board; final screenshot remains. |
+### Parts and 1440 sections
 
-### Boards
+| ID | Name | Findings |
+|---|---|---|
+| `2520:29` | Mock browser bar | WK-31 |
+| `2520:50` | Project card / More | WK-03 (proposal), WK-04–WK-07, WK-31 |
+| `2520:1658` | Project card / Featured | WK-03 (proposal), WK-09 |
+| `2523:2246` | Project card / Featured · Reverse | WK-03 (proposal), WK-09 |
+| `2522:1506` | Project card / Featured · Paired (also 768) | WK-03 (proposal), WK-09 |
+| `2522:1429` | Project card / Featured · Mobile (390 and 768 pair) | WK-03 (proposal) |
+| `2522:481` | Project card / More · Mobile (768 and 390) | WK-03 (proposal), WK-04, WK-06, WK-07, WK-31 |
+| `2522:39` | Experiment tile (variants Default, Peek) | WK-01, WK-10, WK-11 |
+| `2524:2493`, `2524:2500` | Icon / star, Icon / git-fork (page) | WK-10 |
+| `2522:1282` | Work hero / Desktop | SY-12 (proposal) |
+| `2522:449` | Project hero / Desktop | WK-17, WK-20 |
+| `2522:840`, `2522:843` | At a glance fact, Step card | WK-18, WK-21 (proposal), WK-22, WK-26 (proposal) |
+| `2522:848` | Next project / Desktop | WK-17, WK-19 (proposal), WK-20 |
+| `2524:2688`, `2524:2718`, `2524:2775` | TourBench Overview, How it works, Decision | WK-18, WK-22, WK-23, WK-28, WK-29 |
+| `2524:2714`, `2524:2716` | Table cell / Label, Number | WK-23 |
+| `2526:1123`, `2526:1146`, `2526:1178`, `2528:1174`, `2530:1188`, `2530:1249`, `2530:1280` | Garden 1440 sections | WK-18, WK-26 (proposal), WK-28 |
+| `2526:1159`, `2526:1219`, `2526:1168`, `2528:1168`, `2530:1245`, `2529:1188`, `2529:1198`, `2529:1206` | Garden feature rows, terminal, decision row, milestone, era art | WK-26 (proposal) |
+
+### Responsive sections (derived from the checked 1440 content)
+
+| Group | Tablet 768 | Mobile 390 |
+|---|---|---|
+| Work: hero, featured, more projects, experiments | `2563:3310`, `2563:3315`, `2563:3491`, `2563:4181` | `2563:4628`, `2563:4633`, `2563:4809`, `2563:5503` |
+| TourBench: hero, overview, how it works, decision, next | `2558:1666`, `2558:1736`, `2558:1863`, `2558:1982`, `2558:2027` | `2558:2305`, `2558:2375`, `2558:2502`, `2558:2623`, `2558:2668` |
+| Garden: hero, overview, problem, what it does, decisions, mistakes, growth, next | `2560:2446`, `2560:2512`, `2560:2575`, `2560:2638`, `2560:2794`, `2560:2981`, `2560:3113`, `2560:3188` | `2560:3438`, `2560:3504`, `2560:3567`, `2560:3630`, `2560:3786`, `2560:3973`, `2560:4105`, `2560:4180` |
+
+Rows that had to restack (Garden feature and decision rows, TourBench and Garden next cards, the stacked experiment tiles) are plain auto-layout frames inside their section component, not nested instances. Section positions were repacked so nothing overlaps.
+
+## Boards
 
 | Board | Node | Width | Modes | Check result |
 |---|---|---:|---|---|
-| Proposed · Work index · 1440 | `2522:1526` | 1440 | Outside / Desktop 1440 | **Checked**, screenshot compared with `2470:870`; narrow card titles fixed, Garden’s reversed layout and baseline artwork restored, contact marker corrected. Page-level solid colors, nonzero auto-layout gaps/padding and four corner bindings were audited; no page-level gaps except inherited Footer geometry. Shared design-system binding exceptions are listed below. SY-12: proposal: text-shadow on the display word in code (audit SY-12); baseline art retained per supervisor. Caption `2523:2423`. |
+| Work index · 1440 | `2522:1526` | 1440 | Outside / Desktop 1440 | Checked against `2470:870`. Caption `2523:2423`. |
+| Work index · 768 | `2563:3278` | 768 | Outside / Tablet 768 | Checked against `2471:12`. Mink'a and Tranqui paired, More in 2 columns with equal heights. Caption `2564:5302`. |
+| Work index · 390 | `2563:4581` | 390 | Outside / Mobile 390 | Checked against `2471:428`. Fixed the "Services" orphan. Caption `2564:5303`. |
+| Experiments peek · 1440 | `2524:2560` | 1440 | Outside / Desktop 1440 | Checked against `2471:840`. Caption `2524:2686`. |
+| TourBench · 1440 | `2524:2790` | 1440 | Outside / Desktop 1440 | Checked against `2471:903`. Caption `2526:1122`. |
+| TourBench · 768 | `2558:1614` | 768 | Outside / Tablet 768 | Checked against `2471:1100`. Caption `2561:3278`. |
+| TourBench · 390 | `2558:2228` | 390 | Outside / Mobile 390 | Checked against `2471:1297`. Caption `2561:3279`. |
+| Inspiration Garden · 1440 | `2530:1307` | 1440 | Outside / Desktop 1440 | Checked against `2471:1541`. Removed As built background plates (baked card shadows showed as ghost boxes), centred the capture, restored the timeline rules. Caption `2557:4732`. |
+| Inspiration Garden · 768 | `2560:2394` | 768 | Outside / Tablet 768 | Checked side by side against `2471:1934` (full height); content matches. Caption `2561:3280`. |
+| Inspiration Garden · 390 | `2560:3370` | 390 | Outside / Mobile 390 | Checked against `2471:2335`; heading orphans fixed. Caption `2561:3281`. |
 
-| Proposed · Experiments peek · 1440 | `2524:2560` | 1440 | Outside / Desktop 1440 (tiles use dark surface) | **Checked** against `2471:840`: side-by-side states both 300 px; three-line peek clamp; vector star and git-fork; image caption and action on one baseline. No page-level binding gaps found. Caption `2524:2686`. |
+### Binding audit
 
-| Proposed · TourBench · 1440 | `2524:2790` | 1440 | Outside / Desktop 1440 | **Checked** against `2471:903`; screenshot rechecked after balancing the third step heading, restoring dark formula cards and applying 20/30 facts. WK-19/21/26 are proposals. Page-level bindings verified with the existing shared Footer geometry exception. Caption `2526:1122`. |
+The six 768/390 boards were audited on page-level layers (colour, text style, gap, padding) and for text overflow outside the board: no findings. Exceptions by design: nested design-system instances, hidden layers, the three rebuilt Garden era panels (one-off art), image paints (hero photo at 35% over the surface token on project heroes; cropped sunset art on Contact), and the unbound gradient of the table scroll fade (binding a variable to a gradient stop replaces its alpha with the variable's). Corner radii were not re-audited on the 768/390 boards. The primary button arrows that lost their `color/accent-text` binding after card swaps were rebound.
 
-Seven boards remain unbuilt: Inspiration Garden 1440/768/390, TourBench 768/390, and Work index 768/390. Next: Inspiration Garden 1440.
+## Findings
 
-### Findings
+| ID | Result |
+|---|---|
+| WK-01 | fixed (`2524:2560`, tiles share 300 px) |
+| WK-02 | code (focus ring colour on dark tiles; no focus state drawn) |
+| WK-03 | proposal (needs owner): one pill on both tiers (all Work and next-project cards) |
+| WK-04 | fixed (Work boards, body text styles) |
+| WK-05 | fixed (Work 1440, 768) |
+| WK-06, WK-07, WK-08 | fixed (Work boards). Featured and More kickers share size and case; their colour still differs |
+| WK-09 | fixed (Work 1440, 768) |
+| WK-10, WK-11 | fixed (`2524:2560`) |
+| WK-12 | code (hover behaviour on the tile without a peek) |
+| WK-13 | fixed (Work 768, 390) |
+| WK-14 | code (motion) |
+| WK-15 | fixed (Work 768, 390) |
+| WK-16 | code (hit areas) |
+| WK-17 | fixed (TourBench and Garden, all widths) |
+| WK-18 | fixed on boards; also needs code (`code { font-family }`) |
+| WK-19 | proposal (needs owner) |
+| WK-20 | fixed (project boards, design-system BackLink) |
+| WK-21 | proposal (needs owner) |
+| WK-22 | fixed (TourBench 1440, 768) |
+| WK-23 | fixed (TourBench, all widths) |
+| WK-24 | proposal and code: right-edge fade drawn at 390, table fits at 768; region, label and keyboard access are code |
+| WK-25 | fixed on 768/390 (`layout/section-pad`); 1440 uses 120 |
+| WK-26 | proposal (needs owner); page style `Work/At a glance value` |
+| WK-27 | fixed (TourBench 390, surface token, no bytes art) |
+| WK-28 | fixed (TourBench and Garden) |
+| WK-29 | fixed (TourBench) |
+| WK-30 | fixed (design-system icon sizes) |
+| WK-31 | fixed (one mock browser bar; hostname stays readable at 390, so no hidden-hostname variant was needed) |
+| WK-32 | not applicable to these EN boards; ES kicker wording and eyebrow balance are copy and code |
 
-WK-01, WK-03–WK-09, WK-15, WK-30 and WK-31 have draft treatments on the WIP desktop board, not yet signed off; WK-03 is a proposal. WK-10 and WK-11 are drawn on the checked peek board (`2524:2560`). WK-02, WK-12–WK-14 and WK-16 need state/behavior classification and verification; WK-17–WK-23 and WK-28/29 are drawn on TourBench 1440; WK-19/21/26 remain proposals. WK-18 and WK-24 also require code. Remaining WK-24–WK-32 cases need board-by-board classification. Consult `audit-work.md`; behavior-only items must be reported as code and owner decisions as proposals.
+## Requests for the design system
 
-### Requests for the design system
+- Promote the page-local 20/30 `Work/At a glance value` text style (WK-26).
+- Shared star and git-fork icons (WK-10; page versions `2524:2493`, `2524:2500`).
+- A mono heading style for experiment titles; the proposal uses `Heading/H3`.
+- Contact section Tablet and Mobile variants default to the marker "06 — CONTACT" and have no sunset art; each board overrides both. The art is cropped per board so the links stay off the dark hills.
+- Footer at 390: the decorative "Jahat" art looks clipped at the left edge.
+- Binding gaps in shared components: NavLink/Button literal padding (8/14/22), LangSwitch 6/13.5, Footer 152 top padding; the image-filled "Jahat" has no text style.
+- Swapping a card's nested primary Button can leave its arrow bound to `color/text` (dark on dark).
 
-A page-local 20/30 `Work/At a glance value` text style was created for WK-26; request promotion to the shared system. WK-10 uses page-local vector star and git-fork icons (`2524:2493`, `2524:2500`); request shared equivalents. The original experiment title is mono, while the existing design system has no matching mono heading style; this proposal uses Heading/H3 and requests system-owner review. SY-12: proposal: text-shadow on the display word in code (audit SY-12). Keep the baked baseline art per supervisor. Binding audit: shared NavLink/Button use some literal padding (8/14/22), LangSwitch uses 6/13.5, and Footer has 152 px top padding; no exact tokens exist for several values. Footer’s image-filled Jahat is decorative artwork with no text style. Request system-owner review; do not edit the shared Design system page from this unit.
+## Open questions
 
-### Open questions
-
-WK-03, WK-19, WK-21 and WK-26 require owner decisions; draw the audit recommendations as proposals.
+- WK-03, WK-19, WK-21, WK-26 and the WK-24 fade need owner approval.
+- SY-12: proposal: text-shadow on the display word in code (audit SY-12). The baked art is kept, per supervisor.
+- "[Owner: confirm wording]" is still visible in the Garden terminal block, on the live page and on the boards (As built defect 1). Copy was not changed.
+- Project heroes at 768/390 wash the photo to 35% for text contrast; this is a visual choice for the owner.
+- The Garden era panels still read filter options as plain words (As built defect 12; not a WK finding).
