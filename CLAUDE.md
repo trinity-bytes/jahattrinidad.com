@@ -150,10 +150,18 @@ brand, copy, image or UI task:
 - `assets.md` — hero image files and the prompts that generated them.
 - `tasks.md` — what is done and what is next.
 
-The approved boards no longer match the running site. The **design audit**
-in progress (`openspec/changes/design-audit/`, start with `proposal.md`)
-keeps an as-built copy of the site on the Figma pages `As built · …`; read
-it before any audit, UI review or Figma sync task.
+The approved design is now the three `Proposed · …` pages (Home, Work &
+projects, Notes & links), approved by the owner on 2026-11-25 and built
+from the components on the `Design system` page. The old v3.5 boards
+(pages Portfolio, Case study, Work, Writing) and the Archive page were
+deleted that day; they survive only in the file's version history
+("Before removing deprecated pages"), so node ids under `design.md` §6
+and the archived openspec records may point at nodes that no longer
+exist. The `As built · …` pages (the site at commit `5a0977a`) were
+deleted by the owner the same day; the audit reports still cite their
+node ids as evidence. Read the **design audit**
+(`openspec/changes/design-audit/`, start with `proposal.md`) before any
+audit, UI review, Figma sync or code task that implements the design.
 
 Three rules follow from it, and they are the ones a session without
 context gets wrong:

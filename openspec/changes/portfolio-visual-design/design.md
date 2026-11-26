@@ -183,6 +183,8 @@ No automatic rotation. Spec frame "Logo — states" `2093:2` sits under the Outs
 
 ## 6. Figma map
 
+> **2026-11-25:** the pages Portfolio, Case study — Inspiration Garden, Work — all projects, Writing — blog and Archive were deleted after the owner approved the design-audit proposals (pages `Proposed · …`). The ids below are history; the boards survive in the file's version history ("Before removing deprecated pages"). Current map: `openspec/changes/design-audit/tasks.md`, phase 3.
+
 Pages:
 
 | Page | Id |
