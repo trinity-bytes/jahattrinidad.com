@@ -83,5 +83,5 @@ Owner, 2026-11-25: "vamos a pasar a la fase de correcion del diseño y comprotam
 - [x] 3.1 Variables and text styles from `tokens.css` plus the audit's new tokens
 - [x] 3.2 Controls: Icon, Button, TextLink, BackLink (SY-01, SY-02, SY-03, §4 patterns)
 - [x] 3.3 Nav (Desktop / Mobile × Top / Scrolled)
-- [x] 3.4 Footer, Contact, mobile menu sheet (chat card pending)
+- [x] 3.4 Footer, Contact, mobile menu sheet, chat card
 - [ ] 3.5 Corrected boards beside the As built boards, built from instances
