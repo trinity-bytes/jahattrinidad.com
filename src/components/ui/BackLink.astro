@@ -1,0 +1,10 @@
+---
+import TextLink from './TextLink.astro';
+
+type Props = Omit<astroHTML.JSX.AnchorHTMLAttributes, 'href' | 'type' | 'target' | 'rel'> & {
+  href: string;
+  label: string;
+};
+const { href, label, ...attrs } = Astro.props;
+---
+<TextLink {...attrs} href={href} label={label} destination="in-page" back />

@@ -145,17 +145,9 @@ const isCase = variant === 'case';
   .intro :global(.headline) { max-width: 660px; font: 600 var(--font-size-heading-sm) / 1.15 var(--font-display), sans-serif; letter-spacing: -0.02em; color: var(--color-heading); }
   .intro :global(.sub) { max-width: 520px; font: 400 var(--font-size-body) / 1.5 var(--font-sans), sans-serif; }
   .intro :global(.title) { font: 600 2.125rem / 1.05 var(--font-display), sans-serif; letter-spacing: -0.02em; color: var(--color-heading); }
-  .intro :global(.back) { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font: 500 14px / 1.5 var(--font-sans), sans-serif; color: inherit; text-decoration: none; }
-  .intro :global(.back:hover) { text-decoration: underline; }
   .intro :global(.actions) { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
-  .intro :global(.button) { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 14px 22px; border: 1px solid var(--color-accent); border-radius: 999px; font: 500 16px / 1 var(--font-sans), sans-serif; text-decoration: none; }
-  .intro :global(.button.primary) { background: var(--color-accent); color: var(--color-accent-text); }
-  .intro :global(.button.secondary) { color: var(--color-heading); }
-  .intro :global(.button:hover) { text-decoration: underline; }
   /* Post: "← ALL NOTES · ESSAY · NOV 20, 2024 · 2 MIN READ". */
   .intro :global(.meta) { display: flex; flex-wrap: wrap; align-items: center; column-gap: 18px; font: 500 13px / 1.3 var(--font-mono), monospace; letter-spacing: 0.08em; text-transform: uppercase; }
-  .intro :global(.meta a) { display: inline-flex; align-items: center; min-height: 44px; color: inherit; text-decoration: none; }
-  .intro :global(.meta a:hover) { text-decoration: underline; }
   /* Mobile: the link takes its own line, the metadata follows with tighter gaps and no leading dot. */
   .intro :global(.meta-line) { flex-basis: 100%; display: flex; flex-wrap: wrap; column-gap: 8px; }
   .intro :global(.meta-line .lead) { display: none; }

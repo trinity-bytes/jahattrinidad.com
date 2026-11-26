@@ -1,4 +1,5 @@
 ---
+import TextLink from '../ui/TextLink.astro';
 import type { CollectionEntry } from 'astro:content';
 import type { Dictionary } from '../../lib/i18n';
 import ProjectCard from '../content/ProjectCard.astro';
@@ -48,9 +49,7 @@ const remaining = index ? [...rest.slice(2), ...projects.filter(project => proje
           <span data-show="outside">{headline}</span><span data-show="inside">{insideCopy.headline}</span>
         </h2>
       </div>
-      {!index && <a class="all" href={allProjectsHref} data-background-text data-reveal>
-        <span class="underlined">{copy.seeAll(displayedCount)}</span> <span aria-hidden="true">→</span>
-      </a>}
+      {!index && <TextLink class="all" href={allProjectsHref} label={copy.seeAll(displayedCount)} data-background-text data-reveal />}
     </header>
     <div class="projects" data-reveal-children>
       {featured && <ProjectCard
@@ -63,6 +62,7 @@ const remaining = index ? [...rest.slice(2), ...projects.filter(project => proje
         insideLabels={insideCopy.rowLabels}
         featured
         optimized={index}
+        pillAction={index}
       />}
       {(pair.length > 0 || !index) && <div class="pair">
         {
@@ -75,11 +75,12 @@ const remaining = index ? [...rest.slice(2), ...projects.filter(project => proje
               whatItDoes={project.whatItDoes}
               labels={labels}
               insideLabels={insideCopy.rowLabels}
+              pillAction={index}
             />
           ))
         }
       </div>}
-      {remaining.map((project) => <ProjectCard project={project.data} href={project.href} meta={project.meta} problem={project.problem} whatItDoes={project.whatItDoes} labels={labels} insideLabels={insideCopy.rowLabels} featured mirrored optimized />)}
+      {remaining.map((project) => <ProjectCard project={project.data} href={project.href} meta={project.meta} problem={project.problem} whatItDoes={project.whatItDoes} labels={labels} insideLabels={insideCopy.rowLabels} featured mirrored optimized pillAction />)}
     </div>
   </div>
 </section>
@@ -116,21 +117,7 @@ const remaining = index ? [...rest.slice(2), ...projects.filter(project => proje
     color: var(--color-heading);
   }
 
-  .all {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    flex-shrink: 0;
-    min-height: 2.75rem;
-    color: var(--color-heading);
-    white-space: nowrap;
-  }
-
-  .underlined {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
-  }
+  .all { flex-shrink: 0; }
 
   .projects {
     display: grid;

@@ -120,24 +120,56 @@ Goal: the site implements the approved Proposed boards (Figma `gq6glEp9QrPOnEyYG
 |---|---|---|---|
 | T1 | The eight behaviour defects of `reports/phase-2-audit.md` §1 (NL-01, HI-01, HI-02, NL-03, WK-17, NL-02, HI-03, WK-01) | done: live re-check passed 2026-11-26 (WK-01 54/54 tiles at 300 px, HI-01/02/03, NL-01 heading at 96 px at 1440/768/390 with and without reduced motion) | `a4abdf0`, `reports/code-t1-behaviour.md` |
 | T2 | Foundations: tokens from the Figma variables, `@layer base` defaults (line height, `text-wrap`, form fonts, mono), focus tokens and `[data-surface="dark"]`, `Icon` `sizing` prop (`inline` / `control` / `brand`) with a 1.5 px non-scaling stroke, motion tokens | done | `1bd86ef`, `reports/code-t2-foundations.md` |
-| T3 | Shared controls `ui/Button`, `ui/TextLink`, `ui/BackLink` as on `Design system` (system causes S1, S6 hit areas, S7 hover/press of `phase-2-audit.md` §2); migrate every hand-built call site; remove the temporary `.site-nav .contact` line-height rule in `src/layouts/Base.astro` | in progress (Codex, brief `prompts/code-t3-controls.md`) | input: T2 report "Call sites to adopt" |
+| T3 | Shared controls `ui/Button`, `ui/TextLink`, `ui/BackLink` as on `Design system` (system causes S1, S6 hit areas, S7 hover/press of `phase-2-audit.md` §2); migrate every hand-built call site; remove the temporary `.site-nav .contact` line-height rule in `src/layouts/Base.astro` | **partial, uncommitted work committed as WIP** (Codex worker interrupted 2026-11-26, no report): components built, 12 files migrated; audit and close-out pending, see "T3 and T7 — state at interruption" | brief `prompts/code-t3-controls.md`; input: T2 report "Call sites to adopt" |
 | T4 | Home Outside, Inside, chat, nav, footer: every item `reports/phase-3-home.md` marks "code", plus the label sweep (S3) and adopting T2's tokens | after T3 | |
 | T5 | Work index and project pages: items marked "code" in `reports/phase-3-work.md` | after T3 | |
 | T6 | Notes, post, `/links/`: items marked "code" in `reports/phase-3-notes.md` | after T3 | |
-| T7 | SEO in code, findings F3–F8 and F1's IndexNow key of `reports/seo-search-results.md`: `WebSite` JSON-LD; titles `<page> — <what it is> · Jahat Trinidad` and 140–160 character descriptions in en/es/pt via the dictionary; `data-nosnippet` on the skip link and nav handle; `Person` with one `@id`, full `sameAs`, portrait `image`; `alt="Jahat Trinidad"` on the hero portrait and avatar; `BreadcrumbList`, `BlogPosting`, project schema | in progress (Sonnet, brief `prompts/code-t7-seo.md`), parallel with T3 | |
+| T7 | SEO in code, findings F3–F8 and F1's IndexNow key of `reports/seo-search-results.md`: `WebSite` JSON-LD; titles `<page> — <what it is> · Jahat Trinidad` and 140–160 character descriptions in en/es/pt via the dictionary; `data-nosnippet` on the skip link and nav handle; `Person` with one `@id`, full `sameAs`, portrait `image`; `alt="Jahat Trinidad"` on the hero portrait and avatar; `BreadcrumbList`, `BlogPosting`, project schema | **code mostly done, uncommitted work committed as WIP** (Sonnet worker idle 2026-11-26, no report); 3 component edits for the supervisor and a review pending, see "T3 and T7 — state at interruption" | brief `prompts/code-t7-seo.md` |
 | T8 | Owner actions (outside the repo): deploy, then confirm production links `/favicon.ico` and `/favicon.svg` instead of `data:` icons; Cloudflare Crawler Hints; submit TourBench to Bing after the deploy (it is missing from the production sitemap); Search Console indexing of TourBench, Inspiration Garden and the posts; re-check Bing Site Explorer around 2026-12-03; LinkedIn headline and website links on every profile | owner | |
+
+### T3 and T7 — state at interruption (2026-11-26)
+
+The session stopped while T3 (Codex `controls`) and T7 (Sonnet `seo`) were both writing in the same tree. Neither wrote its report (`reports/code-t3-controls.md` and `reports/code-t7-seo.md` do not exist). The whole tree was committed **as is** to `develop` in one WIP commit (`wip(code): T3 controls and T7 SEO at interruption`) so another machine can continue. It was not reviewed line by line. What was verified on that tree:
+
+- `npm run check` exit 0 (boundaries, tests including the new `seo.test.ts` cases, `astro check`, build of 55 pages, link-arrow rule).
+- Nothing else: no captures, no look at the pages, no diff check against each brief's edit surface.
+
+**T3 — what exists**
+
+- New `src/components/ui/Button.astro` (76 lines), `TextLink.astro` (86), `BackLink.astro` (10).
+- Call sites already using them (count of `<Button|TextLink|BackLink`): `content/ProjectCard` 2, `sections/Contact` 4, `contact/Chat` 8, `Hero` 1, `Nav` 1, `NextCaseStudy` 1, `Notes` 2, `Values` 1, `Work` 1, `WorkMore` 4, `pages/notes/[...slug]` 3, `_views/CaseStudy` 3. `PostRow`, `PageHero` and `contact/chat-client.ts` were also edited (markup or styles removed).
+- Not done: the temporary `.site-nav .contact { line-height: 1.25rem; }` rule is still in `src/layouts/Base.astro:141`. There is no list of which brief items (HO-01, HO-05, HO-14, HO-15, HO-19, HI-10, WK-03, WK-20, NL-13, NL-14) are covered, and no "Open questions".
+
+**T3 — to finish**
+
+1. Read `prompts/code-t3-controls.md` and `prompts/code-common.md`. Open each component in the three `ui/` files against `Design system` `2501:136` (variants, hit areas S6, hover/press S7). They must stay project-agnostic: no `src/lib/` or `astro:*` imports (the check enforces it).
+2. Search for hand-built controls that remain: primary pills, underline links and back links outside `components/ui/` (for example `rg -n "←|class=\"(cta|pill|btn)" src`). `Lens.astro` `.pill` and the `Nav` `data-nav-pill` are not buttons (hint and nav indicator). Migrate the rest, or list them as open questions.
+3. Make the per-item list (file:line, before → after) for the ten items and write `reports/code-t3-controls.md` in the `code-common.md` report format.
+4. Remove the temporary `.site-nav .contact` rule in `Base.astro` once the nav Contact uses `ui/Button`, then check the nav height at 1440/768/390.
+5. Take before/after captures of Home (Outside and Inside, chat open), `/work/`, a project page, `/notes/`, a post and `/links/` in en, es and pt. Compare them with the Proposed boards.
+
+**T7 — what exists** (checked in `dist/` after the build)
+
+- `src/lib/seo.ts` +179 lines with tests in `src/lib/seo.test.ts` (+205): `WebSite` on each home, `Person` with `@id`, `sameAs` and `ImageObject`, `BreadcrumbList` on posts and project pages, `BlogPosting` on posts, `SoftwareApplication`/`CreativeWork` on project pages.
+- Titles follow `<page> — <what it is> · Jahat Trinidad`. Descriptions are 151–157 characters on Home, Work, Notes and Links (en checked, es Home 156). Wired through `src/lib/i18n.ts`, the dictionaries and the frontmatter of `_views/*.astro`.
+- `data-nosnippet` on the skip link in `Base.astro`.
+- F1: IndexNow key file `public/e362ae8d0a623331ac836ab1a538ec2b.txt` (public by design: the engines fetch it) and `scripts/indexnow.mjs` (`npm run build && npm run indexnow`, `-- --dry-run` prints only; it uses the network, so it is not part of `check`).
+
+**T7 — to finish** (component edits the brief left to the supervisor)
+
+1. `src/components/sections/Hero.astro`: hero portrait `alt=""` → `alt="Jahat Trinidad"` (the portrait image, not the decorative layers at lines 56/69/78; check which one is the portrait).
+2. `src/components/sections/contact/Chat.astro:57`: avatar `alt=""` → `alt="Jahat Trinidad"`.
+3. `src/components/sections/Nav.astro`: `data-nosnippet` on the handle element (the name/brand link).
+4. Review: descriptions in es and pt on every page type are native and 140–160 characters; validate the JSON-LD of one page of each type (Home, Work, project, Notes, post, Links) in the Rich Results Test or schema.org validator after deploy; write `reports/code-t7-seo.md`.
 
 ### Resume here
 
-1. **T1 live re-check**, on the current `develop` with fresh captures:
-   - WK-01: experiment tiles stay 300 px tall at rest, on hover and on keyboard focus at 1025, 1100, 1199, 1280, 1440 and 1920 px in en, es and pt, and the page height does not change. T2's root line height landed after the worker's last measurement, so this is the check that matters most.
-   - HI-01: press `I` twice during the lens reveal (gaps 200, 600, 950 ms) and spam the lens button: no crash, the lens ends in one state.
-   - HI-02: Esc while typing in the chat composer does not switch the lens; Esc in an empty field only blurs it.
-   - HI-03: with the chat open the composer annotation and the Contact annotation list are hidden, at 1440 / 768 / 390.
-   - NL-01: on `/notes/why-a-boundary-checker/`, each "In this post" link lands its heading at 96 px from the top and that item carries `aria-current`, at 1440 / 768 / 390, with and without reduced motion.
-   - NL-02, NL-03, WK-17 were checked by the worker; look at them once in the captures.
-   Fix what fails, commit, then tick T1.
-2. **T3**, then T4–T6 (two workers at a time where surfaces are disjoint). **T7** can run beside T3: it touches `src/lib/seo.ts`, `src/layouts/Base.astro`, the dictionaries and content, not the controls.
+1. On the other machine: `git switch develop && git pull`, `npm install`, `npm run dev -- --host 127.0.0.1 --port 4321`. Captures need a full Chromium and `playwright` on `NODE_PATH` (`proposal.md`, "Continue from another clone").
+2. New branch from `develop` (for example `feat/t3-t7-closeout`). Finish **T7** first (four small items above, supervisor inline), then **T3** steps 1–5. `npm run check` before each commit. One commit per unit (`feat(seo): …`, `feat(ui): …`).
+3. Settle the open questions below that block T4–T6, then T4–T6 (two workers at a time where surfaces are disjoint, briefs in the shape of `prompts/code-t3-controls.md`).
+4. T8 stays with the owner (deploy, favicon check, Bing after the deploy, run `npm run indexnow` after the deploy).
+
+Engram is not needed: this file, `proposal.md`, `design.md`, the `prompts/` briefs and the `reports/` files hold the full state. `odd/tasks/design-corrections-code.md` is the same plan as a logbook (L1–L14).
 
 ### Open questions (owner or the next unit decides)
 
@@ -157,4 +189,4 @@ Owner: "antes de cerrar sesion quisiera que mejoremos e tema de seo y de la inde
 
 - [x] Search results for the owner's name on Google, Bing, DuckDuckGo and Ecosia, and Bing Webmaster Tools → `reports/seo-search-results.md` (F1–F10, owner actions). Google ranks the site first; Bing knew only `/`.
 - [x] The 25 production sitemap URLs submitted in Bing Webmaster Tools → URL Submission (2026-11-26, "Success: 25 URLs submitted").
-- [ ] T7 (code) and T8 (owner), table above.
+- [ ] T7 (code: mostly done, close-out in "T3 and T7 — state at interruption") and T8 (owner), table above.

@@ -1,4 +1,5 @@
 ---
+import Button from '../ui/Button.astro';
 import Icon from '../ui/Icon.astro';
 import type { Dictionary } from '../../lib/i18n';
 import { navTargets } from '../../lib/nav';
@@ -43,7 +44,7 @@ const profileIcons = {
         {languages.map((language, index) => <>{index > 0 && <span class="lang-sep" aria-hidden="true">/</span>}<a href={language.href} hreflang={language.hrefLang} lang={language.lang} data-locale-choice={language.lang} aria-label={language.name} aria-current={language.current ? 'true' : undefined}>{language.code}</a></>)}
       </div>}
     </div>
-    <a class="contact" data-magnetic href={contact} data-section-link="contact">{strings.contact}</a>
+    <Button class="contact" data-magnetic href={contact} data-section-link="contact" label={strings.contact} />
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-navigation" aria-label={strings.openMenu} data-open-label={strings.openMenu} data-close-label={strings.closeMenu}>
       <span class="menu-icon"><Icon name="menu" size={20} /></span><span class="close-icon"><Icon name="x" size={20} /></span>
     </button>
@@ -288,7 +289,6 @@ const profileIcons = {
   .pill[data-visible='true'] { opacity: 1; }
   .pill[data-jump] { transition: opacity 200ms ease; }
   @media (prefers-reduced-motion: reduce) { .pill { transition: opacity 120ms ease; } }
-  .contact { border-radius: 999px; background: var(--color-accent); color: var(--color-accent-text); padding: var(--space-sm) var(--space-lg); font-size: 1rem; font-weight: 500; }
   .menu-toggle { display: none; width: 44px; height: 44px; padding: 0; align-items: center; justify-content: center; border: 1px solid color-mix(in srgb, var(--color-heading) 35%, transparent); border-radius: 50%; color: inherit; background: transparent; cursor: pointer; }
   .close-icon, [aria-expanded='true'] .menu-icon { display: none; }
   [aria-expanded='true'] .close-icon { display: block; }
@@ -338,5 +338,4 @@ const profileIcons = {
   }
   @media (min-width: 48rem) and (max-width: 64rem) { .site-nav[data-state='top'] .nav-inner { transform: translateY(17.5px); } .nav-inner { padding-inline: var(--gutter-tablet); gap: 2rem; } .desktop-links { gap: 2rem; } }
   @media (max-width: 47.99rem) { .site-nav[data-state='top'] .nav-inner { transform: translateY(9.5px); } .nav-inner { padding-inline: var(--gutter-mobile); } .brand { font-size: 1.25rem; } }
-  @media (forced-colors: active) { .contact { border: 1px solid ButtonText; } }
 </style>

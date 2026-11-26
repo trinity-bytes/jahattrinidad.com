@@ -1,9 +1,9 @@
 ---
-import { Image, Picture } from 'astro:assets';
+import { getImage, Image, Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/ui/Icon.astro';
 import { collectionPath, entryPath, entrySlug, listLinks, listPosts, listProjects, type Locale } from '../../lib/content';
-import { buildSeo } from '../../lib/seo';
+import { breadcrumbNode, buildSeo, jsonLdGraph, pageTitle, personNode } from '../../lib/seo';
 import { cvPath } from '../../lib/cv';
 import { getDictionary, localeGroup, localizedPath } from '../../lib/i18n';
 import sky from '../../assets/hero/sky.png';
@@ -34,8 +34,24 @@ const projects = await listProjects({ lang });
 const caseStudies = projects.filter((project) => project.data.tier === 'case-study').length;
 const [latest] = await listPosts({ lang: postsLang, order: 'newest', limit: 1 });
 
+const portrait = await getImage({ src: profile, width: 600, height: 600, format: 'jpg' });
+const person = personNode({
+  site,
+  description: t.meta.homeDescription,
+  sameAs: links.map((link) => link.url),
+  image: portrait.src,
+});
+const jsonLd = jsonLdGraph([
+  person,
+  breadcrumbNode(site, [
+    { name: t.nav.home, path: localizedPath(lang, '/') },
+    { name: t.nav.links, path: localizedPath(lang, '/links/') },
+  ]),
+]);
+
 const seo = buildSeo({
-  title: t.nav.links,
+  jsonLd,
+  title: pageTitle(t.nav.links, t.meta.linksWhat),
   description: t.meta.linksDescription,
   path: localizedPath(lang, '/links/'),
   lang,

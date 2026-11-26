@@ -1,4 +1,5 @@
 ---
+import TextLink from '../ui/TextLink.astro';
 import { getDictionary, type Locale } from '../../lib/i18n';
 import type { CollectionEntry } from 'astro:content';
 import PostRow from '../content/PostRow.astro';
@@ -57,8 +58,8 @@ const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', postsLa
         <h2 id="notes-heading" data-background-text data-reveal="text">{headline}</h2>
       </div>
       {index
-        ? <a class="all" href={allWritingHref} target="_blank" rel="noopener noreferrer" data-background-text data-reveal>{strings.rssFeed}<Icon name="arrow-up-right" size={16} /><span class="visually-hidden"> {newTab}</span></a>
-        : <a class="all" href={allWritingHref} data-background-text data-reveal>{strings.allWriting}<span aria-hidden="true">→</span></a>}
+        ? <TextLink href={allWritingHref} destination="external" label={strings.rssFeed} newTab={newTab} data-background-text data-reveal />
+        : <TextLink href={allWritingHref} label={strings.allWriting} data-background-text data-reveal />}
     </header>
     <div class="columns">
       <div class="writing">
@@ -84,7 +85,7 @@ const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', postsLa
             description={featured.entry.data.description}
             type={featured.entry.data.type}
             typeLabel={typeLabel(featured.entry.data.type)}
-            meta={`${dictionary.post.readingTime(featured.readingTime)} · ${formatDate(featured.entry.data.publishDate, lang)}`}
+            meta={`${formatDate(featured.entry.data.publishDate, lang)} · ${dictionary.post.readingTime(featured.readingTime)}`}
           />
           {/* Inside: the type chip sits inside the card's link, so its annotation anchors to an invisible copy of the chip. */}
           {!index && <div class="chip-anchor" data-show="inside">
@@ -152,7 +153,6 @@ const postHref = (entry: CollectionEntry<'posts'>) => entryPath('posts', postsLa
   .title { display: flex; flex-direction: column; gap: var(--space-sm); }
   .marker { margin: 0; font: 500 0.8125rem/1.3 var(--font-mono); color: var(--color-text-muted); }
   h2 { margin: 0; font: 600 var(--font-size-heading-lg)/1.05 var(--font-display); letter-spacing: -0.02em; color: var(--color-heading); }
-  .all { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 2.75rem; font: 500 1.125rem/1.3 var(--font-sans); color: var(--color-heading); text-decoration: underline; text-underline-offset: 0.2em; }
   .columns { display: flex; flex-direction: column; gap: 3.5rem; }
   .writing { min-width: 0; }
   .label-wrap { position: relative; width: fit-content; margin-bottom: var(--space-md); }

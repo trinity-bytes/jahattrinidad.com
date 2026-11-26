@@ -18,7 +18,7 @@ const { href, title, typeLabel, type, meta, featured = false, description, detai
 <a class:list={['post', { featured, detailed }]} href={href}>
   <span class={`chip ${type}`} data-background-text>{typeLabel}</span>
   {detailed ? <span class="details"><span class="title" data-background-text>{title}</span>{description && <span class="description" data-background-text>{description}</span>}</span> : <><span class="title" data-background-text>{title}</span>{featured && description && <span class="description" data-background-text>{description}</span>}</>}
-  <span class="meta" data-background-text>{meta}{featured && <span class="arrow" aria-hidden="true">&nbsp; →</span>}</span>
+  <span class="meta" data-background-text>{meta}</span>
 </a>
 <style>
   .post { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-xs); padding-block: var(--space-lg); border-top: 1px solid var(--color-rule); color: var(--color-heading); text-decoration: none; }
@@ -30,7 +30,8 @@ const { href, title, typeLabel, type, meta, featured = false, description, detai
   .detailed:not(.featured) .description { font: 400 1rem/1.5 var(--font-sans); color: var(--green-900); }
   .detailed:not(.featured) .title { font: 500 1.1875rem/1.5 var(--font-sans); }
   .meta { font: 400 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text-muted); }
-  .post:hover .title, .post:focus-visible .title { text-decoration: underline; }
+  .post:focus-visible .title, .post:active .title { text-decoration: underline; }
+  @media (hover: hover) and (pointer: fine) { .post:hover .title { text-decoration: underline; } }
   .featured { gap: var(--space-md); padding: var(--post-card-pad-y) var(--post-card-pad-x); border: 0; border-radius: var(--space-md); background: var(--color-card-alt); }
   .featured .details { gap: var(--space-md); }
   .featured .title { font: 600 var(--font-size-heading-sm)/1.12 var(--font-display); letter-spacing: -0.015em; }

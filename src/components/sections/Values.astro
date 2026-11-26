@@ -1,4 +1,5 @@
 ---
+import TextLink from '../ui/TextLink.astro';
 import type { Dictionary } from '../../lib/i18n';
 import Backgrounds from './Backgrounds.astro';
 import Annotation from '../ui/Annotation.astro';
@@ -85,9 +86,7 @@ const notes = [insideCopy.annotations.source];
                     ))
                   }
                 </dl>
-                <a href={gardenHref} data-background-text>
-                  <span class="underlined">{copy.gardenLink}</span> <span aria-hidden="true">→</span>
-                </a>
+                <TextLink class="proof-link" href={gardenHref} label={copy.gardenLink} data-background-text />
               </div>
             </div>
           </aside>
@@ -262,20 +261,8 @@ const notes = [insideCopy.annotations.source];
     line-height: 1.4;
   }
 
-  .card a {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    min-height: 2.75rem;
-    margin-top: var(--space-xs);
-    color: var(--color-heading);
-  }
+  .proof-link { margin-block-start: calc(var(--space-xs) - var(--hit-pad)); }
 
-  .underlined {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
-  }
 
   @media (min-width: 48rem) {
     .values {

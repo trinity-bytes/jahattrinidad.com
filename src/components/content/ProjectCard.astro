@@ -1,4 +1,6 @@
 ---
+import Button from '../ui/Button.astro';
+import TextLink from '../ui/TextLink.astro';
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import type { Dictionary } from '../../lib/i18n';
@@ -18,9 +20,10 @@ interface Props {
   featured?: boolean;
   mirrored?: boolean;
   optimized?: boolean;
+  pillAction?: boolean;
 }
 
-const { project, href, labels, insideLabels, meta, problem, whatItDoes, featured = false, mirrored = false, optimized = false } = Astro.props;
+const { project, href, labels, insideLabels, meta, problem, whatItDoes, featured = false, mirrored = false, optimized = false, pillAction = false } = Astro.props;
 
 const facts = [
   { label: labels.problem, value: problem },
@@ -67,9 +70,11 @@ const factLists = [
           )
       )
     }
-    <a class="link" href={href} data-background-text>
-      <span class="underlined">{labels.seeProject}</span> <span aria-hidden="true">→</span>
-    </a>
+    <div class="action">
+      {pillAction
+        ? <Button href={href} label={labels.seeProject} icon="arrow-right" />
+        : <TextLink href={href} label={labels.seeProject} data-background-text />}
+    </div>
   </div>
 </article>
 
@@ -144,21 +149,10 @@ const factLists = [
     line-height: 1.5;
   }
 
-  .link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
+  .action {
     align-self: flex-start;
-    min-height: 2.75rem;
     margin-top: auto;
     padding-top: var(--space-md);
-    color: var(--color-heading);
-  }
-
-  .underlined {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
   }
 
   /* Featured: inset image above the text. */

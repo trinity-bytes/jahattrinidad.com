@@ -1,5 +1,8 @@
 ---
-import { Image } from 'astro:assets';
+import BackLink from '../../components/ui/BackLink.astro';
+import Button from '../../components/ui/Button.astro';
+import TextLink from '../../components/ui/TextLink.astro';
+import { getImage, Image } from 'astro:assets';
 import profile from '../../assets/profile/jahat.jpg';
 import PostRow from '../../components/content/PostRow.astro';
 import PullQuote from '../../components/content/PullQuote.astro';
@@ -23,7 +26,7 @@ import {
   renderEntry,
   type Post,
 } from '../../lib/content';
-import { buildSeo } from '../../lib/seo';
+import { absoluteUrl, blogPostingNode, breadcrumbNode, buildSeo, jsonLdGraph, metaDescription, pageTitle, personNode, POST_TITLE_MAX } from '../../lib/seo';
 import { getDictionary } from '../../lib/i18n';
 import { formatDate } from '../../lib/format';
 
@@ -51,11 +54,45 @@ if (!site) {
 const readingTime = getReadingTime(entry);
 const group = await getTranslationGroup('posts', entry);
 
+const pagePath = entryPath('posts', lang, entry.id);
+const cardPath = ogImagePath('posts', lang, entry.id);
+const description = metaDescription(entry.data.description, t.meta.postSignatures);
+// notes.essay / notes.tutorial are typed in capitals for the label; a title needs sentence case.
+const kindWord = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial;
+const kindName = kindWord.charAt(0) + kindWord.slice(1).toLowerCase();
+
+const portrait = await getImage({ src: profile, width: 600, height: 600, format: 'jpg' });
+const person = personNode({
+  site,
+  description: t.meta.homeDescription,
+  sameAs: links.map((link) => link.url),
+  image: portrait.src,
+});
+const jsonLd = jsonLdGraph([
+  person,
+  breadcrumbNode(site, [
+    { name: t.nav.home, path: localizedPath(lang, '/') },
+    { name: t.nav.notes, path: collectionPath('posts', lang) },
+    { name: entry.data.title, path: pagePath },
+  ]),
+  blogPostingNode({
+    site,
+    url: entry.data.canonicalUrl ?? absoluteUrl(pagePath, site).href,
+    lang,
+    name: entry.data.title,
+    description,
+    image: cardPath,
+    datePublished: entry.data.publishDate,
+    dateModified: entry.data.updatedDate,
+  }),
+]);
+
 const seo = buildSeo({
-  title: entry.data.title,
-  description: entry.data.description,
-  path: entryPath('posts', lang, entry.id),
-  image: { path: ogImagePath('posts', lang, entry.id), alt: entry.data.title },
+  jsonLd,
+  title: pageTitle(entry.data.title, kindName, { max: POST_TITLE_MAX }),
+  description,
+  path: pagePath,
+  image: { path: cardPath, alt: entry.data.title },
   lang,
   site,
   // A canonicalUrl override suppresses all hreflang alternates (D10).
@@ -74,7 +111,7 @@ const typeLabel = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial
 <Base lang={lang} seo={seo} profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
   <PageHero variant="post">
     <div class="meta">
-      <a href={collectionPath('posts', lang)}><span aria-hidden="true">←&nbsp;</span>{t.notes.allNotes}</a>
+      <BackLink class="meta-back" href={collectionPath('posts', lang)} label={t.notes.allNotes} />
       <span class="meta-line">
         <span class="lead" aria-hidden="true">·</span>
         <span>{typeLabel}</span>
@@ -91,14 +128,14 @@ const typeLabel = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial
     <div class="article-layout">
       <aside class="contents" aria-label={t.post.inThisPost}>
         {headings.length > 0 && <><h2>{t.post.inThisPost}</h2><ul>{headings.filter((heading) => heading.depth === 2).map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ul></>}
-        {entry.data.canonicalUrl && <a class="canonical" href={entry.data.canonicalUrl} target="_blank" rel="noopener noreferrer">{t.post.published} <Icon name="arrow-up-right" size={15} /><span class="visually-hidden"> {newTab}</span></a>}
+        {entry.data.canonicalUrl && <TextLink class="canonical" href={entry.data.canonicalUrl} destination="external" label={t.post.published} newTab={newTab} />}
       </aside>
       <article class="article">
         <div class="prose" data-copy={t.post.copy} data-copied={t.post.copied} data-code={t.post.code}><Content components={{ PullQuote, Note, Figure }} /></div>
         <template data-copied-icon><Icon name="check" size={14} /></template>
         <div class="article-end">
           {(entry.data.updatedDate || entry.data.tags.length > 0) && <p class="updated">{entry.data.updatedDate && <span>{t.post.updated} {formatDate(entry.data.updatedDate, lang)}</span>}{entry.data.updatedDate && entry.data.tags.length > 0 && <span aria-hidden="true"> · </span>}{entry.data.tags.join(' · ')}</p>}
-          <div class="author"><Image class="avatar" src={profile} alt="" width={112} height={112} densities={[1, 2]} loading="lazy" /><div><p class="author-name">{t.post.author}</p><p class="author-role">{t.post.authorRole}</p></div><a class="author-link" href={`${localizedPath(lang, '/')}#contact`}>{t.post.write} <span aria-hidden="true">→</span></a></div>
+          <div class="author"><Image class="avatar" src={profile} alt="" width={112} height={112} densities={[1, 2]} loading="lazy" /><div><p class="author-name">{t.post.author}</p><p class="author-role">{t.post.authorRole}</p></div><Button class="author-link" href={`${localizedPath(lang, '/')}#contact`} label={t.post.write} icon="arrow-right" /></div>
           {morePosts.length > 0 && <div class="more"><h2>{t.post.keepReading}</h2><ul>{morePosts.map(({ entry: post, readingTime }) => <li><PostRow detailed href={entryPath('posts', lang, post.id)} title={post.data.title} description={post.data.description} type={post.data.type} typeLabel={t.notes[post.data.type]} meta={`${formatDate(post.data.publishDate, lang)} · ${t.notes.minutes(readingTime)}`} /></li>)}</ul></div>}
         </div>
       </article>
@@ -212,13 +249,12 @@ const typeLabel = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial
   .contents[data-tracking] li a[aria-current='location'] { color: var(--green-950); font-weight: 500; }
   .contents[data-tracking] li a[aria-current='location']::before { content: ''; position: absolute; left: 0; top: .45em; width: .4rem; height: .4rem; border-radius: 50%; background: currentColor; }
   .contents a:hover { text-decoration: underline; }
-  .contents .canonical { display: inline-flex; align-items: center; gap: .25rem; margin-top: 1.75rem; color: var(--green-700); font-weight: 500; }
+  .contents .canonical { margin-block-start: calc(1.75rem - var(--hit-pad)); }
   .article-end { border-top: 1px solid color-mix(in srgb, var(--green-950) 20%, transparent); padding-top: 1.5rem; }
   .updated { margin: 0 0 1.5rem; color: var(--green-700); font: 400 .75rem/1.5 var(--font-mono); }
   .author { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; padding: 1.5rem; background: var(--card); border: 1px solid color-mix(in srgb, var(--green-950) 12%, transparent); border-radius: 1rem; }
   .avatar { width: 3.5rem; height: 3.5rem; flex: none; border-radius: 50%; object-fit: cover; background: var(--green-200); }
   .author > div { flex: 1; min-width: 12rem; } .author p { margin: 0; } .author-name { font: 500 1.0625rem/1.4 var(--font-sans); } .author-role { margin-top: .25rem !important; font: 400 .9375rem/1.5 var(--font-sans); color: var(--green-900); }
-  .author-link { padding: .75rem 1.25rem; border-radius: 999px; background: var(--green-950); color: var(--white); text-decoration: none; font: 500 .9375rem/1.3 var(--font-sans); }
   .more { margin-top: 1.5rem; }
   @media (min-width: 48rem) { .article-layout { padding-block: 6rem; } }
   @media (min-width: 64.0625rem) { .article-layout { display: grid; grid-template-columns: minmax(0, 680px) 240px; justify-content: center; gap: 6rem; padding-block: 7.5rem; } .contents { grid-column: 2; grid-row: 1; position: sticky; top: 6rem; align-self: start; } .article { grid-column: 1; grid-row: 1; } }

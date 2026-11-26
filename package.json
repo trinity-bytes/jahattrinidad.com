@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "test": "node --test \"src/**/*.test.ts\"",
     "check": "node scripts/check-boundaries.mjs && npm test && astro check && astro build && node scripts/check-links.mjs",
-    "check:links": "node scripts/check-links.mjs"
+    "check:links": "node scripts/check-links.mjs",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "8.0.1",

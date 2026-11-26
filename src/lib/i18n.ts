@@ -77,10 +77,19 @@ export interface Dictionary {
     /** Home <title> and meta description: name and role first, so search results lead with them. */
     homeTitle: string;
     homeDescription: string;
-    /** Meta descriptions of the index pages. */
+    /** Meta descriptions of the index pages. 140–160 characters (seo.test.ts). */
     workDescription: string;
     notesDescription: string;
     linksDescription: string;
+    /** "What it is" part of the index titles: "<page> — <what> · Jahat Trinidad". */
+    workWhat: string;
+    notesWhat: string;
+    linksWhat: string;
+    /** "What it is" for a project whose kind only repeats its name. */
+    projectWhat: string;
+    /** Name-and-role endings of project and post descriptions, in several lengths (lib/seo.ts metaDescription). */
+    projectSignatures: string[];
+    postSignatures: string[];
   };
   nav: {
     home: string;
@@ -282,10 +291,16 @@ export const en: Dictionary = {
     ogImageAlt: 'Jahat Trinidad on a hill at sunset, beside the line "I build products people actually use."',
     ogSignature: 'Jahat Trinidad · jahattrinidad.com',
     homeTitle: 'Jahat Trinidad · Design Engineer — Frontend and product',
-    homeDescription: 'Jahat Trinidad, design engineer in Lima, Peru. I design and build web products end to end, from the first sketch to the live site.',
-    workDescription: 'Selected projects and case studies.',
-    notesDescription: 'Posts about building and shipping this site.',
-    linksDescription: 'Where to find me elsewhere.',
+    homeDescription: 'Jahat Trinidad, design engineer in Lima, Peru. I design and build web products end to end, from the first sketch to the live site. See my projects and notes.',
+    workDescription: 'Projects by Jahat Trinidad, design engineer in Lima: case studies, web apps, tools and experiments, each with my part, the stack and links to the code.',
+    notesDescription: 'Notes by Jahat Trinidad, design engineer in Lima: essays and tutorials on how I design, build and ship web products, and the decisions behind each one.',
+    linksDescription: 'All the links of Jahat Trinidad, design engineer in Lima, Peru: projects, notes, CV, contact, and profiles on GitHub, LinkedIn, YouTube, Instagram and X.',
+    workWhat: 'Web products and case studies',
+    notesWhat: 'On designing and building',
+    linksWhat: 'Profiles, CV and contact',
+    projectWhat: 'Web project',
+    projectSignatures: ['By Jahat Trinidad, design engineer.', 'A project in the portfolio of Jahat Trinidad.', 'In the portfolio of Jahat Trinidad, design engineer in Lima.', 'A project in the portfolio of Jahat Trinidad, design engineer in Lima, Peru.', 'From the portfolio of Jahat Trinidad, design engineer in Lima, Peru: what it is and how it works.', 'A project in the portfolio of Jahat Trinidad, design engineer in Lima, Peru, who designs and builds web products.', 'From the portfolio of Jahat Trinidad, design engineer in Lima, Peru: what it does, how it was built and the decisions behind it.'],
+    postSignatures: ['By Jahat Trinidad, design engineer.', 'A note by Jahat Trinidad, design engineer in Lima.', 'A note by Jahat Trinidad, design engineer in Lima, on the web.', 'A note by Jahat Trinidad, design engineer in Lima, Peru, on building the web.', 'A note by Jahat Trinidad, design engineer in Lima, Peru, on designing and building for the web.', 'A note by Jahat Trinidad, design engineer in Lima, Peru, about designing, building and shipping web products.', 'From the notes of Jahat Trinidad, design engineer in Lima, Peru, about designing, building and shipping web products from end to end.'],
   },
   nav: {
     home: 'Home',

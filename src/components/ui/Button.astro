@@ -1,0 +1,76 @@
+---
+import type { ComponentProps } from 'astro/types';
+import Icon from './Icon.astro';
+
+type Anchor = astroHTML.JSX.AnchorHTMLAttributes;
+type NativeButton = astroHTML.JSX.ButtonHTMLAttributes;
+type Props = {
+  label: string;
+  variant?: 'primary' | 'secondary';
+  icon?: ComponentProps<typeof Icon>['name'];
+  showIcon?: boolean;
+} & (
+  | (Omit<Anchor, 'href' | 'type' | 'target' | 'rel'> & { href: string; newTab?: string; type?: never })
+  | (Omit<NativeButton, 'type'> & { href?: never; newTab?: never; type: NonNullable<NativeButton['type']> })
+);
+
+const { href, type, label, variant = 'primary', icon, showIcon = true, newTab, class: className, ...attrs } = Astro.props;
+const glyph = newTab ? 'arrow-up-right' : icon;
+const Tag = href === undefined ? 'button' : 'a';
+---
+<Tag
+  {...attrs}
+  class:list={['control-button', variant, className]}
+  href={href}
+  type={type}
+  target={newTab ? '_blank' : undefined}
+  rel={newTab ? 'noopener noreferrer' : undefined}
+>
+  <span><slot>{label}</slot></span>
+  {(newTab || showIcon) && glyph && <Icon name={glyph} size={18} />}
+  {newTab && <span class="visually-hidden"> {newTab}</span>}
+</Tag>
+
+<style>
+  .control-button {
+    --button-hover: var(--color-accent-hover);
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    min-block-size: 44px;
+    padding: calc(var(--space-sm) - 1px) 21px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-full);
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    font: 500 var(--font-size-small)/1.25 var(--font-sans), sans-serif;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--dur-press) var(--ease-out), scale var(--dur-press) var(--ease-out);
+  }
+  .secondary {
+    --button-hover: var(--color-surface);
+    border-color: var(--color-text);
+    background: var(--color-card);
+    color: var(--color-text);
+  }
+  .control-button:disabled { cursor: default; }
+  .control-button > :global(svg) { flex: none; }
+  @media (hover: hover) and (pointer: fine) {
+    .control-button:not(:disabled, [aria-disabled='true']):hover { background: var(--button-hover); }
+  }
+  .control-button:not(:disabled, [aria-disabled='true']):active {
+    background: var(--button-hover);
+    scale: .97;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .control-button { transition: none; }
+    .control-button:active { scale: none; }
+  }
+  @media (forced-colors: active) {
+    .control-button { border-color: ButtonText; }
+  }
+</style>

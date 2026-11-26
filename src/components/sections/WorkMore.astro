@@ -1,4 +1,6 @@
 ---
+import Button from '../ui/Button.astro';
+import TextLink from '../ui/TextLink.astro';
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { getDictionary, type Dictionary, type Locale } from '../../lib/i18n';
@@ -37,9 +39,9 @@ const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.rep
                 <h3>{data.title}</h3>
                 <p>{data.description}</p>
                 <div class="links">
-                  {pageHrefs[entry.id] && <a class="internal" href={pageHrefs[entry.id]}>{dict.work.seeProject}<span aria-hidden="true">→</span></a>}
-                  {data.demoUrl && <a href={data.demoUrl} {...out}>{data.demoLabel ?? t.live}<Icon name="arrow-up-right" size={15} /><span class="visually-hidden"> {newTab}</span></a>}
-                  {data.repoUrl && <a href={data.repoUrl} {...out}>{t.code}<Icon name="arrow-up-right" size={15} /><span class="visually-hidden"> {newTab}</span></a>}
+                  {pageHrefs[entry.id] && <Button href={pageHrefs[entry.id]} label={dict.work.seeProject} icon="arrow-right" />}
+                  {data.demoUrl && <TextLink destination="external" href={data.demoUrl} label={data.demoLabel ?? t.live} newTab={newTab} />}
+                  {data.repoUrl && <TextLink destination="external" href={data.repoUrl} label={t.code} newTab={newTab} />}
                 </div>
               </div>
             </article>
@@ -84,7 +86,7 @@ const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.rep
             );
           })}
         </div>
-        <a href="https://github.com/trinity-bytes" {...out} data-background-text>{t.moreExperiments}<Icon name="arrow-up-right" size={15} /><span class="visually-hidden"> {newTab}</span></a>
+        <TextLink destination="external" href="https://github.com/trinity-bytes" label={t.moreExperiments} newTab={newTab} data-background-text />
       </div>
     )}
   </div>
@@ -157,26 +159,6 @@ const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.rep
     flex-wrap: wrap;
     align-items: center;
     gap: 12px 24px;
-  }
-  /* External links: text, then the ↗ icon. */
-  .links a,
-  .experiments > a {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  /* The card's main action: its project page on this site (→), as a button. */
-  .links a.internal {
-    gap: 8px;
-    padding: 10px 18px;
-    border-radius: 999px;
-    background: var(--green-950);
-    color: var(--cream);
-    text-decoration: none;
-    font-weight: 500;
-  }
-  .links a.internal:hover {
-    background: var(--green-800);
   }
   .experiments {
     margin-top: 7rem;

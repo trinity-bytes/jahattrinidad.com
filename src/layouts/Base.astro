@@ -24,7 +24,7 @@ export interface Props {
   profileLinks?: { label: string; href: string }[];
   /** The page renders its own Contact section (PageContact); the nav's Contact link then stays on the page. */
   contactOnPage?: boolean;
-  /** Serialized schema.org data (from lib/seo.ts), rendered as JSON-LD in <head>. */
+  /** The Home's schema.org graph; every other page carries its own in `seo.jsonLd`. */
   jsonLd?: string;
   /** The page plays the Home hero's load choreography (Hero.astro): mark it from the head, before first paint. */
   heroIntro?: boolean;
@@ -32,6 +32,7 @@ export interface Props {
 
 const { lang, seo, lens = false, nav = true, profileLinks = [], contactOnPage = false, jsonLd, heroIntro = false } = Astro.props;
 const t = getDictionary(lang);
+const structuredData = jsonLd ?? seo.jsonLd;
 
 // EN / ES / PT switch: each locale goes to this page's counterpart (its hreflang
 // alternate) or, when the page has none, to that locale's Home.
@@ -96,7 +97,7 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     <meta property="og:image:height" content={seo.openGraph['og:image:height']} />
     <meta property="og:image:alt" content={seo.imageAlt ?? t.meta.ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
-    {jsonLd && <script type="application/ld+json" is:inline set:html={jsonLd} />}
+    {structuredData && <script type="application/ld+json" is:inline set:html={structuredData} />}
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
@@ -105,7 +106,7 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     <meta name="theme-color" content="#0a200b" />
   </head>
   <body>
-    <a class="skip-link" href="#main-content">{t.nav.skipToContent}</a>
+    <a class="skip-link" href="#main-content" data-nosnippet>{t.nav.skipToContent}</a>
     {nav && <Nav
       home={localizedPath(lang, '')}
       workPath={collectionPath('projects', lang)}

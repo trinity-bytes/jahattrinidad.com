@@ -233,7 +233,7 @@ class Chat {
       const item = this.clone('chip');
       const button = item.querySelector<HTMLElement>('button')!;
       button.dataset.chip = chip.value;
-      button.textContent = chip.label;
+      button.querySelector('span')!.textContent = chip.label;
       this.chips.append(item);
     }
   }
