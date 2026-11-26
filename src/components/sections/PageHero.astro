@@ -36,6 +36,8 @@ interface Props {
 const { variant, word } = Astro.props;
 const sky = { work: workSky, notes: notesSky, post: notesSky, case: studyDesk }[variant];
 const isCase = variant === 'case';
+// Notes has no near hill (owner, 2026-11-26): the grass hill is not reused on that cover.
+const hasHill = variant === 'work' || variant === 'post';
 ---
 
 <section class:list={['hero', variant]} data-hero aria-labelledby={word ? 'hero-word' : undefined}>
@@ -50,9 +52,8 @@ const isCase = variant === 'case';
     fetchpriority="high"
   />
   {word && <h1 id="hero-word" class="word">{word}</h1>}
-  {isCase ? (
-    <div class="scrim" aria-hidden="true" />
-  ) : (
+  {isCase && <div class="scrim" aria-hidden="true" />}
+  {hasHill && (
     <Picture
       src={hill}
       formats={['avif', 'webp']}
@@ -95,7 +96,6 @@ const isCase = variant === 'case';
 
   /* The near hill is lit by the Home's sunset: cooled toward the morning of each cover. */
   .work .hill, .post .hill { filter: brightness(1.04) saturate(0.85) hue-rotate(6deg); }
-  .notes .hill { filter: brightness(1.06) contrast(0.95) saturate(0.7) hue-rotate(8deg); }
   /* Work: the terraces sit lower than the sunset did, so the intro stays on the light sky. */
   .work { --sky-shift: 60px; }
   .work .sky { top: calc(var(--sky-top) + var(--sky-shift)); }
@@ -157,7 +157,11 @@ const isCase = variant === 'case';
     --intro-top: 112px;
     height: 700px;
   }
-  .notes { --word-size: 116px; --word-top: 539px; --word-right: 32px; }
+  /* Notes (boards 2522:510, 2522:871): below desktop the word fills the content width (Epilogue
+     500 at -0.04em sets "Notes" about 2.83 em wide) and sinks only a little under the bottom edge,
+     so it stays legible on a phone. */
+  .notes { --word-size: calc((100cqw - 2 * var(--edge)) / 2.83); }
+  .notes .word { top: auto; right: var(--edge); bottom: calc(var(--word-size) * -0.13); }
   .post {
     --sky-top: -114px;
     --hill-top: 349.223px;
@@ -208,7 +212,6 @@ const isCase = variant === 'case';
           color-mix(in srgb, var(--cream) 10%, transparent) 85%,
           transparent 100%);
     }
-    .notes { --word-size: 210px; --word-top: 485px; --word-right: 40px; }
     .post { --intro-top: 136px; height: 560px; }
   }
 
@@ -243,8 +246,6 @@ const isCase = variant === 'case';
       --hill-top: calc(628.2px - 55.22cqw);
       height: 745px;
     }
-    /* The covers are not mirrored (the study desk and the mist face the intro on their own); the hill still is. */
-    .notes .hill { transform: scaleX(-1); }
     .work { --sky-shift: 154px; }
     .scrim {
       background:
@@ -259,7 +260,8 @@ const isCase = variant === 'case';
           color-mix(in srgb, var(--cream) 86%, transparent) 36%,
           transparent 62%);
     }
-    .notes { --word-top: 437px; --word-right: var(--edge); }
+    .notes { --word-size: 300px; }
+    .notes .word { top: 437px; bottom: auto; }
     .case .intro { max-width: 660px; }
     .post .intro { max-width: 980px; }
     .post { --intro-top: 180px; height: 560px; }
@@ -267,6 +269,23 @@ const isCase = variant === 'case';
 
   /* Project pages (boards 2522:449, 2558:1666, 2558:2305): the title is Heading/H1 in the hero's green. */
   .hero.case .intro :global(.title) { font-size: var(--font-size-h1); line-height: 1.05; letter-spacing: -0.02em; color: var(--color-hero-text); }
+
+  /* Project pages below desktop (option A, owner 2026-11-26; components 2558:1666, 2558:2305): the
+     text sits on cream with room around it and the photo is its own full-strength band under it,
+     instead of the text over a faded photo. Phones stack full-width buttons. */
+  @media (width < 64.0625rem) {
+    .hero.case { --intro-top: 92px; --case-photo-h: 280px; display: flex; flex-direction: column; height: auto; }
+    .case .scrim { display: none; }
+    .case .intro { position: static; max-width: none; padding: var(--intro-top) var(--edge) 40px; }
+    .case .intro :global(.actions) { align-self: stretch; align-items: stretch; margin-top: 8px; }
+    .case :global(picture) { display: block; order: 1; }
+    .case .sky { position: relative; inset: auto; width: 100%; height: var(--case-photo-h); object-fit: cover; translate: none; }
+  }
+  @media (min-width: 48rem) and (width < 64.0625rem) {
+    .hero.case { --intro-top: 100px; --case-photo-h: 400px; }
+    .case .intro { padding-bottom: 48px; }
+    .case .intro :global(.actions) { align-self: flex-start; }
+  }
 
   /* Notes index and post (boards 2520:151, 2522:1212, 2522:2234): the intro starts at the section
      padding, labels are muted and the sub takes the title colour for contrast (NL-05, NL-10). */

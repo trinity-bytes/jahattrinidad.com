@@ -204,6 +204,21 @@ Each is detailed in its report. The code keeps the current behaviour until decid
 9. More cards without a demo URL show three dots and no hostname (T5).
 10. HO-09 and HI-04 contrast not re-measured on the new pixels.
 
+**Owner answers, 2026-11-26.** Code waits only where a Figma proposal is pending approval.
+
+1. "Look inside" is about showing the technical side, dressed with construction elements, not about how the site is built. The drag affordance must be explicit again (the old hover said it). Figma proposal pending.
+2. Keep the circle: it is the main open animation; a fade and slide may run inside it. Update the `MobileMenu` description to match.
+3. Keep the photo and the fixed 40rem width; update the Figma `ChatCard`.
+4. Project heroes at 768/390 look cramped on a phone and must be redesigned. Proposals A (photo as its own band under the text) and B (one screen tall, photo at the bottom), section `Proposal · 2026-11-26 · Work fixes` (`2586:5221`) on the Work page. **Approved 2026-11-26: Option A.**
+5. Hide "Press I anywhere" on touch-only devices; show it with a fine pointer, or after the first physical key press.
+6. Fix the filled `/links/` card hover.
+7. Fix the `/links/` minimum heights on phones.
+8. No near hill on the Notes hero at any width (do not reuse the grass hill); the post sky band follows board `2522:1286`. The first proposal was rejected ("ninguna propuesta en notes pasa, se ven terribles"): the problem was the display word cut to "Note" / "No". **Applied to the boards 2026-11-26:** the word fits the width with only a slight bottom crop (tablet 243 px at x 40, mobile 123 px at x 20; desktop unchanged), near hill hidden at every width, post sky band unchanged (= board). Code: the word must fit the content width at every breakpoint.
+9. More cards: the mock browser frame shrinks the image for nothing. Options A (image edge to edge, host chip) and B (the card is the window) in `2586:5221`. **Approved 2026-11-26: Option B.**
+
+**Applied to Figma 2026-11-26** (proposal sections deleted): project hero components (TourBench and Inspiration Garden, tablet and mobile) are option A; `Project card / More` and its mobile variant are option B; coursera-clone and forest-hero-2 left More projects at 1440/768/390 and are tiles "Coursera Clone" and "Forest Hero 2" in Small experiments; Portfolio shows `jahattrinidad.com`; `ChatCard` avatar is the photo and its description fixes the width (350 / 640); `MobileMenu` description states the circle reveal. Code phase may start on these. coursera-clone and forest-hero-2 move to Small experiments (tiles in the same section) and get real titles.
+10. Re-measure HO-09 and HI-04.
+
 ### SEO and indexing (2026-11-26)
 
 Owner: "antes de cerrar sesion quisiera que mejoremos e tema de seo y de la indexacion. [...] atencion especial en google. quiero qu eveas como muestra la pagina web, que contenido muestra de ella y como podemos mejorar no solo el raking sino el contenido qu ese muestra en la lista de resultados. anotas ensas mejoras y las incluyes en el plakn de implemntacion"
