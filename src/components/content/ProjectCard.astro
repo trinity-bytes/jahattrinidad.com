@@ -21,9 +21,10 @@ interface Props {
   mirrored?: boolean;
   optimized?: boolean;
   pillAction?: boolean;
+  flowAction?: boolean;
 }
 
-const { project, href, labels, insideLabels, meta, problem, whatItDoes, featured = false, mirrored = false, optimized = false, pillAction = false } = Astro.props;
+const { project, href, labels, insideLabels, meta, problem, whatItDoes, featured = false, mirrored = false, optimized = false, pillAction = false, flowAction = false } = Astro.props;
 
 const facts = [
   { label: labels.problem, value: problem },
@@ -45,7 +46,7 @@ const factLists = [
 ] as const;
 ---
 
-<article class:list={['card', { featured, mirrored }]}>
+<article class:list={['card', { featured, mirrored, 'flow-action': flowAction }]}>
   {
     project.coverImage && (
       optimized ? <Image class="cover" src={project.coverImage} alt={project.coverImageAlt ?? ''} loading="lazy" /> : <img class="cover" src={project.coverImage.src} width={project.coverImage.width} height={project.coverImage.height} alt={project.coverImageAlt ?? ''} loading="lazy" />
@@ -84,7 +85,7 @@ const factLists = [
     flex-direction: column;
     min-width: 0;
     overflow: hidden;
-    background: var(--color-card-alt);
+    background: var(--color-card-raised);
     border-radius: 1rem;
   }
 
@@ -112,18 +113,16 @@ const factLists = [
 
   .meta,
   dt {
-    font: 500 var(--font-size-label) / 1.5 var(--font-mono);
-    color: var(--color-text-muted);
-  }
-
-  .meta {
+    font: var(--type-meta);
+    letter-spacing: var(--type-meta-tracking);
     text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   h3 {
     margin-top: var(--space-xs);
-    font: 600 var(--font-size-heading-sm) / 1.1 var(--font-display);
-    letter-spacing: -0.01em;
+    font: 600 var(--font-size-h3) / 1.15 var(--font-display);
+    letter-spacing: -0.02em;
     color: var(--color-heading);
   }
 
@@ -154,6 +153,7 @@ const factLists = [
     margin-top: auto;
     padding-top: var(--space-md);
   }
+  .flow-action .action { margin-top: 0; }
 
   /* Featured: inset image above the text. */
   .featured {
@@ -167,10 +167,6 @@ const factLists = [
 
   .featured .body {
     padding: var(--space-md) 0 0;
-  }
-
-  .featured h3 {
-    font-size: var(--font-size-heading-section);
   }
 
   @media (min-width: 48rem) {

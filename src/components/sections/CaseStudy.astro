@@ -41,7 +41,7 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
   .band {
     position: relative;
     background: var(--cream);
-    padding: 7.5rem 0;
+    padding: var(--section-pad) 0;
   }
   .pale {
     background: var(--card);
@@ -50,24 +50,23 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
     position: relative;
   }
   .overview {
-    padding-top: 0;
+    padding-top: var(--section-pad);
   }
   /* Contain the negative margin so the section background never covers the hero. */
   .overview .inner {
     display: flow-root;
   }
   .overview {
-    padding-bottom: 11.375rem;
+    padding-bottom: var(--section-pad);
   }
   .browser {
     position: relative;
     max-width: 72rem;
     container-type: inline-size;
-    margin: -4rem auto 7.5rem;
+    margin: 0 auto var(--space-2xl);
     overflow: hidden;
     border-radius: 1rem;
     background: var(--card);
-    box-shadow: 0 24px 64px color-mix(in srgb, var(--green-950) 18%, transparent);
   }
   .browser img,
   .feature img {
@@ -76,22 +75,25 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
     height: auto;
   }
   .browser-bar {
-    height: clamp(12px, 3.472cqw, 40px);
+    height: var(--space-2xl);
     display: flex;
     align-items: center;
-    gap: clamp(2px, 0.694cqw, 8px);
-    padding: 0 clamp(6px, 1.736cqw, 20px);
+    gap: var(--space-xs);
+    padding: 0 var(--space-lg);
     color: var(--green-700);
-    font: clamp(4px, 1.042cqw, 12px) var(--font-mono);
+    font: var(--type-meta);
   }
   .browser-bar i {
-    width: clamp(3px, 0.868cqw, 10px);
-    height: clamp(3px, 0.868cqw, 10px);
+    width: var(--space-xs);
+    height: var(--space-xs);
     border-radius: 50%;
     background: var(--green-300);
   }
   .browser-bar span {
-    margin: auto;
+    margin-left: var(--space-xs);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .marker,
   dt,
@@ -128,11 +130,22 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
     margin-top: 40px;
   }
   .glance > div {
-    border-top: 1px solid var(--green-950);
-    padding: 16px 24px 0 0;
+    padding-right: var(--space-xl);
+  }
+  .glance dt {
+    font: var(--type-meta);
+    letter-spacing: var(--type-meta-tracking);
+    text-transform: uppercase;
+    margin-bottom: var(--space-xs);
+  }
+  dt, .table-head, .stack-label {
+    font: var(--type-meta);
+    letter-spacing: var(--type-meta-tracking);
+    text-transform: uppercase;
   }
   .glance dd {
     font-size: 20px;
+    line-height: 1.5;
   }
   .problem h2 {
     max-width: 560px;
@@ -155,7 +168,7 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
     margin-top: 0;
   }
   .problem {
-    padding-bottom: 10rem;
+    padding-bottom: var(--section-pad);
   }
   .facts > div {
     display: grid;
@@ -165,7 +178,7 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
     padding: 16px 0;
   }
   .features {
-    padding-bottom: 10rem;
+    padding-bottom: var(--section-pad);
   }
   .feature {
     display: grid;
@@ -226,7 +239,7 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
     gap: 2rem;
   }
   .table-head {
-    font: 500 13px var(--font-mono);
+    font: var(--type-meta);
     color: var(--green-700);
   }
   .decision {
@@ -238,7 +251,9 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
   }
   .stack-label {
     display: none;
-    font: 500 12px/1.5 var(--font-mono);
+    font: var(--type-meta);
+    letter-spacing: var(--type-meta-tracking);
+    text-transform: uppercase;
     color: var(--green-700);
     margin-bottom: 10px;
   }
@@ -432,18 +447,8 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
     max-width: 40rem;
   }
   @media (max-width: 1024px) {
-    .band {
-      padding: 5rem 0;
-    }
     .overview {
-      padding-top: 0;
-      padding-bottom: 6.5rem;
-    }
-    .browser {
-      margin-bottom: 4rem;
-    }
-    .problem {
-      padding-bottom: 5rem;
+      padding-block: var(--section-pad);
     }
     .split > div:last-child {
       max-width: none;
@@ -458,9 +463,6 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
     .decision {
       grid-template-columns: 1fr;
       gap: 1.5rem;
-    }
-    .features {
-      padding-bottom: 5rem;
     }
     .feature {
       gap: 24px;
@@ -540,15 +542,8 @@ const { data, decisions, cover, coverAlt = '', website, strings: t } = Astro.pro
     }
   }
   @media (max-width: 767px) {
-    .band {
-      padding: 5rem 0;
-    }
     .overview {
-      padding-top: 0;
-      padding-bottom: 6.5rem;
-    }
-    .browser {
-      margin: -4rem auto 4rem;
+      padding-block: var(--section-pad);
     }
     .glance {
       grid-template-columns: 1fr;

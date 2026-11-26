@@ -20,8 +20,8 @@ page:
   glance:
     - { label: Problema, value: 'Agente viajero (TSP) sobre un grafo completo' }
     - { label: Método, value: 'Búsqueda exhaustiva con backtracking, sin heurísticas' }
-    - { label: Escala, value: 'De 4 a 11 puntos, de 6 a 3 628 800 recorridos' }
-    - { label: Tecnologías, value: 'JavaScript sin frameworks, Cytoscape.js, node --test' }
+    - { label: Escala, value: 'De 4 a 11 puntos, de 6 a 3 628 800 recorridos' }
+    - { label: Tecnologías, value: 'JavaScript sin frameworks, Cytoscape.js, node -‑test' }
     - { label: Mi parte, value: 'Todo, por mi cuenta' }
   how:
     headline: 'La mejor ruta, demostrada probándolas todas.'
@@ -32,7 +32,7 @@ page:
         formula: "C(π) = Σ w(πᵢ, πᵢ₊₁)\ni = 0 … N−1"
       - title: Cada recorrido, una vez
         text: 'Fijar el punto de partida deja (N−1)! recorridos posibles. El backtracking los arma arista por arista y se queda con el más barato, así el resultado es el óptimo, no una estimación.'
-        formula: "N = 8  →  7! = 5 040 recorridos"
+        formula: "N = 8: 7! = 5 040 recorridos"
       - title: De kilómetros a impacto
         text: 'La mejor ruta se vuelve algo sobre lo que una ciudad puede actuar: el tiempo de manejo a la velocidad media del camión y el CO₂ que emite, comparados con la peor ruta.'
         formula: "t = d / 25 km/h × 60\nCO₂ = d × 0.2 kg/km"
@@ -40,12 +40,12 @@ page:
       title: Por qué se detiene en 11 puntos
       rows:
         - [N, '4', '6', '8', '10', '11', '12']
-        - ['recorridos (N−1)!', '6', '120', '5 040', '362 880', '3 628 800', '39 916 800']
+        - ['recorridos (N−1)!', '6', '120', '5 040', '362 880', '3 628 800', '39 916 800']
       note: 'Cada punto extra multiplica el trabajo: 12 puntos serían once veces los recorridos de 11.'
   decisionHeadline: 'Fuerza bruta, a propósito.'
 decisions:
   - choice: 'Enumerar cada recorrido, sin heurística'
-    rejected: 'Vecino más cercano o 2-opt'
+    rejected: 'vecino más cercano o 2-opt'
     because: 'Una heurística da una buena ruta rápido, pero no puede decirte cuán lejos está de la mejor. Probar los (N−1)! recorridos da el óptimo demostrado y deja ver cómo el costo explota al crecer N.'
     cost: 'Solo escala hasta 11 puntos: es un banco de enseñanza, no un motor de rutas para una flota real. La app además necesita una pantalla de al menos 1024 px de ancho.'
 ---
