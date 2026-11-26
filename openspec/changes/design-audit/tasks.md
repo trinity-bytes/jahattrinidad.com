@@ -84,5 +84,5 @@ Owner, 2026-11-25: "vamos a pasar a la fase de correcion del diseño y comprotam
 - [x] 3.2 Controls: Icon, Button, TextLink, BackLink (SY-01, SY-02, SY-03, §4 patterns)
 - [x] 3.3 Nav (Desktop / Mobile × Top / Scrolled)
 - [x] 3.4 Footer, Contact, mobile menu sheet, chat card
-- [x] 3.5 Corrected boards beside the As built boards, built from instances: pages `Proposed · Home` `2536:12`, `Proposed · Work & projects` `2520:22`, `Proposed · Notes & links` `2520:12` (33 boards; reports `reports/phase-3-home.md`, `phase-3-work.md`, `phase-3-notes.md`)
+- [x] 3.5 Corrected boards beside the As built boards, built from instances: pages `Proposed · Home` `2536:12`, `Proposed · Work & projects` `2520:22`, `Proposed · Notes & links` `2520:12` (26 boards; reports `reports/phase-3-home.md`, `phase-3-work.md`, `phase-3-notes.md`)
 - [ ] 3.6 Owner review of the proposals; then the code phase
