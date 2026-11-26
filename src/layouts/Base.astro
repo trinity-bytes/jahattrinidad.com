@@ -136,9 +136,6 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     button, input, textarea, select { font: inherit; color: inherit; }
     pre, code { font-family: var(--font-mono), monospace; }
     :focus-visible { outline: var(--focus-width) solid var(--color-focus); outline-offset: var(--focus-offset); }
-    /* UI/Control line height. Without it the nav pill inherits 1.5, the bar grows past the 69px that the
-       hero pulls itself under (Nav.astro) and a strip of page shows above the sky. Goes away with ui/Button. */
-    .site-nav .contact { line-height: 1.25rem; }
     a { color: inherit; text-decoration-color: var(--color-text-muted); text-underline-offset: 0.2em; }
     a:hover { text-decoration-color: currentColor; }
     /* Page-width wrapper with the board gutters; full-bleed sections skip it. */
