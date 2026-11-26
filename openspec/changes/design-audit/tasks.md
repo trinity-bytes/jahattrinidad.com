@@ -102,7 +102,8 @@ Owner, 2026-11-25: "vamos a pasar a la fase de correcion del diseño y comprotam
 
 Code tasks are tracked in `odd/tasks/design-corrections-code.md` (branch `feat/design-corrections`), worker briefs in `prompts/code-*.md`, worker reports in `reports/code-t*.md`.
 
-- [ ] T1 behaviour defects (`phase-2-audit.md` §1), T2 foundations: delegated to two Sonnet workers
+- [x] T2 foundations (`1bd86ef`, `reports/code-t2-foundations.md`) and T1 behaviour defects (`a4abdf0`, `reports/code-t1-behaviour.md`), by two Sonnet workers; `npm run check` passes
+- [ ] T1 close-out: live re-check on the combined tree (`odd/tasks/design-corrections-code.md` L10), then T3 shared controls, T4–T6 pages
 - [x] SEO check of the search results for the owner's name (Google, Bing, DuckDuckGo, Ecosia) and of Bing Webmaster Tools → `reports/seo-search-results.md` (findings F1–F10, owner actions)
 - [x] Bing: the 25 production sitemap URLs submitted through URL Submission (2026-11-26)
 - [ ] T7 SEO fixes in code; T8 owner actions (deploy and check the favicon, Cloudflare Crawler Hints, Search Console indexing, profile alignment, submit TourBench to Bing after the next deploy)
