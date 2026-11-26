@@ -26,6 +26,7 @@ import Button from '../ui/Button.astro';
 import Annotation from '../ui/Annotation.astro';
 import AnnotationList from '../ui/annotation/AnnotationList.astro';
 import type { Dictionary } from '../../lib/i18n';
+import { OWNER_NAME } from '../../lib/consts';
 
 interface Props {
   strings: Dictionary['home']['outside']['hero'];
@@ -75,7 +76,7 @@ const portraitMask = await getImage({ src: portrait, format: 'webp', width: 1040
     formats={['avif', 'webp']}
     widths={[300, 360, 520, 1040, 1400]}
     sizes="(min-width: 64.0625rem) 623px, (min-width: 48rem) 440px, 380px"
-    alt=""
+    alt={OWNER_NAME}
     class="layer portrait"
     loading="eager"
   />

@@ -36,7 +36,7 @@ const profileIcons = {
 {isHome && <script is:inline>if ('IntersectionObserver' in window && window.scrollY === 0) document.documentElement.dataset.navLogoInitial = 'hidden';</script>}
 <header class="site-nav" data-nav data-state="scrolled" data-scroll-spy={isHome ? '' : undefined}>
   <nav aria-label={strings.navigation} class="nav-inner">
-    <a class="brand" href={home}><span class="brand-outside">{strings.brand}</span><span class="brand-inside">{strings.brandInside}</span></a>
+    <a class="brand" href={home} data-nosnippet><span class="brand-outside">{strings.brand}</span><span class="brand-inside">{strings.brandInside}</span></a>
     <div class="desktop-links">
       <span class="pill" data-nav-pill aria-hidden="true"></span>
       {links.map((link) => <a href={link.href} data-section-link={link.id} aria-current={link.route && pathname.startsWith(link.route) ? 'page' : undefined}>{link.label}</a>)}
