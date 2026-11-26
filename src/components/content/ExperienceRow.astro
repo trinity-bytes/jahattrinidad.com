@@ -32,7 +32,7 @@ const { period, role, organisation, description, tags, image, imageAlt = '', too
             n={toolNote.n}
             x="calc(100% + 5px)"
             y="50%"
-            pinX="-5px"
+            pinX="calc(100% + 5px)"
             pinY="-5px"
             title={toolNote.title}
             note={toolNote.note}
@@ -44,26 +44,22 @@ const { period, role, organisation, description, tags, image, imageAlt = '', too
   </div>
 </li>
 <style>
-  .row { display: grid; grid-template-columns: 1fr; gap: var(--space-2xs); padding-block: var(--space-xl); border-top: 1px solid var(--color-border); }
-  .period { margin: 0; font: 400 13px/1.5 var(--font-mono); color: var(--color-text-muted); }
+  /* Home / Experience row 2538:103 and Home / Chip 2538:75. */
+  .row { display: grid; grid-template-columns: 1fr; gap: var(--space-xs); padding-block: var(--space-xl); border-top: 1px solid var(--color-border); }
+  .period { margin: 0; font: var(--type-meta); letter-spacing: 0.02em; color: var(--color-text-muted); }
   .body { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-xs); min-width: 0; }
-  .heading { margin: 0; font-weight: 400; }
-  .role { display: block; font: 500 1.125rem/1.35 var(--font-sans); color: var(--color-heading); }
-  .organisation { display: block; font: 400 1rem/1.4 var(--font-sans); color: var(--color-text); }
-  .description { margin: 0; font: 400 1rem/1.5 var(--font-sans); color: var(--color-text); }
-  .photo { width: 100%; aspect-ratio: 35 / 24; overflow: hidden; border-radius: var(--space-sm); }
+  .heading { display: flex; flex-direction: column; gap: var(--space-2xs); margin: 0; font-weight: 400; }
+  .role { font: 500 var(--font-size-body)/1.5 var(--font-sans); color: var(--color-heading); }
+  .organisation { font: 400 var(--font-size-small)/1.5 var(--font-sans); color: var(--color-text); }
+  .description { margin: 0; font: 400 var(--font-size-small)/1.5 var(--font-sans); color: var(--color-text); }
+  .photo { width: 100%; aspect-ratio: 35 / 24; overflow: hidden; border-radius: var(--radius-md); }
   .photo :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .tags { display: flex; flex-wrap: wrap; gap: 0 var(--space-xs); margin: 0; padding: 0; list-style: none; }
-  .tags li { position: relative; padding: var(--space-2xs) 0.625rem; border: 1px solid var(--color-chip-border); border-radius: 999px; font: 400 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-chip-text); }
+  .tags { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin: 0; padding: var(--space-2xs) 0 0; list-style: none; }
+  .tags li { position: relative; padding: var(--space-2xs) var(--space-sm); border: 1px solid var(--color-chip-border); border-radius: var(--radius-full); font: var(--type-meta); letter-spacing: 0.02em; color: var(--color-chip-text); }
   @media (min-width: 48rem) {
-    .row { grid-template-columns: 7rem 1fr; gap: var(--space-xl); }
-    .heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.625rem; }
-    .role { font-size: 1.25rem; }
-    .organisation { font-size: 1.125rem; }
+    .row { grid-template-columns: 7rem 1fr; gap: var(--space-2xl-b); }
+    .heading { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-xs); }
     .organisation::before { content: '·'; margin-right: 0.3em; }
     .photo { width: 20rem; aspect-ratio: 8 / 5; }
-  }
-  @media (min-width: 64.0625rem) {
-    .row { grid-template-columns: 8.75rem 1fr; column-gap: 2rem; }
   }
 </style>

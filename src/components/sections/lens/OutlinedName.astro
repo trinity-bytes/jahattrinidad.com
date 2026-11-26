@@ -1,0 +1,37 @@
+---
+/*
+ * The hero name as an outline (HI-05). CSS text-stroke also strokes the overlapping contours inside
+ * the variable font's glyphs, and it has no outside alignment. Here the text is stroked at twice the
+ * width and its own fill is masked out, which leaves only the outer edge of the merged shapes.
+ * The text is written once (in <defs>) and referenced twice; lens/preview.ts renames the references.
+ * Font, size and tracking are inherited from the box the caller places it in.
+ */
+interface Props {
+  text: string;
+  /** Unique on the page: it names the glyphs and the mask. */
+  id: string;
+}
+const { text, id } = Astro.props;
+---
+
+<svg class="outlined-name" aria-hidden="true" focusable="false">
+  <defs>
+    <text id={id} x="0" y="0.755em">{text}</text>
+    <mask id={`${id}-mask`} maskUnits="userSpaceOnUse" x="-10%" y="-30%" width="120%" height="160%">
+      <rect x="-10%" y="-30%" width="120%" height="160%" fill="white"></rect>
+      <use href={`#${id}`} fill="black" stroke="none"></use>
+    </mask>
+  </defs>
+  <use class="edge" href={`#${id}`} mask={`url(#${id}-mask)`}></use>
+</svg>
+
+<style>
+  .outlined-name { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .edge {
+    fill: none;
+    stroke: var(--outline-color);
+    /* Half of it falls inside the glyphs and is masked away. */
+    stroke-width: calc(2 * var(--hero-stroke-width));
+    stroke-linejoin: round;
+  }
+</style>

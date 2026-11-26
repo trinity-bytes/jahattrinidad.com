@@ -36,9 +36,8 @@ const [head, ...rows] = page.how.table?.rows ?? [];
       <h2 data-background-text>{page.how.headline}</h2>
       {page.how.sub && <p class="sub" data-background-text>{page.how.sub}</p>}
       <ol class="steps">
-        {page.how.steps.map((step, index) => (
+        {page.how.steps.map((step) => (
           <li>
-            <span class="number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
             <h3 data-background-text>{step.title}</h3>
             <p data-background-text>{step.text}</p>
             {step.formula && <pre class="formula"><code>{step.formula}</code></pre>}
@@ -47,12 +46,14 @@ const [head, ...rows] = page.how.table?.rows ?? [];
       </ol>
       {page.how.table && (
         <figure class="table">
-          <figcaption class="marker" data-background-text>{page.how.table.title}</figcaption>
-          <div class="table-scroll">
-            <table>
-              <thead><tr>{head.map((cell) => <th scope="col">{cell}</th>)}</tr></thead>
-              <tbody>{rows.map((row) => <tr>{row.map((cell, index) => (index === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>))}</tr>)}</tbody>
-            </table>
+          <figcaption class="table-title" data-background-text>{page.how.table.title}</figcaption>
+          <div class="table-frame">
+            <div class="table-scroll" role="region" aria-label={t.scrollableTable(page.how.table.title)} tabindex="0">
+              <table>
+                <thead><tr>{head.map((cell) => <th scope="col">{cell}</th>)}</tr></thead>
+                <tbody>{rows.map((row) => <tr>{row.map((cell, index) => (index === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>))}</tr>)}</tbody>
+              </table>
+            </div>
           </div>
           {page.how.table.note && <p class="note" data-background-text>{page.how.table.note}</p>}
         </figure>
@@ -81,7 +82,7 @@ const [head, ...rows] = page.how.table?.rows ?? [];
   .band {
     position: relative;
     background: var(--cream);
-    padding: 7.5rem 0;
+    padding: var(--section-pad) 0;
   }
   .pale {
     background: var(--card);
@@ -91,8 +92,7 @@ const [head, ...rows] = page.how.table?.rows ?? [];
   }
   /* Contain the negative margin so the section background never covers the hero. */
   .overview {
-    padding-top: 0;
-    padding-bottom: 7.5rem;
+    padding-block: var(--section-pad);
   }
   .overview .inner {
     display: flow-root;
@@ -101,11 +101,10 @@ const [head, ...rows] = page.how.table?.rows ?? [];
     position: relative;
     max-width: 72rem;
     container-type: inline-size;
-    margin: -4rem auto 6rem;
+    margin: 0 0 var(--space-2xl);
     overflow: hidden;
     border-radius: 1rem;
     background: var(--card);
-    box-shadow: 0 24px 64px color-mix(in srgb, var(--green-950) 18%, transparent);
   }
   .browser :global(img) {
     display: block;
@@ -113,22 +112,25 @@ const [head, ...rows] = page.how.table?.rows ?? [];
     height: auto;
   }
   .browser-bar {
-    height: clamp(12px, 3.472cqw, 40px);
+    height: var(--space-2xl);
     display: flex;
     align-items: center;
-    gap: clamp(2px, 0.694cqw, 8px);
-    padding: 0 clamp(6px, 1.736cqw, 20px);
+    gap: var(--space-xs);
+    padding: 0 var(--space-lg);
     color: var(--green-700);
-    font: clamp(4px, 1.042cqw, 12px) var(--font-mono);
+    font: var(--type-meta);
   }
   .browser-bar i {
-    width: clamp(3px, 0.868cqw, 10px);
-    height: clamp(3px, 0.868cqw, 10px);
+    width: var(--space-xs);
+    height: var(--space-xs);
     border-radius: 50%;
     background: var(--green-300);
   }
   .browser-bar span {
-    margin: auto;
+    margin-left: var(--space-xs);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .marker,
   dt,
@@ -167,11 +169,22 @@ const [head, ...rows] = page.how.table?.rows ?? [];
     margin-top: 40px;
   }
   .glance > div {
-    border-top: 1px solid var(--green-950);
-    padding: 16px 24px 0 0;
+    padding-right: var(--space-xl);
+  }
+  .glance dt {
+    font: var(--type-meta);
+    letter-spacing: var(--type-meta-tracking);
+    text-transform: uppercase;
+    margin-bottom: var(--space-xs);
+  }
+  dt, .table-head, .stack-label {
+    font: var(--type-meta);
+    letter-spacing: var(--type-meta-tracking);
+    text-transform: uppercase;
   }
   .glance dd {
-    font-size: 20px;
+    font-size: 1.25rem; /* The fixed 20px value style has no token. */
+    line-height: 1.5;
   }
   .sub {
     max-width: 720px;
@@ -191,11 +204,13 @@ const [head, ...rows] = page.how.table?.rows ?? [];
     flex-direction: column;
     gap: 0.875rem;
   }
+  .steps h3 { text-wrap: balance; }
   /* The formula card takes the experiment tiles' terminal look (WorkMore.astro). */
   .formula {
+    min-height: 81px; /* Formula height matches the board; no token. */
     margin: auto 0 0;
     padding: 1.125rem 1.25rem;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     background: var(--green-950);
     color: var(--green-300);
     font: 500 14px/1.6 var(--font-mono);
@@ -203,17 +218,19 @@ const [head, ...rows] = page.how.table?.rows ?? [];
     overflow-wrap: anywhere;
   }
   .table {
-    margin: 4.5rem 0 0;
+    margin: var(--space-2xl) 0 0;
+  }
+  .table-title { font: 600 var(--font-size-h3)/1.2 var(--font-display); }
+  .table-frame {
+    position: relative;
   }
   .table-scroll {
-    margin-top: 1.25rem;
     overflow-x: auto;
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
   }
   table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0 var(--space-md);
     font: 400 14px/1.4 var(--font-mono);
     font-variant-numeric: tabular-nums;
   }
@@ -222,16 +239,14 @@ const [head, ...rows] = page.how.table?.rows ?? [];
     padding: 14px 24px;
     text-align: left;
     white-space: nowrap;
+    background: var(--color-card-alt);
   }
+  td, thead th:not(:first-child) { text-align: right; }
   thead th {
-    background: color-mix(in srgb, var(--green-950) 6%, transparent);
     font-weight: 500;
   }
   tbody th {
     font-weight: 500;
-  }
-  tbody tr + tr {
-    border-top: 1px solid var(--color-border);
   }
   .note {
     margin-top: 1rem;
@@ -248,7 +263,7 @@ const [head, ...rows] = page.how.table?.rows ?? [];
     gap: 2rem;
   }
   .table-head {
-    font: 500 13px var(--font-mono);
+    font: var(--type-meta);
     color: var(--green-700);
     padding-bottom: 10px;
   }
@@ -260,22 +275,22 @@ const [head, ...rows] = page.how.table?.rows ?? [];
     font-size: 26px;
     margin-bottom: 0.625rem;
   }
+  .decision small {
+    display: block;
+    font: 400 var(--font-size-small)/1.5 var(--font-sans);
+    color: var(--color-text);
+  }
   .stack-label {
     display: none;
-    font: 500 12px/1.5 var(--font-mono);
+    font: var(--type-meta);
+    letter-spacing: var(--type-meta-tracking);
+    text-transform: uppercase;
     color: var(--green-700);
     margin-bottom: 10px;
   }
   @media (max-width: 1024px) {
-    .band {
-      padding: 5rem 0;
-    }
     .overview {
-      padding-top: 0;
-      padding-bottom: 5rem;
-    }
-    .browser {
-      margin-bottom: 4rem;
+      padding-block: var(--section-pad);
     }
     .decision {
       grid-template-columns: 1fr;
@@ -288,4 +303,37 @@ const [head, ...rows] = page.how.table?.rows ?? [];
       display: block;
     }
   }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    th, td { padding-inline: var(--space-lg); }
+  }
+  @media (max-width: 767px) {
+    .overview { padding-block: var(--section-pad); }
+    .table-frame::after {
+      content: '';
+      position: absolute;
+      inset: 1px 1px 1px auto;
+      width: var(--space-2xl-b);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      pointer-events: none;
+      background: linear-gradient(to right, transparent, var(--color-card));
+    }
+    .table-frame[data-scroll-end='true']::after { display: none; }
+    .decisions :global([data-bytes-mask]) { display: none; }
+  }
 </style>
+<script>
+  document.querySelectorAll<HTMLElement>('.table-frame').forEach((frame) => {
+    const scroll = frame.querySelector<HTMLElement>('.table-scroll');
+    if (!scroll) return;
+    const update = () => {
+      frame.dataset.scrollEnd = String(scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 1);
+    };
+    scroll.addEventListener('scroll', update, { passive: true });
+    const observer = new ResizeObserver(update);
+    observer.observe(scroll);
+    const table = scroll.querySelector('table');
+    if (table) observer.observe(table);
+    document.fonts.ready.then(update);
+    update();
+  });
+</script>

@@ -120,11 +120,11 @@ Goal: the site implements the approved Proposed boards (Figma `gq6glEp9QrPOnEyYG
 |---|---|---|---|
 | T1 | The eight behaviour defects of `reports/phase-2-audit.md` §1 (NL-01, HI-01, HI-02, NL-03, WK-17, NL-02, HI-03, WK-01) | done: live re-check passed 2026-11-26 (WK-01 54/54 tiles at 300 px, HI-01/02/03, NL-01 heading at 96 px at 1440/768/390 with and without reduced motion) | `a4abdf0`, `reports/code-t1-behaviour.md` |
 | T2 | Foundations: tokens from the Figma variables, `@layer base` defaults (line height, `text-wrap`, form fonts, mono), focus tokens and `[data-surface="dark"]`, `Icon` `sizing` prop (`inline` / `control` / `brand`) with a 1.5 px non-scaling stroke, motion tokens | done | `1bd86ef`, `reports/code-t2-foundations.md` |
-| T3 | Shared controls `ui/Button`, `ui/TextLink`, `ui/BackLink` as on `Design system` (system causes S1, S6 hit areas, S7 hover/press of `phase-2-audit.md` §2); migrate every hand-built call site; remove the temporary `.site-nav .contact` line-height rule in `src/layouts/Base.astro` | **partial, uncommitted work committed as WIP** (Codex worker interrupted 2026-11-26, no report): components built, 12 files migrated; audit and close-out pending, see "T3 and T7 — state at interruption" | brief `prompts/code-t3-controls.md`; input: T2 report "Call sites to adopt" |
-| T4 | Home Outside, Inside, chat, nav, footer: every item `reports/phase-3-home.md` marks "code", plus the label sweep (S3) and adopting T2's tokens | after T3 | |
-| T5 | Work index and project pages: items marked "code" in `reports/phase-3-work.md` | after T3 | |
-| T6 | Notes, post, `/links/`: items marked "code" in `reports/phase-3-notes.md` | after T3 | |
-| T7 | SEO in code, findings F3–F8 and F1's IndexNow key of `reports/seo-search-results.md`: `WebSite` JSON-LD; titles `<page> — <what it is> · Jahat Trinidad` and 140–160 character descriptions in en/es/pt via the dictionary; `data-nosnippet` on the skip link and nav handle; `Person` with one `@id`, full `sameAs`, portrait `image`; `alt="Jahat Trinidad"` on the hero portrait and avatar; `BreadcrumbList`, `BlogPosting`, project schema | **code mostly done, uncommitted work committed as WIP** (Sonnet worker idle 2026-11-26, no report); 3 component edits for the supervisor and a review pending, see "T3 and T7 — state at interruption" | brief `prompts/code-t7-seo.md` |
+| T3 | Shared controls `ui/Button`, `ui/TextLink`, `ui/BackLink` as on `Design system` (system causes S1, S6 hit areas, S7 hover/press of `phase-2-audit.md` §2); migrate every hand-built call site; remove the temporary `.site-nav .contact` line-height rule in `src/layouts/Base.astro` | done 2026-11-26: closed by the supervisor (components checked against Figma, temporary nav rule removed) | `832174b`, `6ac3da4`, `reports/code-t3-controls.md` |
+| T4 | Home Outside, Inside, chat, nav, footer: every item of `reports/phase-3-home.md`, label sweep (S3), NL-17, project hero title | done 2026-11-26 | `0ffcb5a`, `reports/code-t4-home.md` |
+| T5 | Work index and project pages: every WK item of `reports/phase-3-work.md` | done 2026-11-26 (two feedback rounds) | `2babbd9`, `reports/code-t5-work.md` |
+| T6 | Notes, post, `/links/`: every NL item of `reports/phase-3-notes.md` except NL-17 | done 2026-11-26 | `0ffcb5a`, `reports/code-t6-notes.md` |
+| T7 | SEO in code, findings F3–F8 and F1's IndexNow key of `reports/seo-search-results.md`: `WebSite` JSON-LD; titles `<page> — <what it is> · Jahat Trinidad` and 140–160 character descriptions in en/es/pt via the dictionary; `data-nosnippet` on the skip link and nav handle; `Person` with one `@id`, full `sameAs`, portrait `image`; `alt="Jahat Trinidad"` on the hero portrait and avatar; `BreadcrumbList`, `BlogPosting`, project schema | done 2026-11-26 (Rich Results Test after the deploy, T8) | `832174b`, `d9bf8aa`, `reports/code-t7-seo.md` |
 | T8 | Owner actions (outside the repo): deploy, then confirm production links `/favicon.ico` and `/favicon.svg` instead of `data:` icons; Cloudflare Crawler Hints; submit TourBench to Bing after the deploy (it is missing from the production sitemap); Search Console indexing of TourBench, Inspiration Garden and the posts; re-check Bing Site Explorer around 2026-12-03; LinkedIn headline and website links on every profile | owner | |
 
 ### T3 and T7 — state at interruption (2026-11-26)
@@ -164,6 +164,12 @@ The session stopped while T3 (Codex `controls`) and T7 (Sonnet `seo`) were both 
 
 ### Resume here
 
+**Update 2026-11-26, end of the code phase units:** T1–T7 are done on `feat/t3-t7-closeout` (last commits `0ffcb5a`, `2babbd9`); `npm run check` passes. What is left: the owner decisions below ("Open questions after T4–T6"), then merge the branch into `develop`, deploy, and T8 (owner). Older resume notes follow.
+
+
+**Update 2026-11-26, later:** T3 and T7 are closed on `feat/t3-t7-closeout` (`d9bf8aa`, `6ac3da4`); open questions T1-1, T1-2, T1-3 and T2-2 are decided in `odd/tasks/design-corrections-code.md` L17. T5 and T6 run in parallel (briefs `prompts/code-t5-work.md`, `prompts/code-t6-notes.md`); T4 follows them. If the session stops before their reports exist, check `git status` for their uncommitted edits, run `npm run check`, and relaunch with the same brief, telling the worker to continue from the tree as it is. The steps below are the earlier resume point.
+
+
 1. On the other machine: `git switch develop && git pull`, `npm install`, `npm run dev -- --host 127.0.0.1 --port 4321`. Captures need a full Chromium and `playwright` on `NODE_PATH` (`proposal.md`, "Continue from another clone").
 2. New branch from `develop` (for example `feat/t3-t7-closeout`). Finish **T7** first (four small items above, supervisor inline), then **T3** steps 1–5. `npm run check` before each commit. One commit per unit (`feat(seo): …`, `feat(ui): …`).
 3. Settle the open questions below that block T4–T6, then T4–T6 (two workers at a time where surfaces are disjoint, briefs in the shape of `prompts/code-t3-controls.md`).
@@ -182,6 +188,21 @@ Engram is not needed: this file, `proposal.md`, `design.md`, the `prompts/` brie
 - T2-3: token names assumed without a direct Figma read: `--radius-xl`, `--radius-2xl`, `--icon-*`, the motion durations and easings. Confirm against the Foundation collection with a Plugin API read.
 - T2-4: the Design system icon section holds 20 icons, not 15.
 - Known leftovers: `components/content/PostRow.astro` `&nbsp; →` still has a breakable space; Contact chips "I'm hiring" with a straight apostrophe; the send button still draws `arrow-up` instead of a paper plane (owner asked for a typical send icon, `odd/tasks/figma-design-system.md` L14).
+
+### Open questions after T4–T6 (owner)
+
+Each is detailed in its report. The code keeps the current behaviour until decided.
+
+1. Lens hover tooltip "Drag to see my technical side" is gone with the labelled pill (HO-03); nothing on screen says the lens can be dragged (`code-t4-home.md` Q2).
+2. Mobile menu opens with a 560 ms circle; `MobileMenu` describes a 200 ms fade and slide (T4 Q1).
+3. Chat card keeps the photo instead of the "JT" initials, and a fixed 40rem width (T4 Q3).
+4. Project heroes at 768/390: the boards draw content height with the photo at 35 %; the code keeps its layout (T4 Q5).
+5. The lead says "Press I anywhere" on touch too (T4 Q8).
+6. Filled "Write to me" card on `/links/` has no hover fill (its hover colour equals its fill) (T6 Q4).
+7. `/links/` uses the board heights (1120/1180) as minimum heights, so a phone scrolls past ~150 px of sky (T6 Q5).
+8. Notes hero hill at 1440 and the post sky band edge differ from the boards; no item asked for them (T6 Q2, Q3).
+9. More cards without a demo URL show three dots and no hostname (T5).
+10. HO-09 and HI-04 contrast not re-measured on the new pixels.
 
 ### SEO and indexing (2026-11-26)
 

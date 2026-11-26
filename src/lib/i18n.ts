@@ -39,12 +39,14 @@ interface HomeLensCopy {
   hero: HeroCopy;
   values: {
     marker: string;
-    headline: string;
+    /** Phrases of the heading: a line breaks between them, and inside one only when it does not fit. */
+    headline: string[];
     sub: string;
     valueLabel: string;
     teamLabel: string;
     proofLabel: string;
-    rows: { title: string; description: string }[];
+    /** `title` is a list of phrases, like `headline`. */
+    rows: { title: string[]; description: string }[];
     gardenTitle: string;
     gardenDescription: string;
     facts: { figure: string; description: string }[];
@@ -64,7 +66,8 @@ interface HomeLensCopy {
   };
   contact: {
     marker: string;
-    headline: string;
+    /** Phrases, like `values.headline`. */
+    headline: string[];
   };
 }
 
@@ -153,6 +156,8 @@ export interface Dictionary {
   };
   caseStudy: {
     allWork: string;
+    scrollableTable: (title: string) => string;
+    nextProjectHeading: string;
     eyebrow: string;
     contactMarker: string;
     openProject: string;
@@ -195,7 +200,6 @@ export interface Dictionary {
     allWriting: string;
     rssFeed: string;
     latest: string;
-    minutes: (minutes: number) => string;
   };
   experience: {
     carriesOver: string;
@@ -204,8 +208,6 @@ export interface Dictionary {
   };
   lens: {
     lookInside: string;
-    pointerHint: string;
-    touchHint: string;
     backOutside: string;
     escapeKey: string;
     insideAnnouncement: string;
@@ -232,7 +234,9 @@ export interface Dictionary {
     navigate: string;
     elsewhere: string;
     thisSite: string;
+    /** The footer button's label flips between the two as the shortcut is turned off and on. */
     shortcut: string;
+    shortcutOn: string;
     /** Inside only: how to leave the lens. */
     insideHint: string;
     builtWith: string;
@@ -268,7 +272,6 @@ export interface Dictionary {
     workSub: (projects: number, caseStudies: number) => string;
     notesTitle: string;
     notesSub: string;
-    latestSub: (minutes: number) => string;
     writeTitle: string;
     writeSub: string;
     cvTitle: string;
@@ -339,15 +342,15 @@ export const en: Dictionary = {
       },
       values: {
         marker: '02 — WHAT YOU GET',
-        headline: 'Faster launches. Fewer handoffs. Nothing rebuilt.',
+        headline: ['Faster launches.', 'Fewer handoffs.', 'Nothing rebuilt.'],
         sub: 'What your team gets from one person who designs and builds. Each point is proven on a product I shipped.',
         valueLabel: 'The value',
         teamLabel: 'What it means for your team',
         proofLabel: 'Proof · Inspiration Garden',
         rows: [
-          { title: 'Ideas into working products, fast.', description: 'I take something from a rough idea to a product people can use — without waiting on a separate designer and developer.' },
-          { title: 'A bridge between design and engineering.', description: 'I speak both languages: designs your engineers can build, and code your designers recognize as theirs.' },
-          { title: 'Built to grow, not to be redone.', description: 'I plan for what comes next, so new features plug into what exists instead of starting over.' },
+          { title: ['Ideas into working products, fast.'], description: 'I take something from a rough idea to a product people can use — without waiting on a separate designer and developer.' },
+          { title: ['A bridge between design', 'and engineering.'], description: 'I speak both languages: designs your engineers can build, and code your designers recognize as theirs.' },
+          { title: ['Built to grow,', 'not to be redone.'], description: 'I plan for what comes next, so new features plug into what exists instead of starting over.' },
         ],
         gardenTitle: 'Inspiration Garden',
         gardenDescription: 'A tool for saving the design references, tools, libraries, articles and tutorials I find on the web. Designed, built and launched by me.',
@@ -372,8 +375,9 @@ export const en: Dictionary = {
       },
       contact: {
         marker: '06 — CONTACT',
-        headline:
+        headline: [
           'Looking for someone who can design it and build it? Let’s talk.',
+        ],
       },
     },
     inside: {
@@ -396,15 +400,15 @@ export const en: Dictionary = {
       },
       values: {
         marker: '02 — WHAT YOU GET · HOW IT WAS BUILT',
-        headline: 'How each promise was built.',
-        sub: "Every number below comes from the Garden's repository: its releases and the services it runs on.",
+        headline: ['How each promise', 'was built.'],
+        sub: 'Every number below comes from the Garden’s repository: its releases and the services it runs on.',
         valueLabel: 'The practice',
         teamLabel: 'How I work',
         proofLabel: 'How the proof was built · Inspiration Garden',
         rows: [
-          { title: 'A working slice in the first week.', description: 'A deployable first version early, then small tagged releases on top of it, instead of a long build nobody sees.' },
-          { title: 'Small, versioned releases.', description: 'Interface and performance work ship as small tagged versions, many in a single day, never one big drop.' },
-          { title: 'Extend the foundation, never fork it.', description: 'New features land on the same Worker API, so the first version is never thrown away.' },
+          { title: ['A working slice in the first week.'], description: 'A deployable first version early, then small tagged releases on top of it, instead of a long build nobody sees.' },
+          { title: ['Small, versioned releases.'], description: 'Interface and performance work ship as small tagged versions, many in a single day, never one big drop.' },
+          { title: ['Extend the foundation,', 'never fork it.'], description: 'New features land on the same Worker API, so the first version is never thrown away.' },
         ],
         gardenTitle: 'Inspiration Garden',
         // Approved copy: docs/draft-copy.md, "Values proof".
@@ -444,8 +448,8 @@ export const en: Dictionary = {
         },
       },
       contact: {
-        marker: '06 — CONTACT · FOR DEVELOPERS',
-        headline: "You've seen how I build. What should we build together?",
+        marker: '06 — CONTACT · HOW THE CHAT WORKS',
+        headline: ['You’ve seen how I build.', 'What should we build together?'],
         notesLabel: 'Contact notes',
         // Chat design: openspec/changes/portfolio-implementation/design.md §3 (scripted, no language model).
         annotations: {
@@ -480,6 +484,8 @@ export const en: Dictionary = {
   // Case study board 2298:2; project-specific prose belongs in content entries.
   caseStudy: {
     allWork: 'All work',
+    scrollableTable: (title) => `${title} — scrollable table`,
+    nextProjectHeading: 'Next project',
     // The project's `kind` follows it on the hero: "CASE STUDY · PERSONAL PRODUCT".
     eyebrow: 'CASE STUDY',
     contactMarker: 'CONTACT',
@@ -510,18 +516,17 @@ export const en: Dictionary = {
   },
   // Notes index board 2301:86; intro and sub are approved draft copy.
   notes: {
-    eyebrow: 'NOTES · WRITING AND ELSEWHERE',
+    eyebrow: 'Notes · writing and elsewhere',
     writingMarker: '01 — WRITING',
     writingHeading: 'Essays and tutorials',
     contactMarker: '02 — CONTACT',
-    essay: 'ESSAY',
-    tutorial: 'TUTORIAL',
+    essay: 'Essay',
+    tutorial: 'Tutorial',
     writingLatest: 'Writing · Latest',
     elsewhereLatest: 'Elsewhere · Latest posts',
     allWriting: 'All writing',
     rssFeed: 'RSS feed',
     latest: 'Latest',
-    minutes: (minutes) => `${minutes} min`,
     headline: 'What I learn while building, written down so it sticks.',
     sub: 'Essays on how I decide, and tutorials you can follow step by step.',
     allNotes: 'All notes',
@@ -535,8 +540,6 @@ export const en: Dictionary = {
   // Pointer hint: lens component 2168:10. Remaining text: implementation design §2.
   lens: {
     lookInside: 'Look inside',
-    pointerHint: 'Drag to see my technical side',
-    touchHint: 'Tap to see my technical side',
     backOutside: 'Back outside',
     escapeKey: 'Esc',
     insideAnnouncement: 'Inside view: how each part is built',
@@ -568,6 +571,7 @@ export const en: Dictionary = {
     elsewhere: 'Elsewhere',
     thisSite: 'This site',
     shortcut: 'Turn off the I shortcut',
+    shortcutOn: 'Turn on the I shortcut',
     insideHint: 'Press Esc or I to go back outside',
     builtWith: 'Built with Astro · source on GitHub',
     availability: 'Open to an internship, now.\nLima, Peru · remote.',
@@ -579,8 +583,8 @@ export const en: Dictionary = {
   },
   projectPage: {
     eyebrow: 'PROJECT',
-    howMarker: '02 — HOW IT WORKS',
-    decisionMarker: '03 — THE KEY DECISION',
+    howMarker: '01 — HOW IT WORKS',
+    decisionMarker: '02 — THE KEY DECISION',
     nextProject: 'NEXT PROJECT',
     insteadOf: 'instead of',
   },
@@ -602,7 +606,6 @@ export const en: Dictionary = {
       `${projects} ${projects === 1 ? 'project' : 'projects'} · ${caseStudies} ${caseStudies === 1 ? 'case study' : 'case studies'}`,
     notesTitle: 'Read my notes',
     notesSub: 'Essays and tutorials',
-    latestSub: (minutes) => `Latest note · ${minutes} min read`,
     writeTitle: 'Write to me',
     writeSub: 'A short chat, straight to my inbox',
     cvTitle: 'Download my CV',

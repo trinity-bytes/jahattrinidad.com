@@ -37,7 +37,7 @@ const pair = index ? rest.slice(0, 2) : rest;
 const remaining = index ? [...rest.slice(2), ...projects.filter(project => project.mirrored)] : [];
 ---
 
-<section id="work" class="work" aria-labelledby="work-heading">
+<section id="work" class:list={['work', { index }]} aria-labelledby="work-heading">
   <Backgrounds variant="work" next="bg" seed={3} />
   <div class="container content">
     <header>
@@ -96,8 +96,14 @@ const remaining = index ? [...rest.slice(2), ...projects.filter(project => proje
     position: relative;
   }
 
+  .work { padding-block: var(--section-pad); }
+
   header {
-    margin-bottom: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+    margin-bottom: var(--space-3xl);
   }
 
   p,
@@ -106,12 +112,14 @@ const remaining = index ? [...rest.slice(2), ...projects.filter(project => proje
   }
 
   .marker {
-    font: 500 0.8125rem / 1.5 var(--font-mono);
+    font: var(--type-marker);
+    letter-spacing: var(--type-marker-tracking);
+    text-transform: uppercase;
     color: var(--color-text-muted);
   }
 
   h2 {
-    margin-top: var(--space-2xs);
+    margin-top: var(--space-sm);
     font: 600 var(--font-size-heading-lg) / 1.05 var(--font-display);
     letter-spacing: -0.02em;
     color: var(--color-heading);
@@ -130,16 +138,12 @@ const remaining = index ? [...rest.slice(2), ...projects.filter(project => proje
   }
 
   @media (min-width: 48rem) {
-    .work {
-      padding: 6rem 0;
-    }
-
+    .index :global(.featured .fact) { grid-template-columns: 6.5rem minmax(0, 1fr); gap: var(--space-md); }
     header {
-      display: flex;
+      flex-direction: row;
       align-items: flex-end;
       justify-content: space-between;
       gap: var(--space-xl);
-      margin-bottom: var(--space-2xl);
     }
 
     .projects {
@@ -152,14 +156,7 @@ const remaining = index ? [...rest.slice(2), ...projects.filter(project => proje
   }
 
   @media (min-width: 64.0625rem) {
-    .work {
-      padding: 7.5rem 0;
-    }
-
-    header {
-      margin-bottom: var(--space-4xl);
-    }
-
+    .index :global(.fact) { grid-template-columns: 6.5rem minmax(0, 1fr); gap: var(--space-md); }
     .projects {
       gap: var(--space-3xl);
     }

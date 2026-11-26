@@ -65,6 +65,8 @@ export interface ChatCopy {
   project: string;
   hello: string;
   composerPlaceholder: string;
+  /** Idle composer placeholder on phones, where the long one would truncate. */
+  composerPlaceholderShort: string;
   suggestionsLabel: string;
   /** Chrome of the conversation card that is not part of the scripted dialogue. */
   ui: {

@@ -3,7 +3,6 @@ import type { Locale } from '../lib/i18n';
 import { Font } from 'astro:assets';
 import '../styles/tokens.css';
 import Nav from '../components/sections/Nav.astro';
-import Lens from '../components/sections/Lens.astro';
 import Magnetic from '../components/ui/Magnetic.astro';
 import SmoothScroll from '../components/sections/SmoothScroll.astro';
 import { getDictionary, localizedPath, LOCALES, LOCALE_NAMES } from '../lib/i18n';
@@ -16,8 +15,6 @@ import { pageTransitionScript } from '../lib/page-transition';
 export interface Props {
   lang: Locale;
   seo: SeoResult;
-  /** Pages with an Inside state (the Home) opt in to the lens control. */
-  lens?: boolean;
   /** Launcher pages (/links/) render without the nav; the skip link and landmarks stay. */
   nav?: boolean;
   /** Profile links for the mobile menu; pages read them from content.ts (layouts may not). */
@@ -30,7 +27,7 @@ export interface Props {
   heroIntro?: boolean;
 }
 
-const { lang, seo, lens = false, nav = true, profileLinks = [], contactOnPage = false, jsonLd, heroIntro = false } = Astro.props;
+const { lang, seo, nav = true, profileLinks = [], contactOnPage = false, jsonLd, heroIntro = false } = Astro.props;
 const t = getDictionary(lang);
 const structuredData = jsonLd ?? seo.jsonLd;
 
@@ -58,9 +55,9 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
 <html lang={lang} translate="no" data-lens="outside">
   <head>
     <meta charset="utf-8" />
-    <!-- Cross-document View Transitions opt-in (lib/page-transition.ts). Inline, before anything else:
+    {/* Cross-document View Transitions opt-in (lib/page-transition.ts). Inline, before anything else:
          in an external stylesheet it arrives after the head scripts on a real network, and Chromium then
-         treats the new page as not opted in and aborts the transition ("opt-in disabled"). -->
+         treats the new page as not opted in and aborts the transition ("opt-in disabled"). */}
     <style is:inline>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
     <script is:inline set:html={localeScript} />
     <script is:inline set:html={pageTransitionScript()} />
@@ -121,7 +118,6 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     <main id="main-content" tabindex="-1"><slot /></main>
     <slot name="footer" />
     <div class="visually-hidden" aria-live="polite" aria-atomic="true" id="announcements"></div>
-    {lens && <Lens strings={t.lens} />}
     <Magnetic />
     <SmoothScroll />
   </body>
@@ -136,9 +132,6 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     button, input, textarea, select { font: inherit; color: inherit; }
     pre, code { font-family: var(--font-mono), monospace; }
     :focus-visible { outline: var(--focus-width) solid var(--color-focus); outline-offset: var(--focus-offset); }
-    /* UI/Control line height. Without it the nav pill inherits 1.5, the bar grows past the 69px that the
-       hero pulls itself under (Nav.astro) and a strip of page shows above the sky. Goes away with ui/Button. */
-    .site-nav .contact { line-height: 1.25rem; }
     a { color: inherit; text-decoration-color: var(--color-text-muted); text-underline-offset: 0.2em; }
     a:hover { text-decoration-color: currentColor; }
     /* Page-width wrapper with the board gutters; full-bleed sections skip it. */

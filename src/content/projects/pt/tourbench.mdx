@@ -20,8 +20,8 @@ page:
   glance:
     - { label: Problema, value: 'Caixeiro-viajante (TSP) em um grafo completo' }
     - { label: Método, value: 'Busca exaustiva com backtracking, sem heurísticas' }
-    - { label: Escala, value: 'De 4 a 11 pontos, de 6 a 3 628 800 percursos' }
-    - { label: Tecnologias, value: 'JavaScript puro, Cytoscape.js, node --test' }
+    - { label: Escala, value: 'De 4 a 11 pontos, de 6 a 3 628 800 percursos' }
+    - { label: Tecnologias, value: 'JavaScript puro, Cytoscape.js, node -‑test' }
     - { label: Minha parte, value: 'Tudo, sozinho' }
   how:
     headline: 'A melhor rota, provada testando todas.'
@@ -32,7 +32,7 @@ page:
         formula: "C(π) = Σ w(πᵢ, πᵢ₊₁)\ni = 0 … N−1"
       - title: Cada percurso, uma vez
         text: 'Fixar o ponto de partida deixa (N−1)! percursos possíveis. O backtracking monta cada um aresta por aresta e fica com o mais barato, então o resultado é o ótimo, não uma estimativa.'
-        formula: "N = 8  →  7! = 5 040 percursos"
+        formula: "N = 8: 7! = 5 040 percursos"
       - title: De quilômetros a impacto
         text: 'A melhor rota vira algo sobre o qual uma cidade pode agir: o tempo de direção na velocidade média do caminhão e o CO₂ emitido, comparados com a pior rota.'
         formula: "t = d / 25 km/h × 60\nCO₂ = d × 0.2 kg/km"
@@ -40,12 +40,12 @@ page:
       title: Por que para em 11 pontos
       rows:
         - [N, '4', '6', '8', '10', '11', '12']
-        - ['percursos (N−1)!', '6', '120', '5 040', '362 880', '3 628 800', '39 916 800']
+        - ['percursos (N−1)!', '6', '120', '5 040', '362 880', '3 628 800', '39 916 800']
       note: 'Cada ponto a mais multiplica o trabalho: 12 pontos seriam onze vezes os percursos de 11.'
   decisionHeadline: 'Força bruta, de propósito.'
 decisions:
   - choice: 'Enumerar cada percurso, sem heurística'
-    rejected: 'Vizinho mais próximo ou 2-opt'
+    rejected: 'vizinho mais próximo ou 2-opt'
     because: 'Uma heurística dá uma boa rota rápido, mas não diz quão longe ela está da melhor. Testar os (N−1)! percursos dá o ótimo provado e deixa ver o custo explodir conforme N cresce.'
     cost: 'Só escala até 11 pontos: é uma bancada de ensino, não um motor de rotas para uma frota real. O app também precisa de uma tela de pelo menos 1024 px de largura.'
 ---

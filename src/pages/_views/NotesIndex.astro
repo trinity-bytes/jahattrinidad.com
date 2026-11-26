@@ -28,9 +28,8 @@ if (!site) {
 }
 
 const posts = await listPosts({ lang: postsLang });
-// The links collection contains profiles, not dated individual posts.
-const elsewhere = links.filter((link) => ['LinkedIn', 'Instagram', 'YouTube'].includes(link.label))
-  .map((link) => ({ platform: link.label, href: link.url }));
+// Every profile, the same set as /links/ (NL-16).
+const elsewhere = links.map((link) => ({ platform: link.label, href: link.url }));
 
 const portrait = await getImage({ src: profile, width: 600, height: 600, format: 'jpg' });
 const person = personNode({
@@ -64,7 +63,7 @@ const seo = buildSeo({
     <p class="headline">{t.notes.headline}</p>
     <p class="sub">{t.notes.sub}</p>
   </PageHero>
-  <!-- Writing content comes from the same collection as Home. -->
+  {/* Writing content comes from the same collection as Home. */}
   <Notes index lang={lang} postsLang={postsLang} marker={t.notes.writingMarker} headline={t.notes.writingHeading}
     strings={{ ...t.notes, elsewhereLatest: t.footer.elsewhere }} inside={t.home.inside.notes} posts={posts} elsewhere={elsewhere} allWritingHref="/rss.xml" />
   <PageContact lang={lang} links={links} marker={t.notes.contactMarker} />

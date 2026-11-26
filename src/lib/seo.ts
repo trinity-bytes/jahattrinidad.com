@@ -4,7 +4,7 @@
  * resolved values into canonical/alternate descriptors.
  */
 import type { Locale, TranslationLink } from './content';
-import { BCP47 } from './consts.ts';
+import { BCP47, OWNER_NAME } from './consts.ts';
 
 /**
  * The site-wide social preview (visual-design 8.2, Figma `2374:231`). Pages
@@ -114,7 +114,7 @@ export function buildSeo(input: SeoInput): SeoResult {
 
 // ── Titles and descriptions ──
 
-const OWNER = 'Jahat Trinidad';
+const OWNER = OWNER_NAME;
 /** Google cuts titles at about this many characters and descriptions at about 160. */
 const TITLE_MAX = 60;
 const DESCRIPTION = { min: 140, max: 160 } as const;

@@ -122,8 +122,8 @@ const eyebrow = [data.page ? t.projectPage.eyebrow : t.caseStudy.eyebrow, data.k
     <Content />
   </article>
   </div>}
-  {data.page && nextProject && <NextCaseStudy marker={t.projectPage.nextProject} project={nextProject} href={entryPath('projects', lang, entrySlug(nextProject))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
-  {data.caseStudy && nextCase && <NextCaseStudy project={nextCase} href={entryPath('projects', lang, entrySlug(nextCase))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
+  {data.page && nextProject && <NextCaseStudy kind="project" project={nextProject} href={entryPath('projects', lang, entrySlug(nextProject))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
+  {data.caseStudy && nextCase && <NextCaseStudy kind="case-study" project={nextCase} href={entryPath('projects', lang, entrySlug(nextCase))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
   <PageContact lang={lang} links={links} marker={t.caseStudy.contactMarker} />
   <PageFooter slot="footer" lang={lang} links={links} contactOnPage compact />
 </Base>

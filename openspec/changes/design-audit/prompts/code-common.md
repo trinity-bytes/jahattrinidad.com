@@ -24,7 +24,7 @@ When the Figma and a report disagree, the Figma wins and you note it in your rep
 
 ## Running the site
 
-The supervisor runs the dev server at `http://127.0.0.1:4321/`. Do not start another one and do not stop it. Captures: a Node script with the global `playwright` package and `executablePath: '/usr/bin/chromium'` (see `openspec/changes/design-audit/tools/shot.cjs`), viewports 1440 × 900, 768 × 1024, 390 × 844, remove `astro-dev-toolbar`, `await document.fonts.ready`. Inside is `localStorage` / the `I` key, see `src/components/sections/Lens.astro`.
+The supervisor runs the dev server at `http://127.0.0.1:4321/`. Do not start another one and do not stop it. Captures: a Node script with the global `playwright` package and `executablePath: '/usr/bin/chromium'` (see `openspec/changes/design-audit/tools/shot.cjs`), viewports 1440 × 900, 768 × 1024, 390 × 844, remove `astro-dev-toolbar`, `await document.fonts.ready`. Inside is `localStorage` / the `I` key, see `src/components/sections/Lens.astro`. On this machine `playwright` is not on the default resolution path: in a CommonJS script use `NODE_PATH=$(npm root -g)/@playwright/mcp/node_modules`; in an ES module import `$(npm root -g)/@playwright/mcp/node_modules/playwright/index.mjs` by absolute path (ESM ignores `NODE_PATH`).
 
 Scratch files (captures, scripts) go in a `mktemp -d` folder outside the repository. Never write them in the repo. Report their path at the end; do not delete them.
 
