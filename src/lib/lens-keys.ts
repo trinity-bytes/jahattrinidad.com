@@ -31,6 +31,8 @@ export interface LensKeyState {
 export type LensKeyAction = 'cancel-drag' | 'leave-inside' | 'blur-field' | 'toggle' | 'none';
 
 export function lensKeyAction(event: LensKey, state: LensKeyState): LensKeyAction {
+  // Chrome's autofill and some extensions dispatch keydown events without a key.
+  if (typeof event.key !== 'string') return 'none';
   const field = editableTarget(event.target);
   if (event.key === 'Escape') {
     if (state.dragging) return 'cancel-drag';
