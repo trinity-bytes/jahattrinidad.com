@@ -39,6 +39,9 @@ const projects = defineCollection({
       outcome: z.string().optional(), // one-line quantified result for cards
       repoUrl: z.url().optional(),
       demoUrl: z.url().optional(),
+      // The demo is the working app itself, not a landing page, client catalog or video (schema.org
+      // SoftwareApplication instead of CreativeWork). Only meaningful with demoUrl.
+      demoIsApp: z.boolean().default(false),
       demoLabel: z.string().optional(), // project-specific primary action
       heroDescription: z.string().optional(), // longer case-study hero copy
       // tier: project — the lighter technical page (design.md "Project page v1"). Without it the
@@ -130,6 +133,11 @@ const projects = defineCollection({
     .refine((data) => !data.page || data.tier === 'project', {
       message: '`page` is only rendered for `tier: project` entries',
       path: ['page'],
+    })
+    // The project page's decision table shows one or two rows (Figma `2443:12`); the build rejects a third.
+    .refine((data) => !data.page || data.decisions.length <= 2, {
+      message: 'a project page shows at most 2 decisions',
+      path: ['decisions'],
     }),
 });
 
