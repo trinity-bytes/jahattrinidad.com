@@ -41,11 +41,17 @@ async function load(path: string, fetcher: Fetcher): Promise<RepoStats | null> {
       return null;
     }
     const body = await response.json();
+    // `new Date(null)` is 1970 and `new Date('junk')` throws later in formatDate: both mean no stats.
+    const pushedAt = typeof body.pushed_at === 'string' ? new Date(body.pushed_at) : null;
+    if (!pushedAt || Number.isNaN(pushedAt.getTime())) {
+      console.warn(`[github] ${path}: no valid pushed_at, showing no stats`);
+      return null;
+    }
     return {
       stars: Number(body.stargazers_count) || 0,
       forks: Number(body.forks_count) || 0,
       language: typeof body.language === 'string' ? body.language : null,
-      pushedAt: new Date(body.pushed_at),
+      pushedAt,
     };
   } catch (error) {
     console.warn(`[github] ${path}: ${(error as Error).message}, showing no stats`);

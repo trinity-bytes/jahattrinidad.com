@@ -34,3 +34,10 @@ test('a URL that is not a GitHub repository gives no stats and makes no request'
   assert.equal(await repoStats(undefined, fetcher), null);
   assert.equal(called, false);
 });
+
+test('a reply without a valid last-push date gives no stats instead of failing the build', async () => {
+  const noPush = ok({ stargazers_count: 0, forks_count: 0, language: null, pushed_at: null });
+  const badPush = ok({ stargazers_count: 1, forks_count: 1, language: 'Go', pushed_at: 'not a date' });
+  assert.equal(await repoStats('https://github.com/trinity-bytes/empty', noPush), null);
+  assert.equal(await repoStats('https://github.com/trinity-bytes/empty', badPush), null);
+});
