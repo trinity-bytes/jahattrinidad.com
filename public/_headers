@@ -13,3 +13,7 @@
 
 /cv/jahat-trinidad-cv-pt.pdf
   Content-Disposition: inline; filename="Jahat-Trinidad_Frontend-FullStack_CV_PT.pdf"
+
+# The feed is for readers, not search results: keep it out of the index.
+/rss.xml
+  X-Robots-Tag: noindex
