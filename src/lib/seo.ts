@@ -217,6 +217,23 @@ export function websiteNode(input: { site: URL; path: string; lang: Locale }): S
   };
 }
 
+/**
+ * The Home as the person's profile page. `primaryImageOfPage` names the portrait as the
+ * page's image, so search results pick it over the hero's larger decorative layers.
+ */
+export function profilePageNode(input: { site: URL; path: string; lang: Locale; image: string }): SchemaNode {
+  const url = absoluteUrl(input.path, input.site).href;
+  return {
+    '@type': 'ProfilePage',
+    '@id': `${url}#profilepage`,
+    url,
+    inLanguage: BCP47[input.lang],
+    isPartOf: { '@id': `${url}#website` },
+    mainEntity: { '@id': personId(input.site) },
+    primaryImageOfPage: { '@type': 'ImageObject', url: absoluteUrl(input.image, input.site).href, width: 600, height: 600 },
+  };
+}
+
 export function breadcrumbNode(site: URL, trail: { name: string; path: string }[]): SchemaNode {
   return {
     '@type': 'BreadcrumbList',
