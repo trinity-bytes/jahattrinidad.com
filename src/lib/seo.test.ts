@@ -121,9 +121,9 @@ test('a project whose live demo is the app itself is a SoftwareApplication', () 
   assert.equal(node['@type'], 'SoftwareApplication');
   assert.equal(node.operatingSystem, 'Web');
   assert.equal(node.sameAs, 'https://trama.jahattrinidad.com/');
-  assert.ok(isLiveApp('trama', 'https://trama.jahattrinidad.com/'));
-  assert.ok(!isLiveApp('trama', undefined));
-  assert.ok(!isLiveApp('minka', 'https://minka.jahattrinidad.com/')); // its demo is a landing page
+  assert.ok(isLiveApp({ demoUrl: 'https://trama.jahattrinidad.com/', demoIsApp: true }));
+  assert.ok(!isLiveApp({ demoUrl: undefined, demoIsApp: true }));
+  assert.ok(!isLiveApp({ demoUrl: 'https://minka.jahattrinidad.com/', demoIsApp: false })); // its demo is a landing page
 });
 
 test('the graph is one script-safe JSON document', () => {

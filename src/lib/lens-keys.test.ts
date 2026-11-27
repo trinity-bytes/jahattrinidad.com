@@ -45,3 +45,7 @@ test('the I shortcut keeps its previous behaviour', () => {
   }
   assert.equal(lensKeyAction(press('a'), idle), 'none');
 });
+
+test('a key event without a key (autofill, some extensions) does nothing instead of throwing', () => {
+  assert.equal(lensKeyAction(press(undefined as unknown as string), idle), 'none');
+});

@@ -262,14 +262,9 @@ export function blogPostingNode(input: EntrySchemaInput): SchemaNode {
   return { '@type': 'BlogPosting', headline: input.name, ...entryFields(input), author: person, publisher: person };
 }
 
-/**
- * Projects whose live demo is the app itself. The others link a landing page, a
- * client catalog or only a repository, and no content field tells them apart.
- */
-const LIVE_APPS = new Set(['asm8', 'grayscale-studio', 'inspiration-garden', 'queens', 'tourbench', 'trama']);
-
-export function isLiveApp(slug: string, demoUrl: string | undefined): boolean {
-  return Boolean(demoUrl) && LIVE_APPS.has(slug);
+/** A project is a SoftwareApplication when its live demo is the app itself (`demoIsApp` in content). */
+export function isLiveApp(data: { demoUrl?: string; demoIsApp: boolean }): boolean {
+  return Boolean(data.demoUrl) && data.demoIsApp;
 }
 
 export function projectNode(

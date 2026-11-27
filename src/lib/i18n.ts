@@ -180,7 +180,6 @@ export interface Dictionary {
     cost: string;
     mistakesMarker: string;
     growthMarker: string;
-    nextCaseStudy: string;
     problemHeading: string;
     featuresHeading: string;
     decisionsHeading: string;
@@ -254,9 +253,8 @@ export interface Dictionary {
     eyebrow: string;
     howMarker: string;
     decisionMarker: string;
-    nextProject: string;
-    /** Before the rejected alternative under a decision: "instead of nearest neighbour or 2-opt". */
-    insteadOf: string;
+    /** The rejected alternative under a decision, as a label: "Instead of: nearest neighbour or 2-opt". */
+    insteadOf: (rejected: string) => string;
   };
   project: {
     role: string;
@@ -510,7 +508,6 @@ export const en: Dictionary = {
     cost: 'What it cost',
     mistakesMarker: '04 — WHAT I GOT WRONG',
     growthMarker: '05 — HOW IT GREW',
-    nextCaseStudy: 'NEXT CASE STUDY',
     problemHeading: 'The problem',
     featuresHeading: 'What it does',
     decisionsHeading: 'Decisions',
@@ -588,8 +585,7 @@ export const en: Dictionary = {
     eyebrow: 'PROJECT',
     howMarker: '01 — HOW IT WORKS',
     decisionMarker: '02 — THE KEY DECISION',
-    nextProject: 'NEXT PROJECT',
-    insteadOf: 'instead of',
+    insteadOf: (rejected) => `Instead of: ${rejected}`,
   },
   project: {
     role: 'Role',

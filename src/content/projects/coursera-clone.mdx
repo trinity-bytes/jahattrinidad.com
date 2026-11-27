@@ -13,28 +13,6 @@ stack: [C++, Data structures]
 repoUrl: 'https://github.com/trinity-bytes/coursera-clone'
 insideStack: "A C++ console application with custom data structures."
 insideDecision: "AVL trees track enrolled course and specialization IDs; a title-keyed hash indexes courses. A heap ranks activities by enrollments, while a category graph expands recommendations with BFS."
-page:
-  headline: "A course platform built to put data structures to work."
-  sub: "A team-built C++ console app for discovering courses, enrolling and earning certificates."
-  glance:
-    - { label: "Problem", value: "Model an educational platform in the terminal" }
-    - { label: "Method", value: "Custom data structures and algorithms" }
-    - { label: "Features", value: "Courses, enrollments, payments and certificates" }
-    - { label: "Built with", value: "C++ and a Windows console" }
-    - { label: "My part", value: "Architecture, console UI, persistence, utilities and QR" }
-  how:
-    headline: "Different questions need different structures."
-    steps:
-      - title: "Find courses and enrollments"
-        text: "A hash table indexes courses by title; AVL trees track enrolled course and specialization IDs. A balanced tree keeps lookup logarithmic, while hashing gives average constant-time access."
-        formula: "AVL: O(log n)\nhash: O(1) average"
-      - title: "Rank activity"
-        text: "A heap ranks activities by enrollment count, keeping the highest-priority item at the top. Insertion and removal restore the heap order."
-        formula: "insert / remove: O(log n)"
-      - title: "Explore related categories"
-        text: "A graph connects categories. Breadth-first search expands recommendations through those connections, visiting neighboring categories before more distant ones."
-        formula: "BFS: O(V + E)"
-  decisionHeadline: "Build the hash table ourselves."
 decisions:
   - choice: "Write our own hash table with chained buckets"
     rejected: "A wrapper around std::unordered_map"

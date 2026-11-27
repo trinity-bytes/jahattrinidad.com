@@ -62,9 +62,10 @@ for (const file of htmlFiles(DIST)) {
   }
 }
 
-if (problems.length) {
-  console.error([...new Set(problems)].join('\n'));
-  console.error(`✗ links: ${problems.length} problem(s). See the arrow rule in CLAUDE.md.`);
+const unique = [...new Set(problems)];
+if (unique.length) {
+  console.error(unique.join('\n'));
+  console.error(`✗ links: ${unique.length} problem(s). See the arrow rule in CLAUDE.md.`);
   process.exit(1);
 }
 console.log('✓ links clean — internal →, external ↗ in a new tab.');

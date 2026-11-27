@@ -118,9 +118,11 @@ const fill = await getImage({ src: blueHour, format: 'webp' });
   a, button, .hint { display: inline-flex; align-items: center; gap: var(--space-2xs); min-height: var(--list-row); color: var(--color-heading); font: 500 var(--font-size-small)/1.25rem var(--font-sans); text-decoration: none; }
   button { padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
   @media (hover: hover) and (pointer: fine) { a:hover, button:hover { text-decoration: underline 1px; } }
-  /* The keyboard shortcut means nothing on a touch layout (HO-24). */
-  @media (max-width: 64rem), (pointer: coarse) {
-    .keys { display: none; }
+  /* The keyboard shortcut means nothing on a touch-only device (HO-24). Decided by input, never by width:
+     a narrow or zoomed desktop window still has the I key, so it must keep the switch that turns it off
+     (WCAG 2.1.4). Same rule as the Hero's "Press I" line, including its physical-key override. */
+  @media not all and (any-pointer: fine) {
+    :global(:root:not([data-keyboard])) .keys { display: none; }
   }
   /*
    * The closing name: sized to span the content width exactly (37.7cqw = 100cqw / "Jahat"'s 2.65em

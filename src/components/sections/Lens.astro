@@ -236,8 +236,9 @@ const { strings } = Astro.props;
       const action = lensKeyAction(event, { inside: root.dataset.lens === 'inside', dragging: drag !== null, shortcutDisabled });
       if (action === 'cancel-drag') cancelDrag();
       else if (action === 'leave-inside') switchTo('outside');
-      else if (action === 'blur-field') (event.target as HTMLElement).blur();
-      else if (action === 'toggle' && !event.repeat) {
+      // Blur the focused field itself: the target can be a child inside a contenteditable.
+      else if (action === 'blur-field') (document.activeElement as HTMLElement | null)?.blur();
+      else if (action === 'toggle') {
         discover();
         toggle();
       }
@@ -259,7 +260,7 @@ const { strings } = Astro.props;
     // The "i" shortcut counts only when it actually switches (see the keydown handler above), never
     // when typing an "i" into a field or with the shortcut turned off.
     lens.addEventListener('animationend', () => delete lens.dataset.nudge);
-    if (!discovered && !reducedMotion.matches) {
+    if (!reducedMotion.matches) {
       const nudge = () => {
         if (discovered || root.dataset.lens === 'inside' || drag || lens.matches(':hover, :focus-visible') || document.hidden) return;
         // Restart from scratch every time: if a previous shake never reported its end, setting the
@@ -321,6 +322,12 @@ const { strings } = Astro.props;
     -webkit-touch-callout: none;
     transform: translate(var(--dx, 0), var(--dy, 0)) scale(var(--scale, 1));
     transition: transform var(--dur-ui) var(--ease-out), background-color var(--dur-press) var(--ease-out);
+  }
+  /* The pill floats over the cream page and the dark footer alike, so no single ring colour contrasts with
+     both grounds. The global ring stays (S5); a card-coloured halo fills its offset, so the ring always sits
+     on a light band. */
+  .lens:focus-visible {
+    box-shadow: 0 0 0 var(--focus-offset) var(--color-card), 0 4px 16px color-mix(in srgb, var(--green-950) 14%, transparent);
   }
   .lens:active { background: var(--color-surface); --scale: 0.97; }
   .dock[data-dragging] .lens { --scale: 1.25; cursor: grabbing; transition: none; }

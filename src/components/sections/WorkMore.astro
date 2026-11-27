@@ -8,13 +8,22 @@ import Backgrounds from './Backgrounds.astro';
 import Icon from '../ui/Icon.astro';
 import { repoStats } from '../../lib/github';
 import { formatDate } from '../../lib/format';
-interface Props { projects: CollectionEntry<'projects'>[]; experiments: CollectionEntry<'projects'>[]; lang: string; strings: Dictionary['work']; /** Project page URL by entry id, for the projects that have one (built by the page). */ pageHrefs: Record<string, string> }
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+  experiments: CollectionEntry<'projects'>[];
+  lang: Locale;
+  strings: Dictionary['work'];
+  /** Project page URL by entry id, for the projects that have one (built by the page). */
+  pageHrefs: Record<string, string>;
+}
 const { projects, experiments, lang, strings: t, pageHrefs } = Astro.props;
-// Every link in this section leaves the site: ↗ and a new tab, with the screen-reader note.
-const newTab = getDictionary(lang as Locale).common.newTab;
-const dict = getDictionary(lang as Locale);
+// Live and Code links leave the site (↗, new tab, screen-reader note); "See project" stays on it.
+const newTab = getDictionary(lang).common.newTab;
 // Live numbers from the GitHub API at build time; null when GitHub cannot be reached (the tile keeps its chips).
-const stats = await Promise.all(experiments.map(({ data }) => repoStats(data.repoUrl)));
+const stats = await Promise.all(experiments.map(async ({ data }) => {
+  const s = await repoStats(data.repoUrl);
+  return s && { ...s, updated: t.updated(formatDate(s.pushedAt, lang)) };
+}));
 // The browser bar shows where the project lives. This site has no demo link (a visitor is already on
 // it), so its card shows the site's own hostname: the project whose repository is named after it.
 const siteHost = Astro.site?.hostname;
@@ -32,10 +41,10 @@ const barHost = (data: CollectionEntry<'projects'>['data']) =>
         <h2 data-background-text>{t.moreHeading}</h2>
         <p class="intro" data-background-text>{t.moreSub}</p>
         <div class="grid">
-          {projects.map((entry) => { const { data } = entry; return (
+          {projects.map((entry) => { const { data } = entry; const host = barHost(data); return (
             <article class="card">
               <div class="frame">
-                <div class="bar" aria-hidden="true"><i></i><i></i><i></i>{barHost(data) && <span>{barHost(data)}</span>}</div>
+                <div class="bar" aria-hidden="true"><i></i><i></i><i></i>{host && <span>{host}</span>}</div>
                 <div class="capture">
                   {data.coverImage && <Image src={data.coverImage} alt={data.coverImageAlt ?? ''} />}
                 </div>
@@ -45,7 +54,7 @@ const barHost = (data: CollectionEntry<'projects'>['data']) =>
                 <h3>{data.title}</h3>
                 <p>{data.description}</p>
                 <div class="links">
-                  {pageHrefs[entry.id] && <Button href={pageHrefs[entry.id]} label={dict.work.seeProject} icon="arrow-right" />}
+                  {pageHrefs[entry.id] && <Button href={pageHrefs[entry.id]} label={t.seeProject} icon="arrow-right" />}
                   <span class="secondary-links">
                     {data.demoUrl && <TextLink destination="external" href={data.demoUrl} label={data.demoLabel ?? t.live} newTab={newTab} />}
                     {data.repoUrl && <TextLink destination="external" href={data.repoUrl} label={t.code} newTab={newTab} />}
@@ -74,8 +83,8 @@ const barHost = (data: CollectionEntry<'projects'>['data']) =>
                     <ul class="chips">{data.stack.map((item) => <li>{item}</li>)}</ul>
                     {s && (
                       <p class="stats">
-                        <span class="stat-values" aria-hidden="true"><span><Icon name="star" size={12} />{s.stars}</span><span><Icon name="git-fork" size={12} />{s.forks}</span>{s.language && <span>{s.language}</span>}<span>{t.updated(formatDate(s.pushedAt, lang as Locale))}</span></span>
-                        <span class="visually-hidden">{[t.stars(s.stars), t.forks(s.forks), s.language, t.updated(formatDate(s.pushedAt, lang as Locale))].filter(Boolean).join(', ')}</span>
+                        <span class="stat-values" aria-hidden="true"><span><Icon name="star" size={12} />{s.stars}</span><span><Icon name="git-fork" size={12} />{s.forks}</span>{s.language && <span>{s.language}</span>}<span>{s.updated}</span></span>
+                        <span class="visually-hidden">{[t.stars(s.stars), t.forks(s.forks), s.language, s.updated].filter(Boolean).join(', ')}</span>
                       </p>
                     )}
                     <span class="links">

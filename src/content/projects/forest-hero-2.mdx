@@ -13,27 +13,6 @@ stack: [C++/CLI, Windows Forms]
 repoUrl: 'https://github.com/trinity-bytes/forest-hero-2'
 insideStack: "A 2D game built with C++/CLI and Windows Forms."
 insideDecision: "Enemies change direction at random; collisions mark seeds and enemies for removal once the checks are done."
-page:
-  headline: "Restore a forest while the clock is running."
-  sub: "A team-built 2D game made for an Algorithms course, with resources, enemies and reforestation."
-  glance:
-    - { label: "Problem", value: "Turn a reforestation objective into a playable game" }
-    - { label: "Loop", value: "Collect resources, plant trees and avoid enemies" }
-    - { label: "Platform", value: "Windows Forms and C++/CLI" }
-    - { label: "Context", value: "Algorithms course project, team of three" }
-    - { label: "My part", value: "Gameplay, game state management and the interface design" }
-  how:
-    headline: "A game built around resources and time."
-    steps:
-      - title: "Gather and plant"
-        text: "The guardian collects seeds and water, then uses both to plant trees before time runs out."
-        formula: "seeds + water → tree"
-      - title: "Update the world"
-        text: "Enemies move and can change direction randomly. The game checks collisions between the guardian, resources and enemies as play continues."
-      - title: "Remove after checking"
-        text: "Collision handling collects indices and removes seeds and enemies after the checks."
-        formula: "check collisions → collect indices → remove"
-  decisionHeadline: "Keep collision checks safe to iterate."
 decisions:
   - choice: "Collect each index once, then remove after the checks"
     rejected: "Record an index every time a collision reports it"
