@@ -11,3 +11,6 @@ design/
 # Owner's local working media (like design/): recordings and the source profile photo
 docs/*.mp4
 docs/linkedin.png
+
+# Local CodeGraph index
+.codegraph/
