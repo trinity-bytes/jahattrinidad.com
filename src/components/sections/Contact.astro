@@ -181,7 +181,9 @@ const facts = [
   .dusk { position: absolute; inset: 0; z-index: -2; background: var(--color-dusk); pointer-events: none; }
   .sun-mask { position: absolute; z-index: -1; left: calc(var(--sun-x) - var(--sun-size) / 2); top: calc(var(--sun-y) - var(--sun-size) / 2); width: var(--sun-size); height: var(--sun-size); border-radius: 50%; background: var(--dusk-sun); filter: blur(calc(var(--sun-size) / 4)); pointer-events: none; translate: 0 var(--sky-y, 0px); }
   .content > :global(.notes) { padding-inline: 0; }
-  .content { max-width: calc(var(--content-max) + 2 * var(--gutter)); margin-inline: auto; padding: var(--section-pad) var(--gutter); display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2xl-b); }
+  /* The bottom padding adds a runway for the footer's hill: it rests ~90px over this section and climbs up to
+     72px more on scroll (Footer.astro), so without it the grass covers the last link (CV) on phones. */
+  .content { max-width: calc(var(--content-max) + 2 * var(--gutter)); margin-inline: auto; padding: var(--section-pad) var(--gutter) calc(var(--section-pad) + 6rem); display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2xl-b); }
   .marker { margin: 0; font: var(--type-marker); letter-spacing: var(--type-marker-tracking); text-transform: uppercase; color: var(--color-text); }
   h2 { margin: 0; max-width: 60rem; font: 600 var(--font-size-h1)/1.05 var(--font-display); letter-spacing: -0.02em; color: var(--color-heading); }
   /* Phones: the question flows as one text, as the 390 boards set it. */
