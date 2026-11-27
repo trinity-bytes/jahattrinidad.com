@@ -25,6 +25,7 @@ const targets = navTargets({
   home: localizedPath(lang, ''),
   workPath: collectionPath('projects', lang),
   notesPath: collectionPath('posts', lang),
+  aboutPath: localizedPath(lang, '/about/'),
   isHome: false,
   contactOnPage,
 });
@@ -36,6 +37,7 @@ const targets = navTargets({
     { label: t.nav.work, href: targets.work },
     { label: t.nav.experience, href: targets.experience },
     { label: t.nav.notes, href: targets.notes },
+    { label: t.nav.about, href: targets.about },
     { label: t.nav.contact, href: targets.contact },
   ]}
   elsewhere={[

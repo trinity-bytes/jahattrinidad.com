@@ -12,7 +12,7 @@ const FACTS = [
   'Role: design engineer (frontend and product). Designs and builds web products end to end, from the first sketch to the live site.',
   'Education: Software Engineering student at Universidad Peruana de Ciencias Aplicadas (UPC), Lima, Peru.',
   'Availability: open to an internship in frontend or product design engineering, now. Based in Lima, Peru; open to remote.',
-  'Languages: Spanish (native), English, Portuguese. The site is published in English, Spanish (/es/) and Portuguese (/pt/).',
+  'Languages: Spanish (native), English (advanced, EF SET C2), Portuguese (basic, A2). The site is published in English, Spanish (/es/) and Portuguese (/pt/).',
   'Also known as: trinitybytes (X, Instagram, LinkedIn), trinity-bytes (GitHub).',
 ];
 const CV_LOCALES: readonly Locale[] = ['en', 'es', 'pt'];
@@ -39,6 +39,7 @@ export async function GET(context: APIContext) {
       { title: 'Home', path: '/', description: t.meta.homeDescription },
       { title: 'Work', path: collectionPath('projects', LOCALE), description: t.meta.workDescription },
       { title: 'Notes', path: collectionPath('posts', LOCALE), description: t.meta.notesDescription },
+      { title: 'About', path: '/about/', description: t.meta.aboutDescription },
       { title: 'Links', path: '/links/', description: t.meta.linksDescription },
     ],
     projects: projects.map((p) => ({

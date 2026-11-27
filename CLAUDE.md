@@ -151,7 +151,9 @@ brand, copy, image or UI task:
 
 The approved design is now the three `Proposed · …` pages (Home, Work &
 projects, Notes & links), approved by the owner on 2026-11-25 and built
-from the components on the `Design system` page. The old v3.5 boards
+from the components on the `Design system` page. `Proposed · About` (boards
+1440 and 390, no tablet or Inside) was approved on 2026-11-27; its plan is
+in `openspec/changes/discoverability/tasks.md`. The old v3.5 boards
 (pages Portfolio, Case study, Work, Writing) and the Archive page were
 deleted that day; they survive only in the file's version history
 ("Before removing deprecated pages"), so node ids under `design.md` §6

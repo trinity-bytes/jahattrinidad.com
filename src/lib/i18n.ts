@@ -86,10 +86,12 @@ export interface Dictionary {
     workDescription: string;
     notesDescription: string;
     linksDescription: string;
+    aboutDescription: string;
     /** "What it is" part of the index titles: "<page> — <what> · Jahat Trinidad". */
     workWhat: string;
     notesWhat: string;
     linksWhat: string;
+    aboutWhat: string;
     /** "What it is" for a project whose kind only repeats its name. */
     projectWhat: string;
     /** Name-and-role endings of project and post descriptions, in several lengths (lib/seo.ts metaDescription). */
@@ -106,6 +108,7 @@ export interface Dictionary {
     work: string;
     experience: string;
     notes: string;
+    about: string;
     contact: string;
     openMenu: string;
     closeMenu: string;
@@ -119,6 +122,8 @@ export interface Dictionary {
   home: {
     workHeadline: string;
     notesHeadline: string;
+    /** Band between Experience and Notes that links to the About page (approved 2026-11-27); same copy in both views. */
+    about: { marker: string; heading: string; text: string; link: string };
     outside: HomeLensCopy;
     inside: Omit<HomeLensCopy, 'hero' | 'values' | 'work' | 'experience' | 'notes' | 'contact'> & {
       hero: InsideHeroCopy;
@@ -205,7 +210,37 @@ export interface Dictionary {
   experience: {
     carriesOver: string;
     now: string;
-    groups: Record<'work' | 'volunteering' | 'beyond-class', string>;
+    groups: Record<'work' | 'volunteering' | 'beyond-class' | 'education', string>;
+  };
+  /** About page, Figma page "Proposed · About" (boards 2596:13, 2600:285), approved 2026-11-27. */
+  about: {
+    eyebrow: string;
+    headline: string;
+    sub: string;
+    shortMarker: string;
+    shortHeading: string;
+    intro: string;
+    portraitAlt: string;
+    facts: { label: string; value: string }[];
+    storyMarker: string;
+    storyHeading: string;
+    storyNote: string;
+    seeExperience: string;
+    whyLabel: string;
+    /** The owner's own account of why he builds (2026-11-27). */
+    why: { label: string; text: string }[];
+    pathLabel: string;
+    path: { years: string; text: string }[];
+    quote: string;
+    workMarker: string;
+    workHeading: string;
+    principles: { title: string; text: string }[];
+    notesLink: string;
+    educationMarker: string;
+    educationHeading: string;
+    languagesLabel: string;
+    languages: { name: string; level: string }[];
+    contactMarker: string;
   };
   lens: {
     lookInside: string;
@@ -301,6 +336,8 @@ export const en: Dictionary = {
     workWhat: 'Web products and case studies',
     notesWhat: 'On designing and building',
     linksWhat: 'Profiles, CV and contact',
+    aboutDescription: 'About Jahat Trinidad, design engineer in Lima, Peru: how I went from taking things apart to building web products, what I study and how I work.',
+    aboutWhat: 'My story, studies and how I work',
     projectWhat: 'Web project',
     projectSignatures: ['By Jahat Trinidad, design engineer.', 'A project in the portfolio of Jahat Trinidad.', 'In the portfolio of Jahat Trinidad, design engineer in Lima.', 'A project in the portfolio of Jahat Trinidad, design engineer in Lima, Peru.', 'From the portfolio of Jahat Trinidad, design engineer in Lima, Peru: what it is and how it works.', 'A project in the portfolio of Jahat Trinidad, design engineer in Lima, Peru, who designs and builds web products.', 'From the portfolio of Jahat Trinidad, design engineer in Lima, Peru: what it does, how it was built and the decisions behind it.'],
     postSignatures: ['By Jahat Trinidad, design engineer.', 'A note by Jahat Trinidad, design engineer in Lima.', 'A note by Jahat Trinidad, design engineer in Lima, on the web.', 'A note by Jahat Trinidad, design engineer in Lima, Peru, on building the web.', 'A note by Jahat Trinidad, design engineer in Lima, Peru, on designing and building for the web.', 'A note by Jahat Trinidad, design engineer in Lima, Peru, about designing, building and shipping web products.', 'From the notes of Jahat Trinidad, design engineer in Lima, Peru, about designing, building and shipping web products from end to end.'],
@@ -315,6 +352,7 @@ export const en: Dictionary = {
     work: 'Work',
     experience: 'Experience',
     notes: 'Notes',
+    about: 'About',
     contact: 'Contact',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
@@ -328,6 +366,12 @@ export const en: Dictionary = {
     // Shared across both views; board 2191:86 and approved R9.
     workHeadline: 'Selected work',
     notesHeadline: 'Notes on building things',
+    about: {
+      marker: '05 — ABOUT',
+      heading: 'I took things apart. Now I build them.',
+      text: 'Curious since I was a kid, I took apart everything to see how it worked inside. Then came graphic design, teaching, and now Software Engineering at UPC.',
+      link: 'More about me',
+    },
     // Markers and non-draft-copy text follow the Home boards 2191:86 and 2191:503.
     outside: {
       hero: {
@@ -371,10 +415,10 @@ export const en: Dictionary = {
         sub: 'Work, volunteering and what I do beyond class — and what each one left behind.',
       },
       notes: {
-        marker: '05 — NOTES',
+        marker: '06 — NOTES',
       },
       contact: {
-        marker: '06 — CONTACT',
+        marker: '07 — CONTACT',
         headline: [
           'Looking for someone who can design it and build it? Let’s talk.',
         ],
@@ -439,7 +483,7 @@ export const en: Dictionary = {
         notesLabel: 'Experience tool notes',
       },
       notes: {
-        marker: '05 — NOTES · HOW A POST GETS PUBLISHED',
+        marker: '06 — NOTES · HOW A POST GETS PUBLISHED',
         notesLabel: 'Notes pipeline notes',
         // Facts: src/pages/rss.xml.ts, the posts collection in src/content.config.ts, listPosts in src/lib/content.ts.
         annotations: {
@@ -449,7 +493,7 @@ export const en: Dictionary = {
         },
       },
       contact: {
-        marker: '06 — CONTACT · HOW THE CHAT WORKS',
+        marker: '07 — CONTACT · HOW THE CHAT WORKS',
         headline: ['You’ve seen how I build.', 'What should we build together?'],
         notesLabel: 'Contact notes',
         // Chat design: openspec/changes/portfolio-implementation/design.md §3 (scripted, no language model).
@@ -535,7 +579,58 @@ export const en: Dictionary = {
   experience: {
     carriesOver: 'What carries over to your team',
     now: 'now',
-    groups: { work: 'Work', volunteering: 'Volunteering', 'beyond-class': 'Beyond class' },
+    groups: { work: 'Work', volunteering: 'Volunteering', 'beyond-class': 'Beyond class', education: 'Education' },
+  },
+  // About page (Figma page "Proposed · About", approved 2026-11-27).
+  about: {
+    eyebrow: 'About · who I am',
+    headline: 'I’m Jahat, a design engineer in\u00a0Lima, Peru.',
+    sub: 'I design and build web products end to end, from the first sketch to the live site.',
+    shortMarker: '01 — THE SHORT VERSION',
+    shortHeading: 'I design products, then I build them.',
+    intro: 'I’m a Software Engineering student at UPC who designs and builds complete products. Before code, I spent three years as a graphic designer, so how a product looks and how it works come from the same person.',
+    portraitAlt: 'Jahat Trinidad leaning against a tree in a park, in warm afternoon light.',
+    facts: [
+      { label: 'Role', value: 'Design engineer · frontend and product' },
+      { label: 'Studying', value: 'Software Engineering at UPC, 6th semester' },
+      { label: 'Designing since', value: '2019, as a graphic designer' },
+      { label: 'Building with', value: 'TypeScript, Vue, React and Astro' },
+    ],
+    storyMarker: '02 — HOW I GOT HERE',
+    storyHeading: 'I took things apart. Now I build them.',
+    storyNote: 'The roles behind this story, with dates and details, are in my experience.',
+    seeExperience: 'See my experience',
+    whyLabel: 'Why I build',
+    why: [
+      { label: 'As a kid', text: 'I’ve always been curious. People close to me remember me taking apart everything I could find, just to see how it was made inside. Little by little I understood more, from toys to perfumes, learned to put things back together and started repairing my broken toys.' },
+      { label: 'Growing up', text: 'I was always drawn to creative things: music, theater, debate. That, and a love for good design, led me to learn design, audiovisual production and related work.' },
+      { label: 'Then, code', text: 'Later I found programming and fell in love with it. It felt almost like a superpower: I could build whatever my imagination came up with. That’s why I went into development. It’s where every passion I’ve had all my life comes together.' },
+    ],
+    pathLabel: 'The path so far',
+    path: [
+      { years: '2019–2022', text: 'I started in graphic design. At Bionutricel I built a brand from market research up, then its social media and print materials. In 2022 I also redesigned the identity of Alto Huallaga Radio & TV.' },
+      { years: '2022–2023', text: 'At the Municipality of Oxapampa I monitored more than 30 cameras, wrote the daily incident reports and ran the security office’s social media as its community manager.' },
+      { years: '2023', text: 'I taught at a secondary school in Madre de Dios. I designed a course that introduced students to web development and content creation, taught programming with VS Code and editing with Photoshop and OpenShot, and coordinated the school’s music activities.' },
+      { years: '2024–now', text: 'I started Software Engineering at UPC, in Lima. Since then I design and build web products end to end. Inspiration Garden is one I made on my own: product, design and code.' },
+    ],
+    quote: 'Brand work taught me systems, teaching taught me to explain, and running community channels taught me to listen to users. I use all three every time I build.',
+    workMarker: '03 — HOW I WORK',
+    workHeading: 'Small steps, shipped early, written down.',
+    principles: [
+      { title: 'Design and code in the same hands', text: 'I design a feature and build it myself, so nothing gets lost in a handoff between the two.' },
+      { title: 'Something working, early', text: 'I put a rough working version in front of people first, then polish what they actually use.' },
+      { title: 'Small releases, decisions written down', text: 'I ship in small, versioned steps and write down why I chose what I did. Some of those notes end up on this site.' },
+    ],
+    notesLink: 'Read how I decide, in my notes',
+    educationMarker: '04 — EDUCATION AND LANGUAGES',
+    educationHeading: 'Still learning, in three languages.',
+    languagesLabel: 'Languages',
+    languages: [
+      { name: 'Spanish', level: 'Native' },
+      { name: 'English', level: 'Advanced · EF SET C2' },
+      { name: 'Portuguese', level: 'Basic · A2' },
+    ],
+    contactMarker: '05 — CONTACT',
   },
   // Pointer hint: lens component 2168:10. Remaining text: implementation design §2.
   lens: {

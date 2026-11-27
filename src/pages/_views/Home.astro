@@ -8,6 +8,7 @@ import Values from '../../components/sections/Values.astro';
 import Work from '../../components/sections/Work.astro';
 import Experience from '../../components/sections/Experience.astro';
 import Notes from '../../components/sections/Notes.astro';
+import AboutBand from '../../components/sections/AboutBand.astro';
 import Contact from '../../components/sections/Contact.astro';
 import Footer from '../../components/sections/Footer.astro';
 import Lens from '../../components/sections/Lens.astro';
@@ -23,7 +24,7 @@ import {
   type Locale,
   type Project,
 } from '../../lib/content';
-import { CONTACT_EMAIL, SOURCE_URL } from '../../lib/consts';
+import { CONTACT_EMAIL, OWNER_NAME, SOURCE_URL } from '../../lib/consts';
 import { buildSeo, jsonLdGraph, personNode, profilePageNode, websiteNode } from '../../lib/seo';
 import profile from '../../assets/profile/jahat.jpg';
 import { getDictionary, localeGroup, localizedPath } from '../../lib/i18n';
@@ -57,7 +58,7 @@ const [allProjects, featuredProjects, posts, experience, links] = await Promise.
 
 const workPath = collectionPath('projects', lang);
 // The hero CTA follows the nav's convention: on the Home it scrolls to the Work section (lib/nav.ts).
-const workSection = navTargets({ home: localizedPath(lang, ''), workPath, notesPath: collectionPath('posts', lang), isHome: true, contactOnPage: true }).work;
+const workSection = navTargets({ home: localizedPath(lang, ''), workPath, notesPath: collectionPath('posts', lang), aboutPath: localizedPath(lang, '/about/'), isHome: true, contactOnPage: true }).work;
 const notesPath = collectionPath('posts', lang);
 const linkOf = (id: string) => links.find((link) => link.id === id)?.data.url;
 
@@ -139,6 +140,14 @@ const personSchema = jsonLdGraph([
     inside={t.home.inside.experience}
     entries={experience}
   />
+  <AboutBand
+    marker={t.home.about.marker}
+    heading={t.home.about.heading}
+    text={t.home.about.text}
+    linkLabel={t.home.about.link}
+    href={localizedPath(lang, '/about/')}
+    name={OWNER_NAME}
+  />
   <Notes
     lang={lang}
     postsLang={postsLang}
@@ -169,6 +178,7 @@ const personSchema = jsonLdGraph([
       { label: t.nav.work, href: '#work' },
       { label: t.nav.experience, href: '#experience' },
       { label: t.nav.notes, href: '#notes' },
+      { label: t.nav.about, href: localizedPath(lang, '/about/') },
       { label: t.nav.contact, href: '#contact' },
     ]}
     elsewhere={[

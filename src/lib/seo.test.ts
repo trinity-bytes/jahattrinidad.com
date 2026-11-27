@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { registerHooks } from 'node:module';
 import { test } from 'node:test';
 import {
-  blogPostingNode, breadcrumbNode, buildSeo, isLiveApp, jsonLdGraph, metaDescription, OG_DEFAULT_IMAGE,
+  aboutPageNode, blogPostingNode, breadcrumbNode, buildSeo, isLiveApp, jsonLdGraph, metaDescription, OG_DEFAULT_IMAGE,
   pageTitle, personId, personNode, profilePageNode, projectNode, websiteNode, whatItIs,
 } from './seo.ts';
 
@@ -90,6 +90,18 @@ test('the Home is a ProfilePage about the person, with the portrait as its prima
   assert.deepEqual(node.primaryImageOfPage, {
     '@type': 'ImageObject', url: 'https://jahattrinidad.com/_astro/jahat.abc.jpg', width: 600, height: 600,
   });
+});
+
+test('the About page is an AboutPage about the person, part of its locale Home website', () => {
+  const node = aboutPageNode({ site, path: '/es/about/', homePath: '/es/', lang: 'es', image: '/_astro/portrait.abc.jpg' });
+  assert.equal(node['@type'], 'AboutPage');
+  assert.equal(node['@id'], 'https://jahattrinidad.com/es/about/#aboutpage');
+  assert.equal(node.url, 'https://jahattrinidad.com/es/about/');
+  assert.equal(node.inLanguage, 'es');
+  assert.deepEqual(node.mainEntity, { '@id': personId(site) });
+  // The WebSite node lives on the Home, not on /about/.
+  assert.deepEqual(node.isPartOf, { '@id': 'https://jahattrinidad.com/es/#website' });
+  assert.deepEqual(node.primaryImageOfPage, { '@type': 'ImageObject', url: 'https://jahattrinidad.com/_astro/portrait.abc.jpg' });
 });
 
 test('breadcrumbs are numbered from 1 with absolute URLs', () => {
@@ -192,14 +204,14 @@ for (const lang of LOCALES) {
   const t = getDictionary(lang);
 
   test(`${lang}: static page descriptions are 140–160 characters and name the owner`, () => {
-    for (const text of [t.meta.homeDescription, t.meta.workDescription, t.meta.notesDescription, t.meta.linksDescription]) {
+    for (const text of [t.meta.homeDescription, t.meta.workDescription, t.meta.notesDescription, t.meta.linksDescription, t.meta.aboutDescription]) {
       inRange(text);
       assert.ok(text.includes('Jahat Trinidad'), text);
     }
   });
 
   test(`${lang}: index page titles fit in 60 characters`, () => {
-    for (const [name, what] of [[t.nav.work, t.meta.workWhat], [t.nav.notes, t.meta.notesWhat], [t.nav.links, t.meta.linksWhat]]) {
+    for (const [name, what] of [[t.nav.work, t.meta.workWhat], [t.nav.notes, t.meta.notesWhat], [t.nav.links, t.meta.linksWhat], [t.nav.about, t.meta.aboutWhat]]) {
       const title = pageTitle(name, what);
       assert.equal(title, `${name} — ${what} · Jahat Trinidad`);
       assert.ok(title.length <= 60, `${title.length}: ${title}`);
