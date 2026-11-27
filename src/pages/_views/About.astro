@@ -1,0 +1,276 @@
+---
+/*
+ * About page: Figma page "Proposed · About" (boards 2596:13 desktop, 2600:285 mobile), approved by
+ * the owner on 2026-11-27. Outside only: no Inside version (owner), the tokens recolour it like any
+ * page. Sections take the site's effects: Backgrounds (light, grain, bytes), Reveal on scroll and the
+ * descend glow into Contact, as on the Home.
+ */
+import { getImage, Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import PageContact from '../../components/sections/PageContact.astro';
+import PageFooter from '../../components/sections/PageFooter.astro';
+import Backgrounds from '../../components/sections/Backgrounds.astro';
+import GlowTransition from '../../components/sections/GlowTransition.astro';
+import Reveal from '../../components/sections/Reveal.astro';
+import ExperienceRow from '../../components/content/ExperienceRow.astro';
+import PullQuote from '../../components/content/PullQuote.astro';
+import TextLink from '../../components/ui/TextLink.astro';
+import { collectionPath, listExperience, listLinks, type Locale } from '../../lib/content';
+import { aboutPageNode, breadcrumbNode, buildSeo, jsonLdGraph, pageTitle, personNode } from '../../lib/seo';
+import { formatPeriod } from '../../lib/format';
+import { OWNER_NAME } from '../../lib/consts';
+import { getDictionary, localeGroup, localizedPath } from '../../lib/i18n';
+import profile from '../../assets/profile/jahat.jpg';
+import portraitTree from '../../assets/about/portrait-tree.jpg';
+import headshot from '../../assets/about/headshot.jpg';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getDictionary(lang);
+const a = t.about;
+
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    'astro.config.mjs must define `site` before this page can compute canonical URLs.'
+  );
+}
+
+const links = (await listLinks()).map((link) => link.data);
+const education = (await listExperience(lang)).filter((entry) => entry.data.group === 'education');
+const homePath = localizedPath(lang, '/');
+const aboutPath = localizedPath(lang, '/about/');
+
+const portrait = await getImage({ src: profile, width: 600, height: 600, format: 'jpg' });
+const pagePortrait = await getImage({ src: portraitTree, width: 800, format: 'jpg' });
+const jsonLd = jsonLdGraph([
+  personNode({ site, description: t.meta.homeDescription, sameAs: links.map((link) => link.url), image: portrait.src }),
+  aboutPageNode({ site, path: aboutPath, homePath, lang, image: pagePortrait.src }),
+  breadcrumbNode(site, [
+    { name: t.nav.home, path: homePath },
+    { name: t.nav.about, path: aboutPath },
+  ]),
+]);
+
+const seo = buildSeo({
+  jsonLd,
+  title: pageTitle(t.nav.about, t.meta.aboutWhat),
+  description: t.meta.aboutDescription,
+  path: aboutPath,
+  lang,
+  site,
+  group: localeGroup('/about/'),
+});
+const number = (index: number) => String(index + 1).padStart(2, '0');
+---
+
+<Base lang={lang} seo={seo} contactOnPage profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
+  <PageHero variant="about" word={t.nav.about}>
+    <p class="eyebrow">{a.eyebrow}</p>
+    <p class="headline">{a.headline}</p>
+    <p class="sub">{a.sub}</p>
+  </PageHero>
+
+  <section class="about-section short" aria-labelledby="short-heading">
+    <Backgrounds variant="values" next="surface" seed={11} />
+    <div class="layout">
+      <header class="section-header">
+        <p class="marker" data-background-text data-reveal="text">{a.shortMarker}</p>
+        <h2 id="short-heading" data-background-text data-reveal="text">{a.shortHeading}</h2>
+      </header>
+      <p class="intro-copy" data-background-text data-reveal="text">{a.intro}</p>
+      <div class="portrait" data-reveal>
+        <Image src={portraitTree} alt={a.portraitAlt} widths={[420, 640, 840, 1122]} sizes="(min-width: 48rem) 26.25rem, calc(100vw - 2.5rem)" />
+      </div>
+      <dl class="facts" data-reveal-children>
+        {a.facts.map(({ label, value }) => (
+          <div class="fact">
+            <dt data-background-text>{label}</dt>
+            <dd data-background-text>{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="about-section story" aria-labelledby="story-heading">
+    <Backgrounds variant="work" next="bg" seed={12} />
+    <div class="layout split">
+      <div class="side">
+        <header class="section-header">
+          <p class="marker" data-background-text data-reveal="text">{a.storyMarker}</p>
+          <h2 id="story-heading" data-background-text data-reveal="text">{a.storyHeading}</h2>
+        </header>
+        <p class="side-note" data-background-text data-reveal="text">{a.storyNote}</p>
+        <TextLink href={`${homePath}#experience`} label={a.seeExperience} data-background-text data-reveal />
+      </div>
+      <div class="main">
+        {[{ label: a.whyLabel, items: a.why.map((item) => ({ lead: item.label, text: item.text })) },
+          { label: a.pathLabel, items: a.path.map((item) => ({ lead: item.years, text: item.text })) }].map((group) => (
+          <div class="group" data-reveal>
+            <h3 class="group-label" data-background-text>{group.label}</h3>
+            <ol class="chapters">
+              {group.items.map((item) => (
+                <li class="chapter">
+                  <p class="chapter-lead" data-background-text>{item.lead}</p>
+                  <p class="chapter-text" data-background-text>{item.text}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
+        <figure class="closing" data-reveal>
+          <PullQuote><p data-background-text>{a.quote}</p></PullQuote>
+          <figcaption class="by" data-background-text>
+            <Image src={headshot} alt="" width={96} height={96} class="avatar" />
+            <span>{OWNER_NAME}</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section work" aria-labelledby="work-heading">
+    <Backgrounds variant="experience" next="surface" seed={13} />
+    <div class="layout">
+      <header class="section-header">
+        <p class="marker" data-background-text data-reveal="text">{a.workMarker}</p>
+        <h2 id="work-heading" data-background-text data-reveal="text">{a.workHeading}</h2>
+      </header>
+      <ol class="principles" data-reveal-children>
+        {a.principles.map((principle, index) => (
+          <li class="principle">
+            <p class="principle-number" data-background-text aria-hidden="true">{number(index)}</p>
+            <h3 data-background-text>{principle.title}</h3>
+            <p class="principle-text" data-background-text>{principle.text}</p>
+          </li>
+        ))}
+      </ol>
+      <TextLink href={collectionPath('posts', lang)} label={a.notesLink} data-background-text data-reveal />
+    </div>
+  </section>
+
+  <section class="about-section education" aria-labelledby="education-heading">
+    <Backgrounds variant="notes" next="none" seed={14} />
+    <div class="layout split">
+      <div class="side">
+        <header class="section-header">
+          <p class="marker" data-background-text data-reveal="text">{a.educationMarker}</p>
+          <h2 id="education-heading" data-background-text data-reveal="text">{a.educationHeading}</h2>
+        </header>
+      </div>
+      <div class="main">
+        <div class="group" data-reveal>
+          <h3 class="group-label" data-background-text>{t.experience.groups.education}</h3>
+          <ul class="rows">
+            {education.map((entry) => (
+              <ExperienceRow
+                period={formatPeriod(entry.data.start, entry.data.end, lang, t.experience.now)}
+                role={entry.data.role}
+                organisation={entry.data.organisation}
+                description={entry.data.description}
+                tags={entry.data.tags}
+              />
+            ))}
+          </ul>
+        </div>
+        <div class="group" data-reveal>
+          <h3 class="group-label" data-background-text>{a.languagesLabel}</h3>
+          <dl class="languages">
+            {a.languages.map(({ name, level }) => (
+              <div class="language">
+                <dt data-background-text>{name}</dt>
+                <dd data-background-text>{level}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Same ending as the Home: 04 hangs over Contact and pulls back up (desktop, motion allowed). */}
+  <GlowTransition direction="descend" />
+  <PageContact lang={lang} links={links} marker={a.contactMarker} />
+  <Reveal />
+  <PageFooter slot="footer" lang={lang} links={links} contactOnPage compact />
+</Base>
+
+<style>
+  .about-section { position: relative; }
+  .short, .work { background: var(--color-bg); }
+  .story, .education { background: var(--color-surface); }
+  .layout { position: relative; max-width: calc(var(--content-max) + 2 * var(--gutter)); margin-inline: auto; padding: var(--section-pad) var(--gutter); display: flex; flex-direction: column; gap: var(--space-3xl); }
+
+  /* Section header: marker + Heading/H2 (Home / Section header, Level=Sub). */
+  .section-header { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .marker { margin: 0; font: var(--type-marker); letter-spacing: var(--type-marker-tracking); text-transform: uppercase; color: var(--color-text-muted); }
+  h2 { margin: 0; font: 600 var(--font-size-h2)/1.1 var(--font-display); letter-spacing: -0.02em; color: var(--color-heading); text-wrap: balance; }
+
+  /* 01 — The short version. Mobile order: header, intro, portrait, facts; desktop puts the portrait on the left. */
+  .short .layout { display: grid; grid-template-areas: 'header' 'intro' 'portrait' 'facts'; gap: var(--space-2xl-b); }
+  .short .section-header { grid-area: header; }
+  .intro-copy { grid-area: intro; margin: 0; max-width: 42.5rem; font: 400 var(--font-size-body)/1.5 var(--font-sans); color: var(--color-text); }
+  .portrait { grid-area: portrait; width: 100%; max-width: 26.25rem; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--radius-xl); }
+  .portrait :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .facts { grid-area: facts; display: grid; grid-template-columns: 1fr; gap: var(--space-xl) 2.5rem; max-width: 42.5rem; margin: 0; }
+  .fact { display: flex; flex-direction: column; gap: 0.375rem; padding-top: var(--space-md); border-top: 1px solid var(--color-heading); }
+  .fact dt { font: var(--type-meta); letter-spacing: var(--type-meta-tracking); text-transform: uppercase; color: var(--color-text); }
+  .fact dd { margin: 0; font: 400 var(--font-size-body)/1.5 var(--font-sans); color: var(--color-heading); }
+
+  /* 02 and 04: a side column beside the content, sticky on desktop like Experience. */
+  .split { gap: var(--space-3xl); }
+  .side { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-xl); }
+  .side-note { margin: 0; max-width: 28rem; font: 400 var(--font-size-small)/1.5 var(--font-sans); color: var(--color-text); }
+  .main { display: flex; flex-direction: column; gap: var(--space-3xl); min-width: 0; }
+  .group-label { display: flex; align-items: center; gap: var(--space-xs); margin: 0; padding-bottom: var(--space-sm); font: var(--type-meta); letter-spacing: var(--type-meta-tracking); text-transform: uppercase; color: var(--color-text-muted); }
+  .group-label::before { content: ''; width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--color-signal); }
+  .chapters, .rows, .principles { margin: 0; padding: 0; list-style: none; }
+  .chapter { display: grid; grid-template-columns: 1fr; gap: var(--space-xs); padding-block: var(--space-xl); border-top: 1px solid var(--color-border); }
+  .chapter-lead { margin: 0; font: var(--type-meta); letter-spacing: var(--type-meta-tracking); text-transform: uppercase; color: var(--color-text-muted); }
+  .chapter-text { margin: 0; max-width: 36rem; font: 400 var(--font-size-body)/1.5 var(--font-sans); color: var(--color-text); }
+  .closing { display: flex; flex-direction: column; gap: var(--space-xl); margin: 0; }
+  .by { display: flex; align-items: center; gap: var(--space-sm); font: 500 var(--font-size-small)/1.25 var(--font-sans); color: var(--color-heading); }
+  .by :global(.avatar) { width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; }
+
+  /* 03 — How I work. */
+  .work .layout { gap: var(--space-4xl); }
+  .principles { display: grid; grid-template-columns: 1fr; gap: var(--space-2xl-b); }
+  .principle { display: flex; flex-direction: column; gap: var(--space-sm); padding-top: var(--space-xl); border-top: 1px solid var(--color-heading); }
+  .principle-number { margin: 0; font: var(--type-marker); letter-spacing: var(--type-marker-tracking); color: var(--color-text-muted); }
+  .principle h3 { margin: 0; font: 600 var(--font-size-h5)/1.25 var(--font-display); letter-spacing: -0.02em; color: var(--color-heading); }
+  .principle-text { margin: 0; font: 400 var(--font-size-small)/1.5 var(--font-sans); color: var(--color-text); }
+
+  /* 04 — Languages. */
+  .languages { margin: 0; }
+  .language { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-md); padding-block: var(--space-md); border-bottom: 1px solid var(--color-border); }
+  .language dt { font: 500 var(--font-size-body)/1.5 var(--font-sans); color: var(--color-heading); }
+  .language dd { margin: 0; text-align: right; font: 400 var(--font-size-small)/1.5 var(--font-sans); color: var(--color-text-muted); }
+
+  @media (min-width: 48rem) {
+    .facts { grid-template-columns: repeat(2, minmax(0, 17.5rem)); }
+    /* Story row 2594:20, Layout=Row: 140px lead, 32px gap, the text. */
+    .chapter { grid-template-columns: 8.75rem minmax(0, 1fr); gap: var(--space-2xl-b); }
+    .closing { padding-left: calc(8.75rem + var(--space-2xl-b) - var(--space-xl)); }
+  }
+
+  @media (min-width: 64.0625rem) {
+    .short .layout {
+      grid-template-columns: 26.25rem minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr;
+      grid-template-areas: 'portrait header' 'portrait intro' 'portrait facts';
+      column-gap: 6rem;
+    }
+    .short .section-header { max-width: 32.5rem; }
+    .portrait { align-self: start; }
+    .split { flex-direction: row; gap: var(--space-4xl); align-items: flex-start; }
+    .side { flex: none; width: 31.25rem; position: sticky; top: 7.5rem; }
+    .main { flex: 1; }
+    .education .section-header { max-width: 27.5rem; }
+    .principles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; }
+  }
+</style>

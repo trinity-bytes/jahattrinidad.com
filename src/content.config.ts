@@ -176,7 +176,8 @@ const experience = defineCollection({
     z.object({
       id: z.string(),
       lang: z.enum(LOCALES),
-      group: z.enum(['work', 'volunteering', 'beyond-class']),
+      // 'education' is listed on the About page only; Home's Experience section names its own groups.
+      group: z.enum(['work', 'volunteering', 'beyond-class', 'education']),
       role: z.string(),
       organisation: z.string(),
       start: z.string(), // 'YYYY' or 'YYYY-MM'

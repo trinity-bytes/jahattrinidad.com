@@ -234,6 +234,23 @@ export function profilePageNode(input: { site: URL; path: string; lang: Locale; 
   };
 }
 
+/**
+ * The About page: about the same Person, and part of the locale Home's WebSite node (that node
+ * lives on the Home, so its id is built from `homePath`, not from this page's URL).
+ */
+export function aboutPageNode(input: { site: URL; path: string; homePath: string; lang: Locale; image: string }): SchemaNode {
+  const url = absoluteUrl(input.path, input.site).href;
+  return {
+    '@type': 'AboutPage',
+    '@id': `${url}#aboutpage`,
+    url,
+    inLanguage: BCP47[input.lang],
+    isPartOf: { '@id': `${absoluteUrl(input.homePath, input.site).href}#website` },
+    mainEntity: { '@id': personId(input.site) },
+    primaryImageOfPage: { '@type': 'ImageObject', url: absoluteUrl(input.image, input.site).href },
+  };
+}
+
 export function breadcrumbNode(site: URL, trail: { name: string; path: string }[]): SchemaNode {
   return {
     '@type': 'BreadcrumbList',
