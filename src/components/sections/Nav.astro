@@ -297,13 +297,15 @@ const profileIcons = {
   .pill[data-jump] { transition: opacity 200ms ease; }
   @media (prefers-reduced-motion: reduce) { .pill { transition: opacity 120ms ease; } }
   /* IconButton 2517:816: the menu toggle and the menu's profile links. */
-  .menu-toggle { display: none; width: 44px; height: 44px; padding: 0; align-items: center; justify-content: center; border: 1px solid var(--color-control-border); border-radius: 50%; color: inherit; background: transparent; cursor: pointer; }
+  .menu-toggle { display: none; flex: none; width: 44px; height: 44px; aspect-ratio: 1; padding: 0; align-items: center; justify-content: center; border: 1px solid var(--color-control-border); border-radius: 50%; color: inherit; background: transparent; cursor: pointer; }
   .menu-toggle, .profiles a { transition: background-color var(--dur-press) var(--ease-out), scale var(--dur-press) var(--ease-out); }
   .menu-toggle:active, .profiles a:active { background: var(--color-current); scale: 0.97; }
   @media (hover: hover) and (pointer: fine) { .menu-toggle:hover, .profiles a:hover { background: var(--color-current); } }
   @media (prefers-reduced-motion: reduce) { .menu-toggle, .profiles a { transition: none; } .menu-toggle:active, .profiles a:active { scale: none; } }
+  /* Flex spans so the SVG sits centered, not on a text baseline. */
+  .menu-icon, .close-icon { display: flex; align-items: center; justify-content: center; line-height: 0; }
   .close-icon, [aria-expanded='true'] .menu-icon { display: none; }
-  [aria-expanded='true'] .close-icon { display: block; }
+  [aria-expanded='true'] .close-icon { display: flex; }
   /* The icons turn in as they swap; only after the first toggle (data-menu is set by it), not on load. */
   .site-nav[data-menu] [aria-expanded='true'] .close-icon,
   .site-nav[data-menu] [aria-expanded='false'] .menu-icon { animation: menu-icon-in 320ms cubic-bezier(0.23, 1, 0.32, 1); }
