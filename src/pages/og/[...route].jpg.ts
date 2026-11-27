@@ -21,7 +21,8 @@ async function cardsFor(lang: Locale) {
     return { params: { route: routeOf(ogImagePath('posts', lang, entrySlug(entry))) }, props: { card } };
   });
   const cases = (await projectRoutes(lang)).map(({ props: { entry } }) => {
-    const label = [t.caseStudy.eyebrow, entry.data.kind].filter(Boolean).join(' · ');
+    // Same eyebrow as the page itself (_views/CaseStudy.astro): project pages are not case studies.
+    const label = [entry.data.page ? t.projectPage.eyebrow : t.caseStudy.eyebrow, entry.data.kind].filter(Boolean).join(' · ');
     const card: OgCard = { label, title: entry.data.title, signature };
     return { params: { route: routeOf(ogImagePath('projects', lang, entrySlug(entry))) }, props: { card } };
   });

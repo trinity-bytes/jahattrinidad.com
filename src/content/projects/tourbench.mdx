@@ -1,0 +1,52 @@
+---
+title: TourBench
+description: "A visual tool that finds the shortest route for a waste collection round."
+lang: en
+translationKey: tourbench
+tier: project
+publishDate: 2025-09-03
+kind: Visualization · Solo
+team: { size: 1, solo: true }
+coverImage: "./tourbench/cover.png"
+coverImageAlt: "TourBench showing an eight-node route, its distance, time and CO₂"
+stack: [JavaScript, Cytoscape.js]
+demoUrl: "https://tourbench.jahattrinidad.com/"
+demoIsApp: true
+repoUrl: "https://github.com/trinity-bytes/tour-bench"
+insideStack: "Vanilla JavaScript with Cytoscape.js."
+insideDecision: "Fixing the start leaves (N−1)! tours; backtracking checks every valid cycle to prove the shortest. Factorial growth limits the app to 11 nodes."
+page:
+  headline: 'TourBench finds the shortest round for a garbage truck, and proves it.'
+  sub: 'A visual test bench for the travelling salesman problem: it tries every possible route, keeps the best one and shows its distance, time and CO₂.'
+  glance:
+    - { label: Problem, value: 'Travelling salesman (TSP) on a complete graph' }
+    - { label: Method, value: 'Exhaustive search with backtracking, no heuristics' }
+    - { label: Scale, value: '4 to 11 points, from 6 to 3 628 800 tours' }
+    - { label: Built with, value: 'Vanilla JavaScript, Cytoscape.js, node -‑test' }
+    - { label: My part, value: 'All of it, on my own' }
+  how:
+    headline: 'The best route, proven by trying all of them.'
+    sub: 'No shortcuts: the point of the project is to make the factorial cost of the problem visible, not just to explain it.'
+    steps:
+      - title: The model
+        text: 'A round is a cycle that visits every point once and returns to the start. Its cost is the sum of the edges it uses, read from the adjacency matrix.'
+        formula: "C(π) = Σ w(πᵢ, πᵢ₊₁)\ni = 0 … N−1"
+      - title: Every tour, once
+        text: 'Fixing the starting point leaves (N−1)! possible tours. Backtracking builds them one edge at a time and keeps the cheapest, so the result is the optimum, not an estimate.'
+        formula: "N = 8: 7! = 5 040 tours"
+      - title: From kilometres to impact
+        text: 'The best route becomes something a city can act on: driving time at the truck’s average speed and the CO₂ it emits, compared with the worst route.'
+        formula: "t = d / 25 km/h × 60\nCO₂ = d × 0.2 kg/km"
+    table:
+      title: Why it stops at 11 points
+      rows:
+        - [N, '4', '6', '8', '10', '11', '12']
+        - ['tours (N−1)!', '6', '120', '5 040', '362 880', '3 628 800', '39 916 800']
+      note: 'Each extra point multiplies the work: 12 points would mean eleven times the tours of 11.'
+  decisionHeadline: 'Brute force, on purpose.'
+decisions:
+  - choice: 'Enumerate every tour, no heuristic'
+    rejected: 'nearest neighbour or 2-opt'
+    because: 'A heuristic gives a good route fast but cannot tell you how far it is from the best. Trying all (N−1)! tours gives the proven optimum and lets the student watch the cost explode as N grows.'
+    cost: 'It only scales to 11 points, so it is a teaching bench, not a routing engine for a real fleet. The app also needs a screen at least 1024 px wide.'
+---

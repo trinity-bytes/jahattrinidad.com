@@ -36,6 +36,8 @@ interface Props {
 const { variant, word } = Astro.props;
 const sky = { work: workSky, notes: notesSky, post: notesSky, case: studyDesk }[variant];
 const isCase = variant === 'case';
+// Notes has no near hill (owner, 2026-11-26): the grass hill is not reused on that cover.
+const hasHill = variant === 'work' || variant === 'post';
 ---
 
 <section class:list={['hero', variant]} data-hero aria-labelledby={word ? 'hero-word' : undefined}>
@@ -50,9 +52,8 @@ const isCase = variant === 'case';
     fetchpriority="high"
   />
   {word && <h1 id="hero-word" class="word">{word}</h1>}
-  {isCase ? (
-    <div class="scrim" aria-hidden="true" />
-  ) : (
+  {isCase && <div class="scrim" aria-hidden="true" />}
+  {hasHill && (
     <Picture
       src={hill}
       formats={['avif', 'webp']}
@@ -95,7 +96,6 @@ const isCase = variant === 'case';
 
   /* The near hill is lit by the Home's sunset: cooled toward the morning of each cover. */
   .work .hill, .post .hill { filter: brightness(1.04) saturate(0.85) hue-rotate(6deg); }
-  .notes .hill { filter: brightness(1.06) contrast(0.95) saturate(0.7) hue-rotate(8deg); }
   /* Work: the terraces sit lower than the sunset did, so the intro stays on the light sky. */
   .work { --sky-shift: 60px; }
   .work .sky { top: calc(var(--sky-top) + var(--sky-shift)); }
@@ -145,21 +145,7 @@ const isCase = variant === 'case';
   .intro :global(.headline) { max-width: 660px; font: 600 var(--font-size-heading-sm) / 1.15 var(--font-display), sans-serif; letter-spacing: -0.02em; color: var(--color-heading); }
   .intro :global(.sub) { max-width: 520px; font: 400 var(--font-size-body) / 1.5 var(--font-sans), sans-serif; }
   .intro :global(.title) { font: 600 2.125rem / 1.05 var(--font-display), sans-serif; letter-spacing: -0.02em; color: var(--color-heading); }
-  .intro :global(.back) { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font: 500 14px / 1.5 var(--font-sans), sans-serif; color: inherit; text-decoration: none; }
-  .intro :global(.back:hover) { text-decoration: underline; }
   .intro :global(.actions) { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
-  .intro :global(.button) { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 14px 22px; border: 1px solid var(--color-accent); border-radius: 999px; font: 500 16px / 1 var(--font-sans), sans-serif; text-decoration: none; }
-  .intro :global(.button.primary) { background: var(--color-accent); color: var(--color-accent-text); }
-  .intro :global(.button.secondary) { color: var(--color-heading); }
-  .intro :global(.button:hover) { text-decoration: underline; }
-  /* Post: "← ALL NOTES · ESSAY · NOV 20, 2024 · 2 MIN READ". */
-  .intro :global(.meta) { display: flex; flex-wrap: wrap; align-items: center; column-gap: 18px; font: 500 13px / 1.3 var(--font-mono), monospace; letter-spacing: 0.08em; text-transform: uppercase; }
-  .intro :global(.meta a) { display: inline-flex; align-items: center; min-height: 44px; color: inherit; text-decoration: none; }
-  .intro :global(.meta a:hover) { text-decoration: underline; }
-  /* Mobile: the link takes its own line, the metadata follows with tighter gaps and no leading dot. */
-  .intro :global(.meta-line) { flex-basis: 100%; display: flex; flex-wrap: wrap; column-gap: 8px; }
-  .intro :global(.meta-line .lead) { display: none; }
-
   /* Mobile landscape of the case study and the post. */
   .case {
     --sky-w: 1981.415px;
@@ -171,9 +157,11 @@ const isCase = variant === 'case';
     --intro-top: 112px;
     height: 700px;
   }
-  .notes { --word-size: 116px; --word-top: 539px; --word-right: 32px; }
-  .post .intro :global(.title) { font-size: 2.125rem; line-height: 1.08; }
-  .post .intro :global(.sub) { max-width: 720px; }
+  /* Notes (boards 2522:510, 2522:871): below desktop the word fills the content width (Epilogue
+     500 at -0.04em sets "Notes" about 2.8 em wide) and sinks only a little under the bottom edge,
+     so it stays legible on a phone. */
+  .hero.notes { --word-size: calc((100cqw - 2 * var(--edge)) / 2.8); }
+  .notes .word { top: auto; right: var(--edge); bottom: calc(var(--word-size) * -0.13); }
   .post {
     --sky-top: -114px;
     --hill-top: 349.223px;
@@ -197,12 +185,9 @@ const isCase = variant === 'case';
     .intro { max-width: 640px; }
     .intro :global(.sub) { font-size: 1.125rem; line-height: 1.4444; }
     .case .intro :global(.sub), .post .intro :global(.sub) { max-width: none; }
-    .intro :global(.meta-line) { column-gap: 18px; }
-    .intro :global(.meta-line .lead) { display: inline; }
     .intro :global(.title) { font-size: 2.75rem; }
     .intro :global(.actions) { flex-direction: row; }
-    .intro :global(.back), .intro :global(.meta a) { min-height: 0; }
-    .intro :global(.meta-line) { flex-basis: auto; }
+    .intro :global(.back) { min-height: 0; }
     .case {
       --sky-w: 2554.781px;
       --sky-left: calc(50cqw - 829.723px);
@@ -227,8 +212,6 @@ const isCase = variant === 'case';
           color-mix(in srgb, var(--cream) 10%, transparent) 85%,
           transparent 100%);
     }
-    .notes { --word-size: 210px; --word-top: 485px; --word-right: 40px; }
-    .post .intro :global(.title) { font-size: 2.75rem; }
     .post { --intro-top: 136px; height: 560px; }
   }
 
@@ -252,7 +235,6 @@ const isCase = variant === 'case';
     .intro :global(.title) { font-size: 3.75rem; letter-spacing: -0.02em; }
     .intro :global(.sub) { line-height: 1.5; }
     .case .intro :global(.sub) { max-width: 520px; }
-    .post .intro :global(.sub) { max-width: 720px; }
     /* Case study and Notes: the landscape is mirrored, so the sun sits on the right. */
     .case, .notes {
       --sky-w: 100cqw;
@@ -264,8 +246,6 @@ const isCase = variant === 'case';
       --hill-top: calc(628.2px - 55.22cqw);
       height: 745px;
     }
-    /* The covers are not mirrored (the study desk and the mist face the intro on their own); the hill still is. */
-    .notes .hill { transform: scaleX(-1); }
     .work { --sky-shift: 154px; }
     .scrim {
       background:
@@ -280,13 +260,49 @@ const isCase = variant === 'case';
           color-mix(in srgb, var(--cream) 86%, transparent) 36%,
           transparent 62%);
     }
-    .notes .intro :global(.headline) { line-height: 1.06; }
-    .notes { --word-top: 437px; --word-right: var(--edge); }
+    .hero.notes { --word-size: 300px; }
+    .notes .word { top: 437px; bottom: auto; }
     .case .intro { max-width: 660px; }
     .post .intro { max-width: 980px; }
-    .post .intro :global(.title) { font-size: 3.5rem; }
-    .post .intro :global(.sub) { font-size: 1.25rem; }
     .post { --intro-top: 180px; height: 560px; }
+  }
+
+  /* Project pages (boards 2522:449, 2558:1666, 2558:2305): the title is Heading/H1 in the hero's green. */
+  .hero.case .intro :global(.title) { font-size: var(--font-size-h1); line-height: 1.05; letter-spacing: -0.02em; color: var(--color-hero-text); }
+
+  /* Project pages below desktop (option A, owner 2026-11-26; components 2558:1666, 2558:2305): the
+     text sits on cream with room around it and the photo is its own full-strength band under it,
+     instead of the text over a faded photo. Phones stack full-width buttons. */
+  @media (width < 64.0625rem) {
+    .hero.case { --intro-top: 92px; --case-photo-h: 280px; display: flex; flex-direction: column; height: auto; }
+    .case .scrim { display: none; }
+    .case .intro { position: static; max-width: none; padding: var(--intro-top) var(--edge) 40px; }
+    .case .intro :global(.actions) { align-self: stretch; align-items: stretch; margin-top: 8px; }
+    .case :global(picture) { display: block; order: 1; }
+    .case .sky { position: relative; inset: auto; width: 100%; height: var(--case-photo-h); object-fit: cover; translate: none; }
+  }
+  @media (min-width: 48rem) and (width < 64.0625rem) {
+    .hero.case { --intro-top: 100px; --case-photo-h: 400px; }
+    .case .intro { padding-bottom: 48px; }
+    .case .intro :global(.actions) { align-self: flex-start; }
+  }
+
+  /* Notes index and post (boards 2520:151, 2522:1212, 2522:2234): the intro starts at the section
+     padding, labels are muted and the sub takes the title colour for contrast (NL-05, NL-10). */
+  .hero.notes, .hero.post { --intro-top: var(--section-pad); }
+  .notes .intro { gap: var(--space-xl); }
+  .notes .intro :global(.eyebrow) { color: var(--color-text-muted); }
+  .notes .intro :global(.headline) { font-size: var(--font-size-h3); line-height: 1.15; }
+  .hero:is(.notes, .post) .intro :global(.sub) { max-width: 35.625rem; color: var(--color-heading); font-size: var(--font-size-body); line-height: 1.5; }
+  .hero.post .intro :global(.sub) { max-width: 44.375rem; }
+  .post .intro { gap: var(--space-md); }
+  .hero.post .intro :global(.title) { max-width: 53.125rem; font: 600 var(--font-size-h1) / 1.05 var(--font-display), sans-serif; letter-spacing: -0.02em; color: var(--color-heading); }
+  .post .intro :global(.meta) { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
+  /* The back link keeps its 44px in the layout, as drawn, instead of pulling its padding back. */
+  .post .intro :global(.meta .meta-back) { margin-block: 0; }
+  .post .intro :global(.meta-line) { font: var(--type-meta); letter-spacing: var(--type-meta-tracking); text-transform: uppercase; color: var(--color-text-muted); }
+  @media (min-width: 48rem) {
+    .post .intro :global(.meta) { flex-direction: row; align-items: center; }
   }
 
   @media (prefers-reduced-motion: reduce) {

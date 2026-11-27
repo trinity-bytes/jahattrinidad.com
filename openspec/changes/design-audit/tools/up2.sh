@@ -1,0 +1,1 @@
+while read f id; do t=image/png; [[ $f == *.jpg ]] && t=image/jpeg; r=$(curl -s -H "Content-Type: $t" --data-binary @$f "https://mcp.figma.com/mcp/upload/$id/submit?scaleMode=FILL" </dev/null); [[ $r == *'"success":true'* ]] || echo "$f $r"; done; echo done

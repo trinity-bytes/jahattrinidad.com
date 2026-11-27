@@ -1,8 +1,8 @@
 ---
-import type { Locale } from '../../lib/i18n';
+import TextLink from '../ui/TextLink.astro';
+import { getDictionary, type Locale } from '../../lib/i18n';
 import { Image } from 'astro:assets';
 import sky from '../../assets/hero/sky.png';
-import Icon from '../ui/Icon.astro';
 import Chat from './contact/Chat.astro';
 import Annotation from '../ui/Annotation.astro';
 import { cvPath } from '../../lib/cv';
@@ -12,7 +12,8 @@ import type { Dictionary } from '../../lib/i18n';
 interface Props {
   lang: Locale;
   marker: string;
-  headline: string;
+  /** Phrases of the heading: a line breaks between them, and inside one only when it does not fit. */
+  headline: string[];
   strings: Dictionary['contact'];
   /** The Inside lens's copy: its marker and headline replace the two above, and it carries the annotation. */
   inside: Dictionary['home']['inside']['contact'];
@@ -24,6 +25,7 @@ interface Props {
 }
 
 const { lang, marker, headline, strings, inside, chat, email, linkedInHref } = Astro.props;
+const newTab = getDictionary(lang).common.newTab;
 const notes = [inside.annotations.composer];
 const facts = [
   { label: strings.lookingFor, value: strings.lookingForValue },
@@ -31,11 +33,11 @@ const facts = [
   { label: strings.basedIn, value: strings.basedInValue },
 ];
 ---
-<!--
+{/*
   The sky runs into the footer (D17): the footer's hill is positioned 260px above its own top, so it
   rises over this section's bottom padding. Render the footer directly after this section, with no
   margin between them.
--->
+*/}
 <section id="contact" class="contact" aria-labelledby="contact-heading">
   <Image class="sky" src={sky} alt="" widths={[768, 1440, 2000]} sizes="100vw" loading="lazy" />
   <div class="dusk" data-show="inside" aria-hidden="true"></div>
@@ -43,7 +45,7 @@ const facts = [
   <div class="content">
     <p class="marker" data-show="outside" data-reveal="text">{marker}</p>
     <p class="marker" data-show="inside" data-reveal="text">{inside.marker}</p>
-    <h2 id="contact-heading" data-reveal="text"><span data-show="outside">{headline}</span><span data-show="inside">{inside.headline}</span></h2>
+    <h2 id="contact-heading" data-reveal="text"><span data-show="outside">{headline.map((phrase, i) => (<>{i > 0 && ' '}<span class="phrase">{phrase}</span></>))}</span><span data-show="inside">{inside.headline.map((phrase, i) => (<>{i > 0 && ' '}<span class="phrase">{phrase}</span></>))}</span></h2>
     <dl class="facts" data-reveal-children>
       {facts.map(({ label, value }) => (
         <div class="fact">
@@ -56,31 +58,22 @@ const facts = [
       <Annotation
         slot="annotation"
         n={1}
-        x="calc(100% + 9px)"
+        x="calc(100% + 8px)"
         y="50%"
-        pinX="-9px"
-        pinY="-9px"
-        bound={{ x: '-9px', y: '-9px', width: 'calc(100% + 18px)', height: 'calc(100% + 18px)' }}
+        pinX="calc(100% - 8px)"
+        pinY="-8px"
+        bound={{ x: '-8px', y: '-8px', width: 'calc(100% + 16px)', height: 'calc(100% + 16px)' }}
         {...notes[0]}
       />
     </Chat>
     <div class="fallback" data-reveal>
       <span class="or">{strings.or}</span>
-      <button type="button" class="link" data-copy-email={email} data-copied={strings.copied}>
-        <Icon name="copy" size={20} />
+      <TextLink type="button" destination="in-page" leadingGlyph="copy" label={strings.copyEmail} data-copy-email={email} data-copied={strings.copied}>
         <span data-copy-label>{strings.copyEmail}</span>
-      </button>
-      <noscript><a class="link" href={`mailto:${email}`}>{email}</a></noscript>
-      {linkedInHref && (
-        <a class="link" href={linkedInHref} target="_blank" rel="noopener noreferrer">
-          {strings.linkedIn}
-          <Icon name="arrow-up-right" size={18} />
-        </a>
-      )}
-      <a class="link" href={cvPath(lang)} target="_blank" rel="noopener">
-        {strings.cv}
-        <Icon name="arrow-up-right" size={18} />
-      </a>
+      </TextLink>
+      <noscript><TextLink destination="in-page" href={`mailto:${email}`} label={email} /></noscript>
+      {linkedInHref && <TextLink destination="external" href={linkedInHref} label={strings.linkedIn} newTab={newTab} />}
+      <TextLink destination="external" href={cvPath(lang)} label={strings.cv} newTab={newTab} />
     </div>
     <AnnotationList class="notes" items={notes} label={inside.notesLabel} />
   </div>
@@ -188,47 +181,50 @@ const facts = [
   .dusk { position: absolute; inset: 0; z-index: -2; background: var(--color-dusk); pointer-events: none; }
   .sun-mask { position: absolute; z-index: -1; left: calc(var(--sun-x) - var(--sun-size) / 2); top: calc(var(--sun-y) - var(--sun-size) / 2); width: var(--sun-size); height: var(--sun-size); border-radius: 50%; background: var(--dusk-sun); filter: blur(calc(var(--sun-size) / 4)); pointer-events: none; translate: 0 var(--sky-y, 0px); }
   .content > :global(.notes) { padding-inline: 0; }
-  .content { max-width: calc(var(--content-max) + 2 * var(--gutter)); margin-inline: auto; padding: 5rem var(--gutter) 6.5rem; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-xl); }
-  .marker { margin: 0; font: 500 0.8125rem/1.3 var(--font-mono); letter-spacing: 0.08em; color: var(--color-text); }
-  h2 { margin: 0; max-width: 56.25rem; font: 600 var(--font-size-heading-lg)/1.05 var(--font-display); letter-spacing: -0.03em; color: var(--color-heading); }
+  .content { max-width: calc(var(--content-max) + 2 * var(--gutter)); margin-inline: auto; padding: var(--section-pad) var(--gutter); display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2xl-b); }
+  .marker { margin: 0; font: var(--type-marker); letter-spacing: var(--type-marker-tracking); text-transform: uppercase; color: var(--color-text); }
+  h2 { margin: 0; max-width: 60rem; font: 600 var(--font-size-h1)/1.05 var(--font-display); letter-spacing: -0.02em; color: var(--color-heading); }
+  /* Phones: the question flows as one text, as the 390 boards set it. */
+  @media (max-width: 47.99rem) { .phrase:not(:only-child) { display: inline; } }
+  /* The boards fill each line; balance would split the Outside question elsewhere. */
+  h2 { text-wrap: wrap; }
+  .phrase { display: inline-block; }
   .facts { display: grid; grid-template-columns: 1fr; width: 100%; max-width: 55rem; margin: 0; }
-  .fact { display: flex; flex-direction: column; gap: 0.375rem; padding: var(--space-md) var(--space-xl) 0 0; border-top: 1px solid var(--color-heading); }
-  dt { font: 500 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text); }
-  dd { margin: 0; white-space: pre-line; font: 500 1.25rem/1.35 var(--font-sans); }
+  .fact { display: flex; flex-direction: column; gap: 0.375rem; padding: var(--space-md) var(--space-xl) var(--space-md) 0; border-top: 1px solid var(--color-heading); }
+  .fact:last-child { padding-bottom: 0; }
+  dt { font: var(--type-meta); letter-spacing: var(--type-meta-tracking); text-transform: uppercase; color: var(--color-text); }
+  dd { margin: 0; white-space: pre-line; font: 400 var(--font-size-body)/1.5 var(--font-sans); color: var(--color-heading); }
   /*
    * Chatting (set by the chat client on the first message): the card replaces the composer and the
    * "Or" row. Mobile board 2353:103 also gives up the headline and facts; tablet 2358:302 keeps them
    * above a full-width card; desktop 2358:226 puts them in a left column beside the card.
    */
   .contact[data-chatting] .fallback { display: none; }
+  /* Beside the card the column is narrow: the heading fills its lines, as the chat-open board does. */
+  .contact[data-chatting] .phrase { display: inline; }
   .contact[data-chatting] h2, .contact[data-chatting] .facts { display: none; }
-  .fallback { display: flex; align-items: center; gap: 0.25rem 1.75rem; flex-wrap: wrap; }
-  .or { font: 500 var(--font-size-label)/1.33 var(--font-mono); color: var(--color-text); }
-  .link { display: inline-flex; align-items: center; gap: 0.625rem; min-height: 2.75rem; padding: 0; border: 0; background: none; font: 500 1.125rem/1.3 var(--font-sans); color: var(--color-heading); text-decoration: underline; text-underline-offset: 0.2em; cursor: pointer; }
-  a.link { gap: var(--space-xs); }
-  .link:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+  .fallback { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-xl); }
+  .or { font: var(--type-meta); letter-spacing: 0.02em; color: var(--color-text); }
   @media (min-width: 48rem) {
     /* Tablet board 2213:634. */
     .contact { --sky-w: 1600px; --sun-x: 230px; --sun-y: 478px; --sun-size: 73.5px; }
-    .content { padding-block: 6.5rem 10.5rem; }
+    .fallback { flex-direction: row; flex-wrap: wrap; align-items: center; }
+    .fact { padding-bottom: 0; }
     .facts { grid-template-columns: 20rem 11.5rem 1fr; max-width: none; }
     .contact[data-chatting] h2 { display: block; }
     .contact[data-chatting] .facts { display: grid; }
-    .contact[data-chatting] .content { padding-bottom: 10.5rem; }
   }
   @media (min-width: 64.0625rem) {
     /* Desktop board 2191:840: the sky is centred and grows with the page past 1440. */
-    .contact { --sky-w: max(1782px, 123.75cqw); --sun-x: calc(50cqw - 355px); --sun-y: 585px; --sun-size: 64px; }
-    .content { padding-block: 8.75rem 12.25rem; gap: 2rem; }
+    .contact { --sky-w: max(1782px, 123.75cqw); --sun-x: calc(50cqw - 355px); --sun-y: 602px; --sun-size: 64px; }
     .facts { grid-template-columns: repeat(3, 1fr); max-width: 55rem; }
-    .contact[data-chatting] .content { padding-bottom: 12.25rem; }
   }
   @media (min-width: 80rem) {
     /* Desktop chat: the card (620 x 640) sits in the right column from the marker line. */
-    .contact[data-chatting] .content { position: relative; min-height: calc(8.75rem + 40rem + 12.25rem); }
-    .contact[data-chatting] .content > :global(.chat) { position: absolute; top: 8.75rem; right: var(--gutter); width: 38.75rem; }
-    .contact[data-chatting] h2 { max-width: min(35rem, calc(100% - 41rem)); }
-    .contact[data-chatting] .facts { grid-template-columns: 1fr; max-width: 30rem; }
+    .contact[data-chatting] .content { position: relative; min-height: calc(40rem + 2 * var(--section-pad)); }
+    .contact[data-chatting] .content > :global(.chat) { position: absolute; top: var(--section-pad); right: var(--gutter); width: 38.75rem; }
+    .contact[data-chatting] h2 { max-width: min(36.25rem, calc(100% - 41rem)); }
+    .contact[data-chatting] .facts { grid-template-columns: 1fr; max-width: 36.25rem; }
     .contact[data-chatting] .fact { padding-bottom: var(--space-md); }
   }
 </style>

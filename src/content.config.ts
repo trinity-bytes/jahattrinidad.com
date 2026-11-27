@@ -19,6 +19,10 @@ const projects = defineCollection({
       homeFeatured: z.boolean().default(true), // Garden appears in Home Values, not Home Work
       coverImage: image().optional(), // validated at build; missing file = Zod error
       coverImageAlt: z.string().optional(),
+      // Experiments: the "peek" shown inside the tile on hover/focus (design.md "Experiments preview v2"),
+      // a real capture from the repo's README. Repo stats come from the GitHub API at build time.
+      peekImage: image().optional(),
+      peekCaption: z.string().optional(), // short mono line under the capture, e.g. "300+ installs"
       tags: z.array(z.string()).default([]), // what KIND of thing it is
       stack: z.array(z.string()), // what it was BUILT WITH
       tier: z.enum(['case-study', 'project', 'experiment']),
@@ -35,8 +39,42 @@ const projects = defineCollection({
       outcome: z.string().optional(), // one-line quantified result for cards
       repoUrl: z.url().optional(),
       demoUrl: z.url().optional(),
+      // The demo is the working app itself, not a landing page, client catalog or video (schema.org
+      // SoftwareApplication instead of CreativeWork). Only meaningful with demoUrl.
+      demoIsApp: z.boolean().default(false),
       demoLabel: z.string().optional(), // project-specific primary action
       heroDescription: z.string().optional(), // longer case-study hero copy
+      // tier: project — the lighter technical page (design.md "Project page v1"). Without it the
+      // project is a card only. Its key decision is `decisions[0]` (one or two rows are shown).
+      page: z
+        .object({
+          headline: z.string(), // hero claim, one sentence
+          sub: z.string(), // plain-language line under it
+          glance: z.array(z.object({ label: z.string(), value: z.string() })).min(3).max(7),
+          how: z.object({
+            headline: z.string(),
+            sub: z.string().optional(),
+            steps: z
+              .array(
+                z.object({
+                  title: z.string(),
+                  text: z.string(),
+                  formula: z.string().optional(), // mono card; "\n" separates lines
+                })
+              )
+              .min(2)
+              .max(4),
+            table: z
+              .object({
+                title: z.string(),
+                rows: z.array(z.array(z.string())).min(2), // first row is the header
+                note: z.string().optional(),
+              })
+              .optional(),
+          }),
+          decisionHeadline: z.string(),
+        })
+        .optional(),
       caseStudy: z
         .object({
           headlines: z.object({
@@ -89,6 +127,17 @@ const projects = defineCollection({
           })
         )
         .default([]),
+    })
+    // Only `tier: project` entries are routed to a project page (content.ts projectRoutes); a `page`
+    // anywhere else is copy that never renders, so the build says so instead of dropping it silently.
+    .refine((data) => !data.page || data.tier === 'project', {
+      message: '`page` is only rendered for `tier: project` entries',
+      path: ['page'],
+    })
+    // The project page's decision table shows one or two rows (Figma `2443:12`); the build rejects a third.
+    .refine((data) => !data.page || data.decisions.length <= 2, {
+      message: 'a project page shows at most 2 decisions',
+      path: ['decisions'],
     }),
 });
 

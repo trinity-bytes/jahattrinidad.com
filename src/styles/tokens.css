@@ -54,6 +54,18 @@
     --color-placeholder: light-dark(color-mix(in srgb, var(--green-900) 70%, transparent), color-mix(in srgb, var(--green-300) 70%, transparent));
     --color-accent: light-dark(var(--green-950), var(--green-300));
     --color-accent-text: light-dark(var(--white), var(--green-950));
+    /* One background step for hovered and pressed controls. */
+    --color-accent-hover: light-dark(var(--green-800), var(--green-200));
+    /* Current page or language pill, nav glass, control outlines and the menu scrim. */
+    --color-current: light-dark(color-mix(in srgb, var(--color-heading) 8%, transparent), color-mix(in srgb, var(--color-heading) 12%, transparent));
+    --color-glass: light-dark(color-mix(in srgb, var(--color-bg) 82%, transparent), color-mix(in srgb, var(--color-bg) 78%, transparent));
+    --color-control-border: color-mix(in srgb, var(--color-heading) 35%, transparent);
+    --color-scrim: light-dark(color-mix(in srgb, var(--green-950) 32%, transparent), color-mix(in srgb, var(--green-950) 50%, transparent));
+    /* Proof figures and the essay chip. */
+    --color-highlight: light-dark(var(--sun-soft), var(--green-300));
+    --color-highlight-text: var(--green-950);
+    --color-essay-chip: var(--green-200);
+    --color-essay-chip-text: var(--green-950);
     --color-focus: light-dark(var(--green-700), var(--green-300));
     --color-signal: var(--sun);
     --color-light-sun: var(--sun-soft);
@@ -73,7 +85,7 @@
     --annotation-pin: color-mix(in srgb, var(--cream) 60%, transparent);
     --annotation-leader: color-mix(in srgb, var(--cream) 30%, transparent);
     --annotation-title: color-mix(in srgb, var(--cream) 62%, transparent);
-    --annotation-note: color-mix(in srgb, var(--cream) 40%, transparent);
+    --annotation-note: color-mix(in srgb, var(--cream) 60%, transparent);
     --annotation-bound: color-mix(in srgb, var(--cream) 20%, transparent);
     --annotation-pin-ring: color-mix(in srgb, var(--cream) 45%, transparent);
     --annotation-pin-number: color-mix(in srgb, var(--cream) 75%, transparent);
@@ -88,6 +100,7 @@
     --space-md: 1rem;
     --space-lg: 1.25rem;
     --space-xl: 1.5rem;
+    --space-2xl-b: 2rem;
     --space-2xl: 2.5rem;
     --space-3xl: 3rem;
     --space-4xl: 4rem;
@@ -96,11 +109,37 @@
     --gutter-desktop: 4rem;
     /* Active page gutter: mobile, then tablet from 48rem, desktop above 64rem (the nav's breakpoints). */
     --gutter: var(--gutter-mobile);
+    /* Top and bottom padding of a page section: 72 / 86 / 120px at 390 / 768 / 1440. */
+    --section-pad: clamp(4.5rem, 3rem + 5vw, 7.5rem);
+    /* Row height of link lists: touch size up to the desktop breakpoint. */
+    --list-row: 2.75rem;
+
+    --radius-sm: 0.25rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-2xl: 1.5rem;
+    --radius-full: 999px;
+
+    --focus-width: 3px;
+    --focus-offset: 3px;
+
+    /* Icon stroke, and the sizes by role. The inline role is 1em of its text. */
+    --icon-stroke: 1.5px;
+    --icon-control: 1.25rem;
+    --icon-brand: 1.25rem;
+
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.18, 1);
+    --dur-press: 120ms;
+    --dur-ui: 200ms;
+    --dur-reveal: 420ms;
+
     /* Content width at 1440: 1440 − 2 × 64px gutter. */
     --content-max: 82rem;
 
     /* Padding of the featured post card. The card and the Inside annotation of its type chip share it. */
-    --post-card-pad-x: var(--space-xl);
+    --post-card-pad-x: var(--space-lg);
     --post-card-pad-y: var(--space-xl);
 
     --font-size-label: 0.75rem;
@@ -116,11 +155,33 @@
     --font-size-heading-lg: clamp(2.125rem, 1.22222222rem + 3.70370370vw, 3rem);
     /* Home 2210:86 / 2211:86 / 2191:86: 130 / 210 / 300px. */
     --font-size-display: clamp(8.125rem, 2.96626984rem + 21.16402116vw, 13.125rem);
+    /* Type ramp steps: mobile here, tablet and desktop in the media queries below. */
+    --font-size-h1: 2.5rem;
+    --font-size-h2: 2.125rem;
+    --font-size-h3: 1.625rem;
+    --font-size-h4: 1.375rem;
+    --font-size-h5: 1.25rem;
+    --font-size-small: 1rem;
+    --font-size-caption: 0.875rem;
+    --font-size-marker: 0.8125rem;
     --line-height-article: 1.65;
 
     --font-display: var(--font-epilogue);
     --font-sans: var(--font-hanken);
     --font-mono: var(--font-plex-mono);
+
+    /* Label styles (Label/Marker, Label/Meta). Both are uppercase in --color-text-muted:
+       use `font: var(--type-marker)` plus letter-spacing, text-transform and color. */
+    --type-marker-size: var(--font-size-marker);
+    --type-marker-weight: 500;
+    --type-marker-leading: 1.3;
+    --type-marker-tracking: 0.08em;
+    --type-marker: var(--type-marker-weight) var(--type-marker-size) / var(--type-marker-leading) var(--font-mono), monospace;
+    --type-meta-size: var(--font-size-label);
+    --type-meta-weight: 500;
+    --type-meta-leading: 1.33;
+    --type-meta-tracking: 0.04em;
+    --type-meta: var(--type-meta-weight) var(--type-meta-size) / var(--type-meta-leading) var(--font-mono), monospace;
   }
 
   /* Matches <html> and the lens preview clone, which carries the same attribute. */
@@ -133,11 +194,21 @@
     --hero-hill-filter: brightness(0.76);
   }
 
+  /* A surface that stays dark in the Outside lens. Inside needs no hook: light-dark() resolves it. */
+  [data-surface='dark'] {
+    --color-focus: var(--green-300);
+  }
+
   @media (min-width: 48rem) {
     :root {
       --gutter: var(--gutter-tablet);
-      --post-card-pad-x: 2rem;
-      --post-card-pad-y: 2.25rem;
+      --font-size-h1: 3rem;
+      --font-size-h2: 2.5rem;
+      --font-size-h3: 1.875rem;
+      --font-size-h4: 1.5rem;
+      --font-size-h5: 1.375rem;
+      --post-card-pad-x: var(--space-2xl);
+      --post-card-pad-y: var(--space-2xl-b);
       /* Home 2210:86 / 2211:86 / 2191:86: 16 / 17 / 18px. */
       --font-size-body: clamp(1.0625rem, 0.99107143rem + 0.14880952vw, 1.125rem);
       /* Home 2210:86 / 2211:86 / 2191:86: 26 / 30 / 34px. */
@@ -156,7 +227,11 @@
   @media (min-width: 64.0625rem) {
     :root {
       --gutter: var(--gutter-desktop);
-      --post-card-pad-x: var(--space-2xl);
+      --list-row: 2rem;
+      --font-size-h1: 3.75rem;
+      --font-size-h2: 3rem;
+      --font-size-h3: 2.125rem;
+      --font-size-h4: 1.625rem;
     }
   }
 }

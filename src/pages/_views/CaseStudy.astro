@@ -1,4 +1,6 @@
 ---
+import Button from '../../components/ui/Button.astro';
+import BackLink from '../../components/ui/BackLink.astro';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/sections/PageHero.astro';
 import PageContact from '../../components/sections/PageContact.astro';
@@ -6,9 +8,13 @@ import PageFooter from '../../components/sections/PageFooter.astro';
 import Icon from '../../components/ui/Icon.astro';
 import CaseStudy from '../../components/sections/CaseStudy.astro';
 import NextCaseStudy from '../../components/sections/NextCaseStudy.astro';
+import ProjectPage from '../../components/sections/ProjectPage.astro';
 import { collectionPath, entryPath, ogImagePath, listLinks, listProjects, entrySlug, getTranslationGroup, renderEntry, type Locale, type Project } from '../../lib/content';
-import { buildSeo } from '../../lib/seo';
-import { getDictionary } from '../../lib/i18n';
+import { breadcrumbNode, buildSeo, isLiveApp, jsonLdGraph, metaDescription, pageTitle, personNode, projectNode, absoluteUrl, whatItIs } from '../../lib/seo';
+import { getImage } from 'astro:assets';
+import profile from '../../assets/profile/jahat.jpg';
+import { getDictionary, localizedPath } from '../../lib/i18n';
+import { nextInCycle } from '../../lib/cycle';
 
 export interface Props {
   entry: Project;
@@ -17,6 +23,7 @@ export interface Props {
 
 const { entry, lang } = Astro.props;
 const t = getDictionary(lang);
+const newTab = t.common.newTab;
 const links = (await listLinks()).map((link) => link.data);
 
 const site = Astro.site;
@@ -30,11 +37,50 @@ if (!site) {
 // field (design.md §4); do not import getReadingTime here.
 const group = await getTranslationGroup('projects', entry);
 
+const slug = entrySlug(entry);
+const pagePath = entryPath('projects', lang, slug);
+const cardPath = ogImagePath('projects', lang, slug);
+const description = metaDescription(
+  entry.data.description,
+  t.meta.projectSignatures,
+  entry.data.page?.sub ?? entry.data.heroDescription,
+);
+
+const portrait = await getImage({ src: profile, width: 600, height: 600, format: 'jpg' });
+const person = personNode({
+  site,
+  description: t.meta.homeDescription,
+  sameAs: links.map((link) => link.url),
+  image: portrait.src,
+});
+const jsonLd = jsonLdGraph([
+  person,
+  breadcrumbNode(site, [
+    { name: t.nav.home, path: localizedPath(lang, '/') },
+    { name: t.nav.work, path: collectionPath('projects', lang) },
+    { name: entry.data.title, path: pagePath },
+  ]),
+  projectNode({
+    site,
+    url: absoluteUrl(pagePath, site).href,
+    lang,
+    name: entry.data.title,
+    description,
+    image: cardPath,
+    datePublished: entry.data.publishDate,
+    dateModified: entry.data.updatedDate,
+    app: isLiveApp(entry.data),
+    solo: entry.data.team?.solo ?? false,
+    demoUrl: entry.data.demoUrl,
+  }),
+]);
+
 const seo = buildSeo({
-  title: entry.data.title,
-  description: entry.data.description,
-  path: entryPath('projects', lang, entrySlug(entry)),
-  image: { path: ogImagePath('projects', lang, entrySlug(entry)), alt: entry.data.title },
+  jsonLd,
+  title: pageTitle(entry.data.title, whatItIs(entry.data.title, entry.data.kind, t.meta.projectWhat)),
+  description,
+  path: pagePath,
+  image: { path: cardPath, alt: entry.data.title },
   lang,
   site,
   group,
@@ -44,26 +90,29 @@ const seo = buildSeo({
 });
 
 const { Content } = await renderEntry(entry);
-const nextCase = (await listProjects({ lang })).find(project => project.id !== entry.id && project.data.tier === 'case-study');
+const all = await listProjects({ lang });
+// Each page links to the next page of its own kind in list order, wrapping around.
+const nextCase = nextInCycle(all.filter(project => project.data.tier === 'case-study'), entry.id);
+const nextProject = nextInCycle(all.filter(project => project.data.tier === 'project' && project.data.page), entry.id);
 
 const { data } = entry;
-const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
+const eyebrow = [data.page ? t.projectPage.eyebrow : t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
 ---
 
 <Base lang={lang} seo={seo} contactOnPage profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
   <PageHero variant="case">
-    <a class="back" href={collectionPath('projects', lang)}><span aria-hidden="true">←</span>{t.caseStudy.allWork}</a>
+    <BackLink href={collectionPath('projects', lang)} label={t.caseStudy.allWork} />
     <p class="eyebrow">{eyebrow}</p>
-    <h1 class="title">{data.title}</h1>
-    <p class="sub">{data.heroDescription ?? data.description}</p>
+    <h1 class="title">{data.page?.headline ?? data.title}</h1>
+    <p class="sub">{data.page?.sub ?? data.heroDescription ?? data.description}</p>
     {(data.demoUrl || data.repoUrl) && (
       <div class="actions">
-        {data.demoUrl && <a class="button primary" data-magnetic href={data.demoUrl} target="_blank" rel="noopener noreferrer">{data.demoLabel ?? t.caseStudy.openProject}<Icon name="arrow-right" size={18} /></a>}
-        {data.repoUrl && <a class="button secondary" data-magnetic href={data.repoUrl} target="_blank" rel="noopener noreferrer">{t.caseStudy.source}<Icon name="arrow-right" size={18} /></a>}
+        {data.demoUrl && <Button data-magnetic href={data.demoUrl} label={data.demoLabel ?? t.caseStudy.openProject} newTab={newTab} />}
+        {data.repoUrl && <Button data-magnetic href={data.repoUrl} label={t.caseStudy.source} newTab={newTab} variant="secondary" />}
       </div>
     )}
   </PageHero>
-  {data.caseStudy ? <CaseStudy data={data.caseStudy} decisions={data.decisions} cover={data.coverImage} coverAlt={data.coverImageAlt} website={data.demoUrl} strings={t.caseStudy}><Content /></CaseStudy> : <div class="container">
+  {data.page ? <ProjectPage page={data.page} decisions={data.decisions} cover={data.coverImage} coverAlt={data.coverImageAlt} website={data.demoUrl} strings={t} /> : data.caseStudy ? <CaseStudy data={data.caseStudy} decisions={data.decisions} cover={data.coverImage} coverAlt={data.coverImageAlt} website={data.demoUrl} strings={t.caseStudy}><Content /></CaseStudy> : <div class="container">
   <article>
     {entry.data.role && <p><strong>{t.project.role}:</strong> {entry.data.role}</p>}
     {entry.data.timeframe && <p><strong>{t.project.timeframe}:</strong> {entry.data.timeframe}</p>}
@@ -73,7 +122,8 @@ const eyebrow = [t.caseStudy.eyebrow, data.kind].filter(Boolean).join(' · ');
     <Content />
   </article>
   </div>}
-  {data.caseStudy && nextCase && <NextCaseStudy project={nextCase} href={entryPath('projects', lang, entrySlug(nextCase))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
+  {data.page && nextProject && <NextCaseStudy kind="project" project={nextProject} href={entryPath('projects', lang, entrySlug(nextProject))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
+  {data.caseStudy && nextCase && <NextCaseStudy kind="case-study" project={nextCase} href={entryPath('projects', lang, entrySlug(nextCase))} allWorkHref={collectionPath('projects', lang)} strings={t} />}
   <PageContact lang={lang} links={links} marker={t.caseStudy.contactMarker} />
   <PageFooter slot="footer" lang={lang} links={links} contactOnPage compact />
 </Base>

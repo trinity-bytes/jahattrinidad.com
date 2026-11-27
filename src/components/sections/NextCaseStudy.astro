@@ -1,33 +1,33 @@
 ---
+import BackLink from '../ui/BackLink.astro';
 import type { CollectionEntry } from 'astro:content';
 import type { Dictionary } from '../../lib/i18n';
 import ProjectCard from '../content/ProjectCard.astro';
 import Backgrounds from './Backgrounds.astro';
-interface Props { project: CollectionEntry<'projects'>; href: string; allWorkHref: string; strings: Dictionary }
-const { project, href, allWorkHref, strings: t } = Astro.props;
+interface Props { project: CollectionEntry<'projects'>; href: string; allWorkHref: string; strings: Dictionary; kind: 'case-study' | 'project' }
+const { project, href, allWorkHref, strings: t, kind } = Astro.props;
 ---
-<section class="next"><Backgrounds variant="values" next="none" /><div class="container content"><header><div><p class="marker">{t.caseStudy.nextCaseStudy}</p><h2>{project.data.title}</h2></div><a href={allWorkHref}>{t.caseStudy.allWork} →</a></header><ProjectCard project={project.data} href={href} meta={project.data.kind} problem={project.data.problem} whatItDoes={project.data.whatItDoes} labels={{...t.common, seeProject:t.work.seeProject}} insideLabels={t.home.inside.work.rowLabels} featured optimized /></div></section>
+<section class="next"><Backgrounds variant="values" next="none" /><div class="container content"><header><h2>{t.caseStudy.nextProjectHeading}</h2><BackLink href={allWorkHref} label={t.caseStudy.allWork} /></header><ProjectCard project={project.data} href={href} meta={project.data.kind} problem={project.data.problem} whatItDoes={project.data.whatItDoes} labels={{...t.common, seeProject:t.work.seeProject}} insideLabels={t.home.inside.work.rowLabels} featured optimized pillAction={kind === 'case-study'} flowAction /></div></section>
 <style>
   .next {
     position: relative;
-    padding: 7.5rem 0;
+    padding: var(--section-pad) 0;
     background: var(--cream);
   }
   .content {
     position: relative;
   }
+  /* Back goes on the left (the link-arrow rule): "← All work" sits under the heading. */
   header {
     display: flex;
-    align-items: end;
-    justify-content: space-between;
-    margin-bottom: 3rem;
-  }
-  .marker {
-    font: 500 13px var(--font-mono);
-    color: var(--green-700);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-3xl);
   }
   h2 {
-    font: 600 var(--font-size-heading-lg)/1.1 var(--font-display);
-    margin: 12px 0 0;
+    font: 600 var(--font-size-heading-section)/1.1 var(--font-display);
+    letter-spacing: -0.02em;
+    margin: 0;
   }
 </style>

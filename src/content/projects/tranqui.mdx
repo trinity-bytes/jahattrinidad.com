@@ -7,16 +7,110 @@ tier: case-study
 publishDate: 2026-11-12
 featured: true
 kind: Academic project
-team: { size: 5, solo: false }
-timeframe: '2025–2026'
-coverImage: './tranqui/cover.png'
+team:
+  size: 5
+  solo: false
+timeframe: 2025–2026
+coverImage: ./tranqui/cover.png
 coverImageAlt: 'Tranqui landing page: "Llega a tu destino con más tranquilidad" on a dark map background'
-problem: 'People walk through areas they do not know with no idea of what happened there this week.'
-whatItDoes: 'A map of anonymous reports that neighbours validate, with alerts for the zones near you.'
-myPart: 'Product and experience for the team, and the landing site, designed and built on my own.'
-stack: [Astro, Tailwind CSS, Flutter]
-insideStack: 'Landing: Astro 7, Tailwind 4, a canvas glyph field. App: Flutter.'
-insideDecision: "The landing uses the browser's own `<dialog>` for pop-ups and `<details>` for the FAQ, so they work with a keyboard and a screen reader without extra JavaScript. Animations stop for anyone who asks for reduced motion."
-demoUrl: 'https://tranqui.jahattrinidad.com/'
-repoUrl: 'https://github.com/trinity-bytes/tranqui'
+problem: People walk through areas they do not know with no idea of what happened there this week.
+whatItDoes: A proposed map of anonymous reports, community validation and nearby alerts.
+myPart: Product and experience for the team, and the landing site, designed and built on my own.
+stack:
+  - Astro
+  - Tailwind CSS
+  - Flutter
+insideStack: "Landing: Astro 7, Tailwind 4 and a canvas glyph field. A Flutter app is planned separately."
+insideDecision: The landing uses the browser’s own <dialog> for pop-ups and <details> for the FAQ, with native keyboard and screen-reader behavior. JavaScript opens and closes the mobile menu. Animations stop for anyone who asks for reduced motion.
+demoUrl: https://tranqui.jahattrinidad.com/
+repoUrl: https://github.com/trinity-bytes/tranqui
+heroDescription: A five-person academic project about safer journeys in Lima. I worked with the team on product requirements and wireframes, then designed and built its landing independently.
+caseStudy:
+  headlines:
+    problem: Public statistics could not tell us what was happening on a particular route.
+    features: From a report to a safer journey.
+    decisions: Designing for participation, privacy and clarity.
+    mistakes: A visual that needed more context.
+    growth: From course work to a live landing.
+  glance:
+    - label: Team
+      value: Vigilantix · five software engineering students at UPC
+    - label: My part
+      value: Product backlog, user stories and wireframes with the team; landing design and implementation
+    - label: Research basis
+      value: INEI crime data and the team’s as-is and to-be scenarios
+    - label: Status
+      value: Academic app designs; landing live, app availability unconfirmed
+  problem:
+    - Our team saw a gap between published crime statistics and the information someone needs when deciding how to travel through a neighbourhood. The report cites INEI data and describes how difficult it is to use existing information in everyday decisions.
+    - "We mapped the current and intended experience, then turned the problem into user stories: report without exposing a name, understand nearby incidents and choose a route using recent reports."
+  requirements: Anonymous incident reports, community interaction, nearby alerts, a heatmap and routes that consider recent incidents.
+  constraint: The course scope was documentation and design artifacts. The team also identified dependence on connectivity and the risk that people might not trust or adopt the service.
+  features:
+    - title: Report without a public name
+      description: Choose an incident type, describe what happened and use a location to place it on the map.
+      detail: Report wireframe from the course report. I helped turn the team’s wireframe layouts into finished screens; the report does not attribute this particular screen to one person.
+      image: ./tranqui/report-wireframe.png
+      imagePresentation: phone
+      imageAlt: Report confirmation wireframe showing an incident form
+    - title: Let the community confirm what happened
+      description: People see reported incidents on a map. A report gains weight when several people nearby confirm it, not through comments.
+      detail: Heat-map design from the course report, shown over an illustrative map. Validation by several people is the proposed flow; the confirmation threshold was not fixed in the report.
+      image: ./tranqui/heatmap-wireframe.webp
+      imagePresentation: phone
+      imageAlt: Report heat-map design over an illustrative street map
+    - title: Choose which alerts matter
+      description: Notification settings cover interactions and risks along a route.
+      detail: Notification settings wireframe from the report. The product requirements also describe alerts for selected locations.
+      image: ./tranqui/alerts-wireframe.png
+      imagePresentation: phone
+      imageAlt: Notification settings wireframe for interactions and route risks
+    - title: Compare routes by risk
+      description: A traveller can compare route options using recent incident reports.
+      detail: Simulated route screen captured from the live landing. A route-search design task was assigned to me in the sprint plan, where it was marked pending; this screen is not individually attributed.
+      image: ./tranqui/route-preview.png
+      imagePresentation: phone
+      imageAlt: Simulated suggested route shown on the Tranqui landing
+  milestones:
+    - day: 16 APR 2025
+      title: Purpose and objectives
+      description: The report credits me with defining the project purpose and objectives.
+    - day: 24 APR–3 MAY 2025
+      title: Backlog and wireframes
+      description: I worked on the backlog and user stories, and with teammates on wireframe layouts and finished screens; the log records TB1 corrections on 3 May.
+    - day: 1 JUN 2025
+      title: The landing repository begins
+      description: The first SafeMap landing commit.
+    - day: JUN–JUL 2025
+      title: Refine the course project
+      description: The team reviewed wireframes and domain design; on 8 July I updated non-functional requirements and strategic DDD.
+    - day: JUL 2026
+      title: A web prototype
+      description: The landing and map prototype were rebuilt, followed by v1.0 releases.
+    - day: 14 NOV 2026
+      title: Tranqui goes live
+      description: The redesign removed the old web prototype; SafeMap became Tranqui and v1.1.0 added its custom domain.
+  closing:
+    - title: Where it stands
+      text: The landing is live. The report contains app designs and requirements; I could not verify a released Flutter app or live incident data. I designed and built the landing separately; its crime statistic cites INEI.
+decisions:
+  - choice: Keep reporters anonymous, verify them in private
+    rejected: Show who reported each incident
+    subtitle: privacy · internal identity check
+    because: The map needs reports, and people only report if they are safe doing it. Every account is verified inside the app, so a report can be trusted while its author stays hidden from everyone else.
+    cost: Identity verification has to be built and kept private; anonymity does not mean anyone can post.
+  - choice: Validation by several people, no comments
+    rejected: Comment threads on every report
+    subtitle: scope · community validation
+    because: Tranqui has one job, telling you what happened on your route. Several people confirming a report is enough; comments would turn a safety tool into a social network it does not need to be.
+    cost: A report cannot carry a discussion, so its context has to fit in the report itself.
+  - choice: Use browser-native controls
+    rejected: A custom JavaScript menu and accordion
+    subtitle: dialog + details
+    because: A native dialog for the mobile menu and details for the FAQ behave the same across browsers, with keyboard and screen reader support built in.
+    cost: Responsive styling, testing and a little JavaScript to open the menu are still needed.
 ---
+
+### A visual that needed more context.
+
+In the first landing mockups, the privacy and institutions sections used cropped interface fragments and decorative shapes. Feedback showed that the pieces did not make sense on their own. I replaced them with complete, readable panels and labelled the privacy preview as simulated. The plans section was also rebuilt with two equally tall cards.

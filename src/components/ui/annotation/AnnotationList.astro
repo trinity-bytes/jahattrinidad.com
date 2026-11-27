@@ -45,8 +45,8 @@ const { items, label, class: className } = Astro.props;
   .annotation-list { padding: var(--space-md) var(--gutter) var(--space-xl); }
   ol { display: flex; flex-direction: column; gap: var(--space-xs); margin: 0; padding: 0; list-style: none; }
   li { display: flex; gap: 10px; align-items: flex-start; }
-  p { display: flex; flex-direction: column; gap: 2px; min-width: 0; margin: 0; font: 400 0.6875rem / normal var(--font-mono), monospace; }
-  .title { color: var(--annotation-title); opacity: 0.85; }
+  p { display: flex; flex-direction: column; gap: 2px; min-width: 0; margin: 0; font: 400 var(--font-size-label) / normal var(--font-mono), monospace; }
+  .title { color: var(--annotation-title); }
   .note { color: var(--annotation-note); }
 
   @media (min-width: 64.0625rem) {

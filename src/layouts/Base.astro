@@ -3,7 +3,6 @@ import type { Locale } from '../lib/i18n';
 import { Font } from 'astro:assets';
 import '../styles/tokens.css';
 import Nav from '../components/sections/Nav.astro';
-import Lens from '../components/sections/Lens.astro';
 import Magnetic from '../components/ui/Magnetic.astro';
 import SmoothScroll from '../components/sections/SmoothScroll.astro';
 import { getDictionary, localizedPath, LOCALES, LOCALE_NAMES } from '../lib/i18n';
@@ -16,22 +15,21 @@ import { pageTransitionScript } from '../lib/page-transition';
 export interface Props {
   lang: Locale;
   seo: SeoResult;
-  /** Pages with an Inside state (the Home) opt in to the lens control. */
-  lens?: boolean;
   /** Launcher pages (/links/) render without the nav; the skip link and landmarks stay. */
   nav?: boolean;
   /** Profile links for the mobile menu; pages read them from content.ts (layouts may not). */
   profileLinks?: { label: string; href: string }[];
   /** The page renders its own Contact section (PageContact); the nav's Contact link then stays on the page. */
   contactOnPage?: boolean;
-  /** Serialized schema.org data (from lib/seo.ts), rendered as JSON-LD in <head>. */
+  /** The Home's schema.org graph; every other page carries its own in `seo.jsonLd`. */
   jsonLd?: string;
   /** The page plays the Home hero's load choreography (Hero.astro): mark it from the head, before first paint. */
   heroIntro?: boolean;
 }
 
-const { lang, seo, lens = false, nav = true, profileLinks = [], contactOnPage = false, jsonLd, heroIntro = false } = Astro.props;
+const { lang, seo, nav = true, profileLinks = [], contactOnPage = false, jsonLd, heroIntro = false } = Astro.props;
 const t = getDictionary(lang);
+const structuredData = jsonLd ?? seo.jsonLd;
 
 // EN / ES / PT switch: each locale goes to this page's counterpart (its hreflang
 // alternate) or, when the page has none, to that locale's Home.
@@ -57,9 +55,9 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
 <html lang={lang} translate="no" data-lens="outside">
   <head>
     <meta charset="utf-8" />
-    <!-- Cross-document View Transitions opt-in (lib/page-transition.ts). Inline, before anything else:
+    {/* Cross-document View Transitions opt-in (lib/page-transition.ts). Inline, before anything else:
          in an external stylesheet it arrives after the head scripts on a real network, and Chromium then
-         treats the new page as not opted in and aborts the transition ("opt-in disabled"). -->
+         treats the new page as not opted in and aborts the transition ("opt-in disabled"). */}
     <style is:inline>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
     <script is:inline set:html={localeScript} />
     <script is:inline set:html={pageTransitionScript()} />
@@ -96,7 +94,7 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     <meta property="og:image:height" content={seo.openGraph['og:image:height']} />
     <meta property="og:image:alt" content={seo.imageAlt ?? t.meta.ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
-    {jsonLd && <script type="application/ld+json" is:inline set:html={jsonLd} />}
+    {structuredData && <script type="application/ld+json" is:inline set:html={structuredData} />}
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
@@ -105,12 +103,13 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     <meta name="theme-color" content="#0a200b" />
   </head>
   <body>
-    <a class="skip-link" href="#main-content">{t.nav.skipToContent}</a>
+    <a class="skip-link" href="#main-content" data-nosnippet>{t.nav.skipToContent}</a>
     {nav && <Nav
       home={localizedPath(lang, '')}
       workPath={collectionPath('projects', lang)}
       notesPath={collectionPath('posts', lang)}
       strings={t.nav}
+      newTab={t.common.newTab}
       profileLinks={profileLinks}
       languages={languages}
       contactOnPage={contactOnPage}
@@ -119,7 +118,6 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
     <main id="main-content" tabindex="-1"><slot /></main>
     <slot name="footer" />
     <div class="visually-hidden" aria-live="polite" aria-atomic="true" id="announcements"></div>
-    {lens && <Lens strings={t.lens} />}
     <Magnetic />
     <SmoothScroll />
   </body>
@@ -128,8 +126,12 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
 <style is:global>
   @layer base {
     *, *::before, *::after { box-sizing: border-box; }
-    body { margin: 0; font-family: var(--font-sans), sans-serif; font-size: var(--font-size-body); background: var(--color-bg); color: var(--color-text); }
-    :focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+    body { margin: 0; font-family: var(--font-sans), sans-serif; font-size: var(--font-size-body); line-height: 1.5; background: var(--color-bg); color: var(--color-text); }
+    h1, h2, h3, h4 { text-wrap: balance; }
+    p, li, dd { text-wrap: pretty; }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    pre, code { font-family: var(--font-mono), monospace; }
+    :focus-visible { outline: var(--focus-width) solid var(--color-focus); outline-offset: var(--focus-offset); }
     a { color: inherit; text-decoration-color: var(--color-text-muted); text-underline-offset: 0.2em; }
     a:hover { text-decoration-color: currentColor; }
     /* Page-width wrapper with the board gutters; full-bleed sections skip it. */

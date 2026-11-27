@@ -1,10 +1,36 @@
 ---
+import Button from '../ui/Button.astro';
+import TextLink from '../ui/TextLink.astro';
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import type { Dictionary } from '../../lib/i18n';
+import { getDictionary, type Dictionary, type Locale } from '../../lib/i18n';
 import Backgrounds from './Backgrounds.astro';
-interface Props { projects: CollectionEntry<'projects'>[]; experiments: CollectionEntry<'projects'>[]; lang: string; strings: Dictionary['work'] }
-const { projects, experiments, strings: t } = Astro.props;
+import Icon from '../ui/Icon.astro';
+import { repoStats } from '../../lib/github';
+import { formatDate } from '../../lib/format';
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+  experiments: CollectionEntry<'projects'>[];
+  lang: Locale;
+  strings: Dictionary['work'];
+  /** Project page URL by entry id, for the projects that have one (built by the page). */
+  pageHrefs: Record<string, string>;
+}
+const { projects, experiments, lang, strings: t, pageHrefs } = Astro.props;
+// Live and Code links leave the site (↗, new tab, screen-reader note); "See project" stays on it.
+const newTab = getDictionary(lang).common.newTab;
+// Live numbers from the GitHub API at build time; null when GitHub cannot be reached (the tile keeps its chips).
+const stats = await Promise.all(experiments.map(async ({ data }) => {
+  const s = await repoStats(data.repoUrl);
+  return s && { ...s, updated: t.updated(formatDate(s.pushedAt, lang)) };
+}));
+// The browser bar shows where the project lives. This site has no demo link (a visitor is already on
+// it), so its card shows the site's own hostname: the project whose repository is named after it.
+const siteHost = Astro.site?.hostname;
+const barHost = (data: CollectionEntry<'projects'>['data']) =>
+  data.demoUrl ? new URL(data.demoUrl).hostname
+  : siteHost && data.repoUrl?.replace(/\/$/, '').endsWith(`/${siteHost}`) ? siteHost
+  : undefined;
 ---
 <section class="more">
   <Backgrounds variant="experience" next="none" />
@@ -15,10 +41,10 @@ const { projects, experiments, strings: t } = Astro.props;
         <h2 data-background-text>{t.moreHeading}</h2>
         <p class="intro" data-background-text>{t.moreSub}</p>
         <div class="grid">
-          {projects.map(({ data }) => (
+          {projects.map((entry) => { const { data } = entry; const host = barHost(data); return (
             <article class="card">
               <div class="frame">
-                <div class="bar" aria-hidden="true">● ● ●</div>
+                <div class="bar" aria-hidden="true"><i></i><i></i><i></i>{host && <span>{host}</span>}</div>
                 <div class="capture">
                   {data.coverImage && <Image src={data.coverImage} alt={data.coverImageAlt ?? ''} />}
                 </div>
@@ -28,12 +54,15 @@ const { projects, experiments, strings: t } = Astro.props;
                 <h3>{data.title}</h3>
                 <p>{data.description}</p>
                 <div class="links">
-                  {data.demoUrl && <a href={data.demoUrl}>{data.demoLabel ?? t.live} →</a>}
-                  {data.repoUrl && <a href={data.repoUrl}>{t.code} →</a>}
+                  {pageHrefs[entry.id] && <Button href={pageHrefs[entry.id]} label={t.seeProject} icon="arrow-right" />}
+                  <span class="secondary-links">
+                    {data.demoUrl && <TextLink destination="external" href={data.demoUrl} label={data.demoLabel ?? t.live} newTab={newTab} />}
+                    {data.repoUrl && <TextLink destination="external" href={data.repoUrl} label={t.code} newTab={newTab} />}
+                  </span>
                 </div>
               </div>
             </article>
-          ))}
+          ); })}
         </div>
       </div>
     )}
@@ -42,17 +71,39 @@ const { projects, experiments, strings: t } = Astro.props;
         <p class="marker" data-background-text>{t.experimentsMarker}</p>
         <h2 data-background-text>{t.experimentsHeading}</h2>
         <div class="grid">
-          {experiments.map(({ data }) => (
-            <article class="experiment">
-              <p class="experiment-meta">$ {data.kind ?? data.stack.join(' · ')}</p>
-              <h3>{data.title}</h3>
-              <p>{data.description}</p>
-              <p class="experiment-meta">{data.stack.join(' · ')}</p>
-              {data.repoUrl && <a href={data.repoUrl}>{t.code} →</a>}
-            </article>
-          ))}
+          {experiments.map(({ data }, index) => {
+            const s = stats[index];
+            return (
+              <article class:list={['experiment', { 'has-peek': data.peekImage, 'has-stats': s }]} data-surface="dark">
+                <div class="text">
+                  <p class="prompt">$ {data.kind ?? data.stack.join(' · ')}</p>
+                  <h3 title={data.title}>{data.title}</h3>
+                  <p class="description">{data.description}</p>
+                  <div class="meta">
+                    <ul class="chips">{data.stack.map((item) => <li>{item}</li>)}</ul>
+                    {s && (
+                      <p class="stats">
+                        <span class="stat-values" aria-hidden="true"><span><Icon name="star" size={12} />{s.stars}</span><span><Icon name="git-fork" size={12} />{s.forks}</span>{s.language && <span>{s.language}</span>}<span>{s.updated}</span></span>
+                        <span class="visually-hidden">{[t.stars(s.stars), t.forks(s.forks), s.language, s.updated].filter(Boolean).join(', ')}</span>
+                      </p>
+                    )}
+                    <span class="links">
+                      {data.demoUrl && <TextLink destination="external" href={data.demoUrl} label={t.live} newTab={newTab} />}
+                      {data.repoUrl && <TextLink destination="external" href={data.repoUrl} label={t.code} newTab={newTab} />}
+                    </span>
+                  </div>
+                </div>
+                {data.peekImage && (
+                  <figure class="peek" aria-hidden="true">
+                    <Image src={data.peekImage} alt="" widths={[268, 536]} sizes="268px" />
+                    {data.peekCaption && <figcaption>{data.peekCaption}</figcaption>}
+                  </figure>
+                )}
+              </article>
+            );
+          })}
         </div>
-        <a href="https://github.com/trinity-bytes" data-background-text>{t.moreExperiments} →</a>
+        <TextLink destination="external" href="https://github.com/trinity-bytes" label={t.moreExperiments} newTab={newTab} data-background-text />
       </div>
     )}
   </div>
@@ -60,7 +111,7 @@ const { projects, experiments, strings: t } = Astro.props;
 <style>
   .more {
     position: relative;
-    padding: 7.5rem 0;
+    padding: var(--section-pad) 0;
     background: var(--color-bg);
   }
   .inner {
@@ -72,10 +123,11 @@ const { projects, experiments, strings: t } = Astro.props;
   }
   h2 {
     font: 600 var(--font-size-heading-lg)/1.05 var(--font-display);
-    margin: 12px 0;
+    margin: var(--space-sm) 0;
   }
   h3 {
-    font: 600 var(--font-size-heading-sm)/1.1 var(--font-display);
+    font: 600 var(--font-size-h3)/1.15 var(--font-display);
+    letter-spacing: -0.02em;
     margin: 10px 0;
   }
   .intro {
@@ -88,21 +140,35 @@ const { projects, experiments, strings: t } = Astro.props;
     margin: 48px 0;
   }
   .card {
+    display: flex;
+    flex-direction: column;
     background: var(--color-card);
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
   }
+  /* Option B (owner 2026-11-26, components 2520:50 and 2522:481): the card is the browser window.
+     The bar is the card's top edge and the capture fills the full width under it, no inset. */
   .frame {
     background: var(--color-surface);
-    padding: 20px 20px 0;
   }
   .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-height: 36px; /* Browser-bar height has no token. */
     background: var(--color-bg);
     color: var(--green-500);
-    font: 10px var(--font-mono);
-    padding: 8px;
-    border-radius: 10px 10px 0 0;
+    font: var(--type-meta);
+    padding: 0 var(--space-md);
   }
+  .bar i {
+    flex: none;
+    width: var(--space-xs);
+    height: var(--space-xs);
+    border-radius: 50%;
+    background: var(--green-500);
+  }
+  .bar span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .capture {
     position: relative;
     aspect-ratio: 16 / 10;
@@ -118,42 +184,232 @@ const { projects, experiments, strings: t } = Astro.props;
     object-fit: cover;
   }
   .body {
-    padding: 28px;
+    padding: 28px var(--space-lg); /* 28px card inset has no token. */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .body > .links {
+    margin-top: auto;
+  }
+  .body > .marker {
+    font: var(--type-meta);
+    text-transform: uppercase;
+  }
+  .body h3, .experiment h3 {
+    text-wrap: balance;
   }
   .links {
     display: flex;
-    gap: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm) var(--space-xl);
   }
+  .secondary-links { display: flex; flex-wrap: wrap; gap: var(--space-md); }
   .experiments {
     margin-top: 7rem;
   }
+  /* Experiments preview v2 (Figma `2442:12`, states `2524:2560`): the "peek" stays inside the tile. On
+     hover or focus (desktop) the text column narrows, the README capture slides in from the right and the
+     stats replace the chips. The tile's height is fixed there, so no state ever moves the grid. */
+  .experiments .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .experiment {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 0fr;
+    min-height: 300px;
+    padding: 28px var(--space-2xl-b); /* 28px tile inset has no token. */
+    border-radius: var(--radius-lg);
     background: var(--green-950);
     color: var(--cream);
-    padding: 32px;
-    border-radius: 16px;
+    border: 1px solid transparent;
+    transition: border-color var(--dur-ui) var(--ease-out);
   }
-  .experiment a {
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    min-width: 0;
+  }
+  .prompt,
+  .chips li,
+  .stats,
+  .peek figcaption {
+    font: var(--type-meta);
     color: var(--green-300);
   }
-  .experiment-meta {
-    font: 12px/1.5 var(--font-mono);
+  .prompt,
+  .description {
+    margin: 0;
+  }
+  .experiment h3 {
+    margin: 0;
+    font: 600 var(--font-size-h3)/1.25 var(--font-display);
     color: var(--green-300);
+  }
+  .description {
+    color: var(--green-300);
+    line-height: 1.5;
+  }
+  .meta {
+    position: relative;
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm) var(--space-md);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    transition: opacity var(--dur-ui) var(--ease-out), visibility var(--dur-ui);
+  }
+  .chips li {
+    padding: 3px 10px;
+    border: 1px solid color-mix(in srgb, var(--green-300) 35%, transparent);
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .stats {
+    position: absolute;
+    inset: 0 auto auto 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--dur-ui) var(--ease-out), visibility var(--dur-ui);
+    margin: 0;
+  }
+  .stat-values { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); }
+  .stat-values > span { display: inline-flex; align-items: center; gap: var(--space-2xs); }
+  .meta .links {
+    margin-left: auto;
+  }
+  .experiment .links :global(a) {
+    color: var(--green-300);
+  }
+  .experiment .links :global(.text-link-label) {
+    text-decoration-color: var(--green-300);
+  }
+  .peek {
+    margin: 0 0 0 0;
+    min-width: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    opacity: 0;
+    transform: translateX(var(--space-sm));
+    transition: opacity var(--dur-ui) var(--ease-out), transform var(--dur-ui) var(--ease-out);
+  }
+  .peek :global(img) {
+    display: block;
+    width: 268px;
+    max-width: 100%;
+    flex: 1;
+    min-height: 0;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 10px;
+    border: 1px solid color-mix(in srgb, var(--green-300) 30%, transparent);
+    background: #13301a;
+  }
+  .peek figcaption {
+    white-space: nowrap;
+  }
+  @media (hover: hover) {
+    .experiment.has-peek:is(:hover, :focus-within) {
+      border-color: var(--green-300);
+    }
+  }
+  /* Touch screens have no hover, and narrower tiles have no room: no peek, the chips stay. */
+  @media (min-width: 1025px) {
+    .experiment {
+      height: 300px;
+      grid-template-rows: minmax(0, 1fr);
+    }
+    .experiment .text { gap: var(--space-md); }
+    .experiment .meta { margin-top: 0; }
+    .experiment .meta .links { margin-left: 0; }
+  }
+  @media (hover: hover) and (min-width: 1025px) {
+    .experiment.has-peek:is(:hover, :focus-within) {
+      grid-template-columns: minmax(0, 1fr) min(268px, 42%);
+      column-gap: 24px;
+      padding-right: var(--space-md);
+    }
+    .experiment:is(:hover, :focus-within) .peek {
+      opacity: 1;
+      transform: none;
+    }
+    .experiment.has-peek.has-stats:is(:hover, :focus-within) .chips {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .experiment.has-peek.has-stats:is(:hover, :focus-within) .stats {
+      opacity: 1;
+      visibility: visible;
+    }
+    /* The narrow column must not need more height: one line of title, three of description. */
+    .experiment.has-peek:is(:hover, :focus-within) h3 {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .experiment.has-peek:is(:hover, :focus-within) .description {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+    }
+    /* Stats, then the links on their own row (board 2524:2560). */
+    .experiment.has-peek:is(:hover, :focus-within) .meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-xs);
+    }
+    .experiment.has-peek:is(:hover, :focus-within) .meta .links {
+      margin-left: 0;
+    }
+    .experiment.has-peek:is(:hover, :focus-within) .stats {
+      white-space: pre-wrap;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .experiment,
+    .peek,
+    .chips,
+    .stats {
+      transition: none;
+    }
+    .peek {
+      transform: none;
+    }
   }
   @media (max-width: 1024px) {
+    .experiment { min-height: 0; }
+    .experiment .meta .links {
+      margin-left: 0;
+      flex-basis: 100%;
+    }
     .grid {
       grid-template-columns: repeat(2, 1fr);
     }
-    .more {
-      padding: 6rem 0;
-    }
+    .experiments .grid { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .body > .links { flex-direction: column; align-items: flex-start; }
   }
   @media (max-width: 767px) {
-    .grid {
+    .grid,
+    .experiments .grid {
       grid-template-columns: 1fr;
-    }
-    .more {
-      padding: 5rem 0;
     }
   }
 </style>

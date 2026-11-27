@@ -9,8 +9,8 @@ const firstName = (name: string) => name.trim().split(/\s+/)[0] || name;
 const sentTail = (email: string) => `Enviado. Te responderé pronto a ${email}. Mientras tanto:`;
 
 export const chatEs: ChatCopy = {
-  greeting, hiring, project, hello, composerPlaceholder, suggestionsLabel: 'Sugerencias',
-  ui: { author: 'Jahat Trinidad', status: 'DISPONIBLE PARA PRÁCTICAS', youWrote: 'ESCRIBISTE', privacy: 'Llega directo a mi correo.', failedNote: 'No se perdió nada.', cardLabel: 'Conversación con Jahat', logLabel: 'Mensajes', typing: 'Jahat está escribiendo' },
+  greeting, hiring, project, hello, composerPlaceholder, composerPlaceholderShort: '¿Qué estás creando?', suggestionsLabel: 'Sugerencias',
+  ui: { author: 'Jahat Trinidad', status: 'Disponible para prácticas', youWrote: 'Escribiste', privacy: 'Llega directo a mi correo.', failedNote: 'No se perdió nada.', cardLabel: 'Conversación con Jahat', logLabel: 'Mensajes', typing: 'Jahat está escribiendo' },
   script: {
     idle: { reply: greeting, chips: [{ value: 'hiring', label: hiring }, { value: 'project', label: project }], placeholder: composerPlaceholder },
     intent: { reply: 'Con gusto. ¿Se trata de un puesto, un proyecto o algo más?', chips: [{ value: 'hiring', label: hiring }, { value: 'project', label: project }, { value: 'other', label: hello }], placeholder: 'Cuéntame un poco más' },
@@ -20,7 +20,7 @@ export const chatEs: ChatCopy = {
       other: { askName: '¡Hola! ¿Con quién hablo?', askDetail: '¿Qué tienes en mente?', companyChips: [], detailChips: [], placeholders: { name: 'Tu nombre', company: 'Tu empresa', detail: 'Tu mensaje' } },
     },
     askEmail: { reply: 'Una última pregunta: ¿a dónde te respondo?', placeholder: 'you@company.com' }, invalidEmail: { reply: 'Esa dirección no parece correcta. ¿Puedes revisarla?' },
-    summary: { reply: 'Toca un lápiz para cambiar una respuesta.', title: 'ESTO ES LO QUE ENVIARÉ', labels: { name: 'Nombre', company: 'Empresa', detail: 'Detalles', email: 'Responder a' }, empty: 'Solo para mí', edit: (label) => `Editar ${label}`, confirm: 'Todo bien, enviar', sending: 'Enviando…' },
+    summary: { reply: 'Usa un lápiz para cambiar una respuesta.', title: 'Esto es lo que enviaré', labels: { name: 'Nombre', company: 'Empresa', detail: 'Detalles', email: 'Responder a' }, empty: 'Solo para mí', edit: (label) => `Editar ${label}`, confirm: 'Todo bien, enviar', sending: 'Enviando…' },
     sent: { hiring: { reply: sentTail, next: [{ id: 'garden', label: 'Ver el caso de estudio del Garden' }, { id: 'cv', label: 'Descargar mi CV' }] }, project: { reply: sentTail, next: [{ id: 'work', label: 'Ver mis proyectos' }] }, other: { reply: () => 'Enviado. Gracias por saludar.', next: [] }, placeholder: 'Enviar otro mensaje' },
     failed: { reply: 'No se pudo enviar. Tu mensaje sigue aquí.', retry: 'Intentar de nuevo', copy: 'Copiar mi correo' },
     email: { subjectPrefix: '[jahattrinidad.com]', branchLabel: 'Tipo', branchNames: { hiring: 'Contratación', project: 'Proyecto', other: 'Otro' }, nameLabel: 'Nombre', companyLabel: 'Empresa', emailLabel: 'Correo', empty: '—', signature: '— Enviado desde el chat de contacto de jahattrinidad.com' },

@@ -55,7 +55,8 @@ const noteOf = (entry: CollectionEntry<'experience'>) => {
               <li>
                 <p class="carries-title" data-background-text data-show="outside">{item.title}</p>
                 <p class="carries-title" data-background-text data-show="inside">{item.insideTitle ?? item.title}</p>
-                <p class="carries-from" data-background-text>{item.from}</p>
+                {/* The line breaks before its date range, never inside it. */}
+                <p class="carries-from" data-background-text>{item.from.slice(0, item.from.lastIndexOf(' ') + 1)}<span class="dates">{item.from.slice(item.from.lastIndexOf(' ') + 1)}</span></p>
               </li>
             ))}
           </ul>
@@ -88,28 +89,26 @@ const noteOf = (entry: CollectionEntry<'experience'>) => {
 </section>
 <style>
   .experience { position: relative; background: var(--color-bg); }
-  .layout { position: relative; max-width: calc(var(--content-max) + 2 * var(--gutter)); margin-inline: auto; padding: 4.5rem var(--gutter); display: flex; flex-direction: column; gap: 4rem; }
+  .layout { position: relative; max-width: calc(var(--content-max) + 2 * var(--gutter)); margin-inline: auto; padding: var(--section-pad) var(--gutter); display: flex; flex-direction: column; gap: var(--space-3xl); }
   .intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
-  .marker { margin: 0; font: 500 0.8125rem/1.3 var(--font-mono); letter-spacing: 0.08em; color: var(--color-text-muted); }
-  h2 { margin: 0; max-width: 24rem; font: 600 var(--font-size-heading-md)/1.1 var(--font-display); letter-spacing: -0.03em; color: var(--color-heading); }
-  .sub { margin: 0; max-width: 22.5rem; font: 400 var(--font-size-body)/1.55 var(--font-sans); color: var(--color-text); }
-  .carries { width: 100%; padding-top: var(--space-2xl); }
-  .carries-label { margin: 0; padding-bottom: var(--space-sm); font: 500 var(--font-size-label)/1.33 var(--font-mono); text-transform: uppercase; color: var(--color-text-muted); }
+  .marker { margin: 0 0 calc(var(--space-sm) - var(--space-md)); font: var(--type-marker); letter-spacing: var(--type-marker-tracking); text-transform: uppercase; color: var(--color-text-muted); }
+  h2 { margin: 0; font: 600 var(--font-size-h2)/1.1 var(--font-display); letter-spacing: -0.02em; color: var(--color-heading); }
+  .sub { margin: 0; max-width: 22.5rem; font: 400 var(--font-size-body)/1.5 var(--font-sans); color: var(--color-text); }
+  .carries { width: 100%; padding-top: var(--space-xl); }
+  .carries-label { margin: 0; padding-bottom: var(--space-sm); font: var(--type-meta); letter-spacing: var(--type-meta-tracking); text-transform: uppercase; color: var(--color-text-muted); }
   .carries ul, .group ul { margin: 0; padding: 0; list-style: none; }
   .carries li { display: flex; flex-direction: column; gap: var(--space-2xs); padding-block: var(--space-md); border-top: 1px solid var(--color-border); }
-  .carries-title { margin: 0; font: 600 1.25rem/1.25 var(--font-display); letter-spacing: -0.01em; color: var(--color-heading); }
+  .carries-title { margin: 0; font: 600 var(--font-size-h5)/1.25 var(--font-display); letter-spacing: -0.02em; color: var(--color-heading); }
   .layout > :global(.notes) { padding: 0; }
-  .carries-from { margin: 0; font: 400 1rem/1.45 var(--font-sans); color: var(--color-text-muted); }
+  .carries-from { margin: 0; font: 400 var(--font-size-caption)/1.4 var(--font-sans); color: var(--color-text-muted); }
+  .dates { white-space: nowrap; }
   .groups { display: flex; flex-direction: column; gap: var(--space-3xl); min-width: 0; }
-  .group-label { display: flex; align-items: center; gap: 0.625rem; margin: 0; padding-bottom: 0.875rem; font: 500 var(--font-size-label)/1.33 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); }
-  .group-label::before { content: ''; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--color-signal); }
-  @media (min-width: 48rem) {
-    .layout { padding-block: 6rem; gap: 5rem; }
-    .carries-title { font-size: 1.375rem; letter-spacing: -0.01em; }
-  }
+  .group-label { display: flex; align-items: center; gap: var(--space-xs); margin: 0; padding-bottom: var(--space-sm); font: var(--type-meta); letter-spacing: var(--type-meta-tracking); text-transform: uppercase; color: var(--color-text-muted); }
+  .group-label::before { content: ''; width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--color-signal); }
   @media (min-width: 64.0625rem) {
-    .layout { padding-block: 7.5rem; flex-direction: row; gap: 6rem; align-items: flex-start; }
-    .intro { flex: none; width: 23.75rem; position: sticky; top: 7.5rem; }
+    .layout { flex-direction: row; gap: var(--space-4xl); align-items: flex-start; }
+    .intro { flex: none; width: 26.25rem; position: sticky; top: 7.5rem; }
+    .carries-from { max-width: 21rem; }
     .groups { flex: 1; }
   }
 </style>

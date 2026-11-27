@@ -6,8 +6,10 @@ import PageHero from '../../components/sections/PageHero.astro';
 import PageContact from '../../components/sections/PageContact.astro';
 import PageFooter from '../../components/sections/PageFooter.astro';
 import { collectionPath, entryPath, entrySlug, listLinks, listProjects, type Locale } from '../../lib/content';
-import { buildSeo } from '../../lib/seo';
-import { getDictionary, localeGroup } from '../../lib/i18n';
+import { breadcrumbNode, buildSeo, jsonLdGraph, pageTitle, personNode } from '../../lib/seo';
+import { getImage } from 'astro:assets';
+import profile from '../../assets/profile/jahat.jpg';
+import { getDictionary, localeGroup, localizedPath } from '../../lib/i18n';
 
 interface Props {
   lang: Locale;
@@ -28,9 +30,26 @@ const projects = await listProjects({ lang });
 const featured = projects.filter(p => p.data.tier === 'case-study' && p.data.featured).map(p => ({ data: p.data, href: entryPath('projects', lang, entrySlug(p)), meta: [p.data.kind, p.data.team && (p.data.team.solo ? t.work.solo : t.common.teamOf(p.data.team.size))].filter(Boolean).join(' · '), problem: p.data.problem, whatItDoes: p.data.whatItDoes, mirrored: entrySlug(p) === 'inspiration-garden' }));
 const more = projects.filter(p => p.data.tier === 'project');
 const experiments = projects.filter(p => p.data.tier === 'experiment');
+const pageHrefs = Object.fromEntries(more.filter(p => p.data.page).map(p => [p.id, entryPath('projects', lang, entrySlug(p))]));
+
+const portrait = await getImage({ src: profile, width: 600, height: 600, format: 'jpg' });
+const person = personNode({
+  site,
+  description: t.meta.homeDescription,
+  sameAs: links.map((link) => link.url),
+  image: portrait.src,
+});
+const jsonLd = jsonLdGraph([
+  person,
+  breadcrumbNode(site, [
+    { name: t.nav.home, path: localizedPath(lang, '/') },
+    { name: t.nav.work, path: collectionPath('projects', lang) },
+  ]),
+]);
 
 const seo = buildSeo({
-  title: t.nav.work,
+  jsonLd,
+  title: pageTitle(t.nav.work, t.meta.workWhat),
   description: t.meta.workDescription,
   path: collectionPath('projects', lang),
   lang,
@@ -46,7 +65,11 @@ const seo = buildSeo({
     <p class="sub">{t.work.sub}</p>
   </PageHero>
   {featured.length > 0 && <Work index copy={{ ...t.home.outside.work, marker: t.work.featuredMarker }} insideCopy={t.home.inside.work} headline={t.work.featuredHeading} labels={{ ...t.common, seeProject: t.work.seeProject }} projects={featured} count={featured.length} allProjectsHref={collectionPath('projects', lang)} />}
-  {(more.length > 0 || experiments.length > 0) && <WorkMore projects={more} experiments={experiments} lang={lang} strings={t.work} />}
+  {(more.length > 0 || experiments.length > 0) && <WorkMore projects={more} experiments={experiments} lang={lang} strings={t.work} pageHrefs={pageHrefs} />}
   <PageContact lang={lang} links={links} marker={t.work.contactMarker} />
   <PageFooter slot="footer" lang={lang} links={links} contactOnPage />
 </Base>
+
+<style>
+  .eyebrow { text-wrap: balance; }
+</style>

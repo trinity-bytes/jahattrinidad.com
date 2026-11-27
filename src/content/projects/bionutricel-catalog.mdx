@@ -9,6 +9,37 @@ kind: Client work · Solo
 team: { size: 1, solo: true }
 coverImage: './bionutricel-catalog/cover.png'
 coverImageAlt: 'Bionutricel catalog: search, category chips and featured products'
-stack: [Astro, Vue, Cloudflare Workers, D1]
+stack: [Astro, Vue, Cloudflare Workers, Google Sheets]
 demoUrl: 'https://bionutricel.com/catalogo/'
+insideStack: "Astro and Vue with Cloudflare Workers and Google Sheets."
+insideDecision: "The catalog combines product browsing with a WhatsApp ordering path."
+page:
+  headline: "A catalog that leads from a need to a conversation."
+  sub: "Customers explore natural-health products and ask the shop about them on WhatsApp."
+  glance:
+    - { label: "Problem", value: "Help customers find and ask about products" }
+    - { label: "Browsing", value: "Search and categories by need" }
+    - { label: "Ordering", value: "Product-specific WhatsApp links" }
+    - { label: "Built with", value: "Astro, Vue, Cloudflare Workers and Google Sheets" }
+    - { label: "My part", value: "Client project, built on my own" }
+  how:
+    headline: "From browsing to a product inquiry."
+    steps:
+      - title: "Find a product"
+        text: "The catalog offers search and categories so visitors can browse by product, brand or need."
+      - title: "See the details"
+        text: "Product entries show information such as brand, presentation and price before the visitor contacts the shop."
+      - title: "Continue on WhatsApp"
+        text: "A product link opens WhatsApp with an encoded message that names the product and its reference. The customer can review the message before sending it."
+        formula: "wa.me/<number>?text=<encoded message>"
+  decisionHeadline: "Take the order conversation to WhatsApp."
+decisions:
+  - choice: "Send each order to WhatsApp, with no cart"
+    rejected: "A cart with online payments"
+    because: "The shop's sales come from recommendations, and customers already share links over WhatsApp."
+    cost: "The conversation and order still need to be handled by the shop; the link is not a completed purchase."
+  - choice: "Publish from a separate catalog spreadsheet"
+    rejected: "Keep the earlier single publishing tab"
+    because: "With three tabs in their own file, the build never touches the inventory master, which holds costs, margins and suppliers."
+    cost: "The tabs have to be joined by product code and validated on every build."
 ---

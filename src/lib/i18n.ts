@@ -19,6 +19,8 @@ interface HeroCopy {
 
 /** Inside annotations of the hero, in list order (the number shown on small screens). */
 interface InsideHeroCopy extends HeroCopy {
+  /** `sub` without the keyboard shortcut: shown on touch-only devices, where there is no I key to press. */
+  subTouch: string;
   notesLabel: string;
   annotations: Record<'sky' | 'hill' | 'name' | 'portrait', { title: string; note: string }>;
 }
@@ -39,12 +41,14 @@ interface HomeLensCopy {
   hero: HeroCopy;
   values: {
     marker: string;
-    headline: string;
+    /** Phrases of the heading: a line breaks between them, and inside one only when it does not fit. */
+    headline: string[];
     sub: string;
     valueLabel: string;
     teamLabel: string;
     proofLabel: string;
-    rows: { title: string; description: string }[];
+    /** `title` is a list of phrases, like `headline`. */
+    rows: { title: string[]; description: string }[];
     gardenTitle: string;
     gardenDescription: string;
     facts: { figure: string; description: string }[];
@@ -64,7 +68,8 @@ interface HomeLensCopy {
   };
   contact: {
     marker: string;
-    headline: string;
+    /** Phrases, like `values.headline`. */
+    headline: string[];
   };
 }
 
@@ -77,10 +82,19 @@ export interface Dictionary {
     /** Home <title> and meta description: name and role first, so search results lead with them. */
     homeTitle: string;
     homeDescription: string;
-    /** Meta descriptions of the index pages. */
+    /** Meta descriptions of the index pages. 140–160 characters (seo.test.ts). */
     workDescription: string;
     notesDescription: string;
     linksDescription: string;
+    /** "What it is" part of the index titles: "<page> — <what> · Jahat Trinidad". */
+    workWhat: string;
+    notesWhat: string;
+    linksWhat: string;
+    /** "What it is" for a project whose kind only repeats its name. */
+    projectWhat: string;
+    /** Name-and-role endings of project and post descriptions, in several lengths (lib/seo.ts metaDescription). */
+    projectSignatures: string[];
+    postSignatures: string[];
   };
   nav: {
     home: string;
@@ -137,9 +151,15 @@ export interface Dictionary {
     code: string;
     play: string;
     moreExperiments: string;
+    /** Experiment stats from the GitHub API (screen-reader text; the tile shows ★ and ⑂ glyphs). */
+    stars: (count: number) => string;
+    forks: (count: number) => string;
+    updated: (date: string) => string;
   };
   caseStudy: {
     allWork: string;
+    scrollableTable: (title: string) => string;
+    nextProjectHeading: string;
     eyebrow: string;
     contactMarker: string;
     openProject: string;
@@ -160,7 +180,6 @@ export interface Dictionary {
     cost: string;
     mistakesMarker: string;
     growthMarker: string;
-    nextCaseStudy: string;
     problemHeading: string;
     featuresHeading: string;
     decisionsHeading: string;
@@ -182,7 +201,6 @@ export interface Dictionary {
     allWriting: string;
     rssFeed: string;
     latest: string;
-    minutes: (minutes: number) => string;
   };
   experience: {
     carriesOver: string;
@@ -191,8 +209,6 @@ export interface Dictionary {
   };
   lens: {
     lookInside: string;
-    pointerHint: string;
-    touchHint: string;
     backOutside: string;
     escapeKey: string;
     insideAnnouncement: string;
@@ -219,7 +235,9 @@ export interface Dictionary {
     navigate: string;
     elsewhere: string;
     thisSite: string;
+    /** The footer button's label flips between the two as the shortcut is turned off and on. */
     shortcut: string;
+    shortcutOn: string;
     /** Inside only: how to leave the lens. */
     insideHint: string;
     builtWith: string;
@@ -229,6 +247,14 @@ export interface Dictionary {
     youtube: string;
     rss: string;
     copyright: (year: number) => string;
+  };
+  /** Project page v1 (Figma `2443:12`): the lighter technical page of a `tier: project` entry. */
+  projectPage: {
+    eyebrow: string;
+    howMarker: string;
+    decisionMarker: string;
+    /** The rejected alternative under a decision, as a label: "Instead of: nearest neighbour or 2-opt". */
+    insteadOf: (rejected: string) => string;
   };
   project: {
     role: string;
@@ -246,7 +272,6 @@ export interface Dictionary {
     workSub: (projects: number, caseStudies: number) => string;
     notesTitle: string;
     notesSub: string;
-    latestSub: (minutes: number) => string;
     writeTitle: string;
     writeSub: string;
     cvTitle: string;
@@ -259,6 +284,8 @@ export interface Dictionary {
     myPart: string;
     whatItDoes: string;
     teamOf: (size: number) => string;
+    /** Screen-reader note on links that leave the site and open a new tab (the ↗ icon says it visually). */
+    newTab: string;
   };
 }
 
@@ -267,10 +294,16 @@ export const en: Dictionary = {
     ogImageAlt: 'Jahat Trinidad on a hill at sunset, beside the line "I build products people actually use."',
     ogSignature: 'Jahat Trinidad · jahattrinidad.com',
     homeTitle: 'Jahat Trinidad · Design Engineer — Frontend and product',
-    homeDescription: 'Jahat Trinidad, design engineer in Lima, Peru. I design and build web products end to end, from the first sketch to the live site.',
-    workDescription: 'Selected projects and case studies.',
-    notesDescription: 'Posts about building and shipping this site.',
-    linksDescription: 'Where to find me elsewhere.',
+    homeDescription: 'Jahat Trinidad, design engineer in Lima, Peru. I design and build web products end to end, from the first sketch to the live site. See my projects and notes.',
+    workDescription: 'Projects by Jahat Trinidad, design engineer in Lima: case studies, web apps, tools and experiments, each with my part, the stack and links to the code.',
+    notesDescription: 'Notes by Jahat Trinidad, design engineer in Lima: essays and tutorials on how I design, build and ship web products, and the decisions behind each one.',
+    linksDescription: 'All the links of Jahat Trinidad, design engineer in Lima, Peru: projects, notes, CV, contact, and profiles on GitHub, LinkedIn, YouTube, Instagram and X.',
+    workWhat: 'Web products and case studies',
+    notesWhat: 'On designing and building',
+    linksWhat: 'Profiles, CV and contact',
+    projectWhat: 'Web project',
+    projectSignatures: ['By Jahat Trinidad, design engineer.', 'A project in the portfolio of Jahat Trinidad.', 'In the portfolio of Jahat Trinidad, design engineer in Lima.', 'A project in the portfolio of Jahat Trinidad, design engineer in Lima, Peru.', 'From the portfolio of Jahat Trinidad, design engineer in Lima, Peru: what it is and how it works.', 'A project in the portfolio of Jahat Trinidad, design engineer in Lima, Peru, who designs and builds web products.', 'From the portfolio of Jahat Trinidad, design engineer in Lima, Peru: what it does, how it was built and the decisions behind it.'],
+    postSignatures: ['By Jahat Trinidad, design engineer.', 'A note by Jahat Trinidad, design engineer in Lima.', 'A note by Jahat Trinidad, design engineer in Lima, on the web.', 'A note by Jahat Trinidad, design engineer in Lima, Peru, on building the web.', 'A note by Jahat Trinidad, design engineer in Lima, Peru, on designing and building for the web.', 'A note by Jahat Trinidad, design engineer in Lima, Peru, about designing, building and shipping web products.', 'From the notes of Jahat Trinidad, design engineer in Lima, Peru, about designing, building and shipping web products from end to end.'],
   },
   nav: {
     home: 'Home',
@@ -309,15 +342,15 @@ export const en: Dictionary = {
       },
       values: {
         marker: '02 — WHAT YOU GET',
-        headline: 'Faster launches. Fewer handoffs. Nothing rebuilt.',
+        headline: ['Faster launches.', 'Fewer handoffs.', 'Nothing rebuilt.'],
         sub: 'What your team gets from one person who designs and builds. Each point is proven on a product I shipped.',
         valueLabel: 'The value',
         teamLabel: 'What it means for your team',
         proofLabel: 'Proof · Inspiration Garden',
         rows: [
-          { title: 'Ideas into working products, fast.', description: 'I take something from a rough idea to a product people can use — without waiting on a separate designer and developer.' },
-          { title: 'A bridge between design and engineering.', description: 'I speak both languages: designs your engineers can build, and code your designers recognize as theirs.' },
-          { title: 'Built to grow, not to be redone.', description: 'I plan for what comes next, so new features plug into what exists instead of starting over.' },
+          { title: ['Ideas into working products, fast.'], description: 'I take something from a rough idea to a product people can use — without waiting on a separate designer and developer.' },
+          { title: ['A bridge between design', 'and engineering.'], description: 'I speak both languages: designs your engineers can build, and code your designers recognize as theirs.' },
+          { title: ['Built to grow,', 'not to be redone.'], description: 'I plan for what comes next, so new features plug into what exists instead of starting over.' },
         ],
         gardenTitle: 'Inspiration Garden',
         gardenDescription: 'A tool for saving the design references, tools, libraries, articles and tutorials I find on the web. Designed, built and launched by me.',
@@ -342,8 +375,9 @@ export const en: Dictionary = {
       },
       contact: {
         marker: '06 — CONTACT',
-        headline:
+        headline: [
           'Looking for someone who can design it and build it? Let’s talk.',
+        ],
       },
     },
     inside: {
@@ -356,6 +390,7 @@ export const en: Dictionary = {
         headline:
           'The same page, taken apart — every layer, token and decision.',
         sub: 'Press I anywhere to see how a thing is built: what it is made of, and why.',
+        subTouch: 'See how a thing is built: what it is made of, and why.',
         notesLabel: 'Hero layer notes',
         annotations: {
           sky: { title: '[layer 01 · sky + far hills]', note: 'sky.png · moves slowest' },
@@ -366,15 +401,15 @@ export const en: Dictionary = {
       },
       values: {
         marker: '02 — WHAT YOU GET · HOW IT WAS BUILT',
-        headline: 'How each promise was built.',
-        sub: "Every number below comes from the Garden's repository: its releases and the services it runs on.",
+        headline: ['How each promise', 'was built.'],
+        sub: 'Every number below comes from the Garden’s repository: its releases and the services it runs on.',
         valueLabel: 'The practice',
         teamLabel: 'How I work',
         proofLabel: 'How the proof was built · Inspiration Garden',
         rows: [
-          { title: 'A working slice in the first week.', description: 'A deployable first version early, then small tagged releases on top of it, instead of a long build nobody sees.' },
-          { title: 'Small, versioned releases.', description: 'Interface and performance work ship as small tagged versions, many in a single day, never one big drop.' },
-          { title: 'Extend the foundation, never fork it.', description: 'New features land on the same Worker API, so the first version is never thrown away.' },
+          { title: ['A working slice in the first week.'], description: 'A deployable first version early, then small tagged releases on top of it, instead of a long build nobody sees.' },
+          { title: ['Small, versioned releases.'], description: 'Interface and performance work ship as small tagged versions, many in a single day, never one big drop.' },
+          { title: ['Extend the foundation,', 'never fork it.'], description: 'New features land on the same Worker API, so the first version is never thrown away.' },
         ],
         gardenTitle: 'Inspiration Garden',
         // Approved copy: docs/draft-copy.md, "Values proof".
@@ -414,8 +449,8 @@ export const en: Dictionary = {
         },
       },
       contact: {
-        marker: '06 — CONTACT · FOR DEVELOPERS',
-        headline: "You've seen how I build. What should we build together?",
+        marker: '06 — CONTACT · HOW THE CHAT WORKS',
+        headline: ['You’ve seen how I build.', 'What should we build together?'],
         notesLabel: 'Contact notes',
         // Chat design: openspec/changes/portfolio-implementation/design.md §3 (scripted, no language model).
         annotations: {
@@ -443,10 +478,15 @@ export const en: Dictionary = {
     code: 'Code',
     play: 'Play',
     moreExperiments: 'More experiments on GitHub',
+    stars: (count) => (count === 1 ? '1 star' : `${count} stars`),
+    forks: (count) => (count === 1 ? '1 fork' : `${count} forks`),
+    updated: (date) => `updated ${date}`,
   },
   // Case study board 2298:2; project-specific prose belongs in content entries.
   caseStudy: {
     allWork: 'All work',
+    scrollableTable: (title) => `${title} — scrollable table`,
+    nextProjectHeading: 'Next project',
     // The project's `kind` follows it on the hero: "CASE STUDY · PERSONAL PRODUCT".
     eyebrow: 'CASE STUDY',
     contactMarker: 'CONTACT',
@@ -468,7 +508,6 @@ export const en: Dictionary = {
     cost: 'What it cost',
     mistakesMarker: '04 — WHAT I GOT WRONG',
     growthMarker: '05 — HOW IT GREW',
-    nextCaseStudy: 'NEXT CASE STUDY',
     problemHeading: 'The problem',
     featuresHeading: 'What it does',
     decisionsHeading: 'Decisions',
@@ -477,18 +516,17 @@ export const en: Dictionary = {
   },
   // Notes index board 2301:86; intro and sub are approved draft copy.
   notes: {
-    eyebrow: 'NOTES · WRITING AND ELSEWHERE',
+    eyebrow: 'Notes · writing and elsewhere',
     writingMarker: '01 — WRITING',
     writingHeading: 'Essays and tutorials',
     contactMarker: '02 — CONTACT',
-    essay: 'ESSAY',
-    tutorial: 'TUTORIAL',
+    essay: 'Essay',
+    tutorial: 'Tutorial',
     writingLatest: 'Writing · Latest',
     elsewhereLatest: 'Elsewhere · Latest posts',
     allWriting: 'All writing',
     rssFeed: 'RSS feed',
     latest: 'Latest',
-    minutes: (minutes) => `${minutes} min`,
     headline: 'What I learn while building, written down so it sticks.',
     sub: 'Essays on how I decide, and tutorials you can follow step by step.',
     allNotes: 'All notes',
@@ -502,8 +540,6 @@ export const en: Dictionary = {
   // Pointer hint: lens component 2168:10. Remaining text: implementation design §2.
   lens: {
     lookInside: 'Look inside',
-    pointerHint: 'Drag to see my technical side',
-    touchHint: 'Tap to see my technical side',
     backOutside: 'Back outside',
     escapeKey: 'Esc',
     insideAnnouncement: 'Inside view: how each part is built',
@@ -535,6 +571,7 @@ export const en: Dictionary = {
     elsewhere: 'Elsewhere',
     thisSite: 'This site',
     shortcut: 'Turn off the I shortcut',
+    shortcutOn: 'Turn on the I shortcut',
     insideHint: 'Press Esc or I to go back outside',
     builtWith: 'Built with Astro · source on GitHub',
     availability: 'Open to an internship, now.\nLima, Peru · remote.',
@@ -543,6 +580,12 @@ export const en: Dictionary = {
     youtube: 'YouTube',
     rss: 'RSS',
     copyright: (year) => `© ${year} Jahat Trinidad`,
+  },
+  projectPage: {
+    eyebrow: 'PROJECT',
+    howMarker: '01 — HOW IT WORKS',
+    decisionMarker: '02 — THE KEY DECISION',
+    insteadOf: (rejected) => `Instead of: ${rejected}`,
   },
   project: {
     role: 'Role',
@@ -562,7 +605,6 @@ export const en: Dictionary = {
       `${projects} ${projects === 1 ? 'project' : 'projects'} · ${caseStudies} ${caseStudies === 1 ? 'case study' : 'case studies'}`,
     notesTitle: 'Read my notes',
     notesSub: 'Essays and tutorials',
-    latestSub: (minutes) => `Latest note · ${minutes} min read`,
     writeTitle: 'Write to me',
     writeSub: 'A short chat, straight to my inbox',
     cvTitle: 'Download my CV',
@@ -575,6 +617,7 @@ export const en: Dictionary = {
     myPart: 'My part',
     whatItDoes: 'What it does',
     teamOf: (size) => (size === 1 ? 'Solo' : `Team of ${size}`),
+    newTab: '(opens in a new tab)',
   },
 };
 

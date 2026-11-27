@@ -120,9 +120,10 @@ const style = Object.entries(vars).map(([name, value]) => `${name}: ${value}`).j
   [data-side='left'] .leader { right: 3px; top: 0; width: var(--leader); height: 1px; }
   [data-side='left'] .label { right: calc(3px + var(--leader) + 8px); top: 0; transform: translateY(-50%); align-items: flex-end; text-align: right; }
   [data-side='above'] .leader { left: 0; bottom: 3px; width: 1px; height: var(--leader); }
-  [data-side='above'] .label { left: -6px; bottom: calc(3px + var(--leader)); }
+  /* Above and below: the label's text edge sits on the leader (HI-16). */
+  [data-side='above'] .label { left: -0.5px; bottom: calc(3px + var(--leader)); }
   [data-side='below'] .leader { left: 0; top: 3px; width: 1px; height: var(--leader); }
-  [data-side='below'] .label { left: -6px; top: calc(3px + var(--leader) + 8px); }
+  [data-side='below'] .label { left: -0.5px; top: calc(3px + var(--leader) + 8px); }
 
   @media (min-width: 64.0625rem) {
     .full { display: block; }

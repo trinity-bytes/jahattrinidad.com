@@ -7,16 +7,110 @@ tier: case-study
 publishDate: 2026-11-12
 featured: true
 kind: Projeto acadêmico
-team: { size: 5, solo: false }
-timeframe: '2025–2026'
-coverImage: '../tranqui/cover.png'
+team:
+  size: 5
+  solo: false
+timeframe: 2025–2026
+coverImage: ../tranqui/cover.png
 coverImageAlt: 'Página do Tranqui: "Llega a tu destino con más tranquilidad" sobre um mapa escuro'
-problem: 'As pessoas circulam por áreas que não conhecem sem saber o que aconteceu ali nesta semana.'
-whatItDoes: 'Um mapa de relatos anônimos validados por moradores, com alertas para as áreas próximas.'
-myPart: 'Produto e experiência para a equipe, além da página de apresentação, que desenhei e desenvolvi por conta própria.'
-stack: [Astro, Tailwind CSS, Flutter]
-insideStack: 'Landing: Astro 7, Tailwind 4, um campo de glifos em canvas. Aplicativo: Flutter.'
-insideDecision: "A página usa o `<dialog>` do navegador para janelas e `<details>` para perguntas frequentes, funcionando com teclado e leitor de tela sem JavaScript adicional. As animações param para quem solicita movimento reduzido."
-demoUrl: 'https://tranqui.jahattrinidad.com/'
-repoUrl: 'https://github.com/trinity-bytes/tranqui'
+problem: As pessoas circulam por áreas que não conhecem sem saber o que aconteceu ali nesta semana.
+whatItDoes: Uma proposta de mapa com relatos anônimos, validação comunitária e alertas próximos.
+myPart: Produto e experiência para a equipe, além da página de apresentação, que desenhei e desenvolvi por conta própria.
+stack:
+  - Astro
+  - Tailwind CSS
+  - Flutter
+insideStack: "Página: Astro 7, Tailwind 4 e um campo de glifos em canvas. Um aplicativo Flutter é previsto separadamente."
+insideDecision: A página usa o <dialog> do navegador para janelas e <details> para perguntas frequentes, com comportamento nativo para teclado e leitor de tela. JavaScript abre e fecha o menu móvel. As animações param para quem solicita movimento reduzido.
+demoUrl: https://tranqui.jahattrinidad.com/
+repoUrl: https://github.com/trinity-bytes/tranqui
+heroDescription: Um projeto acadêmico de cinco pessoas sobre trajetos mais seguros em Lima. Trabalhei com a equipe nos requisitos de produto e wireframes e depois desenhei e desenvolvi a página por conta própria.
+caseStudy:
+  headlines:
+    problem: Os dados públicos não mostravam o que acontecia em um trajeto específico.
+    features: De um relato a um trajeto mais seguro.
+    decisions: Projetar para participar, proteger e compreender.
+    mistakes: Elementos visuais que precisavam de contexto.
+    growth: Do trabalho de curso a uma página publicada.
+  glance:
+    - label: Equipe
+      value: Vigilantix · cinco estudantes de Engenharia de Software da UPC
+    - label: Minha parte
+      value: Backlog de produto, histórias de usuário e wireframes com a equipe; design e implementação da página
+    - label: Base da pesquisa
+      value: Dados de criminalidade do INEI e cenários atual e futuro da equipe
+    - label: Estado
+      value: Designs acadêmicos do aplicativo; página publicada, disponibilidade do app não confirmada
+  problem:
+    - A equipe identificou uma distância entre as estatísticas de criminalidade publicadas e as informações necessárias para decidir como percorrer um bairro. O relatório cita dados do INEI e descreve a dificuldade de usar as informações existentes em decisões cotidianas.
+    - "Mapeamos a experiência atual e a desejada e transformamos o problema em histórias de usuário: relatar sem expor um nome, conhecer incidentes próximos e escolher uma rota considerando relatos recentes."
+  requirements: Relatos anônimos, interação comunitária, alertas próximos, um mapa de calor e rotas que considerem incidentes recentes.
+  constraint: O escopo do curso era documentação e artefatos de design. A equipe também identificou a dependência de conexão e o risco de as pessoas não confiarem no serviço ou não o adotarem.
+  features:
+    - title: Relatar sem um nome público
+      description: Escolher o tipo de incidente, descrever o que aconteceu e usar uma localização para posicioná-lo no mapa.
+      detail: Wireframe de relato do relatório do curso. Ajudei a transformar os layouts da equipe em telas finalizadas; o relatório não atribui esta tela a uma pessoa específica.
+      image: ../tranqui/report-wireframe.png
+      imagePresentation: phone
+      imageAlt: Wireframe de confirmação de relato sobre um formulário de incidente
+    - title: A comunidade confirma o que aconteceu
+      description: As pessoas veem os relatos em um mapa. Um relato ganha peso quando várias pessoas por perto o confirmam, não por meio de comentários.
+      detail: Design de mapa de calor do relatório do curso, apresentado sobre um mapa ilustrativo. A validação por várias pessoas é o fluxo proposto; o relatório não fixou o limite de confirmação.
+      image: ../tranqui/heatmap-wireframe.webp
+      imagePresentation: phone
+      imageAlt: Design de mapa de calor sobre um mapa ilustrativo de ruas
+    - title: Escolher quais alertas importam
+      description: As configurações de notificação incluem interações e riscos na rota.
+      detail: Wireframe de notificações do relatório. Os requisitos também descrevem alertas para locais selecionados.
+      image: ../tranqui/alerts-wireframe.png
+      imagePresentation: phone
+      imageAlt: Wireframe de configurações de notificações sobre interações e riscos na rota
+    - title: Comparar rotas pelo risco
+      description: Uma pessoa pode comparar alternativas de rota usando relatos recentes.
+      detail: Tela de rota simulada capturada da página publicada. O plano do sprint atribuiu a mim o design da busca de rotas, com status pendente; esta tela não tem autoria individual.
+      image: ../tranqui/route-preview.png
+      imagePresentation: phone
+      imageAlt: Rota sugerida simulada na página do Tranqui
+  milestones:
+    - day: 16 ABR 2025
+      title: Propósito e objetivos
+      description: O relatório me atribui a definição do propósito e dos objetivos do projeto.
+    - day: 24 ABR–3 MAI 2025
+      title: Backlog e wireframes
+      description: Trabalhei no backlog e nas histórias de usuário e, com a equipe, nos layouts e telas finalizadas; o registro menciona correções do TB1 em 3 de maio.
+    - day: 1 JUN 2025
+      title: O repositório começa
+      description: Primeiro commit da página do SafeMap.
+    - day: JUN–JUL 2025
+      title: Refinar o projeto do curso
+      description: A equipe revisou wireframes e o design do domínio; em 8 de julho atualizei requisitos não funcionais e DDD estratégico.
+    - day: JUL 2026
+      title: Um protótipo web
+      description: A página e o protótipo de mapa foram reconstruídos, seguidos pelas versões v1.0.
+    - day: 14 NOV 2026
+      title: Tranqui é publicado
+      description: O redesign removeu o antigo protótipo web; SafeMap passou a se chamar Tranqui e a v1.1.0 trouxe domínio próprio.
+  closing:
+    - title: Estado atual
+      text: A página está publicada. O relatório contém designs e requisitos do aplicativo; não pude verificar um app Flutter lançado nem dados de incidentes ao vivo. Desenhei e desenvolvi a página separadamente; sua estatística de criminalidade cita o INEI.
+decisions:
+  - choice: Relatos anônimos, identidade verificada em sigilo
+    rejected: Mostrar quem relatou cada incidente
+    subtitle: privacidade · verificação interna
+    because: O mapa precisa de relatos, e as pessoas só relatam se for seguro. Cada conta é verificada dentro do app, então um relato é confiável enquanto o autor fica oculto para todos os outros.
+    cost: A verificação de identidade precisa ser construída e protegida; anônimo não significa que qualquer um pode publicar.
+  - choice: Validação por várias pessoas, sem comentários
+    rejected: Conversas de comentários em cada relato
+    subtitle: escopo · validação comunitária
+    because: O Tranqui tem uma só função, dizer o que aconteceu no seu trajeto. Basta que várias pessoas confirmem um relato; comentários transformariam uma ferramenta de segurança em uma rede social que ela não precisa ser.
+    cost: Um relato não comporta uma conversa, então o contexto precisa caber no próprio relato.
+  - choice: Controles nativos do navegador
+    rejected: Um menu e um acordeão feitos em JavaScript
+    subtitle: dialog + details
+    because: Um dialog nativo para o menu móvel e details para as perguntas frequentes funcionam igual em todos os navegadores, com suporte a teclado e leitor de tela embutido.
+    cost: Ainda são necessários estilos responsivos, testes e um pouco de JavaScript para abrir o menu.
 ---
+
+### Elementos visuais que precisavam de contexto.
+
+Nas primeiras propostas, as seções de privacidade e instituições usavam fragmentos de interface recortados e formas decorativas. As observações mostraram que as peças não faziam sentido sozinhas. Substituí os fragmentos por painéis completos e legíveis e identifiquei a prévia de privacidade como simulação. A seção de planos também foi refeita com dois cartões da mesma altura.

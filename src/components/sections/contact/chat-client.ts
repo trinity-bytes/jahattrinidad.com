@@ -44,6 +44,15 @@ class Chat {
     this.note = this.one('[data-note]');
     this.pinned = this.one('[data-pinned]');
 
+    // The long placeholder would truncate on phones. It only matters while the composer is idle.
+    const phone = matchMedia('(max-width: 47.9375rem)');
+    const idlePlaceholder = () => {
+      if (this.state.step !== 'idle') return;
+      this.input.placeholder = (phone.matches ? root.dataset.placeholderShort : root.dataset.placeholder) ?? '';
+    };
+    phone.addEventListener('change', idlePlaceholder);
+    idlePlaceholder();
+
     // Progressive enhancement: the controls ship disabled and come alive with the script.
     root.querySelectorAll<HTMLButtonElement | HTMLInputElement>(':disabled').forEach((el) => (el.disabled = false));
 
@@ -109,6 +118,8 @@ class Chat {
   private open(): void {
     const before = this.root.getBoundingClientRect().height;
     this.root.dataset.open = '';
+    // The card draws the chips above the composer: move them, so the Tab order follows what is seen.
+    this.chips.parentElement!.prepend(this.chips);
     if (this.section) {
       this.section.dataset.chatting = '';
       // The lens dock is fixed bottom-right and would cover the composer: hide it while the
@@ -233,7 +244,7 @@ class Chat {
       const item = this.clone('chip');
       const button = item.querySelector<HTMLElement>('button')!;
       button.dataset.chip = chip.value;
-      button.textContent = chip.label;
+      button.querySelector('span')!.textContent = chip.label;
       this.chips.append(item);
     }
   }
@@ -264,7 +275,8 @@ class Chat {
       const href = hrefs[step.id];
       // A step without a destination is left out rather than rendered as a dead link.
       if (!href) continue;
-      const item = this.clone('step');
+      // The CV is a PDF outside the site's pages, so it gets the external step.
+      const item = this.clone(step.id === 'cv' ? 'step-out' : 'step');
       item.querySelector('span')!.textContent = step.label;
       item.querySelector('a')!.href = href;
       list.append(item);

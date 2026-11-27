@@ -5,11 +5,44 @@ lang: es
 translationKey: asm8
 tier: project
 publishDate: 2026-11-10
-kind: Herramienta · Nueva versión · Individual
+kind: Herramienta · Rehecha · Individual
 team: { size: 1, solo: true }
 coverImage: '../asm8/cover.png'
 coverImageAlt: 'Pantalla de bienvenida de ASM8 con archivos recientes y el editor de ensamblador'
 stack: [Svelte, TypeScript, CodeMirror, Web Workers]
 demoUrl: 'https://asm8.jahattrinidad.com/'
+demoIsApp: true
 repoUrl: 'https://github.com/trinity-bytes/asm8-ide-simulator'
+insideStack: "Svelte y TypeScript con CodeMirror y Web Workers."
+insideDecision: "La CPU simulada se ejecuta en un worker para no bloquear el editor."
+page:
+  headline: "Una máquina de 8 bits para programar, ejecutar e inspeccionar."
+  sub: "ASM8 rehace un simulador de ensamblador como un IDE instalable en el navegador."
+  glance:
+    - { label: "Problema", value: "Aprender ensamblador observando la ejecución" }
+    - { label: "Máquina", value: "Registros, banderas y 256 bytes de memoria" }
+    - { label: "Herramientas", value: "Ensamblador, depurador y PWA sin conexión" }
+    - { label: "Tecnología", value: "Svelte, TypeScript, CodeMirror y Web Workers" }
+    - { label: "Mi aporte", value: "Remake y rediseño del simulador de Marco Schweighauser" }
+  how:
+    headline: "Del código ensamblador a una máquina en marcha."
+    steps:
+      - title: "Ensamblar el programa"
+        text: "El ensamblador emite bytes de instrucciones y registra las direcciones de las etiquetas; después resuelve sus referencias. También informa errores como una etiqueta no definida."
+        formula: "label → address → byte"
+      - title: "Ejecutar e inspeccionar"
+        text: "La CPU simulada cambia registros, banderas y memoria al ejecutar instrucciones. IN espera una tecla; OUT imprime un carácter."
+        formula: "IN A  →  OUT A"
+      - title: "Depurar sin congelar el editor"
+        text: "Un Web Worker ejecuta la CPU mientras la interfaz recibe instantáneas. Puedes avanzar instrucción por instrucción o detenerte en un punto de ruptura; la PWA también funciona sin conexión."
+  decisionHeadline: "Separar la ejecución del editor."
+decisions:
+  - choice: "Ejecutar la CPU en un Web Worker"
+    rejected: "Mantener el bucle del original, un temporizador en el hilo de la página"
+    because: "La máquina simulada puede seguir ejecutándose sin congelar la página."
+    cost: "El worker y la interfaz deben intercambiar comandos e instantáneas del estado."
+  - choice: "Corregir el error de SUB reg, SP del original y documentarlo"
+    rejected: "Conservar el error por compatibilidad con el original"
+    because: "Allí el original restaba un valor indefinido en lugar de SP."
+    cost: "El nuevo núcleo ya no coincide con el original en todos los casos, así que cada diferencia intencional debe listarse junto a las pruebas de paridad."
 ---

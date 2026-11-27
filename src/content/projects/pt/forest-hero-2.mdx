@@ -1,12 +1,25 @@
 ---
-title: forest-hero-2
-description: Um jogo de pixel art com seu próprio ciclo de sprites e colisões, projeto final de um curso de algoritmos.
+title: Forest Hero 2
+description: "Um jogo em pixel art sobre reunir recursos e plantar árvores para recuperar uma floresta."
 lang: pt
 translationKey: forest-hero-2
 tier: experiment
 publishDate: 2026-03-01
-kind: ./forest-hero-2
-team: { size: 1, solo: true }
-stack: [C++, Game loop]
+kind: Jogo · Equipe de 3
+team: { size: 3, solo: false }
+coverImage: "../forest-hero-2/cover.png"
+coverImageAlt: "Menu principal de Forest Hero 2 com um guaxinim"
+stack: [C++/CLI, Windows Forms]
 repoUrl: 'https://github.com/trinity-bytes/forest-hero-2'
+insideStack: "Um jogo 2D feito com C++/CLI e Windows Forms."
+insideDecision: "Os inimigos mudam de direção aleatoriamente; as colisões marcam sementes e inimigos para remoção quando as verificações terminam."
+decisions:
+  - choice: "Registrar cada índice uma vez e remover depois das verificações"
+    rejected: "Anotar um índice toda vez que uma colisão o informa"
+    because: "Um índice repetido pode fazer uma remoção cair fora do vetor."
+    cost: "Cada colisão afetada precisa consultar a lista pendente antes de adicionar."
+  - choice: "Acrescentar cada pontuação a um arquivo binário"
+    rejected: "O arquivo de texto anterior, gravado só quando ainda não existia"
+    because: "Aquela versão só salvava uma pontuação ao criar o arquivo; acrescentar um registro de tamanho fixo preserva cada nova."
+    cost: "O arquivo deixou de ser legível como texto simples, e a escrita e a leitura precisam compartilhar o formato do registro."
 ---

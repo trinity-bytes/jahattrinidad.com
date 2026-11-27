@@ -1,4 +1,6 @@
 ---
+import Button from '../ui/Button.astro';
+import TextLink from '../ui/TextLink.astro';
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import type { Dictionary } from '../../lib/i18n';
@@ -18,9 +20,11 @@ interface Props {
   featured?: boolean;
   mirrored?: boolean;
   optimized?: boolean;
+  pillAction?: boolean;
+  flowAction?: boolean;
 }
 
-const { project, href, labels, insideLabels, meta, problem, whatItDoes, featured = false, mirrored = false, optimized = false } = Astro.props;
+const { project, href, labels, insideLabels, meta, problem, whatItDoes, featured = false, mirrored = false, optimized = false, pillAction = false, flowAction = false } = Astro.props;
 
 const facts = [
   { label: labels.problem, value: problem },
@@ -42,7 +46,7 @@ const factLists = [
 ] as const;
 ---
 
-<article class:list={['card', { featured, mirrored }]}>
+<article class:list={['card', { featured, mirrored, 'flow-action': flowAction }]}>
   {
     project.coverImage && (
       optimized ? <Image class="cover" src={project.coverImage} alt={project.coverImageAlt ?? ''} loading="lazy" /> : <img class="cover" src={project.coverImage.src} width={project.coverImage.width} height={project.coverImage.height} alt={project.coverImageAlt ?? ''} loading="lazy" />
@@ -67,9 +71,11 @@ const factLists = [
           )
       )
     }
-    <a class="link" href={href} data-background-text>
-      <span class="underlined">{labels.seeProject}</span> <span aria-hidden="true">→</span>
-    </a>
+    <div class="action">
+      {pillAction
+        ? <Button href={href} label={labels.seeProject} icon="arrow-right" />
+        : <TextLink href={href} label={labels.seeProject} data-background-text />}
+    </div>
   </div>
 </article>
 
@@ -79,7 +85,7 @@ const factLists = [
     flex-direction: column;
     min-width: 0;
     overflow: hidden;
-    background: var(--color-card-alt);
+    background: var(--color-card-raised);
     border-radius: 1rem;
   }
 
@@ -107,18 +113,16 @@ const factLists = [
 
   .meta,
   dt {
-    font: 500 var(--font-size-label) / 1.5 var(--font-mono);
-    color: var(--color-text-muted);
-  }
-
-  .meta {
+    font: var(--type-meta);
+    letter-spacing: var(--type-meta-tracking);
     text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   h3 {
     margin-top: var(--space-xs);
-    font: 600 var(--font-size-heading-sm) / 1.1 var(--font-display);
-    letter-spacing: -0.01em;
+    font: 600 var(--font-size-h3) / 1.15 var(--font-display);
+    letter-spacing: -0.02em;
     color: var(--color-heading);
   }
 
@@ -144,22 +148,12 @@ const factLists = [
     line-height: 1.5;
   }
 
-  .link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
+  .action {
     align-self: flex-start;
-    min-height: 2.75rem;
     margin-top: auto;
     padding-top: var(--space-md);
-    color: var(--color-heading);
   }
-
-  .underlined {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
-  }
+  .flow-action .action { margin-top: 0; }
 
   /* Featured: inset image above the text. */
   .featured {
@@ -173,10 +167,6 @@ const factLists = [
 
   .featured .body {
     padding: var(--space-md) 0 0;
-  }
-
-  .featured h3 {
-    font-size: var(--font-size-heading-section);
   }
 
   @media (min-width: 48rem) {

@@ -1,0 +1,86 @@
+---
+import type { ComponentProps } from 'astro/types';
+import Icon from './Icon.astro';
+
+type Anchor = Omit<astroHTML.JSX.AnchorHTMLAttributes, 'href' | 'type' | 'target' | 'rel'>;
+type NativeButton = Omit<astroHTML.JSX.ButtonHTMLAttributes, 'type'>;
+type Props = {
+  label: string;
+  leadingIcon?: boolean;
+  leadingGlyph?: ComponentProps<typeof Icon>['name'];
+  /** BackLink supplies the listing-navigation treatment while sharing the hit area. */
+  back?: boolean;
+} & (
+  | (Anchor & { destination: 'external'; href: string; newTab: string; type?: never })
+  | (Anchor & { destination?: 'internal' | 'in-page'; href: string; newTab?: never; type?: never })
+  | (NativeButton & { destination: 'in-page'; href?: never; newTab?: never; type: NonNullable<astroHTML.JSX.ButtonHTMLAttributes['type']> })
+);
+
+const { label, destination = 'internal', href, type, newTab, leadingGlyph, leadingIcon = Boolean(leadingGlyph), back = false, class: className, ...attrs } = Astro.props;
+const Tag = href === undefined ? 'button' : 'a';
+const external = destination === 'external';
+---
+<Tag
+  {...attrs}
+  class:list={['text-link', 'hit', { 'back-link': back }, className]}
+  href={href}
+  type={type}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+>
+  {back ? <Icon name="arrow-left" size={14} /> : leadingIcon && leadingGlyph && <Icon name={leadingGlyph} sizing="inline" />}
+  <span class="text-link-label"><slot>{label}</slot></span>
+  {destination !== 'in-page' && <Icon name={external ? 'arrow-up-right' : 'arrow-right'} sizing="inline" />}
+  {external && <span class="visually-hidden"> {newTab}</span>}
+</Tag>
+
+<style>
+  .text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text);
+    font: 400 var(--font-size-body)/1.5 var(--font-sans), sans-serif;
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .hit {
+    --hit-size: 24px;
+    --hit-pad: max(0px, (var(--hit-size) - 1lh) / 2);
+    min-inline-size: 24px;
+    padding: var(--hit-pad) 0;
+    margin-block: calc(-1 * var(--hit-pad));
+  }
+  @media (max-width: 63.999rem), (pointer: coarse) {
+    .hit { --hit-size: 44px; }
+  }
+  .text-link > :global(svg) { flex: none; }
+  .text-link-label {
+    text-decoration: underline 1px var(--color-text-muted);
+    text-underline-offset: .2em;
+    transition: text-decoration-color var(--dur-press) var(--ease-out);
+  }
+  .back-link {
+    --hit-size: 44px;
+    gap: var(--space-xs);
+    color: var(--color-text-muted);
+    font: var(--type-marker);
+    letter-spacing: var(--type-marker-tracking);
+    text-transform: uppercase;
+    transition: color var(--dur-press) var(--ease-out);
+  }
+  .back-link .text-link-label { text-decoration: none; }
+  @media (hover: hover) and (pointer: fine) {
+    .text-link:hover .text-link-label { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
+    .back-link:hover { color: var(--color-heading); }
+  }
+  .text-link:active .text-link-label { text-decoration-color: currentColor; text-decoration-thickness: 2px; }
+  .back-link:active { color: var(--color-heading); }
+  @media (prefers-reduced-motion: reduce) {
+    .text-link-label, .back-link { transition: none; }
+  }
+</style>

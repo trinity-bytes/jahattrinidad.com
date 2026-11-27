@@ -1,0 +1,322 @@
+---
+// Project page v1 (Figma `2443:12`): the lighter, openly technical page of a `tier: project` entry.
+// Overview and the decision table follow the case study (CaseStudy.astro) so both pages read as one family.
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import type { Dictionary } from '../../lib/i18n';
+import Backgrounds from './Backgrounds.astro';
+type Data = CollectionEntry<'projects'>['data'];
+type Page = NonNullable<Data['page']>;
+interface Props {
+  page: Page;
+  decisions: Data['decisions'];
+  cover?: ImageMetadata;
+  coverAlt?: string;
+  website?: string;
+  strings: Pick<Dictionary, 'caseStudy' | 'projectPage'>;
+}
+const { page, decisions, cover, coverAlt = '', website, strings } = Astro.props;
+const t = strings.caseStudy;
+const p = strings.projectPage;
+const [head, ...rows] = page.how.table?.rows ?? [];
+---
+<article class="project-page">
+  <section class="overview band">
+    <Backgrounds variant="work" next="none" />
+    <div class="container inner">
+      {cover && <div class="browser"><div class="browser-bar"><i></i><i></i><i></i>{website && <span>{new URL(website).hostname}</span>}</div><Image src={cover} alt={coverAlt} /></div>}
+      <p class="marker" data-background-text>{t.atAGlance}</p>
+      <dl class="glance">{page.glance.map((fact) => <div><dt data-background-text>{fact.label}</dt><dd data-background-text>{fact.value}</dd></div>)}</dl>
+    </div>
+  </section>
+  <section class="how band pale">
+    <Backgrounds variant="experience" next="none" />
+    <div class="container inner">
+      <p class="marker" data-background-text>{p.howMarker}</p>
+      <h2 data-background-text>{page.how.headline}</h2>
+      {page.how.sub && <p class="sub" data-background-text>{page.how.sub}</p>}
+      <ol class="steps">
+        {page.how.steps.map((step) => (
+          <li>
+            <h3 data-background-text>{step.title}</h3>
+            <p data-background-text>{step.text}</p>
+            {step.formula && <pre class="formula"><code>{step.formula}</code></pre>}
+          </li>
+        ))}
+      </ol>
+      {page.how.table && (
+        <figure class="table">
+          <figcaption class="table-title" data-background-text>{page.how.table.title}</figcaption>
+          <div class="table-frame">
+            <div class="table-scroll" role="region" aria-label={t.scrollableTable(page.how.table.title)} tabindex="0">
+              <table>
+                <thead><tr>{head.map((cell) => <th scope="col">{cell}</th>)}</tr></thead>
+                <tbody>{rows.map((row) => <tr>{row.map((cell, index) => (index === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>))}</tr>)}</tbody>
+              </table>
+            </div>
+          </div>
+          {page.how.table.note && <p class="note" data-background-text>{page.how.table.note}</p>}
+        </figure>
+      )}
+    </div>
+  </section>
+  {decisions.length > 0 && (
+    <section class="decisions band">
+      <Backgrounds variant="work" next="none" />
+      <div class="container inner">
+        <p class="marker" data-background-text>{p.decisionMarker}</p>
+        <h2 data-background-text>{page.decisionHeadline}</h2>
+        <div class="table-head"><span>{t.choice}</span><span>{t.why}</span><span>{t.cost}</span></div>
+        {decisions.map((d) => (
+          <div class="decision">
+            <div><span class="stack-label">{t.choice}</span><h3 data-background-text>{d.choice}</h3><small>{d.subtitle ?? p.insteadOf(d.rejected)}</small></div>
+            <div><span class="stack-label">{t.why}</span><p data-background-text>{d.because}</p></div>
+            <div><span class="stack-label">{t.cost}</span><p data-background-text>{d.cost}</p></div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+</article>
+<style>
+  .band {
+    position: relative;
+    background: var(--cream);
+    padding: var(--section-pad) 0;
+  }
+  .pale {
+    background: var(--card);
+  }
+  .inner {
+    position: relative;
+  }
+  /* Contain the negative margin so the section background never covers the hero. */
+  .overview .inner {
+    display: flow-root;
+  }
+  .browser {
+    position: relative;
+    max-width: 72rem;
+    container-type: inline-size;
+    margin: 0 0 var(--space-2xl);
+    overflow: hidden;
+    border-radius: 1rem;
+    background: var(--card);
+  }
+  .browser :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .browser-bar {
+    height: var(--space-2xl);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0 var(--space-lg);
+    color: var(--green-700);
+    font: var(--type-meta);
+  }
+  .browser-bar i {
+    width: var(--space-xs);
+    height: var(--space-xs);
+    border-radius: 50%;
+    background: var(--green-300);
+  }
+  .browser-bar span {
+    margin-left: var(--space-xs);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .marker,
+  dt {
+    color: var(--green-700);
+  }
+  .marker {
+    margin: 0;
+    font: 500 13px/1 var(--font-mono);
+  }
+  h2 {
+    max-width: 820px;
+    font: 600 var(--font-size-heading-section)/1.1 var(--font-display);
+    letter-spacing: -0.02em;
+    margin: 1.25rem 0;
+  }
+  h3 {
+    font: 600 var(--font-size-heading-sm)/1.12 var(--font-display);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  p {
+    line-height: 1.5;
+    margin: 0;
+  }
+  dl,
+  dd {
+    margin: 0;
+  }
+  .glance {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .glance > div {
+    padding-right: var(--space-xl);
+  }
+  .glance dt {
+    margin-bottom: var(--space-xs);
+  }
+  dt, .table-head, .stack-label {
+    font: var(--type-meta);
+    letter-spacing: var(--type-meta-tracking);
+    text-transform: uppercase;
+  }
+  .glance dd {
+    font-size: 1.25rem; /* The fixed 20px value style has no token. */
+    line-height: 1.5;
+  }
+  .sub {
+    max-width: 720px;
+    font-size: 1.125rem;
+    color: var(--color-text);
+  }
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin: 4rem 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 2rem;
+  }
+  .steps li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+  .steps h3 { text-wrap: balance; }
+  /* The formula card takes the experiment tiles' terminal look (WorkMore.astro). */
+  .formula {
+    min-height: 81px; /* Formula height matches the board; no token. */
+    margin: auto 0 0;
+    padding: 1.125rem 1.25rem;
+    border-radius: var(--radius-md);
+    background: var(--green-950);
+    color: var(--green-300);
+    font: 500 14px/1.6 var(--font-mono);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .table {
+    margin: var(--space-2xl) 0 0;
+  }
+  .table-title { font: 600 var(--font-size-h3)/1.2 var(--font-display); }
+  .table-frame {
+    position: relative;
+  }
+  .table-scroll {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 var(--space-md);
+    font: 400 14px/1.4 var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  th,
+  td {
+    padding: 14px 24px;
+    text-align: left;
+    white-space: nowrap;
+    background: var(--color-card-alt);
+  }
+  td, thead th:not(:first-child) { text-align: right; }
+  thead th {
+    font-weight: 500;
+  }
+  tbody th {
+    font-weight: 500;
+  }
+  .note {
+    margin-top: 1rem;
+    max-width: 900px;
+    font-size: 15px;
+  }
+  .decisions h2 {
+    margin-bottom: 3rem;
+  }
+  .table-head,
+  .decision {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr 1fr;
+    gap: 2rem;
+  }
+  .table-head {
+    color: var(--green-700);
+    padding-bottom: 10px;
+  }
+  .decision {
+    border-top: 1px solid var(--color-border);
+    padding: 28px 0;
+  }
+  .decision h3 {
+    font-size: 26px;
+    margin-bottom: 0.625rem;
+  }
+  .decision small {
+    display: block;
+    font: 400 var(--font-size-small)/1.5 var(--font-sans);
+    color: var(--color-text);
+  }
+  .stack-label {
+    display: none;
+    color: var(--green-700);
+    margin-bottom: 10px;
+  }
+  @media (max-width: 1024px) {
+    .decision {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .table-head {
+      display: none;
+    }
+    .stack-label {
+      display: block;
+    }
+  }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    th, td { padding-inline: var(--space-lg); }
+  }
+  @media (max-width: 767px) {
+    .table-frame::after {
+      content: '';
+      position: absolute;
+      inset: 1px 1px 1px auto;
+      width: var(--space-2xl-b);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      pointer-events: none;
+      background: linear-gradient(to right, transparent, var(--color-card));
+    }
+    .table-frame[data-scroll-end='true']::after { display: none; }
+    .decisions :global([data-bytes-mask]) { display: none; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('.table-frame').forEach((frame) => {
+    const scroll = frame.querySelector<HTMLElement>('.table-scroll');
+    if (!scroll) return;
+    const update = () => {
+      frame.dataset.scrollEnd = String(scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 1);
+    };
+    scroll.addEventListener('scroll', update, { passive: true });
+    const observer = new ResizeObserver(update);
+    observer.observe(scroll);
+    const table = scroll.querySelector('table');
+    if (table) observer.observe(table);
+    document.fonts.ready.then(update);
+    update();
+  });
+</script>

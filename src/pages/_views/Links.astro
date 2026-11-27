@@ -1,11 +1,13 @@
 ---
-import { Image, Picture } from 'astro:assets';
+import { getImage, Image, Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/ui/Icon.astro';
+import KeepHyphenated from '../../components/ui/KeepHyphenated.astro';
 import { collectionPath, entryPath, entrySlug, listLinks, listPosts, listProjects, type Locale } from '../../lib/content';
-import { buildSeo } from '../../lib/seo';
+import { breadcrumbNode, buildSeo, jsonLdGraph, pageTitle, personNode } from '../../lib/seo';
 import { cvPath } from '../../lib/cv';
 import { getDictionary, localeGroup, localizedPath } from '../../lib/i18n';
+import { formatDate } from '../../lib/format';
 import sky from '../../assets/hero/sky.png';
 import hill from '../../assets/hero/near-hill.png';
 import profile from '../../assets/profile/jahat.jpg';
@@ -18,6 +20,7 @@ const { lang } = Astro.props;
 // S7: posts are English-only for now; every locale lists the English entries.
 const postsLang: Locale = 'en';
 const t = getDictionary(lang);
+const newTab = t.common.newTab;
 const copy = t.links;
 
 const site = Astro.site;
@@ -33,8 +36,24 @@ const projects = await listProjects({ lang });
 const caseStudies = projects.filter((project) => project.data.tier === 'case-study').length;
 const [latest] = await listPosts({ lang: postsLang, order: 'newest', limit: 1 });
 
+const portrait = await getImage({ src: profile, width: 600, height: 600, format: 'jpg' });
+const person = personNode({
+  site,
+  description: t.meta.homeDescription,
+  sameAs: links.map((link) => link.url),
+  image: portrait.src,
+});
+const jsonLd = jsonLdGraph([
+  person,
+  breadcrumbNode(site, [
+    { name: t.nav.home, path: localizedPath(lang, '/') },
+    { name: t.nav.links, path: localizedPath(lang, '/links/') },
+  ]),
+]);
+
 const seo = buildSeo({
-  title: t.nav.links,
+  jsonLd,
+  title: pageTitle(t.nav.links, t.meta.linksWhat),
   description: t.meta.linksDescription,
   path: localizedPath(lang, '/links/'),
   lang,
@@ -46,7 +65,7 @@ const cards = [
   { href: collectionPath('projects', lang), title: copy.workTitle, sub: copy.workSub(projects.length, caseStudies) },
   { href: collectionPath('posts', lang), title: copy.notesTitle, sub: copy.notesSub },
   ...(latest
-    ? [{ href: entryPath('posts', postsLang, entrySlug(latest.entry)), title: latest.entry.data.title, sub: copy.latestSub(latest.readingTime) }]
+    ? [{ href: entryPath('posts', postsLang, entrySlug(latest.entry)), title: latest.entry.data.title, sub: `${formatDate(latest.entry.data.publishDate, lang)} · ${t.post.readingTime(latest.readingTime)}` }]
     : []),
 ];
 ---
@@ -63,14 +82,14 @@ const cards = [
         <Image class="avatar" src={profile} alt="" width={288} height={288} densities={[1, 2]} loading="eager" />
         <h1 id="links-name">{t.nav.brand}</h1>
         <p class="description">{copy.description}</p>
-        <p class="availability"><span class="dot" aria-hidden="true"></span>{copy.availability}</p>
+        <p class="availability">{copy.availability}</p>
       </section>
       <nav class="cards" aria-label={t.nav.links}>
         <ul>
           {cards.map((card) => (
-            <li><a class="card" href={card.href}><span class="text"><span class="title">{card.title}</span><span class="sub">{card.sub}</span></span><Icon name="arrow-right" size={20} /></a></li>
+            <li><a class="card" href={card.href}><span class="text"><span class="title"><KeepHyphenated text={card.title} /></span><span class="sub">{card.sub}</span></span><Icon name="arrow-right" size={20} /></a></li>
           ))}
-          <li><a class="card" href={cvPath(lang)} target="_blank" rel="noopener"><span class="text"><span class="title">{copy.cvTitle}</span><span class="sub">{copy.cvSub}</span></span><Icon name="arrow-up-right" size={20} /></a></li>
+          <li><a class="card" href={cvPath(lang)} target="_blank" rel="noopener noreferrer"><span class="text"><span class="title">{copy.cvTitle}</span><span class="sub">{copy.cvSub}</span></span><Icon name="arrow-up-right" size={20} /><span class="visually-hidden"> {newTab}</span></a></li>
           <li><a class="card filled" href={`${localizedPath(lang, '/')}#contact`}><span class="text"><span class="title">{copy.writeTitle}</span><span class="sub">{copy.writeSub}</span></span><Icon name="arrow-right" size={20} /></a></li>
         </ul>
       </nav>
@@ -78,7 +97,7 @@ const cards = [
         <h2 id="links-elsewhere">{copy.elsewhere}</h2>
         <ul>
           {links.map((link) => (
-            <li><a class="logo" href={link.url} rel="me noopener" aria-label={link.label}><Icon name={link.icon} size={20} /></a></li>
+            <li><a class="logo" href={link.url} target="_blank" rel="me noopener noreferrer" aria-label={`${link.label} ${newTab}`}><Icon name={link.icon} size={link.icon === 'brand-linkedin' || link.icon === 'brand-x' ? 18 : 20} /></a></li>
           ))}
         </ul>
       </section>
@@ -88,66 +107,85 @@ const cards = [
 </Base>
 
 <style>
+  /* Boards 2523:2359, 2523:2486 and 2523:2632. The landscape is placed per board from the page's centre. */
   .page {
     --sky-w: 1981.415px; --sky-left: calc(50cqw - 736px); --sky-top: -402px;
     --hill-w: 2371.521px; --hill-left: calc(50cqw - 929px); --hill-top: -345px;
     --veil-h: 520px;
+    /* The hill is anchored to the page's bottom, so its ridge keeps the same distance from the foot
+       of the page at any height: board 1180 tall, hill 2371.521 wide (ratio 0.71274) from top -345. */
+    --hill-bottom: -165.3px;
     position: relative;
     isolation: isolate;
     overflow: hidden;
     container-type: inline-size;
     display: flex;
     flex-direction: column;
-    min-height: 940px;
-    padding: 56px var(--gutter) 24px;
+    justify-content: center;
+    /* The board heights (1180 / 1120) were a frame, not a minimum: a phone scrolled past ~150px of
+       empty sky (owner, 2026-11-26). The page is the screen's height or its content's. */
+    min-height: 100svh;
+    padding: 72px var(--gutter);
     background: var(--color-bg);
     color: var(--color-text);
   }
   .landscape { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: var(--color-light-sun); }
   .layer { position: absolute; display: block; max-width: none; height: auto; }
   .sky { width: var(--sky-w); left: var(--sky-left); top: var(--sky-top); }
-  .hill { width: var(--hill-w); left: var(--hill-left); top: var(--hill-top); }
+  .hill { width: var(--hill-w); left: var(--hill-left); bottom: var(--hill-bottom); }
   .veil { position: absolute; inset: 0 0 auto; height: var(--veil-h); background: linear-gradient(to bottom, color-mix(in srgb, var(--cream) 55%, transparent), transparent); }
 
-  .content { display: flex; flex-direction: column; gap: 24px; width: 100%; max-width: 440px; margin-inline: auto; }
+  .content { display: flex; flex-direction: column; gap: var(--space-xl); width: 100%; max-width: 27.5rem; margin-inline: auto; }
   ul { margin: 0; padding: 0; list-style: none; }
   p, h1, h2 { margin: 0; }
 
-  .identity { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
-  .avatar { width: 84px; height: 84px; border: 3px solid var(--white); border-radius: 50%; object-fit: cover; }
-  h1 { font: 600 34px / 38px var(--font-display), sans-serif; letter-spacing: -0.02em; color: var(--color-heading); }
-  .description { max-width: 440px; font: 400 17px / 24px var(--font-sans), sans-serif; }
-  .availability { display: flex; align-items: center; gap: 8px; font: 500 12px / 1.3 var(--font-mono), monospace; letter-spacing: 0.04em; text-transform: uppercase; color: var(--green-900); }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sun); }
+  .identity { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
+  .avatar { width: 6rem; height: 6rem; border-radius: 50%; object-fit: cover; }
+  h1 { font: 600 var(--font-size-h1) / 1.05 var(--font-display), sans-serif; letter-spacing: -0.02em; color: var(--color-heading); }
+  .description { font: 400 var(--font-size-body) / 1.5 var(--font-sans), sans-serif; color: var(--color-heading); }
+  .availability, .elsewhere h2, .sub, .domain { font: var(--type-meta); letter-spacing: var(--type-meta-tracking); text-transform: uppercase; }
+  .availability, .elsewhere h2, .sub { color: var(--color-text-muted); }
 
-  .cards ul { display: flex; flex-direction: column; gap: 10px; }
-  .card { display: flex; align-items: center; gap: 12px; padding: 16px 18px 16px 20px; background: var(--color-card); border: 1px solid var(--green-950); border-radius: 20px; color: var(--green-950); text-decoration: none; }
-  .card:hover { background: var(--white); }
-  .text { display: flex; flex: 1; flex-direction: column; gap: 3px; min-width: 0; }
-  .title { font: 500 17px / 22px var(--font-sans), sans-serif; text-wrap: balance; }
-  .sub { font: 500 12px / 1.3 var(--font-mono), monospace; letter-spacing: 0.03em; text-transform: uppercase; color: var(--green-700); }
-  .card :global(svg) { flex: none; }
-  .card.filled { background: var(--green-950); border-color: var(--green-950); color: var(--white); }
-  .card.filled:hover { background: var(--green-900); }
+  .cards ul { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .card { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-md); border-radius: var(--radius-lg); background: var(--color-card); color: var(--color-heading); text-decoration: none; }
+  .text { display: flex; flex: 1; flex-direction: column; gap: var(--space-xs); min-width: 0; }
+  .title { font: 500 var(--font-size-body) / 1.5 var(--font-sans), sans-serif; }
+  .card > :global(svg) { flex: none; }
+  .card.filled { background: var(--green-900); color: var(--white); }
   .card.filled .sub { color: var(--green-300); }
 
-  .elsewhere { display: flex; flex-direction: column; gap: 10px; }
-  .elsewhere h2 { font: 500 12px / 1.3 var(--font-mono), monospace; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green-900); }
-  .elsewhere ul { display: flex; flex-wrap: wrap; gap: 10px; }
-  .logo { display: grid; place-items: center; width: 52px; height: 52px; background: var(--color-card); border: 1px solid var(--green-950); border-radius: 50%; color: var(--green-950); }
-  .logo:hover { background: var(--white); }
+  /* Below desktop the profiles sit under the cards on one cream band, label included. */
+  .elsewhere { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-xs); align-self: flex-start; max-width: 100%; padding: var(--space-xs); border-radius: var(--radius-lg); background: var(--color-card); }
+  .elsewhere ul { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+  .logo { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid var(--color-control-border); border-radius: 50%; color: var(--color-heading); }
 
-  .domain { width: 100%; max-width: 440px; margin: auto auto 0; padding-top: 48px; font: 500 12px / 1.3 var(--font-mono), monospace; letter-spacing: 0.04em; color: var(--white); }
-  .card, .logo { transition: background-color 150ms ease; }
-  @media (prefers-reduced-motion: reduce) { .card, .logo { transition: none; } }
+  .domain { position: absolute; bottom: var(--space-xl); left: max(var(--gutter), 50% - 13.75rem); color: var(--white); }
+
+  /* One step of feedback per control (NL-12): sand for cards, the current tint for the round buttons. */
+  .card { transition: background-color var(--dur-press) var(--ease-out), scale var(--dur-press) var(--ease-out); }
+  .card > :global(svg) { transition: translate var(--dur-press) var(--ease-out); }
+  .logo { transition: background-color var(--dur-press) var(--ease-out), scale var(--dur-press) var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .card:not(.filled):hover { background: var(--color-surface); }
+    /* The arrow leans toward its destination: right for this site, up and right when it leaves. */
+    .card:hover > :global(svg) { translate: 2px 0; }
+    .card[target='_blank']:hover > :global(svg) { translate: 2px -2px; }
+    .logo:hover { background: var(--color-current); }
+  }
+  .card:not(.filled):active { background: var(--color-surface); }
+  .logo:active { background: var(--color-current); scale: 0.97; }
+  @media (prefers-reduced-motion: reduce) {
+    .card, .logo, .card > :global(svg) { transition: none; }
+    .card:hover > :global(svg), .card[target='_blank']:hover > :global(svg) { translate: none; }
+    .logo:active { scale: none; }
+  }
 
   @media (min-width: 48rem) {
     .page {
       --sky-w: 2972px; --sky-left: calc(50cqw - 1486px); --sky-top: -600px;
       --hill-w: 3320px; --hill-left: calc(50cqw - 1660px); --hill-top: -699px;
       --veil-h: 620px;
-      min-height: 1040px;
-      padding: 96px var(--gutter) 28px;
+      --hill-bottom: -547.3px; /* Board 1120 tall, hill 3320 wide from top -699. */
     }
   }
   @media (min-width: 64.0625rem) {
@@ -155,16 +193,19 @@ const cards = [
       --sky-w: 1645px; --sky-left: calc(50cqw - 720px); --sky-top: -197px;
       --hill-w: 1617px; --hill-left: calc(50cqw - 806px); --hill-top: -13px;
       --veil-h: 640px;
-      min-height: 900px;
-      padding: 222px 0 28px;
+      min-height: max(100svh, 900px);
+      /* Desktop keeps the board's frame: the hill is placed from the top again. */
+      --hill-bottom: auto;
+      /* No side padding here: the landscape is placed in cqw, measured on this box's content width. */
+      padding: 4rem 0;
     }
-    .content { display: grid; grid-template-columns: 460px 520px; grid-template-areas: 'identity cards' 'elsewhere cards'; align-items: center; column-gap: 80px; row-gap: 40px; max-width: none; width: auto; }
-    .identity { grid-area: identity; align-self: end; }
-    .cards { grid-area: cards; grid-row: 1 / span 2; }
-    .elsewhere { grid-area: elsewhere; align-self: start; }
-    .avatar { width: 96px; height: 96px; border-width: 3.4px; }
-    h1 { font-size: 56px; line-height: 60px; letter-spacing: -0.02em; }
-    .description { font-size: 20px; line-height: 28px; max-width: 440px; }
-    .domain { width: 1060px; max-width: none; margin: 0; padding-top: 0; position: absolute; bottom: 24px; left: calc(50% - 530px); }
+    /* DOM order stays identity, cards, profiles: the cards come first from the keyboard (NL-22). */
+    .content { display: grid; grid-template-columns: 28.75rem 32.5rem; grid-template-areas: 'identity cards' 'elsewhere cards'; grid-template-rows: auto auto; align-content: center; column-gap: var(--space-4xl); row-gap: var(--space-xl); max-width: none; width: auto; }
+    .identity { grid-area: identity; align-self: end; gap: var(--space-xl); }
+    .cards { grid-area: cards; grid-row: 1 / span 2; align-self: center; }
+    .elsewhere { grid-area: elsewhere; align-self: start; padding: 0; background: none; gap: var(--space-xl); }
+    .elsewhere ul { padding: var(--space-xs); border-radius: var(--radius-lg); background: var(--color-card); }
+    .domain { left: max(var(--gutter), 50% - 33.125rem); }
+    .hill { top: var(--hill-top); }
   }
 </style>

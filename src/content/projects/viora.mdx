@@ -12,21 +12,101 @@ timeframe: '2026'
 coverImage: './viora/cover.png'
 coverImageAlt: 'Viora landing page: "Anticipa la próxima cosecha" over an illustration of an olive grove'
 problem: 'Olive harvests swing between good and bad years, and growers plan each season without data.'
-whatItDoes: 'A web platform for planning, a phone app for producers in the field and one for cooperatives, all on the same data.'
+whatItDoes: 'A web platform for planning, plus mobile apps for producers in the field and cooperatives.'
 myPart: 'Full stack on a team of five: the Vue web app, a Spring Boot backend with an in-app AI assistant, offline harvest settlements on Android, and alerts for cooperatives in Flutter.'
 stack: [Vue, Angular, Spring Boot, ASP.NET Core, Spring AI, PostgreSQL, Kotlin, Jetpack Compose, Flutter]
-insideStack: 'Spring Boot + Angular and ASP.NET Core + Vue on the web, a Kotlin app and a Flutter app, all on one API.'
+insideStack: 'An earlier Angular and Vue web platform, then Kotlin and Flutter apps backed by a Spring Boot API.'
 insideDecision: "For the mobile apps' API we picked Spring Boot over ASP.NET Core. The team already knew it, and Spring Data, Spring Security and Spring AI gave us storage, sign-in and the in-app assistant without building them from scratch."
 demoUrl: 'https://viora-landing-page-sable.vercel.app/'
 repoUrl: 'https://github.com/upc-pre-1acc0238-2620-4951-arcadiadevs/viora-platform'
+heroDescription: 'A university team built tools for olive growers and cooperatives. I worked across the web, API and mobile apps.'
+caseStudy:
+  headlines:
+    problem: 'An olive season is hard to plan without a record of the last one.'
+    features: 'Field work and cooperative planning, connected by data.'
+    decisions: 'Four decisions, and what each one cost.'
+    mistakes: 'Field testing exposed the gaps.'
+    growth: 'From the first web app to the mobile platform.'
+  glance:
+    - { label: Team, value: 'Five people, university project' }
+    - { label: My role, value: 'Web, backend and mobile development' }
+    - { label: Audience, value: 'Olive growers and cooperative managers in southern Peru' }
+    - { label: Built with, value: 'Vue, Angular, Spring Boot, ASP.NET Core, PostgreSQL, Kotlin and Flutter' }
+    - { label: Status, value: 'Landing on Vercel and API on Render, both live; Android and Flutter builds shipped to testers through Firebase App Distribution.' }
+  problem:
+    - 'The team interviewed three growers and three cooperative technical managers. Growers relied on field observation and faced unreliable connectivity; managers needed to plan collection across many plots.'
+    - 'One manager described the simple harvest projection as ‘one year yes, one year no’. The needfinding insight was that advice must arrive before the useful biological window closes—and field records must work without a signal.'
+  requirements: 'Make plot and harvest records usable offline, explain seasonal guidance, and give managers a view of member plots and collection risks.'
+  constraint: 'Field work cannot assume a network connection. The Android harvest flow needs to keep a settlement until it can synchronize.'
+  features:
+    - title: 'Follow the season'
+      description: 'The producer app brings together plot conditions, seasonal guidance and alerts.'
+      detail: 'The team built the Android producer experience and shared API. I contributed to the API and producer-side work, including the offline harvest flow.'
+      image: './viora/season.webp'
+      imagePresentation: phone
+      imageAlt: 'Producer app showing the daily summary and seasonal guidance'
+    - title: 'Close a harvest in the field'
+      description: 'A producer can record a harvest settlement without a connection and synchronize it later.'
+      detail: 'I implemented the pending settlement queue on Android with Room and WorkManager, including a way to correct a pending record before synchronization.'
+      image: './viora/harvest.webp'
+      imagePresentation: phone
+      imageAlt: 'Producer app harvest form with green, black and discarded olives'
+    - title: 'Give cooperatives their own view'
+      description: 'Managers can follow alerts and open a member plot dossier.'
+      detail: 'I built the manager alerts and provisional plot dossier in the Flutter app, with corresponding territory work in the API.'
+      image: './viora/dossier.webp'
+      imagePresentation: phone
+      imageAlt: 'Manager app showing a provisional plot dossier and PDF download'
+    - title: 'One API, two apps, both offline'
+      description: 'Producers use a native Android app and managers a Flutter app. Both keep a local database, so field work survives without a signal, and both sync with one Spring Boot API.'
+      detail: 'C4 container diagram from the team report. Mapbox draws the plots, Open-Meteo feeds the weather, Mercado Pago handles subscriptions. The diagram is a teammate''s; I worked on the API, the Android offline queue and the Flutter manager views.'
+      image: './viora/architecture.webp'
+      imagePresentation: screenshot
+      imageAlt: 'C4 container diagram: landing page, Android and Flutter apps with local databases, Spring Boot API with PostgreSQL, and external services'
+    - title: 'Check the plot before saving'
+      description: 'After validation, the app compares the traced area with the declared area and asks for confirmation when they differ.'
+      detail: 'I implemented the area comparison; the team used producer interviews and heuristic evaluation to identify the problem.'
+      image: './viora/area-check.webp'
+      imagePresentation: phone
+      imageAlt: 'Producer app warning that the traced area differs from the declared area'
+  milestones:
+    - { day: 'MAY–JUL 2026', title: 'The web platform', description: 'The first course built Viora on the web, in Angular and then Vue, with ASP.NET Core and Spring Boot backends. I worked on alerts, layout and the backend integration.' }
+    - { day: 'SEP 26, 2026', title: 'Landing page released', description: 'The team released the landing page during Sprint 1.' }
+    - { day: 'OCT 13, 2026', title: 'Sprint 1 review', description: 'The landing page and initial API were deployed; the first Android app supported offline field records.' }
+    - { day: 'NOV 13, 2026', title: 'Sprint 2 review', description: 'The team had deployed the API on Render and distributed Android and Flutter builds through Firebase App Distribution.' }
+    - { day: 'NOV 2026', title: 'Validation in the field', description: 'Two producers tested Android; their feedback and the heuristic review informed Sprint 3.' }
+    - { day: 'NOV 19, 2026', title: 'First improvements', description: 'I implemented GPS detection, area checks, contextual explanations and critical notifications; Android 1.23.0 was released.' }
+    - { day: 'NOV 23–24, 2026', title: 'Sprint 3 improvements', description: 'Android 2.0.0 and 2.0.1 followed; the team also distributed updated Flutter builds.' }
+  proof:
+    title: '9 contexts'
+    text: 'Nine bounded contexts found through EventStorming, 37 acceptance feature files written in Sprint 1, ten ADRs in the backend, and the improvements from field validation shipped as Android 1.23.0.'
+decisions:
+  - choice: 'Use Spring Boot for the mobile API'
+    rejected: 'ASP.NET Core for the mobile API'
+    subtitle: 'shared backend · Kotlin + Flutter'
+    because: 'The team already knew Spring, and its data, security and AI libraries supported the mobile platform.'
+    cost: 'The earlier ASP.NET Core backend remains a separate codebase.'
+  - choice: 'Re-evaluate cooperative alerts the moment a plot changes'
+    rejected: 'Only the scheduler that checked every 15 minutes'
+    subtitle: 'my ADR-009 · after-commit async events'
+    because: 'A manager needs to see fruit overload or a frost risk at once, not up to 15 minutes later. The check runs after the producer''s change is saved and off their request, so a failure never undoes a sampling or slows the app; the 15-minute sweep stays as a safety net.'
+    cost: 'An in-memory lock prevents duplicate alerts on the single instance we deploy; scaling out needs a database lock, and a forecast-only frost still waits for the sweep.'
+  - choice: 'One heat threshold, owned by the Telemetry context'
+    rejected: 'Each client keeping its own constant'
+    subtitle: 'my ADR-006 · single source of truth'
+    because: 'The app told producers to water early at 30 °C while no alert opened until 32 °C, so the app contradicted itself and the assistant had no single value to quote. Now the app, the alert screen and the assistant read the same 32 °C and 36 °C from the backend.'
+    cost: 'No warning between 30 and 32 °C, and the values still need an agronomist to validate them for the Sevillana variety.'
+  - choice: 'Certify a campaign only after three consecutive settled seasons'
+    rejected: 'Certify any settled campaign'
+    subtitle: 'my ADR-002 · SHA-256 sealed PDF'
+    because: 'The certified dossier carries the alternation index, which compares consecutive seasons; with fewer than three there is no index, and the sealed PDF would vouch for a number that does not exist.'
+    cost: 'A new producer waits three seasons for a certificate, and the API answers 409 until then.'
 ---
 
-A platform that helps olive growers in southern Peru run their season: web planning, a phone app for producers in the field and one for cooperatives, all on the same data. Team of five.
+### The field test changed the interface
 
-My part, across the whole product:
+During Android validation, one producer struggled to locate a plot with GPS off. Another traced a plot much smaller than the area she had declared and asked for clearer explanations of agronomic terms and cold alerts outside the app.
 
-- Web (Vue): shared layout and navigation, English/Spanish, alerts, the sign-in redesign, onboarding, and the releases that connected it to the real backend.
-- Web (Angular, first version): the alerts module.
-- Backend (Spring Boot): an in-app assistant built with Spring AI, cooperative membership codes and harvest settlements.
-- Android (Kotlin): harvest settlements that work offline and sync later.
-- Cooperative app (Flutter): manager alerts and member plot dossiers.
+I added a GPS-off prompt with a manual drawing option, an area mismatch confirmation, contextual explanations, a consistent daily summary and critical system notifications. WhatsApp was requested, but these changes use Android notifications; they are not a WhatsApp integration. A teammate handled the adjustable calendar and discarded olives.
+
+The team built Viora together. My work also included web alerts and layout, parts of the API and assistant, offline harvest settlements, and manager alerts and plot dossiers in Flutter.

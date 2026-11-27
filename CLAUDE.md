@@ -88,8 +88,7 @@ The lens is the only source of truth for the scheme, not the OS: `:root`
 sets `color-scheme: light` (Outside) and `:root[data-lens="inside"]` sets
 `color-scheme: dark` (Inside). Do not reintroduce `light dark` or a
 `[data-theme]` hook. If you ever touch `:root` in `tokens.css`, confirm both
-declarations survive. (Until task 1.1 of `portfolio-implementation` lands,
-the scaffold `tokens.css` still has `color-scheme: light dark`.)
+declarations survive.
 
 ## `lang` is a required parameter in `src/lib/content.ts`
 
@@ -137,7 +136,7 @@ translation instead. Every language link in the nav needs
 Prose inside MDX content entries is exempt from the Dictionary rule: that
 is content, and the `lang` field on the entry already carries it.
 
-## Visual design lives in Figma — `tokens.css` is a placeholder
+## Visual design lives in Figma
 
 The visual design is in progress and is recorded in
 `openspec/changes/portfolio-visual-design/`. Read it before any design,
@@ -150,20 +149,57 @@ brand, copy, image or UI task:
 - `assets.md` — hero image files and the prompts that generated them.
 - `tasks.md` — what is done and what is next.
 
+The approved design is now the three `Proposed · …` pages (Home, Work &
+projects, Notes & links), approved by the owner on 2026-11-25 and built
+from the components on the `Design system` page. The old v3.5 boards
+(pages Portfolio, Case study, Work, Writing) and the Archive page were
+deleted that day; they survive only in the file's version history
+("Before removing deprecated pages"), so node ids under `design.md` §6
+and the archived openspec records may point at nodes that no longer
+exist. The `As built · …` pages (the site at commit `5a0977a`) were
+deleted by the owner the same day; the audit reports still cite their
+node ids as evidence. Read the **design audit**
+(`openspec/changes/design-audit/`, start with `proposal.md`) before any
+audit, UI review, Figma sync or code task that implements the design.
+
 Three rules follow from it, and they are the ones a session without
 context gets wrong:
 
-**`src/styles/tokens.css` is not the brand.** Its neutral and blue values
-are scaffold placeholders. The brand is a green ramp plus sun yellow, set
-in Epilogue, Hanken Grotesk and IBM Plex Mono. Never derive a color, a
-font or an image prompt from `tokens.css`.
+**Figma is the source, `tokens.css` follows it.** `src/styles/tokens.css`
+holds the brand (green ramp plus sun yellow; Epilogue, Hanken Grotesk, IBM
+Plex Mono) and, since 2026-11-26, the tokens of the Figma variables
+(collections Primitives, Color, Breakpoint, Foundation). A new token is
+added in Figma first, with its WEB code syntax `var(--name)` matching the
+CSS name.
 
-**No UI code until the owner approves the hi-fi.** Design proposals are
-built in the Figma file (`gq6glEp9QrPOnEyYG9dldh`), beside the current
-board, never over it. Do not offer CSS or component code as an
-alternative during the design phase.
+**Code implements approved boards only.** The Proposed boards are approved,
+so the code phase is open: its plan and resume point are in
+`openspec/changes/design-audit/tasks.md`, "Phase 4 — Code". A design
+change that no approved board shows is proposed in the Figma file
+(`gq6glEp9QrPOnEyYG9dldh`) first, beside the current board, never over it,
+and waits for the owner's approval before any CSS or component code.
 
 **`design/` is ignored by git on purpose.** The hero images live in the
 Figma file; the local copies are the owner's working files and a fresh
 clone does not have them. Do not assume they exist and do not commit
 them; `assets.md` says what they are and how to regenerate them.
+
+## Link arrows say where a link goes
+
+A visitor must know before clicking whether a link stays on the site. The
+owner set this on 2026-11-25 after `→` had been used for everything:
+
+- `→` — another page of this site, same tab.
+- `←` — back to a listing (All work, All notes). Back goes on the left,
+  forward on the right; never put a `←` and a `→` side by side facing each
+  other.
+- `↗` — leaves the site: a live demo, GitHub, LinkedIn, the CV PDF, RSS.
+  Always `target="_blank" rel="noopener noreferrer"` and the
+  `common.newTab` note in a `.visually-hidden` span (or in the
+  `aria-label` of a logo-only button, which carries no arrow).
+- No arrow on in-page actions (copy email, chat buttons, submit) and no
+  decorative arrows anywhere.
+
+Hanken Grotesk has no `↗` glyph: use `<Icon name="arrow-up-right" />`.
+`scripts/check-links.mjs` reads the built HTML at the end of
+`npm run check` and fails on a link that breaks this rule.

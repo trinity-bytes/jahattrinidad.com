@@ -183,6 +183,8 @@ No automatic rotation. Spec frame "Logo — states" `2093:2` sits under the Outs
 
 ## 6. Figma map
 
+> **2026-11-25:** the pages Portfolio, Case study — Inspiration Garden, Work — all projects, Writing — blog and Archive were deleted after the owner approved the design-audit proposals (pages `Proposed · …`). The ids below are history; the boards survive in the file's version history ("Before removing deprecated pages"). Current map: `openspec/changes/design-audit/tasks.md`, phase 3.
+
 Pages:
 
 | Page | Id |
@@ -237,6 +239,14 @@ Owner review round (2026-11-16): "el sujeto de la foto queda muy abajo… no imp
 - The section gaps were stale background layers: gradient, light, grain and bytes kept the old section heights after earlier fixes. Every section's background is now refitted to its height. Rule: after any change that alters a section's height, refit its `bg /` layers and masks.
 - Bytes masks on the responsive boards use smaller margins: 12–36 px on mobile, 20–52 px on tablet (desktop keeps 40–120). Step and mask names state the real margin.
 - Inside notes are quieter: on-element pins are 14 px outline circles (cream 45% stroke, number 9 px at 75%); list rows use 11 px text, 8 px spacing; the hero notes band has 16 / 24 padding.
+
+Owner hero round (2026-11-16, later): the owner re-laid the Outside heroes (name lower, over the grass; portrait higher; marker and hint back at the hero bottom; heroes 862 / 867 px) and the same layout was ported to both Inside boards (sky, hill, name, portrait, sun mask, bounds and pins; the Inside mobile hint wraps at 166 px like Outside). The name sits at y 628 (mobile) / 530 (tablet).
+
+**Name behind the portrait (approved).** The portrait hid the middle letters of "Jahat". Rejected: a duplicate name above the portrait at 20% (reads as a double exposure, and it also lands on the grass that should cover the letter bases). Approved: an outline of the name drawn above the portrait and masked to the portrait's alpha, so the word reads whole and only the person carries the outline.
+- Layer `layer 05 / name over portrait`: the name, no fill, 1.5 px stroke. Outside: white at 85%, group at 40%. Inside: green-300 at 90%, group at 100%.
+- Arm gaps: the gaps between each arm and the torso are transparent holes inside the portrait's alpha, so the solid name showed through them (solid, outline, solid, outline: owner, "se ve un poco extraño en la parte de los brazos, como glitcheado"). On Outside the solid name is grouped with a mask "hero minus arm gaps", and a second outline copy is masked to the gaps, so between arms and body only the outline shows. Inside needs no gap mask: its name is outline only.
+- The gap vectors are traced from the portrait PNG (the enclosed transparent regions of its alpha). They depend on the pose: if the portrait image changes, regenerate them. All mask layers are locked; to move the name, move the text layers, never the `layer 05` group.
+- Implementation: the outline is an SVG/text stroke masked with the portrait PNG (`mask-image`), plus the two gap paths as SVG clip paths; the same paths cut the solid name.
 
 Open points for the owner (task 4.4): the annotation notes in the stacked lists measure 3.2–3.6:1 (12 px mono at 40%, inherited from the desktop spec; 60% would pass AA); the hint still says "press I" on phones; mobile hero is taller than the 844 viewport; white "Jahat" on the bright mobile sky (desktop is also white; v2 mobile used green-950 for contrast).
 
@@ -595,10 +605,23 @@ Tablet and desktop show state 02; the other states use the same card at those si
 Board **`2356:86`** on "Portfolio" (`2029:2`), x 13626, 390 × 940. It is the link-in-bio page for Instagram, YouTube and X profiles, so it is designed mobile first; on tablet and desktop the same column (max 440) is centred on the landscape.
 
 - Background: the Home sky and near hill (the hill rises at the bottom, as the footer does elsewhere), with a cream veil (55% → 0) over the top half for legibility. No nav and no footer: the page is a launcher.
-- Identity: the owner's profile photo (`docs/linkedin.png`, 1254 × 1254, supplied 2026-11-18; placed in Figma as a 600 px JPEG fill) in an 84 px circle with a white ring, "Jahat Trinidad" (Epilogue SemiBold 34), the Home hero line "I design and build products, from the first sketch to the live site." and "OPEN TO AN INTERNSHIP · LIMA, PERU" with the sun dot.
+- Identity: the owner's profile photo (`docs/linkedin.png`, 1254 × 1254, supplied 2026-11-18, a local working file not kept in git; placed in Figma as a 600 px JPEG fill) in an 84 px circle with a white ring, "Jahat Trinidad" (Epilogue SemiBold 34), the Home hero line "I design and build products, from the first sketch to the live site." and "OPEN TO AN INTERNSHIP · LIMA, PERU" with the sun dot.
 - Four link cards (radius 20, ink border, `card` fill), each a title in Hanken Medium 17, a mono subline and an arrow: See my work (counts come from the `projects` collection), Read my notes, the latest note (title + read time, from `posts`), and **Write to me** as the one filled card (ink), which goes to Home `#contact` and focuses the chat composer.
 - "ELSEWHERE": the profiles from `links.json` as 52 px circular logo buttons (`card` fill, ink border, 20 px monochrome ink logo, `aria-label` with the network name). Owner, 2026-11-18: "me gustaria que uses los logos en lugar del nombre, porque X queda raro". Logos are Simple Icons paths (CC0); LinkedIn comes from simple-icons 9.21.0, since later versions removed it at the brand's request.
 - **Tablet 768 `2358:101`:** the mobile column (440) centred on the rescaled landscape. **Desktop 1440 `2358:162`:** two columns centred on the desktop Home hero layers (sky `2191:88`, near hill `2191:90`, same positions): identity (avatar 96, name 56, description 20/28) and Elsewhere on the left (460), the four link cards on the right (520).
 - `jahattrinidad.com` in white mono on the hill closes the page.
 
 Owner approved the mobile menu, the chat view and `/links/` (all breakpoints) on 2026-11-18: "me encanta. aprobado". The profile photo also replaces the "JT" placeholder in the post author card and the chat header.
+
+## Project page v1 and experiments preview v2 (proposals, 2026-11-25)
+
+Owner, 2026-11-25: "no, es solo para la home. hay que cambiar el approach para mostrar la parte tecnica. la seccion de proyectos es el momento apra msotrar la parte tecnica sin disiular. pense qu eharaias una vista simplificada por cada proyecto, menos detllada que un caso de estudio" and "me gustaria rediseñar como se muestra el preview de github en los experimentos, que ahora se ve cutre". The lens stays on Home only (code reverted in `eacea63`).
+
+Both boards are on "Work — all projects" (`2065:2`), right of the page covers proposal:
+
+- **Project page v1 · TourBench** `2443:12` (x 11800). A lighter sibling of the case study for `tier: project` entries, technical without a lens. Sections: hero `2443:13` (clone of the Work hero, display word hidden per the display-word rule; back link + type line, a claim headline, a plain sub, "Open the app" and "Code" buttons); overview (browser-framed capture + "At a glance": problem, method, scale, built with, my part, status); "How it works" (three numbered steps, each with a dark mono formula card in the experiment-tile style, plus a growth table "Why it stops at 11 points"); "The key decision" (one row of the case-study decisions table: choice + rejected subtitle, why, what it cost) `2443:123`; next project card + "All work" `2443:143`; Contact and footer clones (`2443:150`, `2443:188`). Facts come from the TourBench README and the live app; one [Draft] note on why the app stops at 11.
+- **Experiments preview v2** `2442:12` (x 10100). The GitHub social card repeated the tile in a white box outside it. The "peek" stays inside the tile: on hover or focus the text column narrows and a real capture from the repo's README slides in from the right, with a mono caption, while the chips give way to `gh`-style stats (stars, forks, language, last update). All tiles share one height (300) so the states do not shift the grid. Examples: Lock Keys OSD (its README OSD capture) and Coursera Clone Web Services (its verifier screenshot); Profile README and Forest Hero shown in the default state. Notes on the board cover data (stats from the GitHub API at build time, captures committed), motion (200 ms, reduced motion instant), touch (no peek) and Forest Hero's missing capture.
+
+Approved 2026-11-25 and implemented: the project page renders from the `page` object of a `tier: project` entry (src/components/sections/ProjectPage.astro, through the CaseStudy view); the overview follows the case study pattern (capture over the hero, then At a glance) rather than the board's side-by-side layout, because that pattern is already solved at every breakpoint. The experiments grid is two columns as on the board; stats come from `src/lib/github.ts` at build time and are hidden when GitHub fails.
+
+**Link arrows (owner, 2026-11-25).** "tienes que revisar los iconos de flecha que usas para indicar que se navega de pagina, no se tinene que usar para todo, como el visitante sabe si ese boton navega dentro del sitio o fuera de el?" Rule: `→` another page of the site; `←` back to a listing, placed left of any forward link; `↗` leaves the site, new tab; no arrow on in-page actions; no decorative arrows. Applied to both proposal boards (external links now carry an up-right SVG icon, the "← All work" link moved to the left of the next-project card, the peek caption lost its ↖) and to the site (CLAUDE.md "Link arrows say where a link goes", enforced by `scripts/check-links.mjs`).

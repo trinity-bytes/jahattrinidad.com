@@ -1,12 +1,21 @@
 ---
-title: coursera-clone
-description: A course platform that runs in the terminal, built on my own AVL trees, hash tables and graphs.
+title: Coursera Clone
+description: "A course platform in the terminal for browsing classes, enrolling and earning certificates."
 lang: en
 translationKey: coursera-clone
 tier: experiment
 publishDate: 2026-07-01
-kind: ./coursera-clone --help
-team: { size: 1, solo: true }
+kind: Console app · Team of 3
+team: { size: 3, solo: false }
+coverImage: "./coursera-clone/cover.png"
+coverImageAlt: "Coursera Clone console landing page"
 stack: [C++, Data structures]
 repoUrl: 'https://github.com/trinity-bytes/coursera-clone'
+insideStack: "A C++ console application with custom data structures."
+insideDecision: "AVL trees track enrolled course and specialization IDs; a title-keyed hash indexes courses. A heap ranks activities by enrollments, while a category graph expands recommendations with BFS."
+decisions:
+  - choice: "Write our own hash table with chained buckets"
+    rejected: "A wrapper around std::unordered_map"
+    because: "This Algorithms and Data Structures course project is built on structures implemented from scratch."
+    cost: "The team has to maintain the collision handling and a custom iterator."
 ---

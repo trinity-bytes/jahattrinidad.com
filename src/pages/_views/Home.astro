@@ -10,6 +10,7 @@ import Experience from '../../components/sections/Experience.astro';
 import Notes from '../../components/sections/Notes.astro';
 import Contact from '../../components/sections/Contact.astro';
 import Footer from '../../components/sections/Footer.astro';
+import Lens from '../../components/sections/Lens.astro';
 import Reveal from '../../components/sections/Reveal.astro';
 import {
   collectionPath,
@@ -23,7 +24,8 @@ import {
   type Project,
 } from '../../lib/content';
 import { CONTACT_EMAIL, SOURCE_URL } from '../../lib/consts';
-import { buildSeo, personJsonLd } from '../../lib/seo';
+import { buildSeo, jsonLdGraph, personNode, websiteNode } from '../../lib/seo';
+import profile from '../../assets/profile/jahat.jpg';
 import { getDictionary, localeGroup, localizedPath } from '../../lib/i18n';
 // Placeholder for the Garden screenshot until the real entry lands (task 8.1).
 import gardenPlaceholder from '../../content/projects/inspiration-garden/cover.png';
@@ -93,16 +95,20 @@ const seo = buildSeo({
   group: localeGroup('/'),
 });
 
-const personSchema = personJsonLd({
+const portrait = await getImage({ src: profile, width: 600, height: 600, format: 'jpg' });
+const person = personNode({
   site,
-  path: localizedPath(lang, '/'),
   description: t.meta.homeDescription,
-  sameAs: [linkOf('github'), linkOf('linkedin')].filter((url): url is string => Boolean(url)),
+  sameAs: links.map((link) => link.data.url),
+  image: portrait.src,
 });
+const personSchema = jsonLdGraph([websiteNode({ site, path: localizedPath(lang, '/'), lang }), person]);
 ---
 
-<Base lang={lang} seo={seo} jsonLd={personSchema} heroIntro lens profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
+<Base lang={lang} seo={seo} jsonLd={personSchema} heroIntro profileLinks={links.map((link) => ({ label: link.data.label, href: link.data.url }))}>
   <Hero strings={copy.hero} insideStrings={t.home.inside.hero} workHref={workSection} />
+  {/* The lens is fixed to the viewport; it sits here so it is the Tab stop right after the hero's CTA. */}
+  <Lens strings={t.lens} />
   <GlowTransition direction="rise" />
   <Values
     copy={copy.values}
@@ -153,6 +159,7 @@ const personSchema = personJsonLd({
   <Footer
     slot="footer"
     strings={t.footer}
+    newTab={t.common.newTab}
     navigation={[
       { label: t.nav.work, href: '#work' },
       { label: t.nav.experience, href: '#experience' },

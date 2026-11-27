@@ -1,0 +1,52 @@
+---
+title: TourBench
+description: "Una herramienta visual que encuentra la ruta más corta para un recorrido de recolección de residuos."
+lang: es
+translationKey: tourbench
+tier: project
+publishDate: 2025-09-03
+kind: Visualización · Individual
+team: { size: 1, solo: true }
+coverImage: "../tourbench/cover.png"
+coverImageAlt: "TourBench muestra una ruta de ocho nodos, su distancia, tiempo y CO₂"
+stack: [JavaScript, Cytoscape.js]
+demoUrl: "https://tourbench.jahattrinidad.com/"
+demoIsApp: true
+repoUrl: "https://github.com/trinity-bytes/tour-bench"
+insideStack: "JavaScript sin frameworks con Cytoscape.js."
+insideDecision: "Fijar el inicio deja (N−1)! recorridos; backtracking comprueba cada ciclo válido para demostrar cuál es el más corto. El crecimiento factorial limita la app a 11 nodos."
+page:
+  headline: 'TourBench encuentra la ronda más corta para un camión de basura, y lo demuestra.'
+  sub: 'Un banco de pruebas visual del problema del agente viajero: prueba todas las rutas posibles, se queda con la mejor y muestra su distancia, tiempo y CO₂.'
+  glance:
+    - { label: Problema, value: 'Agente viajero (TSP) sobre un grafo completo' }
+    - { label: Método, value: 'Búsqueda exhaustiva con backtracking, sin heurísticas' }
+    - { label: Escala, value: 'De 4 a 11 puntos, de 6 a 3 628 800 recorridos' }
+    - { label: Tecnologías, value: 'JavaScript sin frameworks, Cytoscape.js, node -‑test' }
+    - { label: Mi parte, value: 'Todo, por mi cuenta' }
+  how:
+    headline: 'La mejor ruta, demostrada probándolas todas.'
+    sub: 'Sin atajos: el objetivo del proyecto es que el costo factorial del problema se vea, no solo que se explique.'
+    steps:
+      - title: El modelo
+        text: 'Una ronda es un ciclo que visita cada punto una vez y vuelve al inicio. Su costo es la suma de las aristas que usa, leídas de la matriz de adyacencia.'
+        formula: "C(π) = Σ w(πᵢ, πᵢ₊₁)\ni = 0 … N−1"
+      - title: Cada recorrido, una vez
+        text: 'Fijar el punto de partida deja (N−1)! recorridos posibles. El backtracking los arma arista por arista y se queda con el más barato, así el resultado es el óptimo, no una estimación.'
+        formula: "N = 8: 7! = 5 040 recorridos"
+      - title: De kilómetros a impacto
+        text: 'La mejor ruta se vuelve algo sobre lo que una ciudad puede actuar: el tiempo de manejo a la velocidad media del camión y el CO₂ que emite, comparados con la peor ruta.'
+        formula: "t = d / 25 km/h × 60\nCO₂ = d × 0.2 kg/km"
+    table:
+      title: Por qué se detiene en 11 puntos
+      rows:
+        - [N, '4', '6', '8', '10', '11', '12']
+        - ['recorridos (N−1)!', '6', '120', '5 040', '362 880', '3 628 800', '39 916 800']
+      note: 'Cada punto extra multiplica el trabajo: 12 puntos serían once veces los recorridos de 11.'
+  decisionHeadline: 'Fuerza bruta, a propósito.'
+decisions:
+  - choice: 'Enumerar cada recorrido, sin heurística'
+    rejected: 'vecino más cercano o 2-opt'
+    because: 'Una heurística da una buena ruta rápido, pero no puede decirte cuán lejos está de la mejor. Probar los (N−1)! recorridos da el óptimo demostrado y deja ver cómo el costo explota al crecer N.'
+    cost: 'Solo escala hasta 11 puntos: es un banco de enseñanza, no un motor de rutas para una flota real. La app además necesita una pantalla de al menos 1024 px de ancho.'
+---

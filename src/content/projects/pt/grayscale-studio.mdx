@@ -11,5 +11,35 @@ coverImage: '../grayscale-studio/cover.png'
 coverImageAlt: 'Área de trabalho do Grayscale Studio com a imagem original, o resultado e os painéis de histograma'
 stack: [JavaScript, Web Components, OpenCV.js, Chart.js]
 demoUrl: 'https://grayscale.jahattrinidad.com/'
+demoIsApp: true
 repoUrl: 'https://github.com/trinity-bytes/grayscale-studio'
+insideStack: "Web Components em JavaScript, OpenCV.js e Chart.js."
+insideDecision: "A equalização usa a distribuição acumulada para transformar os níveis de intensidade; o app mostra o cálculo."
+page:
+  headline: "Veja como uma imagem em cinza muda e por quê."
+  sub: "Um estúdio no navegador compara equalização de histograma e expansão de contraste, mostrando o cálculo."
+  glance:
+    - { label: "Problema", value: "Explorar contraste em imagens em escala de cinza" }
+    - { label: "Métodos", value: "Equalização de histograma e expansão min–max" }
+    - { label: "Motor", value: "OpenCV.js e Chart.js no navegador" }
+    - { label: "Contexto", value: "Projeto de processamento de imagens, equipe de três" }
+    - { label: "Minha parte", value: "Liderei o projeto e deleguei algumas partes aos colegas" }
+  how:
+    headline: "Duas formas de transformar intensidades."
+    steps:
+      - title: "Ler o histograma"
+        text: "OpenCV.js verifica se a imagem está em escala de cinza. O histograma conta os pixels de cada intensidade e o Chart.js o apresenta para análise."
+        formula: "r ∈ [0, 255]"
+      - title: "Equalizar com a CDF"
+        text: "A distribuição acumulada associa cada intensidade de entrada a uma de saída. CDFmin é o primeiro valor acumulado não nulo; o aplicativo mostra a tabela e o cálculo. rint arredonda para o inteiro mais próximo e, no empate, para o par, como o OpenCV."
+        formula: "s = rint(255 × (CDF(r) − CDFmin) / (1 − CDFmin))"
+      - title: "Expandir o intervalo"
+        text: "A expansão min–max transforma linearmente o mínimo e o máximo observados para aproveitar o intervalo disponível."
+        formula: "s = rint(255 × (r − min) / (max − min))"
+  decisionHeadline: "A explicação precisa corresponder aos pixels."
+decisions:
+  - choice: "Manter as transformações do OpenCV e ajustar a matemática a elas"
+    rejected: "Processar os pixels com uma tabela de conversão compartilhada com a explicação"
+    because: "O build do OpenCV.js não exporta cv.LUT, e um loop de pixels em JavaScript sem benchmark não era um substituto seguro."
+    cost: "A explicação precisa reproduzir o arredondamento float32 e para o par do motor, verificado no motor real."
 ---
