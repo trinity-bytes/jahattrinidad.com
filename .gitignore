@@ -7,3 +7,6 @@ design/
 
 # wrangler local state
 .wrangler/
+
+# Local screen recordings (working files, like design/)
+docs/*.mp4
