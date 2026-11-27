@@ -58,7 +58,7 @@ const group = await getTranslationGroup('posts', entry);
 const pagePath = entryPath('posts', lang, entry.id);
 const cardPath = ogImagePath('posts', lang, entry.id);
 const description = metaDescription(entry.data.description, t.meta.postSignatures);
-const kindName = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial;
+const typeLabel = t.notes[entry.data.type];
 
 const portrait = await getImage({ src: profile, width: 600, height: 600, format: 'jpg' });
 const person = personNode({
@@ -88,7 +88,7 @@ const jsonLd = jsonLdGraph([
 
 const seo = buildSeo({
   jsonLd,
-  title: pageTitle(entry.data.title, kindName, { max: POST_TITLE_MAX }),
+  title: pageTitle(entry.data.title, typeLabel, { max: POST_TITLE_MAX }),
   description,
   path: pagePath,
   image: { path: cardPath, alt: entry.data.title },
@@ -104,7 +104,8 @@ const seo = buildSeo({
 
 const { Content, headings } = await renderEntry(entry);
 const morePosts = (await listPosts({ lang })).filter((post) => post.entry.id !== entry.id).slice(0, 2);
-const typeLabel = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial;
+// "In this post" lists the h2 sections only; without any, the block is left out entirely.
+const sections = headings.filter((heading) => heading.depth === 2);
 ---
 
 <Base lang={lang} seo={seo} profileLinks={links.map((link) => ({ label: link.label, href: link.url }))}>
@@ -121,7 +122,7 @@ const typeLabel = entry.data.type === 'essay' ? t.notes.essay : t.notes.tutorial
   <section class="article-section">
     <div class="article-layout">
       <aside class="contents" aria-label={t.post.inThisPost}>
-        {headings.length > 0 && <><h2>{t.post.inThisPost}</h2><ul>{headings.filter((heading) => heading.depth === 2).map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ul></>}
+        {sections.length > 0 && <><h2>{t.post.inThisPost}</h2><ul>{sections.map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ul></>}
         {entry.data.canonicalUrl && <TextLink class="canonical" href={entry.data.canonicalUrl} destination="external" label={t.post.published} newTab={newTab} />}
       </aside>
       <article class="article">
