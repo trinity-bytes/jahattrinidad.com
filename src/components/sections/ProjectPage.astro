@@ -69,7 +69,7 @@ const [head, ...rows] = page.how.table?.rows ?? [];
         <div class="table-head"><span>{t.choice}</span><span>{t.why}</span><span>{t.cost}</span></div>
         {decisions.slice(0, 2).map((d) => (
           <div class="decision">
-            <div><span class="stack-label">{t.choice}</span><h3 data-background-text>{d.choice}</h3><small>{d.subtitle ?? `${p.insteadOf} ${d.rejected}`}</small></div>
+            <div><span class="stack-label">{t.choice}</span><h3 data-background-text>{d.choice}</h3><small>{d.subtitle ?? p.insteadOf(d.rejected)}</small></div>
             <div><span class="stack-label">{t.why}</span><p data-background-text>{d.because}</p></div>
             <div><span class="stack-label">{t.cost}</span><p data-background-text>{d.cost}</p></div>
           </div>
