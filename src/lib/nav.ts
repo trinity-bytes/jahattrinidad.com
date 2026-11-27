@@ -9,6 +9,8 @@ export interface NavTargetsInput {
   home: string;
   workPath: string;
   notesPath: string;
+  /** About has its own page and no Home section: it always opens the page. */
+  aboutPath: string;
   isHome: boolean;
   /** The page renders its own `#contact` section. */
   contactOnPage: boolean;
@@ -18,6 +20,7 @@ export interface NavTargets {
   work: string;
   experience: string;
   notes: string;
+  about: string;
   contact: string;
 }
 
@@ -27,6 +30,7 @@ export function navTargets(input: NavTargetsInput): NavTargets {
     work: input.isHome ? section('work') : input.workPath,
     experience: section('experience'),
     notes: input.isHome ? section('notes') : input.notesPath,
+    about: input.aboutPath,
     contact: input.isHome ? section('contact') : input.contactOnPage ? '#contact' : section('contact'),
   };
 }

@@ -8,6 +8,7 @@ interface Props {
   home: string;
   workPath: string;
   notesPath: string;
+  aboutPath: string;
   strings: Dictionary['nav'];
   /** Screen-reader note: the profile logos open another site in a new tab. */
   newTab: string;
@@ -17,14 +18,15 @@ interface Props {
   /** The page renders its own Contact section, so the Contact link stays on the page. */
   contactOnPage?: boolean;
 }
-const { home, workPath, notesPath, strings, newTab, profileLinks = [], languages = [], contactOnPage = false } = Astro.props;
+const { home, workPath, notesPath, aboutPath, strings, newTab, profileLinks = [], languages = [], contactOnPage = false } = Astro.props;
 const pathname = Astro.url.pathname;
 const isHome = pathname.replace(/\/$/, '') === home.replace(/\/$/, '');
-const targets = navTargets({ home, workPath, notesPath, isHome, contactOnPage });
+const targets = navTargets({ home, workPath, notesPath, aboutPath, isHome, contactOnPage });
 const links = [
   { label: strings.work, href: targets.work, id: 'work', route: workPath },
   { label: strings.experience, href: targets.experience, id: 'experience' },
   { label: strings.notes, href: targets.notes, id: 'notes', route: notesPath },
+  { label: strings.about, href: targets.about, id: 'about', route: aboutPath },
 ];
 const contact = targets.contact;
 const profileIcons = {
@@ -109,7 +111,9 @@ const profileIcons = {
     const button = nav.querySelector<HTMLButtonElement>('.menu-toggle');
     const menu = nav.querySelector<HTMLElement>('#mobile-navigation');
     const root = document.documentElement;
-    const desktop = matchMedia('(min-width: 48rem)');
+    // The full bar needs about 895px in Spanish (the longest labels, measured 2026-11-27); below 57.5rem
+    // the nav keeps the menu button, as on phones.
+    const desktop = matchMedia('(min-width: 57.5rem)');
     const isOpen = () => button?.getAttribute('aria-expanded') === 'true';
     /** Everything outside the header is inert while the sheet is open, so focus and clicks cannot leave it. */
     const setBackgroundInert = (inert: boolean) => {
@@ -318,7 +322,7 @@ const profileIcons = {
   .mobile-menu { display: none; }
   .mobile-menu:not([hidden]) { display: block; }
   .scrim { position: fixed; inset: 0; z-index: 0; background: var(--color-scrim); animation: menu-fade 200ms cubic-bezier(0.23, 1, 0.32, 1); }
-  .sheet { position: fixed; top: 0; left: 0; right: 0; z-index: 1; max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; padding: 108px var(--gutter-mobile) 40px; background: var(--color-card); color: var(--color-heading); border-radius: 0 0 28px 28px; box-shadow: 0 16px 40px color-mix(in srgb, var(--green-950) 18%, transparent); }
+  .sheet { position: fixed; top: 0; left: 0; right: 0; z-index: 1; max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; padding: 108px var(--gutter) 40px; background: var(--color-card); color: var(--color-heading); border-radius: 0 0 28px 28px; box-shadow: 0 16px 40px color-mix(in srgb, var(--green-950) 18%, transparent); }
   .sheet ul { list-style: none; margin: 0; padding: 0; }
   .sheet-links { border-top: 1px solid var(--color-border); }
   .sheet-links li { border-bottom: 1px solid var(--color-border); }
@@ -345,8 +349,9 @@ const profileIcons = {
     .site-nav[data-logo='hidden']:not([data-menu='open']) .brand { transform: none; transition: opacity 80ms, visibility 0s 80ms; }
     .nav-inner { transition: none; }
   }
-  @media (min-width: 48rem) { .mobile-menu { display: none !important; } }
-  @media (max-width: 47.99rem) {
+  /* Bar or menu button: 57.5rem, where the bar with About fits in every language (owner, 2026-11-27). */
+  @media (min-width: 57.5rem) { .mobile-menu { display: none !important; } }
+  @media (max-width: 57.49rem) {
     .nav-inner { padding-inline: var(--gutter-tablet); gap: var(--space-xs); }
     .desktop-links { display: none; }
     .menu-toggle { display: inline-flex; }

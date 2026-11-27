@@ -122,6 +122,8 @@ export interface Dictionary {
   home: {
     workHeadline: string;
     notesHeadline: string;
+    /** Band between Experience and Notes that links to the About page (approved 2026-11-27); same copy in both views. */
+    about: { marker: string; heading: string; text: string; link: string };
     outside: HomeLensCopy;
     inside: Omit<HomeLensCopy, 'hero' | 'values' | 'work' | 'experience' | 'notes' | 'contact'> & {
       hero: InsideHeroCopy;
@@ -364,6 +366,12 @@ export const en: Dictionary = {
     // Shared across both views; board 2191:86 and approved R9.
     workHeadline: 'Selected work',
     notesHeadline: 'Notes on building things',
+    about: {
+      marker: '05 — ABOUT',
+      heading: 'I took things apart. Now I build them.',
+      text: 'Curious since I was a kid, I took apart everything to see how it worked inside. Then came graphic design, teaching, and now Software Engineering at UPC.',
+      link: 'More about me',
+    },
     // Markers and non-draft-copy text follow the Home boards 2191:86 and 2191:503.
     outside: {
       hero: {
@@ -407,10 +415,10 @@ export const en: Dictionary = {
         sub: 'Work, volunteering and what I do beyond class — and what each one left behind.',
       },
       notes: {
-        marker: '05 — NOTES',
+        marker: '06 — NOTES',
       },
       contact: {
-        marker: '06 — CONTACT',
+        marker: '07 — CONTACT',
         headline: [
           'Looking for someone who can design it and build it? Let’s talk.',
         ],
@@ -475,7 +483,7 @@ export const en: Dictionary = {
         notesLabel: 'Experience tool notes',
       },
       notes: {
-        marker: '05 — NOTES · HOW A POST GETS PUBLISHED',
+        marker: '06 — NOTES · HOW A POST GETS PUBLISHED',
         notesLabel: 'Notes pipeline notes',
         // Facts: src/pages/rss.xml.ts, the posts collection in src/content.config.ts, listPosts in src/lib/content.ts.
         annotations: {
@@ -485,7 +493,7 @@ export const en: Dictionary = {
         },
       },
       contact: {
-        marker: '06 — CONTACT · HOW THE CHAT WORKS',
+        marker: '07 — CONTACT · HOW THE CHAT WORKS',
         headline: ['You’ve seen how I build.', 'What should we build together?'],
         notesLabel: 'Contact notes',
         // Chat design: openspec/changes/portfolio-implementation/design.md §3 (scripted, no language model).

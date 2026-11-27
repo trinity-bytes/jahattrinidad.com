@@ -1,0 +1,54 @@
+---
+/*
+ * Home band that links to the About page (Figma "Proposal · Home About band", 2608:3229 desktop and
+ * 2608:3248 mobile, approved 2026-11-27). Between Experience and Notes; the same copy in both views
+ * (the tokens recolour it), so it has no Inside variant.
+ */
+import { Image } from 'astro:assets';
+import Backgrounds from './Backgrounds.astro';
+import TextLink from '../ui/TextLink.astro';
+import headshot from '../../assets/about/headshot.jpg';
+
+interface Props {
+  marker: string;
+  heading: string;
+  text: string;
+  linkLabel: string;
+  href: string;
+  /** The owner's name, beside the avatar. */
+  name: string;
+}
+
+const { marker, heading, text, linkLabel, href, name } = Astro.props;
+---
+<section id="about" class="about-band" aria-labelledby="about-heading">
+  <Backgrounds variant="values" next="surface" seed={7} />
+  <div class="layout">
+    <header>
+      <p class="marker" data-background-text data-reveal="text">{marker}</p>
+      <h2 id="about-heading" data-background-text data-reveal="text">{heading}</h2>
+    </header>
+    <div class="content" data-reveal>
+      <p class="by" data-background-text><Image src={headshot} alt="" width={96} height={96} class="avatar" /><span>{name}</span></p>
+      <p class="text" data-background-text>{text}</p>
+      <TextLink href={href} label={linkLabel} data-background-text />
+    </div>
+  </div>
+</section>
+<style>
+  .about-band { position: relative; background: var(--color-surface); }
+  .layout { position: relative; max-width: calc(var(--content-max) + 2 * var(--gutter)); margin-inline: auto; padding: var(--section-pad) var(--gutter); display: flex; flex-direction: column; gap: var(--space-2xl-b); }
+  header { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .marker { margin: 0; font: var(--type-marker); letter-spacing: var(--type-marker-tracking); text-transform: uppercase; color: var(--color-text-muted); }
+  /* Home / Section header, Level=Title. Balanced, so no single word is left on the last line. */
+  h2 { margin: 0; font: 600 var(--font-size-heading-lg)/1.05 var(--font-display); letter-spacing: -0.02em; color: var(--color-heading); text-wrap: balance; }
+  .content { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-xl); }
+  .by { display: flex; align-items: center; gap: var(--space-sm); margin: 0; font: 500 var(--font-size-small)/1.25 var(--font-sans); color: var(--color-heading); }
+  .by :global(.avatar) { width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; }
+  .text { margin: 0; max-width: 32.5rem; font: 400 var(--font-size-body)/1.5 var(--font-sans); color: var(--color-text); }
+  @media (min-width: 64.0625rem) {
+    .layout { flex-direction: row; align-items: flex-end; gap: 6rem; }
+    header { flex: none; width: 40rem; }
+    .content { flex: 1; }
+  }
+</style>

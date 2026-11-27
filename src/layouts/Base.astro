@@ -108,6 +108,7 @@ const localeScript = localeRedirectScript({ redirect: lang === 'en', counterpart
       home={localizedPath(lang, '')}
       workPath={collectionPath('projects', lang)}
       notesPath={collectionPath('posts', lang)}
+      aboutPath={localizedPath(lang, '/about/')}
       strings={t.nav}
       newTab={t.common.newTab}
       profileLinks={profileLinks}
