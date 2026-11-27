@@ -3,7 +3,7 @@ import { registerHooks } from 'node:module';
 import { test } from 'node:test';
 import {
   blogPostingNode, breadcrumbNode, buildSeo, isLiveApp, jsonLdGraph, metaDescription, OG_DEFAULT_IMAGE,
-  pageTitle, personId, personNode, projectNode, websiteNode, whatItIs,
+  pageTitle, personId, personNode, profilePageNode, projectNode, websiteNode, whatItIs,
 } from './seo.ts';
 
 // The dictionaries import each other without extensions and i18n.ts imports a virtual Astro
@@ -77,6 +77,19 @@ test('the website node names the site and is published by the person', () => {
   assert.equal(node.url, 'https://jahattrinidad.com/pt/');
   assert.equal(node.inLanguage, 'pt-BR');
   assert.deepEqual(node.publisher, { '@id': personId(site) });
+});
+
+test('the Home is a ProfilePage about the person, with the portrait as its primary image', () => {
+  const node = profilePageNode({ site, path: '/es/', lang: 'es', image: '/_astro/jahat.abc.jpg' });
+  assert.equal(node['@type'], 'ProfilePage');
+  assert.equal(node['@id'], 'https://jahattrinidad.com/es/#profilepage');
+  assert.equal(node.url, 'https://jahattrinidad.com/es/');
+  assert.equal(node.inLanguage, 'es');
+  assert.deepEqual(node.mainEntity, { '@id': personId(site) });
+  assert.deepEqual(node.isPartOf, { '@id': 'https://jahattrinidad.com/es/#website' });
+  assert.deepEqual(node.primaryImageOfPage, {
+    '@type': 'ImageObject', url: 'https://jahattrinidad.com/_astro/jahat.abc.jpg', width: 600, height: 600,
+  });
 });
 
 test('breadcrumbs are numbered from 1 with absolute URLs', () => {
