@@ -21,20 +21,25 @@
  * fastest, all slower than the page. `--parallax` (the scroll offset in px, capped at the hero's
  * height) is read through `translate`, so the mirroring `transform` stays untouched. Reduced
  * motion: none.
+ *
+ * About (Figma "Proposed · About", boards 2596:13 and 2600:285, approved 2026-11-27): its own cover,
+ * an afternoon meadow at a forest edge, full-bleed like the case study, with a cream scrim under the
+ * nav and the intro instead of a near hill. The word behaves like Notes.
  */
 import { Picture } from 'astro:assets';
 import workSky from '../../assets/covers/work-terraces.png';
 import notesSky from '../../assets/covers/notes-mist.png';
 import studyDesk from '../../assets/covers/study-desk.png';
+import aboutMeadow from '../../assets/covers/about-meadow.png';
 import hill from '../../assets/hero/near-hill.png';
 
 interface Props {
-  variant: 'work' | 'case' | 'notes' | 'post';
+  variant: 'work' | 'case' | 'notes' | 'post' | 'about';
   /** Display word drawn between the sky and the near hill (Work and Notes). It is the page's h1. */
   word?: string;
 }
 const { variant, word } = Astro.props;
-const sky = { work: workSky, notes: notesSky, post: notesSky, case: studyDesk }[variant];
+const sky = { work: workSky, notes: notesSky, post: notesSky, case: studyDesk, about: aboutMeadow }[variant];
 const isCase = variant === 'case';
 // Notes has no near hill (owner, 2026-11-26): the grass hill is not reused on that cover.
 const hasHill = variant === 'work' || variant === 'post';
@@ -51,6 +56,7 @@ const hasHill = variant === 'work' || variant === 'post';
     loading="eager"
     fetchpriority="high"
   />
+  {variant === 'about' && <div class="scrim-top" aria-hidden="true" />}
   {word && <h1 id="hero-word" class="word">{word}</h1>}
   {isCase && <div class="scrim" aria-hidden="true" />}
   {hasHill && (
@@ -161,7 +167,21 @@ const hasHill = variant === 'work' || variant === 'post';
      500 at -0.04em sets "Notes" about 2.8 em wide) and sinks only a little under the bottom edge,
      so it stays legible on a phone. */
   .hero.notes { --word-size: calc((100cqw - 2 * var(--edge)) / 2.8); }
-  .notes .word { top: auto; right: var(--edge); bottom: calc(var(--word-size) * -0.13); }
+  .notes .word, .about .word { top: auto; right: var(--edge); bottom: calc(var(--word-size) * -0.13); }
+  /* About: "About" sets about 2.85 em wide in the same face. */
+  .hero.about { --word-size: calc((100cqw - 2 * var(--edge)) / 2.85); }
+  .about .sky { inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* Scrim under the nav and the intro (Figma 2604:565, 2604:566): the trees reach the top right. */
+  .scrim-top {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 340px;
+    pointer-events: none;
+    background: linear-gradient(to bottom,
+      color-mix(in srgb, var(--cream) 92%, transparent) 0%,
+      color-mix(in srgb, var(--cream) 60%, transparent) 55%,
+      transparent 100%);
+  }
   .post {
     --sky-top: -114px;
     --hill-top: 349.223px;
@@ -213,6 +233,7 @@ const hasHill = variant === 'work' || variant === 'post';
           transparent 100%);
     }
     .post { --intro-top: 136px; height: 560px; }
+    .scrim-top { height: 300px; }
   }
 
   @media (min-width: 64.0625rem) {
@@ -260,8 +281,10 @@ const hasHill = variant === 'work' || variant === 'post';
           color-mix(in srgb, var(--cream) 86%, transparent) 36%,
           transparent 62%);
     }
-    .hero.notes { --word-size: 300px; }
-    .notes .word { top: 437px; bottom: auto; }
+    .hero.notes, .hero.about { --word-size: 300px; }
+    .notes .word, .about .word { top: 437px; bottom: auto; }
+    .hero.about { height: 745px; }
+    .scrim-top { height: 240px; }
     .case .intro { max-width: 660px; }
     .post .intro { max-width: 980px; }
     .post { --intro-top: 180px; height: 560px; }
@@ -289,12 +312,15 @@ const hasHill = variant === 'work' || variant === 'post';
 
   /* Notes index and post (boards 2520:151, 2522:1212, 2522:2234): the intro starts at the section
      padding, labels are muted and the sub takes the title colour for contrast (NL-05, NL-10). */
-  .hero.notes, .hero.post { --intro-top: var(--section-pad); }
-  .notes .intro { gap: var(--space-xl); }
-  .notes .intro :global(.eyebrow) { color: var(--color-text-muted); }
-  .notes .intro :global(.headline) { font-size: var(--font-size-h3); line-height: 1.15; }
-  .hero:is(.notes, .post) .intro :global(.sub) { max-width: 35.625rem; color: var(--color-heading); font-size: var(--font-size-body); line-height: 1.5; }
+  .hero.notes, .hero.post, .hero.about { --intro-top: var(--section-pad); }
+  :is(.notes, .about) .intro { gap: var(--space-xl); }
+  :is(.notes, .about) .intro :global(.eyebrow) { color: var(--color-text-muted); }
+  :is(.notes, .about) .intro :global(.headline) { font-size: var(--font-size-h3); line-height: 1.15; }
+  /* About: the boards' measures (500 and 520 px) break "… design engineer / in Lima, Peru.". */
+  .about .intro :global(.headline) { max-width: 31.25rem; text-wrap: pretty; }
+  .hero:is(.notes, .post, .about) .intro :global(.sub) { max-width: 35.625rem; color: var(--color-heading); font-size: var(--font-size-body); line-height: 1.5; }
   .hero.post .intro :global(.sub) { max-width: 44.375rem; }
+  .hero.about .intro :global(.sub) { max-width: 32.5rem; text-wrap: pretty; }
   .post .intro { gap: var(--space-md); }
   .hero.post .intro :global(.title) { max-width: 53.125rem; font: 600 var(--font-size-h1) / 1.05 var(--font-display), sans-serif; letter-spacing: -0.02em; color: var(--color-heading); }
   .post .intro :global(.meta) { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }

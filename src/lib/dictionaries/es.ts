@@ -2,8 +2,8 @@ import type { Dictionary } from '../i18n';
 import { chatEs } from '../chat/script.es';
 
 export const es: Dictionary = {
-  meta: { homeTitle: 'Jahat Trinidad · Design Engineer — Frontend y producto', homeDescription: 'Jahat Trinidad, Design Engineer en Lima, Perú. Diseño y desarrollo productos web de punta a punta, del primer boceto al sitio publicado. Mira mis proyectos.', ogImageAlt: 'Jahat Trinidad en una colina al atardecer, junto a la frase «Creo productos que la gente usa de verdad».', workDescription: 'Proyectos de Jahat Trinidad, Design Engineer en Lima: casos de estudio, apps web, herramientas y experimentos, con mi aporte, el stack y enlaces al código.', notesDescription: 'Notas de Jahat Trinidad, Design Engineer en Lima: ensayos y tutoriales en inglés sobre cómo diseño, desarrollo y publico productos web, y mis decisiones.', linksDescription: 'Los enlaces de Jahat Trinidad, Design Engineer en Lima, Perú: proyectos, notas, CV, contacto y perfiles en GitHub, LinkedIn, YouTube, Instagram y X.', ogSignature: 'Jahat Trinidad · jahattrinidad.com', workWhat: 'Productos y casos de estudio', notesWhat: 'Sobre diseño y desarrollo', linksWhat: 'Perfiles, CV y contacto', projectWhat: 'Proyecto web', projectSignatures: ['Por Jahat Trinidad, Design Engineer.', 'Un proyecto del portafolio de Jahat Trinidad.', 'Del portafolio de Jahat Trinidad, Design Engineer en Lima.', 'Un proyecto del portafolio de Jahat Trinidad, Design Engineer en Lima, Perú.', 'Del portafolio de Jahat Trinidad, Design Engineer en Lima, Perú: qué es, cómo funciona y por qué.', 'Un proyecto del portafolio de Jahat Trinidad, Design Engineer en Lima, Perú, que diseña y desarrolla para la web.', 'Del portafolio de Jahat Trinidad, Design Engineer en Lima, Perú: qué hace, cómo se construyó y las decisiones detrás.'], postSignatures: ['Por Jahat Trinidad, Design Engineer.', 'Una nota de Jahat Trinidad, Design Engineer en Lima.', 'Una nota de Jahat Trinidad, Design Engineer en Lima, Perú, sobre la web.', 'Una nota de Jahat Trinidad, Design Engineer en Lima, Perú, sobre crear para la web.', 'Una nota de Jahat Trinidad, Design Engineer en Lima, Perú, sobre cómo diseñar y desarrollar para la web.', 'Una nota de Jahat Trinidad, Design Engineer en Lima, Perú, sobre cómo diseñar, desarrollar y publicar productos web.', 'De las notas de Jahat Trinidad, Design Engineer en Lima, Perú, sobre cómo diseñar, desarrollar y publicar productos web de punta a punta.'] },
-  nav: { home: 'Inicio', brand: 'Jahat Trinidad', brandInside: '@trinitybytes', navigation: 'Navegación principal', skipToContent: 'Ir al contenido', links: 'Enlaces', work: 'Proyectos', experience: 'Experiencia', notes: 'Notas', contact: 'Contacto', openMenu: 'Abrir menú', closeMenu: 'Cerrar menú', elsewhere: 'En otros sitios', availability: 'Disponible para prácticas.', menuLinks: 'Perfiles', language: 'Idioma' },
+  meta: { homeTitle: 'Jahat Trinidad · Design Engineer — Frontend y producto', homeDescription: 'Jahat Trinidad, Design Engineer en Lima, Perú. Diseño y desarrollo productos web de punta a punta, del primer boceto al sitio publicado. Mira mis proyectos.', ogImageAlt: 'Jahat Trinidad en una colina al atardecer, junto a la frase «Creo productos que la gente usa de verdad».', workDescription: 'Proyectos de Jahat Trinidad, Design Engineer en Lima: casos de estudio, apps web, herramientas y experimentos, con mi aporte, el stack y enlaces al código.', notesDescription: 'Notas de Jahat Trinidad, Design Engineer en Lima: ensayos y tutoriales en inglés sobre cómo diseño, desarrollo y publico productos web, y mis decisiones.', linksDescription: 'Los enlaces de Jahat Trinidad, Design Engineer en Lima, Perú: proyectos, notas, CV, contacto y perfiles en GitHub, LinkedIn, YouTube, Instagram y X.', ogSignature: 'Jahat Trinidad · jahattrinidad.com', workWhat: 'Productos y casos de estudio', notesWhat: 'Sobre diseño y desarrollo', linksWhat: 'Perfiles, CV y contacto', aboutDescription: 'Sobre Jahat Trinidad, Design Engineer en Lima, Perú: cómo pasé de desarmar cosas a crear productos web, qué estudio y cómo trabajo cada día.', aboutWhat: 'Mi historia y cómo trabajo', projectWhat: 'Proyecto web', projectSignatures: ['Por Jahat Trinidad, Design Engineer.', 'Un proyecto del portafolio de Jahat Trinidad.', 'Del portafolio de Jahat Trinidad, Design Engineer en Lima.', 'Un proyecto del portafolio de Jahat Trinidad, Design Engineer en Lima, Perú.', 'Del portafolio de Jahat Trinidad, Design Engineer en Lima, Perú: qué es, cómo funciona y por qué.', 'Un proyecto del portafolio de Jahat Trinidad, Design Engineer en Lima, Perú, que diseña y desarrolla para la web.', 'Del portafolio de Jahat Trinidad, Design Engineer en Lima, Perú: qué hace, cómo se construyó y las decisiones detrás.'], postSignatures: ['Por Jahat Trinidad, Design Engineer.', 'Una nota de Jahat Trinidad, Design Engineer en Lima.', 'Una nota de Jahat Trinidad, Design Engineer en Lima, Perú, sobre la web.', 'Una nota de Jahat Trinidad, Design Engineer en Lima, Perú, sobre crear para la web.', 'Una nota de Jahat Trinidad, Design Engineer en Lima, Perú, sobre cómo diseñar y desarrollar para la web.', 'Una nota de Jahat Trinidad, Design Engineer en Lima, Perú, sobre cómo diseñar, desarrollar y publicar productos web.', 'De las notas de Jahat Trinidad, Design Engineer en Lima, Perú, sobre cómo diseñar, desarrollar y publicar productos web de punta a punta.'] },
+  nav: { home: 'Inicio', brand: 'Jahat Trinidad', brandInside: '@trinitybytes', navigation: 'Navegación principal', skipToContent: 'Ir al contenido', links: 'Enlaces', work: 'Proyectos', experience: 'Experiencia', notes: 'Notas', about: 'Sobre mí', contact: 'Contacto', openMenu: 'Abrir menú', closeMenu: 'Cerrar menú', elsewhere: 'En otros sitios', availability: 'Disponible para prácticas.', menuLinks: 'Perfiles', language: 'Idioma' },
   home: {
     workHeadline: 'Proyectos destacados', notesHeadline: 'Notas sobre crear cosas',
     outside: {
@@ -27,7 +27,58 @@ export const es: Dictionary = {
   work: { eyebrow: 'PROYECTOS · PRODUCTOS, HERRAMIENTAS Y EXPERIMENTOS', headline: 'Cosas que diseñé y desarrollé, desde el primer boceto hasta su publicación.', sub: 'Los destacados incluyen la historia completa. Después encontrarás más proyectos y, al final, pequeños experimentos.', featuredMarker: '01 — DESTACADOS', moreMarker: '02 — MÁS PROYECTOS', moreHeading: 'Más proyectos', featuredHeading: 'Proyectos destacados', solo: 'Individual', moreSub: 'Herramientas, páginas y juegos publicados. De menor alcance, con el mismo cuidado.', experimentsMarker: '03 — PEQUEÑOS EXPERIMENTOS', experimentsHeading: 'Pequeños experimentos', contactMarker: '04 — CONTACTO', seeProject: 'Ver proyecto', live: 'Ver sitio', code: 'Código', play: 'Jugar', moreExperiments: 'Más experimentos en GitHub', stars: (count) => (count === 1 ? '1 estrella' : `${count} estrellas`), forks: (count) => (count === 1 ? '1 fork' : `${count} forks`), updated: (date) => `actualizado ${date}` },
   caseStudy: { allWork: 'Todos los proyectos', nextProjectHeading: 'Siguiente proyecto', scrollableTable: (title) => `${title} — tabla desplazable`, eyebrow: 'CASO DE ESTUDIO', contactMarker: 'CONTACTO', openProject: 'Abrir proyecto', source: 'Código en GitHub', atAGlance: 'DE UN VISTAZO', myRole: 'Mi rol', builtWith: 'Hecho con', status: 'Estado', contributors: 'Quiénes contribuyen', problemMarker: '01 — EL PROBLEMA', requirements: 'Requisitos', constraint: 'Limitación', featuresMarker: '02 — QUÉ HACE', underTheHood: 'Por dentro', decisionsMarker: '03 — DECISIONES', choice: 'La elección', why: 'Por qué', cost: 'El costo', mistakesMarker: '04 — EN QUÉ ME EQUIVOQUÉ', growthMarker: '05 — CÓMO CRECIÓ', problemHeading: 'El problema', featuresHeading: 'Qué hace', decisionsHeading: 'Decisiones', mistakesHeading: 'En qué me equivoqué', growthHeading: 'Cómo creció' },
   notes: { eyebrow: 'Notas · escritos y otros sitios', writingMarker: '01 — ESCRITOS', writingHeading: 'Ensayos y tutoriales', contactMarker: '02 — CONTACTO', essay: 'Ensayo', tutorial: 'Tutorial', writingLatest: 'Escritos · Recientes', elsewhereLatest: 'En otros sitios · Recientes', allWriting: 'Todos los escritos', rssFeed: 'Feed RSS', latest: 'Reciente', headline: 'Lo que aprendo al crear, escrito para recordarlo.', sub: 'Ensayos sobre cómo decido y tutoriales para seguir paso a paso.', allNotes: 'Todas las notas' },
-  experience: { carriesOver: 'Lo que aporto a tu equipo', now: 'actualidad', groups: { work: 'Trabajo', volunteering: 'Voluntariado', 'beyond-class': 'Fuera de clase' } },
+  // "Por qué construyo": el relato del propio Jahat (2026-11-27), con las erratas corregidas.
+  about: {
+    eyebrow: 'Sobre mí · quién soy',
+    headline: 'Soy Jahat, Design Engineer en\u00a0Lima, Perú.',
+    sub: 'Diseño y desarrollo productos web de punta a punta, del primer boceto al sitio publicado.',
+    shortMarker: '01 — LA VERSIÓN CORTA',
+    shortHeading: 'Diseño productos y luego los construyo.',
+    intro: 'Soy estudiante de Ingeniería de Software en la UPC y diseño y desarrollo productos completos. Antes del código pasé tres años como diseñador gráfico, así que cómo se ve un producto y cómo funciona salen de la misma persona.',
+    portraitAlt: 'Jahat Trinidad apoyado en un árbol en un parque, con la luz cálida de la tarde.',
+    facts: [
+      { label: 'Rol', value: 'Design Engineer · frontend y producto' },
+      { label: 'Estudios', value: 'Ingeniería de Software en la UPC, 6.º ciclo' },
+      { label: 'Diseñando desde', value: '2019, como diseñador gráfico' },
+      { label: 'Construyo con', value: 'TypeScript, Vue, React y Astro' },
+    ],
+    storyMarker: '02 — CÓMO LLEGUÉ AQUÍ',
+    storyHeading: 'Desarmaba cosas. Ahora las construyo.',
+    storyNote: 'Los puestos detrás de esta historia, con fechas y detalles, están en mi experiencia.',
+    seeExperience: 'Ver mi experiencia',
+    whyLabel: 'Por qué construyo',
+    why: [
+      { label: 'De niño', text: 'Desde niño siempre fui curioso. Mis seres cercanos recuerdan que desde muy pequeño desarmaba todo lo que encontraba para ver cómo estaba hecho por dentro. Conforme fui creciendo empecé a entender mejor, desde juguetes hasta perfumes, aprendí a volver a armarlos y empecé a reparar mis juguetes averiados.' },
+      { label: 'Creciendo', text: 'Desde siempre he mostrado aptitudes creativas y me he acercado a la música, el teatro y el debate. Eso, sumado a mi gusto por el buen diseño, me encaminó a aprender diseño, producción audiovisual y temas afines.' },
+      { label: 'Luego, el código', text: 'Más adelante conocí la programación y quedé enamorado de ella. Para mí era casi un superpoder: era como construir lo que sea que mi imaginación pudiera crear. Por eso me fui por el lado del desarrollo, porque ahí confluyen las pasiones que tuve toda la vida.' },
+    ],
+    pathLabel: 'El camino hasta ahora',
+    path: [
+      { years: '2019–2022', text: 'Empecé en el diseño gráfico. En Bionutricel construí una marca desde la investigación de mercado, y luego sus redes sociales y materiales impresos. En 2022 también rediseñé la identidad de Alto Huallaga Radio & TV.' },
+      { years: '2022–2023', text: 'En la Municipalidad de Oxapampa monitoreé más de 30 cámaras, redacté los reportes diarios de incidencias y gestioné las redes sociales de la oficina de seguridad como community manager.' },
+      { years: '2023', text: 'Enseñé en un colegio secundario de Madre de Dios. Diseñé un curso que introdujo a los estudiantes al desarrollo web y la creación de contenido, enseñé programación con VS Code y edición con Photoshop y OpenShot, y coordiné las actividades musicales del colegio.' },
+      { years: '2024–actualidad', text: 'Empecé Ingeniería de Software en la UPC, en Lima. Desde entonces diseño y desarrollo productos web de punta a punta. Inspiration Garden es uno que hice por mi cuenta: producto, diseño y código.' },
+    ],
+    quote: 'El trabajo de marca me enseñó sistemas; la docencia, a explicar; y gestionar comunidades, a escuchar a los usuarios. Uso las tres cosas cada vez que creo algo.',
+    workMarker: '03 — CÓMO TRABAJO',
+    workHeading: 'Pasos cortos, publicados pronto y por escrito.',
+    principles: [
+      { title: 'Diseño y código en las mismas manos', text: 'Diseño una funcionalidad y la desarrollo yo mismo, así nada se pierde en el traspaso entre una cosa y la otra.' },
+      { title: 'Algo que funcione, pronto', text: 'Primero pongo frente a las personas una versión simple que funcione, y luego pulo lo que de verdad usan.' },
+      { title: 'Versiones pequeñas, decisiones por escrito', text: 'Publico en pasos pequeños y versionados, y escribo por qué decidí lo que decidí. Algunas de esas notas terminan en este sitio.' },
+    ],
+    notesLink: 'Lee cómo decido, en mis notas',
+    educationMarker: '04 — ESTUDIOS E IDIOMAS',
+    educationHeading: 'Sigo aprendiendo, en tres idiomas.',
+    languagesLabel: 'Idiomas',
+    languages: [
+      { name: 'Español', level: 'Nativo' },
+      { name: 'Inglés', level: 'Avanzado · EF SET C2' },
+      { name: 'Portugués', level: 'Básico · A2' },
+    ],
+    contactMarker: '05 — CONTACTO',
+  },
+  experience: { carriesOver: 'Lo que aporto a tu equipo', now: 'actualidad', groups: { work: 'Trabajo', volunteering: 'Voluntariado', 'beyond-class': 'Fuera de clase', education: 'Estudios' } },
   lens: { lookInside: 'Mirar adentro', backOutside: 'Volver afuera', escapeKey: 'Esc', insideAnnouncement: 'Vista interior: cómo está hecha cada parte', outsideAnnouncement: 'Vista exterior' },
   contact: { startConversation: 'Iniciar conversación', copyEmail: 'Copiar mi correo', linkedIn: 'LinkedIn', cv: 'CV (PDF)', lookingFor: 'Busco', available: 'Disponible', basedIn: 'Ubicación', or: 'O', lookingForValue: 'Prácticas en frontend\no ingeniería de diseño de producto', availableValue: 'Ahora', basedInValue: 'Lima, Perú\ndisponible en remoto', composerLabel: 'Tu mensaje', send: 'Enviar', copied: 'Correo copiado' },
   chat: chatEs,

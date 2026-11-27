@@ -91,6 +91,42 @@
     "order": 7
   },
   {
+    "id": "software-engineering-upc",
+    "lang": "en",
+    "group": "education",
+    "role": "B.S. in Software Engineering",
+    "organisation": "UPC, Lima",
+    "start": "2024",
+    "end": "2028",
+    "description": "6th semester, expected to graduate in 2028. Courses include web applications, software design and patterns, human-computer interaction and databases. Member of the Polyphonic Choir and the Humanities Club.",
+    "tags": ["Software design", "Human-computer interaction"],
+    "order": 20
+  },
+  {
+    "id": "online-courses-platzi",
+    "lang": "en",
+    "group": "education",
+    "role": "Online courses",
+    "organisation": "Platzi",
+    "start": "2019",
+    "end": "2024",
+    "description": "More than 28 certificates in web development, graphic design, photography and data science fundamentals.",
+    "tags": ["Web development", "Graphic design"],
+    "order": 21
+  },
+  {
+    "id": "systems-engineering-upeu",
+    "lang": "en",
+    "group": "education",
+    "role": "Systems Engineering, not finished",
+    "organisation": "Universidad Peruana Unión",
+    "start": "2018",
+    "end": "2019",
+    "description": "Courses in object-oriented programming and front-end development.",
+    "tags": ["Object-oriented programming", "Front-end"],
+    "order": 22
+  },
+  {
     "id": "coverage-fixture",
     "lang": "en",
     "group": "beyond-class",
@@ -193,6 +229,42 @@
     "order": 7
   },
   {
+    "id": "software-engineering-upc-es",
+    "lang": "es",
+    "group": "education",
+    "role": "Ingeniería de Software",
+    "organisation": "UPC, Lima",
+    "start": "2024",
+    "end": "2028",
+    "description": "6.º ciclo, egreso previsto en 2028. Cursos de aplicaciones web, diseño y patrones de software, interacción humano-computador y bases de datos. Miembro del Coro Polifónico y del Club de Humanidades.",
+    "tags": ["Diseño de software", "Interacción humano-computador"],
+    "order": 20
+  },
+  {
+    "id": "online-courses-platzi-es",
+    "lang": "es",
+    "group": "education",
+    "role": "Cursos en línea",
+    "organisation": "Platzi",
+    "start": "2019",
+    "end": "2024",
+    "description": "Más de 28 certificados en desarrollo web, diseño gráfico, fotografía y fundamentos de ciencia de datos.",
+    "tags": ["Desarrollo web", "Diseño gráfico"],
+    "order": 21
+  },
+  {
+    "id": "systems-engineering-upeu-es",
+    "lang": "es",
+    "group": "education",
+    "role": "Ingeniería de Sistemas, sin terminar",
+    "organisation": "Universidad Peruana Unión",
+    "start": "2018",
+    "end": "2019",
+    "description": "Cursos de programación orientada a objetos y desarrollo front-end.",
+    "tags": ["Programación orientada a objetos", "Front-end"],
+    "order": 22
+  },
+  {
     "id": "teacher-adventist-school-pt",
     "lang": "pt",
     "group": "work",
@@ -282,5 +354,41 @@
     "description": "Um espaço para testar minhas habilidades e impulsionar ideias que podem fazer diferença na vida das pessoas.",
     "tags": ["Inovação"],
     "order": 7
+  },
+  {
+    "id": "software-engineering-upc-pt",
+    "lang": "pt",
+    "group": "education",
+    "role": "Engenharia de Software",
+    "organisation": "UPC, Lima",
+    "start": "2024",
+    "end": "2028",
+    "description": "6º semestre, formatura prevista para 2028. Disciplinas de aplicações web, design e padrões de software, interação humano-computador e bancos de dados. Membro do Coro Polifônico e do Clube de Humanidades.",
+    "tags": ["Design de software", "Interação humano-computador"],
+    "order": 20
+  },
+  {
+    "id": "online-courses-platzi-pt",
+    "lang": "pt",
+    "group": "education",
+    "role": "Cursos online",
+    "organisation": "Platzi",
+    "start": "2019",
+    "end": "2024",
+    "description": "Mais de 28 certificados em desenvolvimento web, design gráfico, fotografia e fundamentos de ciência de dados.",
+    "tags": ["Desenvolvimento web", "Design gráfico"],
+    "order": 21
+  },
+  {
+    "id": "systems-engineering-upeu-pt",
+    "lang": "pt",
+    "group": "education",
+    "role": "Engenharia de Sistemas, não concluída",
+    "organisation": "Universidad Peruana Unión",
+    "start": "2018",
+    "end": "2019",
+    "description": "Disciplinas de programação orientada a objetos e desenvolvimento front-end.",
+    "tags": ["Programação orientada a objetos", "Front-end"],
+    "order": 22
   }
 ]
