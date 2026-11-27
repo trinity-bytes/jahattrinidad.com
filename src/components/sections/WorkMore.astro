@@ -10,7 +10,7 @@ import { repoStats } from '../../lib/github';
 import { formatDate } from '../../lib/format';
 interface Props { projects: CollectionEntry<'projects'>[]; experiments: CollectionEntry<'projects'>[]; lang: string; strings: Dictionary['work']; /** Project page URL by entry id, for the projects that have one (built by the page). */ pageHrefs: Record<string, string> }
 const { projects, experiments, lang, strings: t, pageHrefs } = Astro.props;
-// Every link in this section leaves the site: ↗ and a new tab, with the screen-reader note.
+// Live and Code links leave the site (↗, new tab, screen-reader note); "See project" stays on it.
 const newTab = getDictionary(lang as Locale).common.newTab;
 const dict = getDictionary(lang as Locale);
 // Live numbers from the GitHub API at build time; null when GitHub cannot be reached (the tile keeps its chips).

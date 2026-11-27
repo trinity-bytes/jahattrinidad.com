@@ -22,7 +22,6 @@ const projects = defineCollection({
       // Experiments: the "peek" shown inside the tile on hover/focus (design.md "Experiments preview v2"),
       // a real capture from the repo's README. Repo stats come from the GitHub API at build time.
       peekImage: image().optional(),
-      peekImageAlt: z.string().optional(),
       peekCaption: z.string().optional(), // short mono line under the capture, e.g. "300+ installs"
       tags: z.array(z.string()).default([]), // what KIND of thing it is
       stack: z.array(z.string()), // what it was BUILT WITH
@@ -125,6 +124,12 @@ const projects = defineCollection({
           })
         )
         .default([]),
+    })
+    // Only `tier: project` entries are routed to a project page (content.ts projectRoutes); a `page`
+    // anywhere else is copy that never renders, so the build says so instead of dropping it silently.
+    .refine((data) => !data.page || data.tier === 'project', {
+      message: '`page` is only rendered for `tier: project` entries',
+      path: ['page'],
     }),
 });
 

@@ -13,27 +13,6 @@ stack: [C++/CLI, Windows Forms]
 repoUrl: 'https://github.com/trinity-bytes/forest-hero-2'
 insideStack: "Un juego 2D hecho con C++/CLI y Windows Forms."
 insideDecision: "Los enemigos cambian de dirección al azar; las colisiones marcan semillas y enemigos para eliminarlos cuando terminan las comprobaciones."
-page:
-  headline: "Restaura un bosque antes de que termine el tiempo."
-  sub: "Un juego 2D hecho en equipo para un curso de Algoritmos, con recursos, enemigos y reforestación."
-  glance:
-    - { label: "Problema", value: "Convertir la reforestación en un objetivo de juego" }
-    - { label: "Ciclo", value: "Recoger recursos, plantar árboles y evitar enemigos" }
-    - { label: "Plataforma", value: "Windows Forms y C++/CLI" }
-    - { label: "Contexto", value: "Proyecto de Algoritmos, equipo de tres" }
-    - { label: "Mi aporte", value: "El gameplay, la gestión de estados del juego y el diseño de la interfaz" }
-  how:
-    headline: "Un juego basado en recursos y tiempo."
-    steps:
-      - title: "Recolectar y plantar"
-        text: "El guardián recoge semillas y agua, y usa ambos para plantar árboles antes de que se agote el tiempo."
-        formula: "seeds + water → tree"
-      - title: "Actualizar el mundo"
-        text: "Los enemigos se mueven y pueden cambiar de dirección al azar. Durante la partida se revisan colisiones entre el guardián, los recursos y los enemigos."
-      - title: "Eliminar después de revisar"
-        text: "El manejo de colisiones reúne índices y elimina semillas y enemigos después de las comprobaciones."
-        formula: "check collisions → collect indices → remove"
-  decisionHeadline: "Recorrer las colisiones de forma segura."
 decisions:
   - choice: "Registrar cada índice una vez y eliminar después de las comprobaciones"
     rejected: "Anotar un índice cada vez que una colisión lo reporta"

@@ -128,12 +128,12 @@ export async function getPost(slug: string, lang: Locale): Promise<Post | undefi
 }
 
 /**
- * Only `case-study` projects get a page. `project` and `experiment` entries
- * are cards on the Work index that link straight to Live and Code, so a page
- * for them would be an orphan in the sitemap.
+ * The projects that get a page: every `case-study`, and the `project` entries
+ * that carry a `page` (the lighter project page). The other `project` entries
+ * and every `experiment` are cards on the Work index that link straight to
+ * Live and Code, so a page for them would be an orphan in the sitemap.
  */
 export async function projectRoutes(lang: Locale): Promise<EntryRoute<Project>[]> {
-  // Case studies, plus the projects that have a project page (`page`); the rest are cards only.
   const entries = (await listProjects({ lang })).filter((entry) => entry.data.tier === 'case-study' || (entry.data.tier === 'project' && entry.data.page));
   return entries.map((entry) => ({ params: { slug: entrySlug(entry) }, props: { entry } }));
 }
