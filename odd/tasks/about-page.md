@@ -18,12 +18,12 @@ Branch: `feat/about-page` (from `develop`). Delivery: ask-on-risk. Test runner: 
 
 | ID | Specs | Route | Status | Commit |
 |---|---|---|---|---|
-| T0 | — | inline | done, not committed | docs: approval record (CLAUDE.md, openspec) and this document |
-| T1 | S1, S2, S3, S6 | inline | done, not committed | page view, wrappers, dictionary en/es/pt, education entries, images |
-| T2 | S4 | inline | blocked: tablet nav overflow, owner decision | nav, mobile menu, footer |
-| T3 | S5 | inline | done, not committed (RED/GREEN: nav.test, seo.test) | JSON-LD, `llms.txt` |
-| T4 | S7 | inline | done, not committed | Backgrounds, Reveal, descend glow, hero parallax |
-| T5 | S8 | inline | done, not committed (approved 2026-11-27) | Home About band, Notes 06, Contact 07 |
+| T0 | — | inline | done | 5787e41 docs: approval record (CLAUDE.md, openspec) and this document |
+| T1 | S1, S2, S3, S6 | inline | done | da72b00 page view, wrappers, dictionary en/es/pt, education entries, images |
+| T2 | S4 | inline | done | 94981b4 nav, menu sheet, footer; menu button below 57.5rem |
+| T3 | S5 | inline | done (RED/GREEN: nav.test, seo.test) | da72b00 JSON-LD, `llms.txt` |
+| T4 | S7 | inline | done | da72b00 Backgrounds, Reveal, descend glow, hero parallax |
+| T5 | S8 | inline | done (approved 2026-11-27) | 94981b4 Home About band, Notes 06, Contact 07 |
 
 Route evidence: one behavior delivered in dependent steps (T2 and T3 link to the page T1 creates), so no parallel writers; the parent writes inline.
 
@@ -35,4 +35,7 @@ Route evidence: one behavior delivered in dependent steps (T2 and T3 link to the
 - L4: next step — map the code (page pattern, nav, footer, SEO, dictionary, tests) before T1.
 - L6 (2026-11-27): Home band proposed in Figma (`2608:3228`) and approved by the owner ("Approved"). Education rows live in the `experience` collection as group `education` (Home's Experience lists its own groups, so it does not show them). Rise glow not used on About: it depends on the Home hero's seam; the descend glow into Contact is.
 - L7: checks. RED seen for `nav.test.ts` (about target undefined) and `seo.test.ts` (no `aboutPageNode` export); GREEN after. `npm run check` exit 0 (105 tests, 0 astro errors, 52 pages, links clean). Captures 1440/768/390 of /about/ and the Home band. Found: at 768 the nav no longer fits (Contact right edge 789 en, 812 pt, 833 es; before About: 728, 738, 758 against a 728 limit). Owner asked for the options.
+- L8 (2026-11-27, owner, verbatim, on the tablet nav options): "mejor no, qu ese use el menu hamburguesa en ese caso. no vamos a destrozar el diseño pro las purasa". Measured the bar's natural width: 829 px en, 887 pt, 894 es (content + 80 px padding). The bar shows from 57.5rem (920 px); below it the menu button and sheet, as on phones. The sheet now uses `var(--gutter)`.
+- L9: checks on HEAD 94981b4: `npm run check` exit 0 (105 tests, 0 astro errors, 52 pages, links clean). da72b00 alone also passed (104 tests). Nav at 390/768/880/919 shows the menu button, at 920/1024/1440 the bar, in en/es/pt, no horizontal overflow; menu sheet captured open at 768 (es). Home (en/es/pt) has the band and no education rows; /about/ has the AboutPage node; llms.txt lists About. RDD is off (global), so no native review. Not pushed: push and PR are the owner's call (about 900 authored lines; ask-on-risk).
+- Follow-ups, not in this feature: `Notes.astro:45` routes posts with `entry.id` (CLAUDE.md asks for `entrySlug()`), noticed while mapping; tablet and Inside boards for About are not drawn.
 - L5 (2026-11-27, owner, verbatim): "no inside version is needed. aplica los efectos y trnasiciones presentes en el reto de la pagina. adapta el home para agregar una breve seccion 'about' o similar para enlazar a esta pagina tambien"

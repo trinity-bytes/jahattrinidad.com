@@ -56,7 +56,7 @@ Queries: "Jahat Trinidad", "+ design engineer", "+ cv", "+ frontend Lima", "trin
   - [x] Owner approved the design on 2026-11-27 ("va. diseño aprobado"): boards 1440 and 390 with all
         their copy, "About" after Notes in the nav and in the footer's Navigate column.
   - [ ] Not drawn: tablet 768 and the Inside state.
-  - [ ] Code (not started): `src/pages/_views/About.astro` + en/es/pt wrappers, dictionary keys in
+  - [x] Code done 2026-11-27 on `feat/about-page` (5787e41, da72b00, 94981b4; plan and checks in `odd/tasks/about-page.md`), not merged: `src/pages/_views/About.astro` + en/es/pt wrappers, dictionary keys in
         `i18n.ts`, `es.ts`, `pt.ts` (the ES story can start from the owner's own Spanish words, Log in
         engram `design/about-page-proposal`), nav and footer entry, `ProfilePage`/`AboutPage` JSON-LD,
         `llms.txt` entry, the two photos and the cover from Figma into `src/assets/`.
